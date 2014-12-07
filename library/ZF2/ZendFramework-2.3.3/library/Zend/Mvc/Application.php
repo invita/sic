@@ -257,6 +257,8 @@ class Application implements
 
         $listeners = array_unique(array_merge($listenersFromConfigService, $listenersFromAppConfig));
 
+        //echo "<pre>"; print_r($config); echo "</pre><br/>\n";
+
         return $serviceManager->get('Application')->bootstrap($listeners);
     }
 

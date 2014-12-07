@@ -1,5 +1,5 @@
 <?php
-namespace Zic2\Auth\Controller;
+namespace Zic2\Admin\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
@@ -8,6 +8,10 @@ class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
-        return $this->response;
+        return array();
+    }
+    public function adminAction()
+    {
+        return array();
     }
 }
