@@ -2,24 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="81a7b28c-87e0-4530-8bc3-ad9622d3013b" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/.htaccess" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/module/Zic2/Home/view/error/404.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/module/Zic2/Admin/Module.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/module/Zic2/Home/Module.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/module/Zic2/Admin/view/index.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/module/Zic2/Home/view/index.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/module/Zic2/Home/view/error/index.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/module/Zic2/Admin/src/Controller/indexController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/module/Zic2/Home/src/Controller/indexController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/module/Zic2/Admin/view/layout/layout.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/module/Zic2/Home/view/layout/layout.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/module/Zic2/Admin/config/module.config.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/module/Zic2/Home/config/module.config.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/ZF2/ZendFramework-2.3.3/library/Zend/Mvc/Application.php" afterPath="$PROJECT_DIR$/library/ZF2/ZendFramework-2.3.3/library/Zend/Mvc/Application.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/module/Zic2/Auth/src/Controller/IndexController.php" afterPath="$PROJECT_DIR$/module/Zic2/Auth/src/Controller/IndexController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config/application.config.php" afterPath="$PROJECT_DIR$/config/application.config.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/index.php" afterPath="$PROJECT_DIR$/public/index.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/session/sessions.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ZIC2.iws" />
@@ -45,11 +28,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="module.config.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="module.config.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/module/Zic2/Admin/config/module.config.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.59130436" vertical-offset="0" max-vertical-offset="690">
-              <caret line="24" column="10" selection-start-line="24" selection-start-column="10" selection-end-line="24" selection-end-column="10" />
+            <state vertical-scroll-proportion="-9.153846" vertical-offset="0" max-vertical-offset="595">
+              <caret line="14" column="10" selection-start-line="14" selection-start-column="10" selection-end-line="14" selection-end-column="10" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sessions.txt" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/data/session/sessions.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="716">
+              <caret line="0" column="1" selection-start-line="0" selection-start-column="1" selection-end-line="0" selection-end-column="1" />
               <folding />
             </state>
           </provider>
@@ -121,16 +114,6 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="layout.phtml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/module/Zic2/Home/view/layout/layout.phtml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-1.3076923" vertical-offset="0" max-vertical-offset="136">
-              <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="application.config.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/config/application.config.php">
           <provider selected="true" editor-type-id="text-editor">
@@ -193,6 +176,7 @@
         <option value="$PROJECT_DIR$/module/Zic2/Admin/view/index.phtml" />
         <option value="$PROJECT_DIR$/module/Zic2/Home/config/module.config.php" />
         <option value="$PROJECT_DIR$/module/Zic2/Admin/config/module.config.php" />
+        <option value="$PROJECT_DIR$/data/session/sessions.txt" />
       </list>
     </option>
   </component>
@@ -650,6 +634,13 @@
       <option name="number" value="Default" />
       <updated>1414836095589</updated>
     </task>
+    <task id="LOCAL-00001" summary="Module Admin added&#10;Module Home added">
+      <created>1417959461783</created>
+      <option name="number" value="00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1417959461783</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -694,6 +685,8 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
+    <MESSAGE value="Module Admin added&#10;Module Home added" />
+    <option name="LAST_COMMIT_MESSAGE" value="Module Admin added&#10;Module Home added" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -1009,8 +1002,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/module/Zic2/Admin/config/module.config.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.59130436" vertical-offset="0" max-vertical-offset="690">
-          <caret line="24" column="10" selection-start-line="24" selection-start-column="10" selection-end-line="24" selection-end-column="10" />
+        <state vertical-scroll-proportion="-9.153846" vertical-offset="0" max-vertical-offset="595">
+          <caret line="14" column="10" selection-start-line="14" selection-start-column="10" selection-end-line="14" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/session/sessions.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="716">
+          <caret line="0" column="1" selection-start-line="0" selection-start-column="1" selection-end-line="0" selection-end-column="1" />
           <folding />
         </state>
       </provider>
