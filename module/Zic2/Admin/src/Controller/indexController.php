@@ -12,6 +12,7 @@ class IndexController extends AbstractActionController
     }
     public function adminAction()
     {
+        $this->layout('layout/admin');
         return array();
     }
 }

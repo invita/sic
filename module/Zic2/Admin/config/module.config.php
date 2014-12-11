@@ -24,6 +24,7 @@ return array(
         //    'admin' => realpath(__DIR__ . '/../view'),
         //),
         'template_map' => array(
+            'layout/admin' => realpath(__DIR__.'/../view/layout') . '/admin-layout.phtml',
             'zic2/index/admin' => realpath(__DIR__.'/../view') . '/index.phtml',
         ),
     ),
