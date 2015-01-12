@@ -10,7 +10,7 @@ class TestController extends AbstractActionController
     {
 
 
-        echo json_encode(array("a" => 1, "F" => "alert('Hai :D');"));
+        echo json_encode(array("a" => 1, "F" => "F = function() { alert('Hai :D'); };"));
 
         die();
         //print_r($this->layout());

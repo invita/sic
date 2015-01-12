@@ -4,17 +4,17 @@
             //alert(data);
             var dataObj = JSON.parse(data);
 
-            if (dataObj && dataObj["F"] && typeof(dataObj["F"]) == "function") {
-                alert(eval(dataObj["F"]));
-            }
+            //if (dataObj && dataObj["F"] && typeof(dataObj["F"]) == "function") {
+            //    alert(eval(dataObj["F"]));
+            //}
+
             if (dataObj && dataObj["F"] && typeof(dataObj["F"]) == "string") {
-                //var f = eval(""
-                //alert(eval(dataObj["F"]));
+                eval(dataObj["F"]);
+                if (F && typeof(F) == "function") F();
             }
         });
     }
 </script>
 
 Admin view:
-
 <a href="#" onclick="testAjax();">Test</a>
