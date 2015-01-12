@@ -1,5 +1,5 @@
 <?php
-namespace Zic2\Auth;
+namespace Zic2\Core;
 
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
@@ -16,7 +16,7 @@ class Module
         $eventManager        = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
-        $this->bootstrapSession($e);
+        $this->bootstrapCore($e);
     }
 
     public function getConfig()
@@ -24,23 +24,9 @@ class Module
         return include __DIR__ . '/config/module.config.php';
     }
 
-    public function bootstrapSession(MvcEvent $e)
+    public function bootstrapCore(MvcEvent $e)
     {
-        $sessionConfig = new SessionConfig();
-        $sessionConfig->setOptions(array(
-            'save_path' => realpath(__DIR__."/../../../data/session"),
-            'name' => 'sic_auth'
-        ));
 
-        $sessionStorage = new SessionArrayStorage();
-
-        $sessionSaveHandler = null;
-
-        $sessionManager = new SessionManager($sessionConfig, $sessionStorage, $sessionSaveHandler);
-
-        $container = new Container('initialized');
-        $container->setDefaultManager($sessionManager);
-        $container->offsetSet("foo", "bar");
     }
 
     public function getAutoloaderConfig()

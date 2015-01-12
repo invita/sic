@@ -1,2 +1,48 @@
-<div style="border-bottom:silver solid 1px;">Admin Layout!</div>
-<div>View Content: <?php echo $this->layout()->content ?></div>
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="/js/jquery-2.1.1.js"></script>
+
+        <link rel="stylesheet" href="/lib/zurb/css/normalize.css" />
+        <link rel="stylesheet" href="/lib/zurb/css/foundation.css" />
+        <!--
+        <script src="/lib/zurb/js/vendor/custom.modernizr.js"></script>
+        -->
+        <link rel="stylesheet" href="/css/standard.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="/css/zic2.css" type="text/css" media="screen" />
+    </head>
+
+
+    <body>
+
+        <div id="header" class="row">
+            <table cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                    <td ><a href="/admin" title="Slovenian Index of citation - Admin"><img src="/img/logo.png" /></a></td>
+                    <td align="right" class="pr_20" style="vertical-align:bottom;">
+                        <a href="/admin/login">Prijava</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div id="navigation" class="row">
+            <div>
+                <ul>
+                    <li class="mainMenuList">
+                        <a href="#">Iskalnik</a>
+                    </li>
+                    <li class="mainMenuList">
+                        <a href="#">Sistem</a>
+                    </li>
+                    <li class="mainMenuList">
+                        <a href="#">Urejanje strani</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="content" class="row"><?php echo $this->layout()->content; ?></div>
+
+    </body>
+</html>

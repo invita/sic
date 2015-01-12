@@ -13,11 +13,23 @@ return array(
                     ),
                 ),
             ),
+            'test' => array(
+                'type' => 'Zend\Mvc\Router\Http\Literal',
+                'options' => array(
+                    'route' => '/test',
+                    'defaults' => array(
+                        'controller' => 'Zic2\Home\Controller\Test',
+                        'action' => 'index',
+                        'layout' => 'foo',
+                    ),
+                ),
+            ),
         ),
     ),
     'controllers' => array(
         'invokables' => array(
-            'Zic2\Home\Controller\Index' => 'Zic2\Home\Controller\IndexController'
+            'Zic2\Home\Controller\Index' => 'Zic2\Home\Controller\IndexController',
+            'Zic2\Home\Controller\Test' => 'Zic2\Home\Controller\TestController'
         ),
     ),
     'view_manager' => array(
