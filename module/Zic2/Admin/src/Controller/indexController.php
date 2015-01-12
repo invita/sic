@@ -8,6 +8,7 @@ class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
+        die("foo");
         return array();
     }
     public function adminAction()

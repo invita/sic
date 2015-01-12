@@ -4,17 +4,17 @@ namespace Zic2\Home\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
-class IndexController extends AbstractActionController
+class FooController extends AbstractActionController
 {
     public function indexAction()
     {
-        die("home index controller index action");
+        die("home foo controller index action");
         return array();
     }
 
     public function barAction()
     {
-        die("home index controller bar action");
+        die("home foo controller bar action");
         return array();
     }
 }

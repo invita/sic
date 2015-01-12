@@ -17,7 +17,7 @@ class Module
         $eventManager = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
-        $this->bootstrapAdmin($e);
+        //$this->bootstrapAdmin($e);
 
         /*
         $sharedManager = $eventManager->getSharedManager();
