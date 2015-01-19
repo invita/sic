@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <script src="/lib/jquery/jquery-2.1.1.js"></script>
+
         <script src="/js/sic/sic.js"></script>
         <script src="/js/sic/util.js"></script>
-
         <script src="/js/sic/widget/sicElement.js"></script>
-
-        <script src="/lib/jquery/jquery-2.1.1.js"></script>
+        <script src="/js/sic/widget/sicTabPage.js"></script>
 
         <link rel="stylesheet" href="/lib/zurb/css/normalize.css" />
         <link rel="stylesheet" href="/lib/zurb/css/foundation.css" />
@@ -14,7 +14,7 @@
         <script src="/lib/zurb/js/vendor/custom.modernizr.js"></script>
         -->
         <link rel="stylesheet" href="/css/standard.css" type="text/css" media="screen" />
-        <link rel="stylesheet" href="/css/zic2.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="/css/sic.css" type="text/css" media="screen" />
     </head>
 
 
@@ -25,7 +25,7 @@
                 <tr>
                     <td ><a href="/admin" title="Slovenian Index of citation - Admin"><img src="/img/logo.png" /></a></td>
                     <td align="right" class="pr_20" style="vertical-align:bottom;">
-                        <a href="/admin/login">Prijava</a>
+                        <a href="/admin/login">Login</a>
                     </td>
                 </tr>
             </table>
@@ -35,19 +35,21 @@
             <div>
                 <ul>
                     <li class="mainMenuList">
-                        <a href="#">Iskalnik</a>
+                        <a href="javascript:sic.loadModule({moduleName:'searchModule'});">Search</a>
                     </li>
                     <li class="mainMenuList">
-                        <a href="#">Sistem</a>
+                        <a href="javascript:sic.loadModule({moduleName:'systemModule'});">System</a>
                     </li>
                     <li class="mainMenuList">
-                        <a href="#">Urejanje strani</a>
+                        <a href="#">Edit page</a>
                     </li>
                 </ul>
             </div>
         </div>
 
-        <div id="content" class="row"><?php echo $this->layout()->content; ?></div>
+        <div id="content" class="row">
+            <?php echo $this->layout()->content; ?>
+        </div>
 
     </body>
 </html>

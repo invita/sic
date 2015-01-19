@@ -2,6 +2,7 @@ sic.widget.sicElement = function(args)
 {
     // Init
     var _p = this;
+    this.isSicElement = true;
 
     if (!args) args = {};
     this.args = args;
@@ -30,8 +31,11 @@ sic.widget.sicElement = function(args)
 
     // Implementation
 
-    this.appendTo = function(parent){
-        if (_p.insertAtTop)
+    this.appendTo = function(parent, insertAtTop){
+        this.parent = parent;
+        if (typeof(insertAtTop) == "undefined") insertAtTop = _p.insertAtTop;
+
+        if (insertAtTop)
             parent.prepend(_p.selector);
         else
             parent.append(_p.selector);
@@ -59,6 +63,7 @@ sic.widget.sicElement = function(args)
     var id = this.tagId ? this.tagId : this.selector.attr('id');
     if (!id) id = sic.widget._nextId();
     this.attr['id'] = id;
+    this.tagId = id;
 
     if (this.hidden) this.style['display'] = 'none';
 

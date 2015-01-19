@@ -25,6 +25,10 @@ sic.mergeObjects = function(obj1, obj2) {
     return result;
 };
 
+sic.dump = function(obj, depth, nl) {
+    alert(sic.debug(obj, depth, nl));
+};
+
 sic.debug = function(obj, depth, nl) {
 
     if (typeof(obj) == "string") return obj;

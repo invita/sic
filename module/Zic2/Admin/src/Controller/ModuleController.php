@@ -6,13 +6,16 @@ use Zend\View\Model\ViewModel;
 
 class ModuleController extends AbstractActionController
 {
+    // Load Module
     public function loadModuleAction()
     {
+        $args = isset($_POST["args"]) ? $_POST["args"] : array();
+        $moduleName = isset($args["moduleName"]) ? $args["moduleName"] : "TestModule";
+
         $moduleDir = realpath(__DIR__ . '/../modules');
-        $jsFileName = "testModule.js";
+        $jsFileName = $moduleName . '.js';
 
         $jsF = file_get_contents($moduleDir .'/'. $jsFileName);
-        $args = isset($_POST["args"]) ? $_POST["args"] : array();
 
         $result = array(
             "args" => $args,
@@ -24,18 +27,18 @@ class ModuleController extends AbstractActionController
         exit;
     }
 
+    // Call Server Method
     public function callMethodAction()
     {
         $moduleDir = realpath(__DIR__ . '/../modules');
         $moduleNamespace = "Zic2\\Admin\\Modules";
 
         $args = isset($_POST["args"]) ? $_POST["args"] : array();
-        //$moduleName = isset($args["moduleName"]) ? $args["moduleName"] : null;
-        //$methodName = isset($args["methodName"]) ? $args["methodName"] : null;
-        $moduleName = isset($args["moduleName"]) ? $args["moduleName"] : "TestModule";
-        $methodName = isset($args["methodName"]) ? $args["methodName"] : "testMethod";
+        $moduleName = isset($args["moduleName"]) ? $args["moduleName"] : null;
+        $methodName = isset($args["methodName"]) ? $args["methodName"] : null;
         $className = $moduleNamespace."\\".$moduleName;
         $fileName = $moduleDir . '/' .ucfirst($moduleName).'.php';
+
         if (file_exists($fileName))
             include $fileName;
 
