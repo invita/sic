@@ -5,6 +5,7 @@ F = function(args){
     var tab1 = new sic.widget.sicTabPage({
         name: "System",
         parent: sic.data.mainTab,
+        contentText: "System Module",
         unique: true
     });
 

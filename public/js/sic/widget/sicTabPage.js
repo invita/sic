@@ -25,6 +25,7 @@ sic.widget.sicTabPage = function(args)
     this.autoActive = sic.getArg(args, "autoActive", true);
     this.unique = sic.getArg(args, "unique", false);
     this.canClose = sic.getArg(args, "canClose", true);
+    this.contentText = sic.getArg(args, "contentText", "");
     this.fadeTime = sic.getArg(args, "fadeTime", sic.defaults.fadeTime);
 
 
@@ -49,7 +50,7 @@ sic.widget.sicTabPage = function(args)
         _p.content = new sic.widget.sicElement({parent:sicTabHeader});
         _p.content.selector.addClass("sicTabContent");
         _p.content.selector.css("display", "none");
-        _p.content.selector.html(_p.name + "Content");
+        _p.content.selector.html(_p.contentText);
 
         if (_p.autoActive) _p.selectTab();
     };

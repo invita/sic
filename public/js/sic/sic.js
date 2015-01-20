@@ -43,8 +43,8 @@ sic.callMethod = function(args) {
 $(document).ready(function(){
     sic.data.contentElement = $('div#pageHolder');
     sic.data.mainTab = new sic.widget.sicTabPage({
-        name: "mainTab",
-        parent: sic.data.contentElement
+        name: "Sic",
+        parent: sic.data.contentElement,
     });
 
     /*
