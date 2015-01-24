@@ -2,7 +2,7 @@
 return array(
     'router' => array(
         'routes' => array(
-            'home_index_index' => array('type'=>'literal', 'options'=>array('route'=>'/foo/bar', 'defaults'=>array('controller'=>'home_index','action'=>'index'))),
+            'home_index_index' => array('type'=>'literal', 'options'=>array('route'=>'/', 'defaults'=>array('controller'=>'home_index','action'=>'index'))),
 
             /*
             'home' => array(
@@ -16,6 +16,7 @@ return array(
                     ),
                 ),
             ),
+            */
         ),
     ),
     'controllers' => array(
@@ -36,6 +37,6 @@ return array(
             'error' => __DIR__ . '/../../Home/view/error/index.phtml',
         ),
         'not_found_template' => 'error/404',
-        'exception_template' => 'error/index',
-    ),
+        'exception_template' => 'error/index'
+    )
 );
