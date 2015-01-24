@@ -20,21 +20,20 @@ sic.loadModule = function(args) {
     });
 };
 
-sic.callMethod = function(args) {
+sic.callMethod = function(args, f) {
     var moduleName = sic.getArg(args, "moduleName", null); // Module Name
     var methodName = sic.getArg(args, "methodName", null); // Method Name
 
-    $.post("/callMethod", {args: args}, function(data) {
+    return $.post("/callMethod", {args: args}, function(data) {
         var resultObj = JSON.parse(data);
         if (resultObj) {
 
             // Alert
-            if (typeof(resultObj['alert'] != "undefined"))
-                alert(resultObj['alert']);
+            //if (typeof(resultObj['alert'] != "undefined"))
+            //    alert(typeof(resultObj['alert']));
 
             // Message
-
-
+            f(resultObj);
             return resultObj;
         }
     });

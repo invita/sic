@@ -29,11 +29,11 @@ sic.capitalize = function(strVal) {
     return strVal && typeof(strVal) == "string" ? strVal.substr(0, 1).toUpperCase() + strVal.substr(1) : "";
 };
 
-sic.dump = function(obj, depth, nl) {
-    alert(sic.debug(obj, depth, nl));
+sic.dump = function(obj, depth, nl, spaceChar) {
+    alert(sic.debug(obj, depth, nl, spaceChar));
 };
 
-sic.debug = function(obj, depth, nl) {
+sic.debug = function(obj, depth, nl, spaceChar) {
 
     if (typeof(obj) == "string") return obj;
     if (typeof(obj) == "number" ||
@@ -58,10 +58,10 @@ sic.debug = function(obj, depth, nl) {
 
         var result = "";
         for (var key in obj) {
-            result += spaces+key+" : ";
+            result += spaces+"["+key+"]"+spaceChar+"="+spaceChar;
             if (typeof(obj[key]) == "object"){
                 if (depth > 0) result += nl;
-                result += dumpRc(obj[key], depth -1, nl, spaces+"    ");
+                result += dumpRc(obj[key], depth -1, nl, spaces+spacesChars);
             } else {
                 result += dumpRc(obj[key], -1, nl, "");
             }
@@ -71,6 +71,8 @@ sic.debug = function(obj, depth, nl) {
 
     if (typeof(depth) == "undefined") depth = 2;
     if (typeof(nl) == "undefined") nl = "\n";
+    if (typeof(spaceChar) == "undefined") spaceChar = " ";
+    var spacesChars = spaceChar+spaceChar+spaceChar+spaceChar;
 
     return dumpRc(obj, depth, nl, "")
 }
