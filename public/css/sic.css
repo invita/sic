@@ -11,9 +11,9 @@ div.nav1 { margin-left:10px; }
 
 /* sicTabPage */
 div.sicTabHeader {}
-div.sicTabButton { display:inline-table; padding:5px; border:silver solid 1px; border-left-width:0px;
-    border-radius:4px 4px 0px 0px; cursor:pointer; }
-div.sicTabButton.active { border-color:blue; color: blue; }
+div.sicTabButton { display:inline-table; padding:7px 10px 5px 10px; border:#CCCCCC solid 1px; border-left-width:0px;
+    border-radius:8px 8px 0px 0px; cursor:pointer; }
+div.sicTabButton.active { border-color:#AAAAAA; }
 div.sicTabButton:first-of-type { border-left-width:1px; }
 div.sicTabContent { margin-top:5px; }
 

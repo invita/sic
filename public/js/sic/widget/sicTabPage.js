@@ -28,6 +28,9 @@ sic.widget.sicTabPage = function(args)
     this.contentText = sic.getArg(args, "contentText", "");
     this.fadeTime = sic.getArg(args, "fadeTime", sic.defaults.fadeTime);
 
+    this.defaultGradient = "blue";
+    this.selectedGradient = "orange";
+
 
     // Implementation
 
@@ -57,9 +60,15 @@ sic.widget.sicTabPage = function(args)
 
     this.selectTab = function(){
         if (_p.tabButton.selector.hasClass("active")) return;
-        _p.header.selector.children().removeClass("active");
+        for (var i in _p.header.pages) {
+            var page = _p.header.pages[i];
+            page.tabButton.selector.removeClass("active");
+            page.tabButton.setGradient(_p.defaultGradient);
+            page.content.selector.css("display", "none");
+
+        }
         _p.tabButton.selector.addClass("active");
-        _p.header.parent.children(".sicTabContent").css("display", "none");
+        _p.tabButton.setGradient(_p.selectedGradient);
         _p.content.selector.fadeIn(_p.fadeTime);
     };
 
@@ -100,9 +109,7 @@ sic.widget.sicTabPage = function(args)
         this.appendTo(this.parent);
 
 
-
-    // Settings
-    //this.tabCssClass = sic.getArg(args, "tabCssClass", "tabPageButton"); // button, image
+    this.tabButton.setGradient("blue");
 };
 
 sic.widget.sicTabPageHeader = function(args){

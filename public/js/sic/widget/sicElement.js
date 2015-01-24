@@ -110,9 +110,9 @@ sic.widget.sicElement = function(args)
 
     this.setGradient = function(newGrad, hoverP, activeP) {
         this.gradient = newGrad;
-        this.selector.removeClass("gradSilver gradBlue gradRed gradGray gradBlack gradLightBlue");
-        this.selector.removeClass("gradSilverH gradBlueH gradRedH gradGrayH gradBlackH gradLightBlueH");
-        this.selector.removeClass("gradSilverA gradBlueA gradRedA gradGrayA gradBlackA gradLightBlueA");
+        this.selector.removeClass("gradBlue gradOrange");
+        this.selector.removeClass("gradBlueH gradOrangeH");
+        this.selector.removeClass("gradBlueA gradOrangeA");
 
         switch(newGrad) {
             case "blue":
@@ -121,41 +121,10 @@ sic.widget.sicElement = function(args)
                 if (activeP) this.selector.addClass("gradBlueA");
                 break;
 
-            case "silver":
-                this.selector.addClass("gradSilver");
-                if (hoverP) this.selector.addClass("gradSilverH");
-                if (activeP) this.selector.addClass("gradSilverA");
-                break;
-
-            case "red":
-                this.selector.addClass("gradRed");
-                if (hoverP) this.selector.addClass("gradRedH");
-                if (activeP) this.selector.addClass("gradRedA");
-                break;
-
-            case "gray":
-                this.selector.addClass("gradGray");
-                if (hoverP) this.selector.addClass("gradGrayH");
-                if (activeP) this.selector.addClass("gradGrayA");
-                break;
-
-            case "black":
-                this.selector.addClass("gradBlack");
-                if (hoverP) this.selector.addClass("gradBlackH");
-                if (activeP) this.selector.addClass("gradBlackA");
-                break;
-
-            case "lightblue":
-                this.selector.addClass("gradLightblue");
-                if (hoverP) this.selector.addClass("gradLightblueH");
-                if (activeP) this.selector.addClass("gradLightblueA");
-                break;
-
-            case "clear":
-                break;
-
-            default:
-                this.selector.addClass("gradSilver");
+            case "orange":
+                this.selector.addClass("gradOrange");
+                if (hoverP) this.selector.addClass("gradOrangeH");
+                if (activeP) this.selector.addClass("gradOrangeA");
                 break;
         }
 
