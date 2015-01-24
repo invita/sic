@@ -1,34 +1,18 @@
 <?php
-namespace Sic\Admin\Controller;
+namespace Zic2\Admin\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
-class IndexController extends AbstractActionController
+class ModuleController extends AbstractActionController
 {
-    public function indexAction()
-    {
-        $view = new ViewModel();
-        $view->setTemplate("sic/admin/index/index");
-
-        return $view;
-    }
-
-    public function loginAction()
-    {
-        $view = new ViewModel();
-        $view->setTemplate("sic/admin/index/login");
-
-        return $view;
-    }
-
     // Load Module
     public function loadModuleAction()
     {
         $args = isset($_POST["args"]) ? $_POST["args"] : array();
         $moduleName = isset($args["moduleName"]) ? $args["moduleName"] : "TestModule";
 
-        $moduleDir = realpath(__DIR__ . '/../Modules');
+        $moduleDir = realpath(__DIR__ . '/../modules');
         $jsFileName = $moduleName . '.js';
 
         $jsF = file_get_contents($moduleDir .'/'. $jsFileName);
@@ -46,8 +30,8 @@ class IndexController extends AbstractActionController
     // Call Server Method
     public function callMethodAction()
     {
-        $moduleDir = realpath(__DIR__ . '/../Modules');
-        $moduleNamespace = "Sic\\Admin\\Modules";
+        $moduleDir = realpath(__DIR__ . '/../modules');
+        $moduleNamespace = "Zic2\\Admin\\Modules";
 
         $args = isset($_POST["args"]) ? $_POST["args"] : array();
         $moduleName = isset($args["moduleName"]) ? $args["moduleName"] : null;
@@ -69,5 +53,4 @@ class IndexController extends AbstractActionController
 
         exit;
     }
-
 }

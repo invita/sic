@@ -4,7 +4,8 @@ return array(
         'routes' => array(
             'home' => array('type'=>'literal','options'=>array('route'=>'/','defaults'=>array('controller'=>'Sic\Admin\Controller\Index','action'=>'index'))),
             'login' => array('type'=>'literal','options'=>array('route'=>'/login','defaults'=>array('controller'=>'Sic\Admin\Controller\Index','action'=>'login'))),
-
+            'loadModule' => array('type'=>'literal','options'=>array('route'=>'/loadModule','defaults'=>array('controller'=>'Sic\Admin\Controller\Index','action'=>'loadModule'))),
+            'callMethod' => array('type'=>'literal','options'=>array('route'=>'/callMethod','defaults'=>array('controller'=>'Sic\Admin\Controller\Index','action'=>'callMethod'))),
         ),
     ),
     'service_manager' => array(

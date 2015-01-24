@@ -1,0 +1,19 @@
+a { color: #888; }
+a:hover { color:#555; }
+
+body, div { font-size:12px; color: #222; }
+
+div.nav1 { margin-left:10px; }
+
+.mainMenuList { display: inline; font-weight: bold; border-right: silver solid 2px; padding:0px 3px 0px 4px; }
+
+/* *** Widgets *** */
+
+/* sicTabPage */
+div.sicTabHeader {}
+div.sicTabButton { display:inline-table; padding:5px; border:silver solid 1px; border-left-width:0px;
+    border-radius:4px 4px 0px 0px; cursor:pointer; }
+div.sicTabButton.active { border-color:blue; color: blue; }
+div.sicTabButton:first-of-type { border-left-width:1px; }
+div.sicTabContent { margin-top:5px; }
+

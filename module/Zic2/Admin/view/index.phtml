@@ -1,20 +1,12 @@
-<script>
-    function testAjax() {
-        $.post("/test", function(data) {
-            //alert(data);
-            var dataObj = JSON.parse(data);
+Admin view:<br/>
+<!--
+<a href="javascript:sic.loadModule({moduleName:'testModule'});">Load TestModule</a><br />
+<a href="javascript:sic.callMethod({moduleName:'testModule', methodName:'testMethod'});">Run TestModule.testMethod()</a>
+-->
+<a href="javascript:sic.loadModule({moduleName:'systemModule'});">Load SystemModule</a><br />
+<a href="javascript:sic.callMethod({moduleName:'systemModule', methodName:'test'});">Run SystemtModule.test()</a>
 
-            if (dataObj && dataObj["F"] && typeof(dataObj["F"]) == "function") {
-                alert(eval(dataObj["F"]));
-            }
-            if (dataObj && dataObj["F"] && typeof(dataObj["F"]) == "string") {
-                //var f = eval(""
-                //alert(eval(dataObj["F"]));
-            }
-        });
-    }
-</script>
+<br/>
+<br/>
 
-Admin view:
-
-<a href="#" onclick="testAjax();">Test</a>
+<div id="pageHolder"></div>
