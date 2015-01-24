@@ -109,24 +109,22 @@ sic.widget.sicElement = function(args)
      */
 
     this.setGradient = function(newGrad, hoverP, activeP) {
+        hoverP = true; activeP = true;
+
         this.gradient = newGrad;
-        this.selector.removeClass("gradBlue gradOrange");
-        this.selector.removeClass("gradBlueH gradOrangeH");
-        this.selector.removeClass("gradBlueA gradOrangeA");
 
-        switch(newGrad) {
-            case "blue":
-                this.selector.addClass("gradBlue");
-                if (hoverP) this.selector.addClass("gradBlueH");
-                if (activeP) this.selector.addClass("gradBlueA");
-                break;
-
-            case "orange":
-                this.selector.addClass("gradOrange");
-                if (hoverP) this.selector.addClass("gradOrangeH");
-                if (activeP) this.selector.addClass("gradOrangeA");
-                break;
+        var classNames = this.selector.attr("class").split(' ');
+        for (var classIdx in classNames) {
+            var className = classNames[classIdx];
+            if (className.substr(0,4) == "grad")
+                this.selector.removeClass(className);
         }
+
+        var gradClass = "grad"+sic.capitalize(newGrad);
+        this.selector.addClass(gradClass);
+
+        if (hoverP) this.selector.addClass(gradClass+'H');
+        if (activeP) this.selector.addClass(gradClass+'A');
 
         return this;
     };
@@ -135,7 +133,7 @@ sic.widget.sicElement = function(args)
 
     this.expandToggleOnClick = function(onOff) {
         if (onOff === false)
-            this.selector.unbind("click");
+            this.selector.unbind('click');
         else
             this.selector.click(function(event) { _p.expandToggle(); });
 

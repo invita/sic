@@ -29,7 +29,7 @@ sic.widget.sicTabPage = function(args)
     this.fadeTime = sic.getArg(args, "fadeTime", sic.defaults.fadeTime);
 
     this.defaultGradient = "blue";
-    this.selectedGradient = "orange";
+    this.selectedGradient = "gold";
 
 
     // Implementation
@@ -108,8 +108,6 @@ sic.widget.sicTabPage = function(args)
     if (this.parent)
         this.appendTo(this.parent);
 
-
-    this.tabButton.setGradient("blue");
 };
 
 sic.widget.sicTabPageHeader = function(args){

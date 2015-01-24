@@ -25,6 +25,10 @@ sic.mergeObjects = function(obj1, obj2) {
     return result;
 };
 
+sic.capitalize = function(strVal) {
+    return strVal && typeof(strVal) == "string" ? strVal.substr(0, 1).toUpperCase() + strVal.substr(1) : "";
+};
+
 sic.dump = function(obj, depth, nl) {
     alert(sic.debug(obj, depth, nl));
 };
