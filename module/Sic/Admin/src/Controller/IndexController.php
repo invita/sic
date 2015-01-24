@@ -4,20 +4,50 @@ namespace Sic\Admin\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
+use Zend\Authentication\AuthenticationService;
+
+use Sic\Admin\Models\Authentication\Adapter;
+
 class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
-        $view = new ViewModel();
-        $view->setTemplate("sic/admin/index/index");
+        $auth = new AuthenticationService();
+        if( $auth->hasIdentity() )
+        {
+            $view = new ViewModel();
+            $view->setTemplate("sic/admin/index/index");
 
-        return $view;
+            return $view;
+        }
+
+        return $this->redirect()->toUrl('/login');
     }
 
     public function loginAction()
     {
         $view = new ViewModel();
         $view->setTemplate("sic/admin/index/login");
+
+        $request = $this->getRequest();
+        if($request->isPost())
+        {
+            $username = $request->getPost("username");
+            $password = $request->getPost("password");
+
+            $authAdapter = new Adapter($username, $password);
+            $auth = new AuthenticationService();
+            $result = $auth->authenticate($authAdapter);
+
+            if(!$result->isValid())
+            {
+
+
+            } else
+            {
+                return $this->redirect()->toUrl('/');
+            }
+        }
 
         return $view;
     }
