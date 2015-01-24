@@ -42,10 +42,25 @@ sic.widget.sicTabPage = function(args)
     this._createTabButton = function(sicTabHeader){
         _p.tabButton = new sic.widget.sicElement({parent:sicTabHeader});
         _p.tabButton.selector.addClass("sicTabButton");
-        _p.tabButton.selector.html(_p.name);
+
+        _p.tabButton.captionSpan = new sic.widget.sicElement({parent:_p.tabButton.selector, tagName:'span'});
+        _p.tabButton.captionSpan.selector.addClass("sicTabButton_caption");
+        _p.tabButton.captionSpan.selector.html(_p.name);
+
+        if (_p.canClose) _p._createCloseSpan();
 
         _p.tabButton.selector.click(function(e){
             _p.selectTab();
+        });
+    };
+
+    this._createCloseSpan = function(){
+        _p.tabButton.closeSpan = new sic.widget.sicElement({parent:_p.tabButton.selector, tagName:'span'});
+        _p.tabButton.closeSpan.selector.addClass("sicTabButton_closeButton");
+        _p.tabButton.closeImg = new sic.widget.sicElement({parent:_p.tabButton.closeSpan.selector, tagName:'img'});
+        _p.tabButton.closeImg.selector.attr("src", "/img/tabClose2.png");
+        _p.tabButton.closeSpan.selector.click(function(e) {
+            _p.destroyTab();
         });
     };
 
@@ -65,11 +80,23 @@ sic.widget.sicTabPage = function(args)
             page.tabButton.selector.removeClass("active");
             page.tabButton.setGradient(_p.defaultGradient);
             page.content.selector.css("display", "none");
-
         }
         _p.tabButton.selector.addClass("active");
         _p.tabButton.setGradient(_p.selectedGradient);
         _p.content.selector.fadeIn(_p.fadeTime);
+    };
+
+    this.destroyTab = function(){
+        var pageToSelectAfterClose = null;
+        if (_p.tabButton.selector.hasClass("active"))
+            pageToSelectAfterClose = _p.header.findPageBeforeId(_p.uniqId);
+
+        _p.header.removePageRef(_p.uniqId);
+        _p.tabButton.selector.remove();
+        _p.content.selector.remove();
+
+        if (pageToSelectAfterClose)
+            pageToSelectAfterClose.selectTab();
     };
 
     this.appendTo = function(parent, insertInFront) {
@@ -139,6 +166,17 @@ sic.widget.sicTabPageHeader = function(args){
     };
     this.findPageById = function(uniqId) {
         return _p.pages[uniqId];
+    };
+    this.findPageBeforeId = function(uniqId) {
+        var result = null;
+        for (var i in _p.pages){
+            if (i == uniqId) break;
+            result = _p.pages[i];
+        }
+        //if (!result) alert(Object.keys(_p.pages));
+        if (!result && Object.keys(_p.pages).length > 1) result = _p.pages[Object.keys(_p.pages)[1]];
+
+        return result;
     };
 };
 

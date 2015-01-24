@@ -44,25 +44,12 @@ $(document).ready(function(){
     sic.data.contentElement = $('div#pageHolder');
     sic.data.mainTab = new sic.widget.sicTabPage({
         name: "Sic",
-        parent: sic.data.contentElement
+        parent: sic.data.contentElement,
+        canClose: false
     });
 
-    /*
-    var tab1 = new sic.widget.sicTabPage({
-        name: "tab1",
-        parent: sic.data.mainTab
-    });
-
-    var tab2 = new sic.widget.sicTabPage({
-        name: "tab2",
-        parent: tab1.content
-    });
-
-    var tab3 = new sic.widget.sicTabPage({
-        name: "tab3",
-        parent: tab2
-    });
-*/
-
+    var primaryPage = $('#primaryPage');
+    if (primaryPage)
+        sic.data.mainTab.content.selector.append(primaryPage);
 });
 

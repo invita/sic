@@ -38,10 +38,10 @@
     <div>
         <ul>
             <li class="mainMenuList">
-                <a href="javascript:sic.loadModule({moduleName:'searchModule'});">Search</a>
+                <a href="javascript:sic.loadModule({moduleName:'Test/SearchModule'});">Search</a>
             </li>
             <li class="mainMenuList">
-                <a href="javascript:sic.loadModule({moduleName:'systemModule'});">System</a>
+                <a href="javascript:sic.loadModule({moduleName:'System/Dashboard'});">System</a>
             </li>
             <li class="mainMenuList">
                 <a href="#">Edit page</a>
@@ -51,8 +51,10 @@
 </div>
 
 <div id="content" class="row">
-    <div id="pageHolder"><?php echo $this->layout()->content; ?></div>
-
+    <div id="pageHolder"></div>
+    <div id="primaryPage">
+        <?php echo $this->layout()->content; ?>
+    </div>
 </div>
 
 </body>

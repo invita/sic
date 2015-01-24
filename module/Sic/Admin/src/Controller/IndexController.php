@@ -26,12 +26,10 @@ class IndexController extends AbstractActionController
     public function loadModuleAction()
     {
         $args = isset($_POST["args"]) ? $_POST["args"] : array();
-        $moduleName = isset($args["moduleName"]) ? $args["moduleName"] : "TestModule";
-
-        $moduleDir = realpath(__DIR__ . '/../Modules');
-        $jsFileName = $moduleName . '.js';
-
-        $jsF = file_get_contents($moduleDir .'/'. $jsFileName);
+        $origModuleName = isset($args["moduleName"]) ? $args["moduleName"] : null;
+        $moduleInfo = $this->getModuleInfo($origModuleName);
+        $jsFileName = $moduleInfo['moduleName'] . '.js';
+        $jsF = file_get_contents($moduleInfo['moduleDir'] .'/'. $jsFileName);
 
         $result = array(
             "args" => $args,
@@ -46,14 +44,12 @@ class IndexController extends AbstractActionController
     // Call Server Method
     public function callMethodAction()
     {
-        $moduleDir = realpath(__DIR__ . '/../Modules');
-        $moduleNamespace = "Sic\\Admin\\Modules";
-
         $args = isset($_POST["args"]) ? $_POST["args"] : array();
-        $moduleName = isset($args["moduleName"]) ? $args["moduleName"] : null;
+        $origModuleName = isset($args["moduleName"]) ? $args["moduleName"] : null;
         $methodName = isset($args["methodName"]) ? $args["methodName"] : null;
-        $className = $moduleNamespace."\\".$moduleName;
-        $fileName = $moduleDir . '/' .ucfirst($moduleName).'.php';
+        $moduleInfo = $this->getModuleInfo($origModuleName);
+        $className = $moduleInfo['moduleNamespace']."\\".$moduleInfo['moduleName'];
+        $fileName = $moduleInfo['moduleDir'] . '/' .$moduleInfo['moduleName'].'.php';
 
         if (file_exists($fileName))
             include $fileName;
@@ -68,6 +64,24 @@ class IndexController extends AbstractActionController
         echo json_encode($result);
 
         exit;
+    }
+
+    private function getModuleInfo($moduleName){
+        $moduleInfo = array();
+
+        $moduleInfo['fullModuleName'] = $moduleName;
+        $moduleInfo['moduleDir'] = realpath(__DIR__ . '/../Modules');
+        $moduleInfo['moduleName'] = $moduleName;
+        $moduleInfo['moduleNamespace'] = 'Sic\Admin\Modules';
+
+        $slashPos = strrpos($moduleName, '/');
+        if ($slashPos !== false) {
+            $moduleInfo['moduleDir'] .= '/'.substr($moduleName, 0, $slashPos);
+            $moduleInfo['moduleName'] = substr($moduleName, $slashPos +1);
+            $moduleInfo['moduleNamespace'] .= '\\'.str_replace('/', '\\', substr($moduleName, 0, $slashPos));
+        }
+
+        return $moduleInfo;
     }
 
 }
