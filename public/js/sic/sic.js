@@ -1,4 +1,4 @@
-var sic = { widget:{}, data:{}, defaults:{} };
+var sic = { object:{}, widget:{}, data:{}, defaults:{} };
 
 sic.defaults = {
     fadeTime: 600

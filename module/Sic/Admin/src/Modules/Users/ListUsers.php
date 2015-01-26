@@ -8,6 +8,13 @@ class ListUsers {
             array("username" => "TestUser2")
         );
 
+        $adapter = GlobalAdapterFeature::getStaticAdapter();
+        $sql = new Sql($adapter);
+        $select = $sql->select()->from('user')->where(array('username' => $this->username, "password" => sha1($this->password)));
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $results = $statement->execute();
+        $row = $results->current();
+
         return array(
             "users" => $users
         );

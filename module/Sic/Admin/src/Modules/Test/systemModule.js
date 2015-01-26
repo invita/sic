@@ -1,4 +1,4 @@
-F = function(args){
+var F = function(args){
     //var el = new sic.widget.sicElement({});
     //alert("hai");
 

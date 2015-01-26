@@ -1,4 +1,4 @@
-F = function(args){
+var F = function(args){
     var tabPage = new sic.widget.sicTabPage({
         name: "Users",
         parent: sic.data.mainTab

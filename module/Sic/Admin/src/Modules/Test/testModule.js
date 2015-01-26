@@ -1,4 +1,4 @@
-F = function(args){
+var F = function(args){
     //alert("Module loaded!\n" + sic.debug({args: args}));
 
     var sicEl = new sic.widget.sicElement({});
