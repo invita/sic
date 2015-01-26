@@ -1,0 +1,18 @@
+.sicTabContent.cobiss select,
+.sicTabContent.cobiss input
+{
+    display: block;
+    float: left;
+    margin-right: 10px;
+}
+
+.sicTabContent.cobiss select
+{
+    width: 100px;
+}
+
+.sicTabContent.cobiss img.loadingImg
+{
+    display: none;
+}
+
