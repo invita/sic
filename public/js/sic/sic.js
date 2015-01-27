@@ -23,7 +23,33 @@ sic.loadModule = function(args) {
 sic.callMethod = function(args, f) {
     var moduleName = sic.getArg(args, "moduleName", null); // Module Name
     var methodName = sic.getArg(args, "methodName", null); // Method Name
+    var result = null;
 
+    var ajaxResult = $.ajax({
+        type: 'POST',
+        url: '/callMethod',
+        data: {args:args},
+        success: function(e){},
+        dataType: "json",
+        async:false
+    });
+
+    result = ajaxResult.responseJSON;
+    if (result) {
+
+        // Alert
+        if (typeof(result['alert']) != "undefined")
+            alert(typeof(result['alert']));
+
+        // Message
+        if (typeof(f) == "function")
+            f(result);
+    }
+
+    return result;
+    //alert(result);
+
+    /*
     return $.post("/callMethod", {args: args}, function(data) {
         var resultObj = JSON.parse(data);
         if (resultObj) {
@@ -37,6 +63,7 @@ sic.callMethod = function(args, f) {
             return resultObj;
         }
     });
+    */
 };
 
 $(document).ready(function(){

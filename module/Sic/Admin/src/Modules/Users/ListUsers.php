@@ -1,19 +1,23 @@
 <?php
 namespace Sic\Admin\Modules\Users;
 
+use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
+use Zend\Db\Sql\Sql;
+use Zend\Authentication\Result;
+
 class ListUsers {
     public function listUsers($args) {
-        $users = array(
-            array("username" => "TestUser1"),
-            array("username" => "TestUser2")
-        );
+        $users = array();
 
         $adapter = GlobalAdapterFeature::getStaticAdapter();
         $sql = new Sql($adapter);
-        $select = $sql->select()->from('user')->where(array('username' => $this->username, "password" => sha1($this->password)));
+        $select = $sql->select()->from('user');
         $statement = $sql->prepareStatementForSqlObject($select);
         $results = $statement->execute();
-        $row = $results->current();
+
+        foreach($results as $result) {
+            $users[] = array("id" => $result["id"], "username" => $result["username"]);
+        }
 
         return array(
             "users" => $users

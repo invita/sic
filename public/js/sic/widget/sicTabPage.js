@@ -28,8 +28,8 @@ sic.widget.sicTabPage = function(args)
     this.contentText = sic.getArg(args, "contentText", "");
     this.fadeTime = sic.getArg(args, "fadeTime", sic.defaults.fadeTime);
 
-    this.defaultGradient = "blue";
-    this.selectedGradient = "gold";
+    this.defaultGradient = "gold";
+    this.selectedGradient = "blue";
 
 
     // Implementation
