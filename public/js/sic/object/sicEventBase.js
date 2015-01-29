@@ -46,6 +46,10 @@ sic.object.sicEventBase = function(args)
         return _p.events[eName].length;
     };
 
+    this.eventHasSubscribers = function(eName){
+        return (_p.events[eName] && Object.keys(_p.events[eName]).length > 0);
+    };
+
     this.setEnabled = function(newEnabled){
         this.enabled = newEnabled;
     };

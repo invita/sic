@@ -108,6 +108,12 @@ sic.widget.sicTabPage = function(args)
             _p.header = parent.header;
             contentParent = parent.parent;
 
+        } else if (parent.isTabPageHeader){
+
+            // Appending to parent sicTabPageHeader
+            _p.header = parent;
+            contentParent = parent.parent;
+
         } else {
 
             // Appending to parent sicElement
@@ -117,6 +123,9 @@ sic.widget.sicTabPage = function(args)
             // Appending to an element (jquery)
             _p._createHeader(parent);
         }
+
+        //sic.dump(contentParent);
+        //alert(contentParent+" "+parent.isTabPage);
 
         var pageWithThatName = _p.header.findPageByName(_p.name);
 
@@ -132,6 +141,16 @@ sic.widget.sicTabPage = function(args)
         }
     };
 
+    this.createChildPage = function(args) {
+        if (!args) args = {};
+        args.parent = _p.childTabHeader ? _p.childTabHeader : _p.content.selector;
+        var childTabPage = new sic.widget.sicTabPage(args);
+        childTabPage.parentTabPage = _p;
+        childTabPage.header.parentTabPage = _p;
+        _p.childTabHeader = childTabPage.header;
+        return childTabPage;
+    };
+
     if (this.parent)
         this.appendTo(this.parent);
 
@@ -141,6 +160,8 @@ sic.widget.sicTabPageHeader = function(args){
     var _p = this;
     this._cons = sic.widget.sicElement;
     this._cons(args);
+
+    this.isTabPageHeader = true;
 
     this.pages = {};
     this.addPageReference = function(uniqId, tabPage){

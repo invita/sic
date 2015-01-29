@@ -12,6 +12,19 @@ sic.loadModule = function(args) {
         if (dataObj) {
             var args = dataObj.args;
 
+            // Prepare some useful functions
+            args.helpers = {};
+
+            // Create TabPage Function
+            var parentTabPage = sic.getArg(args, "parentTabPage", null);
+            args.helpers.createTabPage = function(tabArgs){
+                if (!tabArgs) tabArgs = {};
+                if (!tabArgs.name) tabArgs.name = args.moduleName;
+                if (!tabArgs.parent) tabArgs.parent = parentTabPage ? parentTabPage : sic.data.mainTab;
+                var tabPage = new sic.widget.sicTabPage(tabArgs);
+                return tabPage;
+            };
+
             if (dataObj["F"] && typeof(dataObj["F"]) == "string") {
                 eval(dataObj["F"]);
                 if (F && typeof(F) == "function") F(args);
@@ -77,5 +90,7 @@ $(document).ready(function(){
     var primaryPage = $('#primaryPage');
     if (primaryPage)
         sic.data.mainTab.content.selector.append(primaryPage);
+
+    sic.loadModule({moduleName:"Test/WidgetTest"});
 });
 
