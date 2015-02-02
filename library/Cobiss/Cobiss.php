@@ -109,7 +109,7 @@ EOT;
 
 		// Search
 		$uri = 'http://cobiss' . $this->server_digit . '.izum.si/scripts/cobiss?id=' . $this->session_id;
-		$data = [
+		$data = array(
 			'ukaz' => 'SEAR',
 			'ID' => $this->session_id,
 			'keysbm' => '',
@@ -117,7 +117,7 @@ EOT;
 			'lan' => '',
 			'ss1' => $query,
 			'find' => 'isci'
-		];
+        );
 		$data = http_build_query($data);
 		$request = \Httpful\Request::post($uri, $data)->addHeader('User-agent:', $this->userAgent)->addHeader('Set-Cookie', $this->cookie);
 		$response = $request->send();
