@@ -336,7 +336,8 @@ EOT;
 	{
 		$i = strpos($isbn, ' :');
 		if ($i !== false) $isbn = substr($isbn, 0, $i);
-		return explode(" ", $isbn)[1];
+        $e = explode(" ", $isbn);
+		return $e[1];
 	}
 
 	/*
