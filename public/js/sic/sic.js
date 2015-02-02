@@ -91,6 +91,6 @@ $(document).ready(function(){
     if (primaryPage)
         sic.data.mainTab.content.selector.append(primaryPage);
 
-    sic.loadModule({moduleName:"Test/WidgetTest"});
+   // sic.loadModule({moduleName:"Test/WidgetTest"});
 });
 

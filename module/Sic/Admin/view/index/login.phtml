@@ -1,15 +1,17 @@
+<div id="container"></div>
+<script type="text/javascript">
+    $(function(){
+        var panel = new sic.widget.sicPanel({parent:$("#container")});
+        var form = new sic.widget.sicForm({parent:panel.firstGroup.content.selector});
+        form.addInput({name:"username", type:"text", label:"Username"});
+        form.addInput({name:"password", type:"password", label:""});
+        form.addInput({name:"login", type:"button"})
+            .setGradient("blue").selector.click(function(e){
+                $.post("/login", form.getValue(), function(data) {
+                    var d = JSON.parse(data);
+                    if(d.status) window.location = "/";
+                });
+            });
 
-
-
-<form action="/login" method="post">
-    U: <input type="text" name="username" />
-    P: <input type="password" name="password" />
-
-
-    <!--
-    <div class="g-recaptcha" data-sitekey="6LcTNQETAAAAAIjJYLhhIYDqf3VjUUApLjRgSGeA"></div>
-    -->
-
-
-    <input type="submit" value="submit" />
-</form>
+    });
+</script>

@@ -34,12 +34,18 @@
         <tr>
             <td ><a href="/" title="Slovenian Index of citation - Admin"><img src="/img/logo2.png" width="40"/><div class="mainTitle">Slovenian Index of citation v2</div></a></td>
             <td align="right" class="pr_20" style="vertical-align:bottom;">
-                <a href="/login">Login</a>
+                <?php if($this->hasIdentity){ ?>
+                    <a href="/logout">Logout</a>
+                <?php } ?>
+                <?php if(!$this->hasIdentity){ ?>
+                    <a href="/login">Login</a>
+                <?php } ?>
             </td>
         </tr>
     </table>
 </div>
 
+<?php if($this->hasIdentity){ ?>
 <div id="navigation" class="">
     <div>
         <ul>
@@ -61,6 +67,7 @@
         </ul>
     </div>
 </div>
+<?php } ?>
 
 <div id="content" class="">
     <div id="pageHolder"></div>

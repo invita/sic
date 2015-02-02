@@ -59,14 +59,8 @@ class IndexController extends AbstractActionController
             $auth = new AuthenticationService();
             $result = $auth->authenticate($authAdapter);
 
-            if(!$result->isValid())
-            {
-
-
-            } else
-            {
-                return $this->redirect()->toUrl('/');
-            }
+            echo json_encode(array("status"=>$result->isValid()));
+            die();
         }
 
         return $view;
