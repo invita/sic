@@ -346,7 +346,7 @@ EOT;
 	public static function pEMCollection($subject)
 	{
 		$p = '|Zbirka (.*?) /|';
-		$matches = [];
+		$matches = array();
 		preg_match_all($p, $subject, $matches);
 		if (count($matches[0]) > 0) return $matches[1][0];
 		return $subject;
