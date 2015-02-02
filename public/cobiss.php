@@ -1,4 +1,6 @@
 <?php
+ini_set("display_errors", 1);
+
 include_once(realpath(__DIR__."/../library/Cobiss/Cobiss.php"));
 
 $lib = $_GET["lib"];
