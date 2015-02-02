@@ -24,7 +24,7 @@ class Cobiss
 	
 	private $prepared = false;
 
-	public $userAgents = [
+	public $userAgents = array(
 		'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:26.0) Gecko/20100101 Firefox/26.0',
 		'Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1667.0 Safari/537.36',
 		'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.107 Safari/537.36',
@@ -33,15 +33,15 @@ class Cobiss
 		'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)', // WATCH OUT WE GOT A BADASS OVER HERE!
 		'Mozilla/5.0 (Windows; U; MSIE 9.0; Windows NT 9.0; en-US)',
 		'Mozilla/5.0 (iPad; U; CPU OS 3_2_1 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Mobile/7B405'
-	];
-	public $libraryIds = [ // Keys mustn't be numeric (is_numeric) !
+    );
+	public $libraryIds = array( // Keys mustn't be numeric (is_numeric) !
 		'Ptuj' => '50360',
 		'Ormoz' => '50395',
 		'Kranj' => '50250',
 		'FMF' => '50028',
 		'CTK' => '50002',
 		'NUK' => '',
-	];
+    );
 
 	public $debug = false;
 
@@ -65,7 +65,7 @@ class Cobiss
 		$p = <<<EOT
 	|a href="http://cobiss(\d*?)\.izum\.si/scripts/cobiss\?ukaz=SFRM&amp;id=(\d*?)" title="Iskanje"|
 EOT;
-		$matches = [];
+		$matches = array();
 		preg_match_all($p, $response->body, $matches);
 		//var_dump($matches);
 		if (false) die('SESSION_ERROR');
@@ -73,7 +73,7 @@ EOT;
 		$this->session_id = $matches[2][0];
 		//var_dump($this->session_id, $this->server_digit);
 
-		$matches = [];
+		$matches = array();
 		preg_match_all("/Set-Cookie: (.*)/", $response->raw_headers, $matches);
 		//if ($matches != []) var_dump($matches);
 		$this->cookie = $matches[1][0];
@@ -128,17 +128,17 @@ EOT;
 		$p = <<<EOT
 			|<div class="left">Število najdenih zapisov:&nbsp;<b>(\d*)</b></div>|
 EOT;
-		$matches = [];
+		$matches = array();
 		preg_match_all($p, $response->raw_body, $matches);
 		//var_dump($matches);
 
 		if (count($matches[0]) == 0) {
 			if (preg_match("|zapis \[1/1\]|", $response->raw_body)) { // Exact match!
-				return [ 'nrResults' => -1, 'results' => $response->raw_body ]; // -1 means an exact match and we need to treat it differently
+				return array('nrResults' => -1, 'results' => $response->raw_body); // -1 means an exact match and we need to treat it differently
 			} else if (preg_match("|Število najdenih zapisov: 0|", $response->raw_body)) { // Pointless (because of the else statement)
-				return [ 'nrResults' => 0, 'results' => [] ];
+				return array('nrResults' => 0, 'results' => array());
 			} else {
-				return [ 'nrResults' => 0, 'results' => [] ];
+				return array('nrResults' => 0, 'results' => array());
 			}
 		}
 
@@ -147,15 +147,15 @@ EOT;
 
 		// Parse rows
 		$p = '|<tr>.*?</tr>|s';
-		$matches = [];
+		$matches = array();
 		preg_match_all($p, $response->raw_body, $matches);
 		//var_dump($matches);
-		if (count($matches[0]) <= 2) return [ 'nrResults' => 0, 'results' => [] ];
+		if (count($matches[0]) <= 2) return array('nrResults' => 0, 'results' => array());
 
 		$results = array_slice($matches[0], 2);
 		if ($this->debug) var_dump($results);
 
-		return [ 'nrResults' => $nrResults, 'results' => $results ];
+		return array('nrResults' => $nrResults, 'results' => $results);
 	}
 
 	/*
@@ -165,16 +165,16 @@ EOT;
 		$results = $response['results'];
 		if ($response['nrResults'] > 0) {
 			// A list of matches
-			$data = [];
+			$data = array();
 			foreach ($results as $r) $data[] = Cobiss::parseResult($r);
 			return $data;
 		} else if ($response['nrResults'] == -1) {
 			// Exact match
 			$result = Cobiss::parseExactMatch($results);
-			return [ $result ];
+			return array($result);
 		} else {
 			// No matches
-			return [];
+			return array();
 		}
 	}
 
@@ -187,10 +187,10 @@ EOT;
 	public static function parseResult($result)
 	{
 		$p = "|<td.*?>(.*?)</td>|s";
-		$matches = [];
+		$matches = array();
 		preg_match_all($p, $result, $matches);
 
-		if (count($matches[0]) != 10) return [];
+		if (count($matches[0]) != 10) return array();
 
 		$author = $matches[1][3];
 		$titleString = $matches[1][4];
@@ -207,11 +207,11 @@ EOT;
 
 		$genre = self::parseGenre($genreString);
 		
-		return [ 
+		return array(
 			'author' => $author, 'title' => $title, 
 			'genre' => $genre, 'lang' => $lang, 'year' => $year, 
 			'isbn' => $isbn, 'titleUrl' => $titleURL
-		];
+        );
 	}
 
 	/*
@@ -220,11 +220,11 @@ EOT;
 	public static function parseTitle($subject)
 	{
 		$titleP = '/<a href="(.*?)">(.*?)<\/a>/';
-		$titleMatches = [];
+		$titleMatches = array();
 		preg_match_all($titleP, $subject, $titleMatches);
 		$title = $titleMatches[2][0];
 		$titleURL = $titleMatches[1][0];
-		return [ 'title' => $title, 'titleURL' => $titleURL ];
+		return array('title' => $title, 'titleURL' => $titleURL);
 	}
 
 	/*
@@ -233,7 +233,7 @@ EOT;
 	public static function parseISBN($subject)
 	{
 		$isbnP = '|rft\.isbn=([0-9x\-]*)&|i';
-		$isbnMatches = [];
+		$isbnMatches = array();
 		preg_match_all($isbnP, $subject, $isbnMatches);
 		if (count($isbnMatches[1]) > 0) {
 			return $isbnMatches[1][0];
@@ -247,7 +247,7 @@ EOT;
 	public static function parseGenre($subject)
 	{
 		$genreP = '|<.*?> *(.*)|';
-		$genreMatches = [];
+		$genreMatches = array();
 		preg_match_all($genreP, $subject, $genreMatches);
 		return $genreMatches[1][0];
 	}
@@ -261,7 +261,7 @@ EOT;
 	public static function parseExactMatch($result)
 	{
 		$p = "|<th.*?>(.*?)</th><td.*?>(.*?)</td>|s";
-		$matches = [];
+		$matches = array();
 		preg_match_all($p, $result, $matches);
 
 		//var_dump($matches);
@@ -283,12 +283,12 @@ EOT;
 
 		$additional = self::pEMAdditional($additional);
 
-		return array_merge([ 
+		return array_merge(array(
 			'author' => $author, 'title' => $title, 
 			'genre' => $genre, 'lang' => $lang, 'year' => $year, 
 			'collection' => $collection, 'collectionOrig' => $collectionOrig, 
 			'isbn' => $isbn, 
-		], $additional);
+        ), $additional);
 	}
 
 	/*
@@ -299,7 +299,7 @@ EOT;
 	public static function pEMAuthor($subject)
 	{
 		$p = '|<a .*?>(.*?)</a>|';
-		$matches = [];
+		$matches = array();
 		preg_match_all($p, $subject, $matches);
 		return $matches[1][0];
 	}
@@ -312,7 +312,7 @@ EOT;
 		/*$i = strpos($title, ' :');
 		return substr($title, 0, $i);*/
 		$p = '| *(.*?) [/;:]|';
-		$matches = [];
+		$matches = array();
 		preg_match_all($p, $title, $matches);
 		return $matches[1][0];
 	}
@@ -323,10 +323,10 @@ EOT;
 	public static function pEMAdditional($subject)
 	{
 		$p = '|(.*?) : (.*?), (\d*)|';
-		$matches = [];
+		$matches = array();
 		preg_match_all($p, $subject, $matches);
 		//var_dump($matches);
-		return [ 'publisher' => $matches[2][0], 'publishedYear' => $matches[3][0], 'publishedCity' => $matches[1][0] ];
+		return array('publisher' => $matches[2][0], 'publishedYear' => $matches[3][0], 'publishedCity' => $matches[1][0]);
 	}
 
 	/*
