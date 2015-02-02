@@ -20,12 +20,30 @@ sic.widget.sicDataTable = function(args)
     this.cssClass_table = sic.getArg(args, "cssClass_table", "sicDataTable_table");
 
     // Events
-    this.onRowClick = function(f) { _p.subscribe("rowClick", f); };
-    this.onRowDoubleClick = function(f) { _p.subscribe("rowDoubleClick", f); };
-    this.onRowRightClick = function(f) { _p.subscribe("rowRightClick", f); };
-    this.onFieldClick = function(f) { _p.subscribe("fieldClick", f); };
-    this.onFieldDoubleClick = function(f) { _p.subscribe("fieldDoubleClick", f); };
-    this.onFieldRightClick = function(f) { _p.subscribe("fieldRightClick", f); };
+
+    // Data Fields Events
+    this.onRowClick = function(f) { _p.subscribe("dataRowClick", f); };
+    this.onRowDoubleClick = function(f) { _p.subscribe("dataRowDoubleClick", f); };
+    this.onRowRightClick = function(f) { _p.subscribe("dataRowRightClick", f); };
+    this.onFieldClick = function(f) { _p.subscribe("dataFieldClick", f); };
+    this.onFieldDoubleClick = function(f) { _p.subscribe("dataFieldDoubleClick", f); };
+    this.onFieldRightClick = function(f) { _p.subscribe("dataFieldRightClick", f); };
+
+    // Header Fields Events
+    this.onHeaderRowClick = function(f) { _p.subscribe("headerRowClick", f); };
+    this.onHeaderRowDoubleClick = function(f) { _p.subscribe("headerRowDoubleClick", f); };
+    this.onHeaderRowRightClick = function(f) { _p.subscribe("headerRowRightClick", f); };
+    this.onHeaderFieldClick = function(f) { _p.subscribe("headerFieldClick", f); };
+    this.onHeaderFieldDoubleClick = function(f) { _p.subscribe("headerFieldDoubleClick", f); };
+    this.onHeaderFieldRightClick = function(f) { _p.subscribe("headerFieldRightClick", f); };
+
+    // All Fields Events
+    this.onAnyRowClick = function(f) { _p.subscribe("rowClick", f); };
+    this.onAnyRowDoubleClick = function(f) { _p.subscribe("rowDoubleClick", f); };
+    this.onAnyRowRightClick = function(f) { _p.subscribe("rowRightClick", f); };
+    this.onAnyFieldClick = function(f) { _p.subscribe("fieldClick", f); };
+    this.onAnyFieldDoubleClick = function(f) { _p.subscribe("fieldDoubleClick", f); };
+    this.onAnyFieldRightClick = function(f) { _p.subscribe("fieldRightClick", f); };
 
 
     // Implementation
@@ -91,6 +109,11 @@ sic.widget.sicDataTable = function(args)
             _p.rows.push(row);
         }
     };
+
+    this.getEventArgs = function(){
+        return { dataTable: _p };
+    };
+
 
     this.getValueType = function(val) {
         return "str";
@@ -164,7 +187,8 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
     if (!this.headerRow) this.displayNone();
 
     this.addField = function(colName, colValue) {
-        _p.fields[colName] = new sic.widget.sicDataTableField(_p.selector, {fieldKey:colName, fieldValue:colValue});
+        _p.fields[colName] = new sic.widget.sicDataTableField(_p.selector, {dataTable:_p.dataTable, row:_p,
+            fieldKey:colName, fieldValue:colValue});
     };
 
     this.show = function(){
@@ -173,30 +197,40 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
 
     this.setValue = function(rowData){
 
-        //if (typeof(_p.rowDataParser) == "function") rowData = _p.rowDataParser(rowData);
-        //_p.oldValue = _p.refValue;
-        //_p.refValue = rowData;
-
         _p.show();
 
         for (var fieldName in rowData) {
             if (_p.fields[fieldName]) _p.fields[fieldName].setValue(rowData[fieldName]);
         }
-
-        //for (var fieldName in _p.fields) {
-        //    var sourceFieldName = _p.fields[fieldName].source;
-        //    var fieldValue = (rowData && rowData[sourceFieldName]) ? rowData[sourceFieldName] : "";
-        //    _p.fields[fieldName].setValue(fieldValue);
-        //}
-
-        //if (typeof(_p.dataTable.rowFormatter) == "function"){
-        //    _p.dataTable.rowFormatter(_p.getEventArgs());
-        //}
-
     };
 
     this.getValue = function(){
     };
+
+    this.getEventArgs = function(){
+        return sic.mergeObjects(_p.dataTable.getEventArgs(), { row: _p });
+    };
+
+    // Bind Events
+    this.selector.click(function(e){
+        if (_p.headerRow) _p.dataTable.trigger("headerRowClick", _p.getEventArgs());
+        if (!_p.headerRow) _p.dataTable.trigger("dataRowClick", _p.getEventArgs());
+        _p.dataTable.trigger("rowClick", _p.getEventArgs());
+        e.preventDefault();
+    });
+    this.selector.dblclick(function(e){
+        if (_p.headerRow) _p.dataTable.trigger("headerRowDoubleClick", _p.getEventArgs());
+        if (!_p.headerRow) _p.dataTable.trigger("dataRowDoubleClick", _p.getEventArgs());
+        _p.dataTable.trigger("rowDoubleClick", _p.getEventArgs());
+        window.getSelection().removeAllRanges();
+        e.preventDefault();
+    });
+    this.selector.bind("contextmenu", function(e){
+        if (_p.headerRow) _p.dataTable.trigger("headerRowRightClick", _p.getEventArgs());
+        if (!_p.headerRow) _p.dataTable.trigger("dataRowRightClick", _p.getEventArgs());
+        _p.dataTable.trigger("rowRightClick", _p.getEventArgs());
+        if (_p.dataTable.preventContextMenu) { e.preventDefault(); return false; }
+    });
 };
 
 sic.widget.sicDataTableField = function(tableRowWnd, args) {
@@ -209,7 +243,8 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
     this.fieldKey = sic.getArg(args, "fieldKey", null);
     this.fieldValue = sic.getArg(args, "fieldValue", null);
     this.row = sic.getArg(args, "row", null);
-    this.dataTable = sic.getArg(args, "dataTable", null);
+    this.dataTable = sic.getArg(args, "dataTable", this.row ? this.row.dataTable : null);
+    this.headerField = sic.getArg(args, "headerField", this.row ? this.row.headerRow : false);
     this.clearValue = sic.getArg(args, "clearValue", "");
 
     this.valueDiv = new sic.widget.sicElement({parent:this.selector});
@@ -220,8 +255,34 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
     };
 
     this.getValue = function(){
+        return _p.fieldValue;
     };
 
+    this.getEventArgs = function(){
+        return sic.mergeObjects(_p.row.getEventArgs(), { field: _p });
+    };
+
+    // Bind events
+    this.selector.click(function(e){
+        if (_p.headerField) _p.dataTable.trigger("headerFieldClick", _p.getEventArgs());
+        if (!_p.headerField) _p.dataTable.trigger("dataFieldClick", _p.getEventArgs());
+        _p.dataTable.trigger("fieldClick", _p.getEventArgs());
+        e.preventDefault();
+    });
+    this.selector.dblclick(function(e){
+        if (_p.headerField) _p.dataTable.trigger("headerFieldDoubleClick", _p.getEventArgs());
+        if (!_p.headerField) _p.dataTable.trigger("dataFieldDoubleClick", _p.getEventArgs());
+        _p.dataTable.trigger("fieldDoubleClick", _p.getEventArgs());
+        e.preventDefault();
+    });
+    this.selector.bind("contextmenu", function(e){
+        if (_p.headerField) _p.dataTable.trigger("headerFieldRightClick", _p.getEventArgs());
+        if (!_p.headerField) _p.dataTable.trigger("dataFieldRightClick", _p.getEventArgs());
+        _p.dataTable.trigger("fieldRightClick", _p.getEventArgs());
+        if (_p.dataTable.preventContextMenu) { e.preventDefault(); return false; }
+    });
+
+    // Set initial value
     this.setValue(this.fieldValue);
 
 };

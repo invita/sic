@@ -1,11 +1,7 @@
 var F = function(args){
-    var tabPage = new sic.widget.sicTabPage({
-        name: "System",
-        parent: sic.data.mainTab,
-        unique: true
-    });
 
+    var tabPage = args.helpers.createTabPage({name:"System"});
+    var childPage = tabPage.createChildPage({name:"Dashboard", canClose:false});
+    var childPage2 = childPage.createChildPage({name:"Dashboard2"});
 
-    //tabPage.selector;
-    //tab1.content.selector.html("foo"+Math.random());
 };

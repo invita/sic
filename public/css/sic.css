@@ -27,4 +27,15 @@ span.sicTabButton_closeButton > img { position:absolute; left:3px; top:0px; widt
     border-radius:10px; opacity:0.75; }
 span.sicTabButton_closeButton > img:hover { opacity:1.0; }
 
+/* sicPanel */
+div.sicPanel { display:inline-table; }
+div.sicPanelGroup { display:inline-table; margin:5px 5px 5px 10px; }
+div.sicPanelGroup > div.header { font-weight:bold; border:silver solid 1px; padding:5px; margin-bottom:2px; }
+div.sicPanelGroup > div.content {}
 
+/* sicInput */
+input.sicInput, textarea.sicInput { margin:0px 0px 2px 0px; color:#444; }
+input.sicInput.labeled, textarea.sicInput.labeled { color:silver; font-style:italic; }
+
+input.sicInput[type=button] { color:white; }
+input.sicInput[type=button].gradGold { color:black; }

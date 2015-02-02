@@ -2,27 +2,23 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="81a7b28c-87e0-4530-8bc3-ad9622d3013b" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/img/logo2.png" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/module/Sic/Admin/src/Models/Authentication/ReCaptcha.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/module/Sic/Admin/src/Models/Authentication/ReCaptchaResponse.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/js/sic/object/sicEventBase.js" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/.name" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/sic.iml" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Test/Cobiss2.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Test/Cobiss2.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Test/WidgetTest.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Test/WidgetTest.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/js/sic/widget/sicForm.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/js/sic/widget/sicInput.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/js/sic/widget/sicPanel.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/System/Dashboard.js" afterPath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/System/Dashboard.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/module/Sic/Admin/src/Controller/IndexController.php" afterPath="$PROJECT_DIR$/module/Sic/Admin/src/Controller/IndexController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Users/ListUsers.js" afterPath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Users/ListUsers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Users/ListUsers.php" afterPath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Users/ListUsers.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/module/Sic/Admin/view/layout/layout.phtml" afterPath="$PROJECT_DIR$/module/Sic/Admin/view/layout/layout.phtml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/module/Sic/Admin/view/index/login.phtml" afterPath="$PROJECT_DIR$/module/Sic/Admin/view/index/login.phtml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/module/Sic/Admin/config/module.config.php" afterPath="$PROJECT_DIR$/module/Sic/Admin/config/module.config.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Test/searchModule.js" afterPath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Test/searchModule.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/css/sic.css" afterPath="$PROJECT_DIR$/public/css/sic.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/sic/sic.js" afterPath="$PROJECT_DIR$/public/js/sic/sic.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/sic/widget/sicDataTable.js" afterPath="$PROJECT_DIR$/public/js/sic/widget/sicDataTable.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/sic/object/sicEventBase.js" afterPath="$PROJECT_DIR$/public/js/sic/object/sicEventBase.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/sic/widget/sicTabPage.js" afterPath="$PROJECT_DIR$/public/js/sic/widget/sicTabPage.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Test/systemModule.js" afterPath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Test/systemModule.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Test/testModule.js" afterPath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Test/testModule.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path=".idea/" />
@@ -48,11 +44,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
+      <file leaf-file-name="Cobiss.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/Test/Cobiss.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-17.692308" vertical-offset="0" max-vertical-offset="780">
+              <caret line="23" column="5" selection-start-line="23" selection-start-column="5" selection-end-line="23" selection-end-column="5" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="Cobiss.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/Test/Cobiss.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="711" max-vertical-offset="1560">
-              <caret line="6" column="48" selection-start-line="6" selection-start-column="48" selection-end-line="6" selection-end-column="48" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1560">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="19" />
               <folding />
             </state>
           </provider>
@@ -61,82 +67,8 @@
       <file leaf-file-name="Dashboard.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/System/Dashboard.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="320">
-              <caret line="10" column="2" selection-start-line="10" selection-start-column="2" selection-end-line="10" selection-end-column="2" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="layout.phtml" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/module/Sic/Admin/view/layout/layout.phtml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.1701094" vertical-offset="157" max-vertical-offset="1420">
-              <caret line="56" column="25" selection-start-line="56" selection-start-column="25" selection-end-line="56" selection-end-column="25" />
-              <folding>
-                <element signature="n#style#0;n#td#1;n#tr#0;n#table#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="sicElement.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/js/sic/widget/sicElement.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="3520" max-vertical-offset="4420">
-              <caret line="71" column="30" selection-start-line="71" selection-start-column="30" selection-end-line="71" selection-end-column="30" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="javascript.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/js/javascript.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1000" max-vertical-offset="1940">
-              <caret line="0" column="7" selection-start-line="0" selection-start-column="7" selection-end-line="0" selection-end-column="7" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="sicEventBase.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/js/sic/object/sicEventBase.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="471" max-vertical-offset="1320">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="util.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/js/sic/util.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="831" max-vertical-offset="1680">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="IndexController.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Controller/IndexController.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-10.0" vertical-offset="780" max-vertical-offset="3000">
-              <caret line="52" column="14" selection-start-line="52" selection-start-column="14" selection-end-line="52" selection-end-column="14" />
-              <folding>
-                <element signature="e#39#88#0#PHP" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.phtml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/module/Sic/Admin/view/index/index.phtml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="160">
-              <caret line="0" column="10" selection-start-line="0" selection-start-column="10" selection-end-line="0" selection-end-column="10" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="240">
+              <caret line="3" column="80" selection-start-line="3" selection-start-column="4" selection-end-line="3" selection-end-column="80" />
               <folding />
             </state>
           </provider>
@@ -145,8 +77,68 @@
       <file leaf-file-name="login.phtml" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/module/Sic/Admin/view/index/login.phtml">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-7.6923075" vertical-offset="0" max-vertical-offset="400">
-              <caret line="10" column="7" selection-start-line="10" selection-start-column="7" selection-end-line="10" selection-end-column="7" />
+            <state vertical-scroll-proportion="-8.461538" vertical-offset="0" max-vertical-offset="440">
+              <caret line="11" column="53" selection-start-line="11" selection-start-column="53" selection-end-line="11" selection-end-column="53" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ListUsers.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/Users/ListUsers.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="600">
+              <caret line="19" column="10" selection-start-line="19" selection-start-column="10" selection-end-line="19" selection-end-column="10" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Cobiss2.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/Test/Cobiss2.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="240">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Cobiss2.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/Test/Cobiss2.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.14134276" vertical-offset="0" max-vertical-offset="849">
+              <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sicDataTable.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/js/sic/widget/sicDataTable.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="2180" max-vertical-offset="5860">
+              <caret line="25" column="25" selection-start-line="25" selection-start-column="9" selection-end-line="25" selection-end-column="25" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ListUsers.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/Users/ListUsers.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="600">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="WidgetTest.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/Test/WidgetTest.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="680">
+              <caret line="2" column="60" selection-start-line="2" selection-start-column="4" selection-end-line="2" selection-end-column="60" />
               <folding />
             </state>
           </provider>
@@ -165,8 +157,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/js/javascript.js" />
-        <option value="$PROJECT_DIR$/module/Zic2/Auth/src/Controller/IndexController.php" />
         <option value="$PROJECT_DIR$/module/Zic2/Auth/Module.php" />
         <option value="$PROJECT_DIR$/public/.htaccess" />
         <option value="$PROJECT_DIR$/module/Zic2/Home/Module.php" />
@@ -195,7 +185,6 @@
         <option value="$PROJECT_DIR$/module/Zic2/Home/config/module.config.php" />
         <option value="$PROJECT_DIR$/module/Sic/Admin/view/index/index.phtml" />
         <option value="$PROJECT_DIR$/data/logs/log.txt" />
-        <option value="$PROJECT_DIR$/public/js/sic/sic.js" />
         <option value="$PROJECT_DIR$/module/Sic/Admin/src/Modules/searchModule.php" />
         <option value="$PROJECT_DIR$/module/Sic/Admin/src/Modules/systemModule.php" />
         <option value="$PROJECT_DIR$/module/Sic/Admin/src/Modules/testModule.php" />
@@ -213,9 +202,12 @@
         <option value="$PROJECT_DIR$/module/Sic/Admin/src/Models/Authentication/ReCapcha.php" />
         <option value="$PROJECT_DIR$/module/Sic/Admin/src/Models/Authentication/Adapter.php" />
         <option value="$PROJECT_DIR$/module/Sic/Admin/src/Models/Authentication/ReCaptcha.php" />
-        <option value="$PROJECT_DIR$/module/Sic/Admin/view/index/login.phtml" />
-        <option value="$PROJECT_DIR$/module/Sic/Admin/src/Controller/IndexController.php" />
         <option value="$PROJECT_DIR$/module/Sic/Admin/view/layout/layout.phtml" />
+        <option value="$PROJECT_DIR$/public/js/sic/sic.js" />
+        <option value="$PROJECT_DIR$/module/Sic/Admin/src/Controller/IndexController.php" />
+        <option value="$PROJECT_DIR$/module/Sic/Admin/view/index/login.phtml" />
+        <option value="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Users/ListUsers.js" />
+        <option value="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Test/Cobiss2.js" />
       </list>
     </option>
   </component>
@@ -775,7 +767,19 @@
       <option name="project" value="LOCAL" />
       <updated>1422552782208</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="commit&#10;">
+      <created>1422864608687</created>
+      <option name="number" value="00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1422864608687</updated>
+    </task>
+    <task id="LOCAL-00012" summary="commit&#10;">
+      <created>1422864640773</created>
+      <option name="number" value="00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1422864640773</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -834,55 +838,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/library/ZF2/ZendFramework-2.3.3/library/Zend/View/Resolver/TemplatePathStack.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4456887" vertical-offset="4668" max-vertical-offset="5746">
-          <caret line="304" column="0" selection-start-line="304" selection-start-column="0" selection-end-line="304" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/library/ZF2/ZendFramework-2.3.3/library/Zend/Mvc/Controller/AbstractController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-12.0" vertical-offset="4125" max-vertical-offset="5491">
-          <caret line="279" column="69" selection-start-line="279" selection-start-column="61" selection-end-line="279" selection-end-column="69" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/library/ZF2/ZendFramework-2.3.3/library/Zend/Mvc/Controller/AbstractActionController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.19036955" vertical-offset="0" max-vertical-offset="1921">
-          <caret line="20" column="53" selection-start-line="20" selection-start-column="53" selection-end-line="20" selection-end-column="53" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/library/ZF2/ZendFramework-2.3.3/library/Zend/Mvc/Router/Http/Literal.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.30360532" vertical-offset="320" max-vertical-offset="2580">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/library/ZF2/ZendFramework-2.3.3/library/Zend/View/Renderer/PhpRenderer.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.9759846" vertical-offset="8820" max-vertical-offset="11280">
-          <caret line="198" column="42" selection-start-line="198" selection-start-column="42" selection-end-line="198" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/lib/zurb/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2960">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/lib/zurb/css/normalize.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="8040">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/lib/zurb/css/foundation.css">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="37040" max-vertical-offset="76480">
@@ -988,24 +943,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/sic/widget/sicDataTable.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="849">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/library/Cobiss/Cobiss.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="340" max-vertical-offset="7280">
           <caret line="42" column="20" selection-start-line="37" selection-start-column="8" selection-end-line="42" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/Test/Cobiss.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="460" max-vertical-offset="780">
-          <caret line="23" column="5" selection-start-line="23" selection-start-column="5" selection-end-line="23" selection-end-column="5" />
         </state>
       </provider>
     </entry>
@@ -1119,22 +1060,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/Users/ListUsers.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="340">
-          <caret line="4" column="7" selection-start-line="1" selection-start-column="4" selection-end-line="4" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/sic/sic.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="380" max-vertical-offset="1740">
-          <caret line="19" column="7" selection-start-line="19" selection-start-column="7" selection-end-line="19" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/js/sic/widget/sicElement.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="3520" max-vertical-offset="4420">
@@ -1143,18 +1068,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/System/Dashboard.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="320">
-          <caret line="10" column="2" selection-start-line="10" selection-start-column="2" selection-end-line="10" selection-end-column="2" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/js/sic/object/sicEventBase.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="471" max-vertical-offset="1320">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="571" max-vertical-offset="1400">
+          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1175,24 +1092,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Controller/IndexController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-10.0" vertical-offset="780" max-vertical-offset="3000">
-          <caret line="52" column="14" selection-start-line="52" selection-start-column="14" selection-end-line="52" selection-end-column="14" />
-          <folding>
-            <element signature="e#39#88#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/module/Sic/Admin/view/index/login.phtml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.6923075" vertical-offset="0" max-vertical-offset="400">
-          <caret line="10" column="7" selection-start-line="10" selection-start-column="7" selection-end-line="10" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/js/javascript.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1000" max-vertical-offset="1940">
@@ -1201,21 +1100,135 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/Test/Cobiss.js">
+    <entry file="file://$PROJECT_DIR$/public/js/sic/widget/sicInput.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="711" max-vertical-offset="1560">
-          <caret line="6" column="48" selection-start-line="6" selection-start-column="48" selection-end-line="6" selection-end-column="48" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1740">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/sic/widget/sicPanel.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="120" max-vertical-offset="1120">
+          <caret line="0" column="11" selection-start-line="0" selection-start-column="11" selection-end-line="0" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/sic/sic.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1191" max-vertical-offset="2040">
+          <caret line="81" column="0" selection-start-line="81" selection-start-column="0" selection-end-line="81" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/sic/widget/sicForm.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="849">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Controller/IndexController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-19.23077" vertical-offset="740" max-vertical-offset="2880">
+          <caret line="62" column="18" selection-start-line="62" selection-start-column="18" selection-end-line="62" selection-end-column="18" />
+          <folding>
+            <element signature="e#39#88#0#PHP" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/module/Sic/Admin/view/layout/layout.phtml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.1701094" vertical-offset="157" max-vertical-offset="1420">
-          <caret line="56" column="25" selection-start-line="56" selection-start-column="25" selection-end-line="56" selection-end-column="25" />
+        <state vertical-scroll-proportion="-52.423077" vertical-offset="17" max-vertical-offset="1720">
+          <caret line="69" column="10" selection-start-line="69" selection-start-column="10" selection-end-line="69" selection-end-column="10" />
           <folding>
             <element signature="n#style#0;n#td#1;n#tr#0;n#table#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/System/Dashboard.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="240">
+          <caret line="3" column="80" selection-start-line="3" selection-start-column="4" selection-end-line="3" selection-end-column="80" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/Users/ListUsers.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="849">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/Sic/Admin/view/index/login.phtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-8.461538" vertical-offset="0" max-vertical-offset="440">
+          <caret line="11" column="53" selection-start-line="11" selection-start-column="53" selection-end-line="11" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/sic/widget/sicDataTable.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2180" max-vertical-offset="5860">
+          <caret line="25" column="25" selection-start-line="25" selection-start-column="9" selection-end-line="25" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/Users/ListUsers.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="600">
+          <caret line="19" column="10" selection-start-line="19" selection-start-column="10" selection-end-line="19" selection-end-column="10" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/Test/Cobiss2.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="849">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/Test/Cobiss.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-17.692308" vertical-offset="0" max-vertical-offset="780">
+          <caret line="23" column="5" selection-start-line="23" selection-start-column="5" selection-end-line="23" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/Test/Cobiss.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1560">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/Test/WidgetTest.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="680">
+          <caret line="2" column="60" selection-start-line="2" selection-start-column="4" selection-end-line="2" selection-end-column="60" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/Test/Cobiss2.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.14134276" vertical-offset="0" max-vertical-offset="849">
+          <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
