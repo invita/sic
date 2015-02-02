@@ -3,17 +3,30 @@ namespace Sic\Admin\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\Mvc\MvcEvent;
 
 use Zend\Authentication\AuthenticationService;
 
 use Sic\Admin\Models\Authentication\Adapter;
+use Sic\Admin\Models\Authentication\ReCaptcha;
 
 class IndexController extends AbstractActionController
 {
-    public function indexAction()
+    private $hasIdentity;
+
+    public function onDispatch( MvcEvent $e )
     {
         $auth = new AuthenticationService();
-        if( $auth->hasIdentity() )
+
+        $this->hasIdentity = $auth->hasIdentity();
+        $this->layout()->setVariable("hasIdentity", $this->hasIdentity);
+
+        return parent::onDispatch( $e );
+    }
+
+    public function indexAction()
+    {
+        if( $this->hasIdentity )
         {
             $view = new ViewModel();
             $view->setTemplate("sic/admin/index/index");
@@ -32,6 +45,13 @@ class IndexController extends AbstractActionController
         $request = $this->getRequest();
         if($request->isPost())
         {
+            $gRecaptchaResponse= $request->getPost("g-recaptcha-response");
+            $reCaptcha = new ReCaptcha("6LcTNQETAAAAANY86werDyiieJyifTMmQexu1Rem");
+            $response = $reCaptcha->verifyResponse($_SERVER["REMOTE_ADDR"], $gRecaptchaResponse);
+
+            //var_dump($response);
+            //die();
+
             $username = $request->getPost("username");
             $password = $request->getPost("password");
 
@@ -50,6 +70,14 @@ class IndexController extends AbstractActionController
         }
 
         return $view;
+    }
+
+    public function logoutAction()
+    {
+        $auth = new AuthenticationService();
+        $auth->clearIdentity();
+
+        return $this->redirect()->toUrl('/');
     }
 
     // Load Module
