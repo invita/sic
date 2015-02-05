@@ -57,8 +57,8 @@ sic.widget.sicElement = function(args)
     }
 
 
-    var cl = this.tagClass ? this.tagClass : this.selector.attr('className');
-    if (cl) this.attr['className'] = cl;
+    var cl = this.tagClass ? this.tagClass : this.selector.attr('class');
+    if (cl) this.attr['class'] = cl;
 
     var id = this.tagId ? this.tagId : this.selector.attr('id');
     if (!id) id = sic.widget._nextId();

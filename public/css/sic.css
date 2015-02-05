@@ -11,6 +11,9 @@ div.nav1 { margin-left:10px; }
 table.logoTable { border:none; margin-bottom:0px; }
 div.mainTitle { display:inline-table; font-size:24px; margin-left:10px; margin-top:20px; vertical-align:top; color:#553490; }
 
+div.statusDiv { font-weight:bold; margin: 4px 12px 0px 12px; color:#6699CC; }
+div.errorDiv { color:#996666; }
+
 /* *** Widgets *** */
 
 /* sicTabPage */
@@ -37,5 +40,9 @@ div.sicPanelGroup > div.content {}
 input.sicInput, textarea.sicInput { margin:0px 0px 2px 0px; color:#444; }
 input.sicInput.labeled, textarea.sicInput.labeled { color:silver; font-style:italic; }
 
-input.sicInput[type=button] { color:white; }
+input.sicInput[type=button] { color:white; padding:3px 10px; }
 input.sicInput[type=button].gradGold { color:black; }
+
+/* sicDataTable */
+div.sicDataTable > table.sicDataTable_table { }
+div.sicDataTable > table.sicDataTable_table tbody > tr:hover { background:#DDEEFF; }

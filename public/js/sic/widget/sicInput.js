@@ -15,10 +15,12 @@ sic.widget.sicInput = function(args)
 
     // Settings
     this.name = sic.getArg(args, "name", null);
-    if (!this.name) this.name = sic.widget._nextInputId();
-
-    this.label = sic.getArg(args, "label", "");
     this.value = sic.getArg(args, "value", "");
+    this.placeholder = sic.getArg(args, "placeholder", "");
+
+
+    // Implementation
+    if (!this.name) this.name = sic.widget._nextInputId();
 
     if (this.type != "textarea")
         this.selector.attr("type", this.type);
@@ -29,48 +31,27 @@ sic.widget.sicInput = function(args)
     if (this.type == "button" && !this.value)
         this.value = this.name;
 
-    this.labelMode = false;
 
-    this.displayLabel = function(){
-        _p.realValue = _p.selector.val();
-        _p.selector.val(_p.label);
-        _p.selector.addClass("labeled");
-        _p.labelMode = true;
-    };
-
-    this.undisplayLabel = function(){
-        _p.selector.val(_p.realValue);
-        _p.selector.removeClass("labeled");
-        _p.labelMode = false;
+   this.setPlaceholder = function(newPlaceholder){
+       if (!newPlaceholder) {
+           _p.placeholder = "";
+           _p.selector.removeAttr("placeholder");
+       } else {
+           _p.placeholder = newPlaceholder;
+           _p.selector.attr("placeholder", _p.placeholder);
+       }
     };
 
     this.getValue = function(){
-        if (_p.labelMode)
-            return _p.realValue
-        else
-            return _p.selector.val();
+        return _p.selector.val();
     };
 
     this.setValue = function(value){
-        _p.realValue = value;
         _p.selector.val(value);
     };
 
-    this.onEnter = function(e){
-        _p.undisplayLabel();
-    };
-
-    this.onExit = function(e){
-        if (_p.getValue() === "")
-            _p.displayLabel();
-        else
-            _p.realValue = _p.getValue();
-    };
-
-    this.selector.focus(this.onEnter);
-    this.selector.blur(this.onExit);
-    this.setValue(this.value);
-    if (!this.value) this.displayLabel();
+    if (this.placeholder) this.setPlaceholder(this.placeholder);
+    if (this.value) this.setValue(this.value);
 };
 
 // Id Generator

@@ -7,9 +7,17 @@ sic.widget.sicForm = function(args)
     this.selector.addClass("sicForm");
 
     this.inputs = {};
+    this._submitInput = null;
 
+    // Settings
+    this.enterSubmits = sic.getArg(args, "enterSubmits", true);
+
+
+    // Implementation
     this.addInput = function(args){
         var input = new sic.widget.sicInput(sic.mergeObjects({parent:_p.selector, type:"text"}, args));
+        input.selector.keypress(_p.onKeyPressed);
+        if (args.type == "submit") _p._submitInput = input;
         _p.inputs[input.name] = input;
         return input;
     };
@@ -33,4 +41,12 @@ sic.widget.sicForm = function(args)
         }
     };
 
+    this.submit = function() {
+        if (_p._submitInput) _p._submitInput.selector.click();
+    };
+
+    // Events
+    this.onKeyPressed = function(e) {
+        if (e.which == 13 && _p.enterSubmits) _p.submit();
+    };
 };
