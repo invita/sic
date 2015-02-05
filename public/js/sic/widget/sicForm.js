@@ -11,6 +11,7 @@ sic.widget.sicForm = function(args)
 
     // Settings
     this.enterSubmits = sic.getArg(args, "enterSubmits", true);
+    this.skipTypes = ["submit", "button"];
 
 
     // Implementation
@@ -26,6 +27,7 @@ sic.widget.sicForm = function(args)
     this.getValue = function(){
         var formData = {};
         for (var i in _p.inputs) {
+            if (_p.skipTypes.indexOf(_p.inputs[i].type) != -1) continue;
             var key = _p.inputs[i].name;
             var val = _p.inputs[i].getValue();
             formData[key] = val;

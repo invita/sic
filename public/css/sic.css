@@ -40,8 +40,8 @@ div.sicPanelGroup > div.content {}
 input.sicInput, textarea.sicInput { margin:0px 0px 2px 0px; color:#444; }
 input.sicInput.labeled, textarea.sicInput.labeled { color:silver; font-style:italic; }
 
-input.sicInput[type=button] { color:white; padding:3px 10px; }
-input.sicInput[type=button].gradGold { color:black; }
+input.sicInput[type=button], input.sicInput[type=submit] { color:white; padding:3px 10px; }
+input.sicInput[type=button].gradGold, input.sicInput[type=submit].gradGold { color:black; }
 
 /* sicDataTable */
 div.sicDataTable > table.sicDataTable_table { }

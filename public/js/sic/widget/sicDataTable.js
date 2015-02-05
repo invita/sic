@@ -205,6 +205,10 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
     };
 
     this.getValue = function(){
+        var result = {};
+        for (var i in _p.fields)
+            result[_p.fields[i].fieldKey] = _p.fields[i].fieldValue;
+        return result;
     };
 
     this.getEventArgs = function(){

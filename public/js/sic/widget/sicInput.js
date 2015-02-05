@@ -17,6 +17,7 @@ sic.widget.sicInput = function(args)
     this.name = sic.getArg(args, "name", null);
     this.value = sic.getArg(args, "value", "");
     this.placeholder = sic.getArg(args, "placeholder", "");
+    this.readOnly = sic.getArg(args, "readOnly", false);
 
 
     // Implementation
@@ -31,6 +32,8 @@ sic.widget.sicInput = function(args)
     if (this.type == "button" && !this.value)
         this.value = this.name;
 
+    if (this.readOnly)
+        this.selector.attr("readonly", true);
 
    this.setPlaceholder = function(newPlaceholder){
        if (!newPlaceholder) {

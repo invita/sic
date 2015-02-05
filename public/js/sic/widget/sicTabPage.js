@@ -25,6 +25,7 @@ sic.widget.sicTabPage = function(args)
     this.autoActive = sic.getArg(args, "autoActive", true);
     this.unique = sic.getArg(args, "unique", false);
     this.canClose = sic.getArg(args, "canClose", true);
+    this.canCloseFirstTab = sic.getArg(args, "canCloseFirstTab", false);
     this.contentText = sic.getArg(args, "contentText", "");
     this.fadeTime = sic.getArg(args, "fadeTime", sic.defaults.fadeTime);
 
@@ -40,14 +41,16 @@ sic.widget.sicTabPage = function(args)
     };
 
     this._createTabButton = function(sicTabHeader){
+        var isFirstTab = sicTabHeader.children().length == 0;
         _p.tabButton = new sic.widget.sicElement({parent:sicTabHeader});
         _p.tabButton.selector.addClass("sicTabButton");
+        _p.tabButton.setGradient(_p.defaultGradient);
 
         _p.tabButton.captionSpan = new sic.widget.sicElement({parent:_p.tabButton.selector, tagName:'span'});
         _p.tabButton.captionSpan.selector.addClass("sicTabButton_caption");
         _p.tabButton.captionSpan.selector.html(_p.name);
 
-        if (_p.canClose) _p._createCloseSpan();
+        if (_p.canClose && (_p.canCloseFirstTab || !isFirstTab)) _p._createCloseSpan();
 
         _p.tabButton.selector.click(function(e){
             _p.selectTab();
@@ -99,28 +102,35 @@ sic.widget.sicTabPage = function(args)
             pageToSelectAfterClose.selectTab();
     };
 
+    this.alertMode = false;
     this.appendTo = function(parent, insertInFront) {
 
         var contentParent;
         if (parent.isTabPage){
 
             // Appending to parent sicTabPage
+            if (_p.alertMode) alert("append "+_p.name+" to "+_p.parent.name);
             _p.header = parent.header;
-            contentParent = parent.parent;
+            contentParent = parent.header.parent;
 
         } else if (parent.isTabPageHeader){
 
             // Appending to parent sicTabPageHeader
+            if (_p.alertMode) alert("append "+_p.name+" to another tabPage header");
             _p.header = parent;
             contentParent = parent.parent;
 
         } else {
 
             // Appending to parent sicElement
-            if (parent.isSicElement) parent = parent.selector;
+            if (parent.isSicElement) {
+                if (_p.alertMode) alert("append "+_p.name+" to sicElement");
+                parent = parent.selector;
+            }
             contentParent = parent;
 
             // Appending to an element (jquery)
+            if (_p.alertMode) alert("append "+_p.name+" to jQuery selector");
             _p._createHeader(parent);
         }
 
