@@ -14,6 +14,7 @@ sic.widget.sicDataTable = function(args)
     // Settings - Basic
     this.name = sic.getArg(args, "name", null);
     this.caption = sic.getArg(args, "caption", "");
+    this.dataSource = sic.getArg(args, "dataSource", null);
 
     // Settings - Appearance
     this.cssClass_holderDiv = sic.getArg(args, "cssClass_holderDiv", "sicDataTable");
@@ -161,6 +162,10 @@ sic.widget.sicDataTable = function(args)
         _p.createTable();
         _p.setValue(tableData);
     };
+
+    if (this.dataSource) {
+        _p.initAndPopulate(_p.dataSource.select());
+    }
 };
 
 
@@ -237,6 +242,7 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
     });
 };
 
+
 sic.widget.sicDataTableField = function(tableRowWnd, args) {
 
     // Init
@@ -288,6 +294,21 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
 
     // Set initial value
     this.setValue(this.fieldValue);
-
 };
 
+
+sic.widget.sicDataTableDataSource = function(args) {
+    // Init
+    var _p = this;
+    this._cons = sic.object.sicEventBase;
+    this._cons();
+
+    this.moduleName = sic.getArg(args, "moduleName", null);
+    this.methodNames = sic.getArg(args, "methodNames", { select:'dataTableSelect', delete:'dataTableDelete' });
+    this.editModule =  sic.getArg(args, "editModule", null);
+
+    this.select = function($args){
+        var data = sic.callMethod({moduleName:_p.moduleName, methodName:_p.methodNames.select});
+        return data;
+    }
+}

@@ -3,10 +3,9 @@ namespace Sic\Admin\Modules\Users;
 
 use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
 use Zend\Db\Sql\Sql;
-use Zend\Authentication\Result;
 
 class ListUsers {
-    public function listUsers($args) {
+    public function dataTableSelect($args) {
         $users = array();
 
         $adapter = GlobalAdapterFeature::getStaticAdapter();
@@ -19,8 +18,6 @@ class ListUsers {
             $users[] = array("id" => $result["id"], "username" => $result["username"]);
         }
 
-        return array(
-            "users" => $users
-        );
+        return $users;
     }
 }

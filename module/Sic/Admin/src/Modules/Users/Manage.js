@@ -17,7 +17,7 @@ var F = function(args) {
     var formPassword = new sic.widget.sicForm({parent:panelGroup2.content.selector});
     //formPassword.addInput({name:"id", type:"text", placeholder:"Id...", readOnly: true});
     formPassword.addInput({name:"password", type:"password", placeholder:"Password..."});
-    formPassword.addInput({name:"save", type:"submit", value:"Save"}).selector.click(function(e){
+    formPassword.addInput({name:"reset", type:"submit", value:"Reset"}).selector.click(function(e){
             var response = sic.callMethod({moduleName:"Users/Manage", methodName:"updatePassword",
                 userId: args.userId, userData:formPassword.getValue()});
             formPassword.setValue({password:""});

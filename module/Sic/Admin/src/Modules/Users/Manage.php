@@ -38,6 +38,19 @@ class Manage {
         return $this->getUser($args);
     }
 
+    public function insertUser($args) {
+
+        $data = $args["data"];
+
+        $adapter = GlobalAdapterFeature::getStaticAdapter();
+        $sql = new Sql($adapter);
+        $insert = $sql->insert()->into('user')->values($data);
+        $statement = $sql->prepareStatementForSqlObject($insert);
+        $result = $statement->execute();
+
+        return $this->getUser($args);
+    }
+
     public function updatePassword($args) {
 
         $userId = $args["userId"];

@@ -45,4 +45,5 @@ input.sicInput[type=button].gradGold, input.sicInput[type=submit].gradGold { col
 
 /* sicDataTable */
 div.sicDataTable > table.sicDataTable_table { }
+div.sicDataTable > table.sicDataTable_table tbody > tr { cursor:pointer; }
 div.sicDataTable > table.sicDataTable_table tbody > tr:hover { background:#DDEEFF; }
