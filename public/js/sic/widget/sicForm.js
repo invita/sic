@@ -11,6 +11,7 @@ sic.widget.sicForm = function(args)
 
     // Settings
     this.enterSubmits = sic.getArg(args, "enterSubmits", true);
+    this.showModified = sic.getArg(args, "showModified", true);
     this.skipTypes = ["submit", "button"];
 
 

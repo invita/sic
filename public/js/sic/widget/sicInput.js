@@ -55,6 +55,8 @@ sic.widget.sicInput = function(args)
 
     if (this.placeholder) this.setPlaceholder(this.placeholder);
     if (this.value) this.setValue(this.value);
+
+    if (this.type == "button" || this.type == "submit") this.setGradient(sic.defaults.buttonGrad);
 };
 
 // Id Generator

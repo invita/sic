@@ -1,7 +1,11 @@
 var sic = { object:{}, widget:{}, data:{}, defaults:{} };
 
 sic.defaults = {
-    fadeTime: 600
+    fadeTime: 600,
+
+    buttonGrad: "blue",
+    tabActiveGrad: "blue",
+    tabInactiveGrad: "gold"
 }
 
 sic.loadModule = function(loadArgs) {

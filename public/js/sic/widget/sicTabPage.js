@@ -29,8 +29,8 @@ sic.widget.sicTabPage = function(args)
     this.contentText = sic.getArg(args, "contentText", "");
     this.fadeTime = sic.getArg(args, "fadeTime", sic.defaults.fadeTime);
 
-    this.defaultGradient = "gold";
-    this.selectedGradient = "blue";
+    this.activeGrad = sic.getArg(args, "activeGrad", sic.defaults.tabActiveGrad);
+    this.inactiveGrad = sic.getArg(args, "inactiveGrad", sic.defaults.tabInactiveGrad);
 
 
     // Implementation
@@ -44,7 +44,7 @@ sic.widget.sicTabPage = function(args)
         var isFirstTab = sicTabHeader.children().length == 0;
         _p.tabButton = new sic.widget.sicElement({parent:sicTabHeader});
         _p.tabButton.selector.addClass("sicTabButton");
-        _p.tabButton.setGradient(_p.defaultGradient);
+        _p.tabButton.setGradient(_p.inactiveGrad);
 
         _p.tabButton.captionSpan = new sic.widget.sicElement({parent:_p.tabButton.selector, tagName:'span'});
         _p.tabButton.captionSpan.selector.addClass("sicTabButton_caption");
@@ -81,11 +81,11 @@ sic.widget.sicTabPage = function(args)
         for (var i in _p.header.pages) {
             var page = _p.header.pages[i];
             page.tabButton.selector.removeClass("active");
-            page.tabButton.setGradient(_p.defaultGradient);
+            page.tabButton.setGradient(_p.inactiveGrad);
             page.content.selector.css("display", "none");
         }
         _p.tabButton.selector.addClass("active");
-        _p.tabButton.setGradient(_p.selectedGradient);
+        _p.tabButton.setGradient(_p.activeGrad);
         _p.content.selector.fadeIn(_p.fadeTime);
     };
 
