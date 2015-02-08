@@ -110,7 +110,7 @@ class ModuleManager implements ModuleManagerInterface
 
         /**
          * Having a dedicated .post event abstracts the complexity of priorities from the user.
-         * Users can attach to the .post event and be sure that important
+         * User can attach to the .post event and be sure that important
          * things like config merging are complete without having to worry if
          * they set a low enough priority.
          */

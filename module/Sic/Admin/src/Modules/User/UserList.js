@@ -4,12 +4,12 @@ var F = function(args){
     var dataTable = new sic.widget.sicDataTable({
         parent:tabPage.content.selector,
         primaryKey: ['id'],
+        entityTitle: "User %id% - %username%",
         dataSource: new sic.widget.sicDataTableDataSource({
-            moduleName:"Users/ListUsers",
+            moduleName:"User/UserList"
         }),
         editorModuleArgs: {
-            moduleName:"Users/Manage",
-            caption: "User: %username% (%id%)",
+            moduleName:"User/UserEdit",
             tabPage:tabPage
         }
     });

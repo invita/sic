@@ -60,7 +60,7 @@ sic.widget.sicTabPage = function(args)
 
         _p.tabButton.captionSpan = new sic.widget.sicElement({parent:_p.tabButton.selector, tagName:'span'});
         _p.tabButton.captionSpan.selector.addClass("sicTabButton_caption");
-        _p.tabButton.captionSpan.selector.html(_p.caption);
+        if (_p.caption) _p.setCaption(_p.caption);
 
         if (_p.canClose && (_p.canCloseFirstTab || !isFirstTab)) _p._createCloseSpan();
 
@@ -127,6 +127,7 @@ sic.widget.sicTabPage = function(args)
     };
 
     this.setCaption = function(newCaption) {
+        newCaption = newCaption.trim();
         _p.caption = newCaption;
         _p.tabButton.captionSpan.selector.html(newCaption);
     };

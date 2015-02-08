@@ -1,10 +1,10 @@
 <?php
-namespace Sic\Admin\Modules\Users;
+namespace Sic\Admin\Modules\User;
 
 use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
 use Zend\Db\Sql\Sql;
 
-class ListUsers {
+class UserList {
     public function dataTableSelect($args) {
         $users = array();
 
@@ -15,7 +15,9 @@ class ListUsers {
         $results = $statement->execute();
 
         foreach($results as $result) {
-            $users[] = array("id" => $result["id"], "username" => $result["username"]);
+            unset($result['password']);
+            $result['password'] = '(hidden)';
+            $users[] = $result;
         }
 
         return array('data' => $users);

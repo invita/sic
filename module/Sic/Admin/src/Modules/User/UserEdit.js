@@ -6,13 +6,15 @@ var F = function(args) {
 
     var formUserData = new sic.widget.sicForm({parent:panel.firstGroup.content.selector});
     formUserData.addInput({name:"username", type:"text", placeholder:"Username..."});
+    formUserData.addInput({name:"email", type:"text", placeholder:"Email..."});
+    formUserData.addInput({name:"notes", type:"textarea", placeholder:"Notes..."});
     formUserData.addInput({name:"save", type:"submit", value:"Save"}).selector.click(function(e){
-            var response = sic.callMethod({moduleName:"Users/Manage", methodName:"updateUser",
+            var response = sic.callMethod({moduleName:"User/UserEdit", methodName:"updateUser",
                 id: args.id, data:formUserData.getValue()});
             formUserData.setValue(response.data);
             args.id = response.data.id;
             panel.firstGroup.setName("Update User (id: "+response.data.id+")");
-            tabPage.parentTab.setCaption(sic.mergePlaceholders(args.caption, response.data));
+            tabPage.parentTab.setCaption(sic.mergePlaceholders(args.entityTitle, response.data));
         });
 
 
@@ -20,13 +22,19 @@ var F = function(args) {
     var formPassword = new sic.widget.sicForm({parent:panelGroup2.content.selector});
     formPassword.addInput({name:"password", type:"password", placeholder:"Password..."});
     formPassword.addInput({name:"reset", type:"submit", value:"Reset"}).selector.click(function(e){
-            var response = sic.callMethod({moduleName:"Users/Manage", methodName:"updatePassword",
-                id: args.id, data:formPassword.getValue()});
-            formPassword.setValue({password:""});
-        });
+
+/*
+        if (formPassword.getValue().password || confirm('Are you sure you want to clear password for '+
+                sic.mergePlaceholders(args.entityTitle, args.data))) {
+        }
+*/
+        var response = sic.callMethod({moduleName:"User/UserEdit", methodName:"updatePassword",
+            id: args.id, data:formPassword.getValue()});
+        formPassword.setValue({password:""});
+    });
 
     if (args.id){
-        var response = sic.callMethod({moduleName:"Users/Manage", methodName:"getUser", id: args.id});
-        formUserData.setValue(response.data);
+        var response = sic.callMethod({moduleName:"User/UserEdit", methodName:"getUser", id: args.id});
+        if (response && response.data) formUserData.setValue(response.data);
     }
 };

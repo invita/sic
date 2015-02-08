@@ -15,6 +15,7 @@ sic.widget.sicDataTable = function(args)
     this.name = sic.getArg(args, "name", null);
     this.caption = sic.getArg(args, "caption", "");
     this.primaryKey = sic.getArg(args, "primaryKey", null);
+    this.entityTitle = sic.getArg(args, "entityTitle", null);
     this.dataSource = sic.getArg(args, "dataSource", null);
     this.editorModuleArgs = sic.getArg(args, "editorModuleArgs", null);
 
@@ -126,8 +127,8 @@ sic.widget.sicDataTable = function(args)
         _p.insertButton.span.selector.html("Insert");
         _p.insertButton.selector.click(function(e){
             var row = _p.createEmptyRow();
-            var tabName = sic.mergePlaceholders(_p.editorModuleArgs.caption, row);
-            var editorModuleArgs = sic.mergeObjects(_p.editorModuleArgs, {newTab:tabName});
+            var tabName = sic.mergePlaceholders(_p.entityTitle, row);
+            var editorModuleArgs = sic.mergeObjects(_p.editorModuleArgs, {newTab:tabName, entityTitle:_p.entityTitle});
             editorModuleArgs.onClosed = function(args){ _p.refresh(); };
             sic.loadModule(editorModuleArgs);
         });
@@ -221,8 +222,8 @@ sic.widget.sicDataTable = function(args)
         if (_p.editorModuleArgs) {
             _p.onRowDoubleClick(function(args){
                 var row = args.row.getValue();
-                var tabName = sic.mergePlaceholders(_p.editorModuleArgs.caption, row);
-                var editorModuleArgs = sic.mergeObjects(_p.editorModuleArgs, {newTab:tabName});
+                var tabName = args.row.reprValue();
+                var editorModuleArgs = sic.mergeObjects(_p.editorModuleArgs, {newTab:tabName, entityTitle:_p.entityTitle});
                 editorModuleArgs.onClosed = function(args){ _p.refresh(); };
                 if (_p.primaryKey)
                     for (var pkIdx in _p.primaryKey)
@@ -232,8 +233,10 @@ sic.widget.sicDataTable = function(args)
 
             _p.onFieldClick(function(args){
                 if (args.field.fieldKey == "_delete") {
-                    var response = _p.dataSource.delete(args.row.getValue());
-                    _p.setValue(response.data);
+                    if (confirm('Are you sure you want to delete record "'+args.row.reprValue()+'"?')) {
+                        var response = _p.dataSource.delete(args.row.getValue());
+                        if (response) _p.setValue(response.data);
+                    }
                 }
             });
         }
@@ -308,6 +311,20 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
             result[_p.fields[i].fieldKey] = _p.fields[i].fieldValue;
         }
         return result;
+    };
+
+    this.reprValue = function(){
+        var reprValue = "";
+        var row = _p.getValue();
+        if (_p.dataTable.entityTitle) {
+            reprValue = sic.mergePlaceholders(_p.dataTable.entityTitle, row);
+        } else if (_p.dataTable.primaryKey) {
+            for (var i in _p.dataTable.primaryKey){
+                if (reprValue) reprValue += ', ';
+                reprValue += row[_p.dataTable.primaryKey[i]];
+            }
+        }
+        return reprValue;
     };
 
     this.getEventArgs = function(){

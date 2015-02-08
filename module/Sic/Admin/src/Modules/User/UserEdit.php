@@ -1,14 +1,13 @@
 <?php
-namespace Sic\Admin\Modules\Users;
+namespace Sic\Admin\Modules\User;
 
 use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
 use Zend\Db\Sql\Sql;
 use Zend\Authentication\Result;
 
-class Manage {
+class UserEdit {
     public function getUser($args) {
 
-        //print_r($args); die();
         $id = $args["id"];
 
         $adapter = GlobalAdapterFeature::getStaticAdapter();
@@ -17,9 +16,10 @@ class Manage {
         $statement = $sql->prepareStatementForSqlObject($select);
         $results = $statement->execute();
         $row = $results->current();
-        $user = array("id" => $row["id"], "username" => $row["username"]);
+        unset($row['password']);
 
-        return array("data" => $user);
+
+        return array("data" => $row);
     }
 
     public function updateUser($args) {

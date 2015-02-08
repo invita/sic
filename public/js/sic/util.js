@@ -30,6 +30,7 @@ sic.capitalize = function(strVal) {
 };
 
 sic.mergePlaceholders = function(str, valueMapObj) {
+    if (!str) return "";
     if (typeof(valueMapObj) == "object") {
         for (var key in valueMapObj) {
             var searchRegEx = new RegExp('%'+key+'%', 'ig');
