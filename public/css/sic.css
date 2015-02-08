@@ -14,11 +14,13 @@ div.mainTitle { display:inline-table; font-size:24px; margin-left:10px; margin-t
 div.statusDiv { font-weight:bold; margin: 4px 12px 0px 12px; color:#6699CC; }
 div.errorDiv { color:#996666; }
 
+span.loginName { color:#553490; font-weight:bold; }
+
 /* *** Widgets *** */
 
 /* sicTabPage */
 div.sicTabHeader { border-bottom:#87BCEA solid 3px;  }
-div.sicTabButton { display:inline-table; padding:7px 10px 5px 10px; border:#CCCCCC solid 1px; font-family: cursive;
+div.sicTabButton { display:inline-table; padding:7px 10px 5px 10px; border:#CCCCCC solid 1px; font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
     border-left-width:0px; border-bottom-width:0px; border-radius:8px 8px 0px 0px; cursor:pointer; }
 div.sicTabButton.active { border-color:#AAAAAA; }
 div.sicTabButton:first-of-type { border-left-width:1px; }
@@ -44,6 +46,14 @@ input.sicInput[type=button], input.sicInput[type=submit] { color:white; padding:
 input.sicInput[type=button].gradGold, input.sicInput[type=submit].gradGold { color:black; }
 
 /* sicDataTable */
-div.sicDataTable > table.sicDataTable_table { }
+div.sicDataTable { margin:5px; }
+div.sicDataTable > table.sicDataTable_table { margin-bottom:5px }
 div.sicDataTable > table.sicDataTable_table tbody > tr { cursor:pointer; }
 div.sicDataTable > table.sicDataTable_table tbody > tr:hover { background:#DDEEFF; }
+div.sicDataTable > div.insertButton { margin-bottom:5px; cursor:pointer; }
+div.sicDataTable > div.insertButton > span { color:#6699CC; font-weight:bold; margin-left:4px; vertical-align:middle; }
+div.sicDataTable > div.insertButton > img { vertical-align:middle; }
+
+img.icon16 { width:16px; }
+
+

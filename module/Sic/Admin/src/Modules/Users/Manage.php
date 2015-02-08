@@ -9,29 +9,29 @@ class Manage {
     public function getUser($args) {
 
         //print_r($args); die();
-        $userId = $args["userId"];
+        $id = $args["id"];
 
         $adapter = GlobalAdapterFeature::getStaticAdapter();
         $sql = new Sql($adapter);
-        $select = $sql->select()->from('user')->where(array('id' => $userId));
+        $select = $sql->select()->from('user')->where(array('id' => $id));
         $statement = $sql->prepareStatementForSqlObject($select);
         $results = $statement->execute();
         $row = $results->current();
         $user = array("id" => $row["id"], "username" => $row["username"]);
 
-        return array(
-            "userData" => $user
-        );
+        return array("data" => $user);
     }
 
     public function updateUser($args) {
 
-        $userId = $args["userId"];
-        $userData = $args["userData"];
+        $id = isset($args["id"]) ? $args["id"] : null;
+        if (!$id) return $this->insertUser($args);
+
+        $data = $args["data"];
 
         $adapter = GlobalAdapterFeature::getStaticAdapter();
         $sql = new Sql($adapter);
-        $update = $sql->update()->table('user')->set($userData)->where(array('id' => $userId));
+        $update = $sql->update()->table('user')->set($data)->where(array('id' => $id));
         $statement = $sql->prepareStatementForSqlObject($update);
         $result = $statement->execute();
 
@@ -40,25 +40,26 @@ class Manage {
 
     public function insertUser($args) {
 
-        $data = $args["data"];
+        $data = isset($args["data"]) ? $args["data"] : array();
 
         $adapter = GlobalAdapterFeature::getStaticAdapter();
         $sql = new Sql($adapter);
         $insert = $sql->insert()->into('user')->values($data);
         $statement = $sql->prepareStatementForSqlObject($insert);
         $result = $statement->execute();
+        $args['id'] = $result->getGeneratedValue();
 
         return $this->getUser($args);
     }
 
     public function updatePassword($args) {
 
-        $userId = $args["userId"];
-        $userData = $args["userData"];
+        $id = $args["id"];
+        $data = $args["data"];
 
         $adapter = GlobalAdapterFeature::getStaticAdapter();
         $sql = new Sql($adapter);
-        $update = $sql->update()->table('user')->set(array("password" => sha1($userData["password"])))->where(array('id' => $userId));
+        $update = $sql->update()->table('user')->set(array("password" => sha1($data["password"])))->where(array('id' => $id));
         $statement = $sql->prepareStatementForSqlObject($update);
         $result = $statement->execute();
 

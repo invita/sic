@@ -18,6 +18,20 @@ class ListUsers {
             $users[] = array("id" => $result["id"], "username" => $result["username"]);
         }
 
-        return $users;
+        return array('data' => $users);
+    }
+
+    public function dataTableDelete($args) {
+
+        $data = isset($args['data']) ? $args['data'] : null;
+        if ($data) {
+            $adapter = GlobalAdapterFeature::getStaticAdapter();
+            $sql = new Sql($adapter);
+            $delete = $sql->delete()->from('user')->where($data);
+            $statement = $sql->prepareStatementForSqlObject($delete);
+            $results = $statement->execute();
+        }
+
+        return $this->dataTableSelect($args);
     }
 }

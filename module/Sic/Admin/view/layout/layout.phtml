@@ -35,7 +35,7 @@
             <td ><a href="/" title="Slovenian Index of citation - Admin"><img src="/img/logo2.png" width="40"/><div class="mainTitle">Slovenian Index of citation v2</div></a></td>
             <td align="right" class="pr_20" style="vertical-align:bottom;">
                 <?php if($this->hasIdentity){ ?>
-                    <a href="/logout">Logout</a>
+                    <span class="loginName"><?php echo $this->username; ?> (<a href="/logout">Logout</a>)</span>
                 <?php } ?>
                 <?php if(!$this->hasIdentity){ ?>
                     <a href="/login">Login</a>

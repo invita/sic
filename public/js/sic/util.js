@@ -29,6 +29,16 @@ sic.capitalize = function(strVal) {
     return strVal && typeof(strVal) == "string" ? strVal.substr(0, 1).toUpperCase() + strVal.substr(1) : "";
 };
 
+sic.mergePlaceholders = function(str, valueMapObj) {
+    if (typeof(valueMapObj) == "object") {
+        for (var key in valueMapObj) {
+            var searchRegEx = new RegExp('%'+key+'%', 'ig');
+            str = str.replace(searchRegEx, valueMapObj[key]);
+        }
+    }
+    return str;
+};
+
 sic.dump = function(obj, depth, nl, spaceChar) {
     alert(sic.debug(obj, depth, nl, spaceChar));
 };

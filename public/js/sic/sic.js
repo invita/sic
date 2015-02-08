@@ -33,6 +33,8 @@ sic.loadModule = function(loadArgs) {
                 if (!tabArgs.name) tabArgs.name = 'Tab';
                 if (!tabArgs.parent) tabArgs.parent = tab == sic.data.mainTab ? tab : tab.content;
                 var childTabPage = new sic.widget.sicTabPage(tabArgs);
+                if (loadArgs.onClose && typeof(loadArgs.onClose) == "function") childTabPage.onClose(loadArgs.onClose);
+                if (loadArgs.onClosed && typeof(loadArgs.onClosed) == "function") childTabPage.onClosed(loadArgs.onClosed);
                 return childTabPage;
             };
 
@@ -63,7 +65,7 @@ sic.callMethod = function(args, f) {
 
         // Alert
         if (typeof(result['alert']) != "undefined")
-            alert(typeof(result['alert']));
+            alert(result['alert']);
 
         // Message
         if (typeof(f) == "function")
@@ -91,6 +93,9 @@ sic.callMethod = function(args, f) {
 };
 
 $(document).ready(function(){
+
+    //sic.messageTunnel = new sic.object.sicMessageTunnel();
+
     sic.data.contentElement = $('div#pageHolder');
     sic.data.mainTab = new sic.widget.sicTabPage({
         name: "Sic",
@@ -101,6 +106,7 @@ $(document).ready(function(){
     var primaryPage = $('#primaryPage');
     if (primaryPage)
         sic.data.mainTab.content.selector.append(primaryPage);
+
 
    // sic.loadModule({moduleName:"Test/WidgetTest"});
 });
