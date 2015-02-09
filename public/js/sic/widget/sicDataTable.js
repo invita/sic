@@ -418,12 +418,12 @@ sic.widget.sicDataTableDataSource = function(args) {
     this.methodNames = sic.getArg(args, "methodNames", { select:'dataTableSelect', delete:'dataTableDelete' });
     this.editModule =  sic.getArg(args, "editModule", null);
 
-    this.select = function(args){
+    this.select = function(args) {
         var data = sic.callMethod({moduleName:_p.moduleName, methodName:_p.methodNames.select, data:args});
         return data;
     }
 
-    this.delete = function(args){
+    this.delete = function(args) {
         var data = sic.callMethod({moduleName:_p.moduleName, methodName:_p.methodNames.delete, data:args});
         return data;
     }

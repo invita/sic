@@ -4,6 +4,10 @@ sic.widget.sicForm = function(args)
     var _p = this;
     this._cons = sic.widget.sicElement;
     this._cons({ parent:args.parent, tagName:"div" });
+
+    this._eventb = sic.object.sicEventBase;
+    this._eventb();
+
     this.selector.addClass("sicForm");
 
     this.inputs = {};
@@ -14,12 +18,22 @@ sic.widget.sicForm = function(args)
     this.showModified = sic.getArg(args, "showModified", true);
     this.skipTypes = ["submit", "button"];
 
+    // Events
+    this.onSubmit = function(f) { _p.subscribe("onSubmit", f); };
 
     // Implementation
     this.addInput = function(args){
-        var input = new sic.widget.sicInput(sic.mergeObjects({parent:_p.selector, type:"text"}, args));
-        input.selector.keypress(_p.onKeyPressed);
-        if (args.type == "submit") _p._submitInput = input;
+        var input;
+        if (args.isArray) {
+            input = new sic.widget.sicInputArray({ parent:_p.selector, name:args.name, inputArgs:args });
+        } else {
+            input = new sic.widget.sicInput(sic.mergeObjects({ parent:_p.selector, type:"text"}, args));
+        }
+        input.onKeyPressed(_p._onKeyPressed);
+        if (args.type == "submit") {
+            _p._submitInput = input;
+            _p._submitInput.selector.click(_p._onSubmit);
+        }
         _p.inputs[input.name] = input;
         return input;
     };
@@ -48,8 +62,22 @@ sic.widget.sicForm = function(args)
         if (_p._submitInput) _p._submitInput.selector.click();
     };
 
-    // Events
-    this.onKeyPressed = function(e) {
+
+    this.allInputs = {
+        resetModified: function(){
+            for (var i in _p.inputs) {
+                _p.inputs[i].setValue(_p.inputs[i].getValue());
+                _p.inputs[i].calcModified();
+            }
+        }
+    };
+
+    // Internal Event handlers
+    this._onSubmit = function(e) {
+        _p.trigger('onSubmit', _p);
+        _p.allInputs.resetModified();
+    };
+    this._onKeyPressed = function(e) {
         if (e.which == 13 && _p.enterSubmits) _p.submit();
     };
 };

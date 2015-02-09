@@ -29,7 +29,7 @@ class UserList {
         if ($data) {
             $adapter = GlobalAdapterFeature::getStaticAdapter();
             $sql = new Sql($adapter);
-            $delete = $sql->delete()->from('user')->where($data);
+            $delete = $sql->delete()->from('user')->where(array("id" => $data['id']));
             $statement = $sql->prepareStatementForSqlObject($delete);
             $results = $statement->execute();
         }

@@ -4,6 +4,7 @@ sic.defaults = {
     fadeTime: 600,
 
     buttonGrad: "blue",
+    submitGrad: "orange",
     tabActiveGrad: "blue",
     tabInactiveGrad: "gold"
 }
@@ -49,7 +50,6 @@ sic.loadModule = function(loadArgs) {
 sic.callMethod = function(args, f) {
     var moduleName = sic.getArg(args, "moduleName", null); // Module Name
     var methodName = sic.getArg(args, "methodName", null); // Method Name
-    var result = null;
 
     var ajaxResult = $.ajax({
         type: 'POST',
@@ -60,7 +60,7 @@ sic.callMethod = function(args, f) {
         async:false
     });
 
-    result = ajaxResult.responseJSON;
+    var result = ajaxResult.responseJSON;
     if (result) {
 
         // Alert
@@ -73,28 +73,11 @@ sic.callMethod = function(args, f) {
     }
 
     return result;
-    //alert(result);
-
-    /*
-    return $.post("/callMethod", {args: args}, function(data) {
-        var resultObj = JSON.parse(data);
-        if (resultObj) {
-
-            // Alert
-            //if (typeof(resultObj['alert'] != "undefined"))
-            //    alert(typeof(resultObj['alert']));
-
-            // Message
-            f(resultObj);
-            return resultObj;
-        }
-    });
-    */
 };
 
 $(document).ready(function(){
 
-    //sic.messageTunnel = new sic.object.sicMessageTunnel();
+    sic.messageTunnel = new sic.object.sicMessageTunnel();
 
     sic.data.contentElement = $('div#pageHolder');
     sic.data.mainTab = new sic.widget.sicTabPage({
@@ -107,7 +90,5 @@ $(document).ready(function(){
     if (primaryPage)
         sic.data.mainTab.content.selector.append(primaryPage);
 
-
-   // sic.loadModule({moduleName:"Test/WidgetTest"});
 });
 

@@ -14,7 +14,8 @@ class PubEdit {
 
         $pub = array(
             "id" => "",
-            "name" => ""
+            "name" => "",
+            "title" => array("Title1", "Title2", "Title3")
         );
 
         return array("data" => $pub);
