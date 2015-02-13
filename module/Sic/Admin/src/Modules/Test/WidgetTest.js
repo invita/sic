@@ -14,15 +14,15 @@ var F = function(args){
     form2.addInput({name:"Test2", type:"text", placeholder:"Name..."});
     form2.addInput({name:"Test3", type:"text", placeholder:"Year..."});
     form2.addInput({name:"Test4", type:"text", placeholder:"Company..."});
-    form2.addInput({name:"GetFormData", type:"button"})
-        .setGradient("gold").selector.click(function(e){ sic.dump(form2.getValue()); });
+    form2.addInput({name:"GetFormData", type:"button", gradient:"gold"})
+        .selector.click(function(e){ sic.dump(form2.getValue()); });
 
     var group3 = panel.addGroup("Group3");
     var form3 = new sic.widget.sicForm({parent:group3.content.selector});
     form3.addInput({name:"Test5", type:"text", value:"Some initial Value 1"});
     form3.addInput({name:"Test6", type:"text", value:"Some initial Value 2"});
     form3.addInput({name:"Test7", type:"text", value:"Some initial Value 3"});
-    form3.addInput({name:"SetFormData", type:"button"})
-        .setGradient("orange").selector.click(function(e){
+    form3.addInput({name:"SetFormData", type:"button", gradient:"orange"})
+        .selector.click(function(e){
             form3.setValue({ Test5: "Lol", Test6: "Test", Test7: "Fooo!", UnknownName: "..." }); });
 };

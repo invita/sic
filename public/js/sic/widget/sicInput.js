@@ -34,7 +34,6 @@ sic.widget.sicInput = function(args)
     this.input.selector.addClass("sicInput");
     this.inputs = [this.input];
 
-
     // Implementation
     if (!this.name) this.name = sic.widget._nextInputId();
 

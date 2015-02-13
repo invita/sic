@@ -8,8 +8,8 @@
         var form = new sic.widget.sicForm({parent:panel.firstGroup.content.selector});
         form.addInput({name:"username", type:"text", placeholder:"Username..."});
         form.addInput({name:"password", type:"password", placeholder:"Password..."});
-        form.addInput({name:"login", type:"submit", value:"Login"})
-            .setGradient("blue").selector.click(function(e){
+        form.addInput({name:"login", type:"submit", value:"Login", gradient:"blue"})
+            .selector.click(function(e){
                 statusDiv.selector.removeClass("errorDiv");
                 statusDiv.selector.html("Login...");
                 $.post("/login", form.getValue(), function(data) {
@@ -22,6 +22,5 @@
                     }
                 });
             });
-
     });
 </script>
