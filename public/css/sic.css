@@ -46,6 +46,7 @@ input.sicInput, textarea.sicInput { margin:0px 0px 2px 0px; color:#444; }
 input.sicInput[type=text], textarea.sicInput { width:200px; }
 div.sicInputDiv.modified > .sicInput { border: orange solid 1px; }
 
+div.sicInputDiv > .sicInputCaption { display:inline-table; width:100px; color:#888;}
 div.sicInputDiv > .sicInput { display:inline-table; }
 div.sicInputDiv > .inputButton { display:inline-table; width:24px; height:24px; border:silver solid 1px;
     text-align:center; margin:0px 0px 0px 2px; padding-top:5px; vertical-align:top; cursor:pointer;

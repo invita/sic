@@ -26,6 +26,7 @@ sic.loadModule = function(loadArgs) {
             // Create TabPage Function
             args.helpers.createTabPage = function(tabArgs){
                 var tab = (tabPage && typeof(tabPage) == "object" && tabPage.isTabPage) ? tabPage : sic.data.mainTab;
+                loadArgs.tabPage = tab;
 
                 if (newTab)
                     tab = new sic.widget.sicTabPage({name:newTab, parent:tab});

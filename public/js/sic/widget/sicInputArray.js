@@ -13,6 +13,7 @@ sic.widget.sicInputArray = function(args)
 
     // Settings
     this.name = sic.getArg(args, "name", null);
+    this.caption = sic.getArg(args, "caption", null);
     this.inputArgs = sic.getArg(args, "inputArgs", {});
     this.inputConstruct = sic.getArg(args, "inputConstruct", sic.widget.sicInput);
 
@@ -23,10 +24,13 @@ sic.widget.sicInputArray = function(args)
 
     // Implementation
     if (!this.name) this.name = sic.widget._nextInputId();
+    if (this.caption === null) this.caption = sic.captionize(this.name);
 
     this.addInput = function(){
         var inputId = _p.inputs.length + "";
-        var input = new _p.inputConstruct(sic.mergeObjects(_p.inputArgs, { parent:_p.selector, name:_p.name+"_"+inputId }));
+        var caption = _p.inputs.length > 0 ? " " : _p.caption;
+        var input = new _p.inputConstruct(sic.mergeObjects(_p.inputArgs, { parent:_p.selector,
+            name:_p.name+"_"+inputId, caption:caption }));
         input.onKeyDown(function(e) { e.sicInput = _p; _p.trigger('onKeyDown', e); });
         input.onKeyPressed(function(e) { e.sicInput = _p; _p.trigger('onKeyPressed', e); });
         input.onKeyUp(function(e) { e.sicInput = _p; _p.trigger('onKeyUp', e); });

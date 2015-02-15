@@ -1,26 +1,26 @@
 var F = function(args) {
-    var tabPage = args.helpers.createTabPage({name:"Basic"});
+    var tabPageBasic = args.helpers.createTabPage({name:"Basic"});
 
-    var panel = new sic.widget.sicPanel({parent:tabPage.content.selector,
+    var panelBasic = new sic.widget.sicPanel({parent:tabPageBasic.content.selector,
             firstGroupName:args.id ? "Update User (id: "+args.id+")" : "Insert User"});
 
-    var formUserData = new sic.widget.sicForm({parent:panel.firstGroup.content.selector});
-    formUserData.addInput({name:"username", type:"text", placeholder:"Username..."});
-    formUserData.addInput({name:"email", type:"text", placeholder:"Email..."});
-    formUserData.addInput({name:"notes", type:"textarea", placeholder:"Notes..."});
+    var formUserData = new sic.widget.sicForm({parent:panelBasic.firstGroup.content.selector});
+    formUserData.addInput({name:"username", type:"text", placeholder:"Username...", caption:""});
+    formUserData.addInput({name:"email", type:"text", placeholder:"Email...", caption:""});
+    formUserData.addInput({name:"notes", type:"textarea", placeholder:"Notes...", caption:""});
     formUserData.addInput({name:"save", type:"submit", value:"Save"}).selector.click(function(e){
             var response = sic.callMethod({moduleName:"User/UserEdit", methodName:"updateUser",
                 id: args.id, data:formUserData.getValue()});
             formUserData.setValue(response.data);
             args.id = response.data.id;
-            panel.firstGroup.setName("Update User (id: "+response.data.id+")");
-            tabPage.parentTab.setCaption(sic.mergePlaceholders(args.entityTitle, response.data));
+        panelBasic.firstGroup.setName("Update User (id: "+response.data.id+")");
+        tabPageBasic.parentTab.setCaption(sic.mergePlaceholders(args.entityTitle, response.data));
         });
 
 
-    var panelGroup2 = panel.addGroup("Reset password");
+    var panelGroup2 = panelBasic.addGroup("Reset password");
     var formPassword = new sic.widget.sicForm({parent:panelGroup2.content.selector});
-    formPassword.addInput({name:"password", type:"password", placeholder:"Password..."});
+    formPassword.addInput({name:"password", type:"password", placeholder:"Password...", caption:""});
     formPassword.addInput({name:"reset", type:"submit", value:"Reset"}).selector.click(function(e){
 
 /*
@@ -33,8 +33,18 @@ var F = function(args) {
         formPassword.setValue({password:""});
     });
 
+
+/*
+    var tabPagePerm = tabPageBasic.parentTab.createChildPage({name:"Permissions", canClose:false}); //args.helpers.createTabPage({name:"Permissions", canClose:false, tabPage: tabPageBasic });
+    var panelPerm = new sic.widget.sicPanel({parent:tabPagePerm.content.selector,
+        firstGroupName:"Permissions"});
+    panelPerm.firstGroup.content.selector.html("...");
+*/
+
     if (args.id){
         var response = sic.callMethod({moduleName:"User/UserEdit", methodName:"getUser", id: args.id});
         if (response && response.data) formUserData.setValue(response.data);
     }
+
+
 };

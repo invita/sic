@@ -29,6 +29,20 @@ sic.capitalize = function(strVal) {
     return strVal && typeof(strVal) == "string" ? strVal.substr(0, 1).toUpperCase() + strVal.substr(1) : "";
 };
 
+sic.captionize = function(strVal) {
+    if (!strVal || typeof(strVal) != "string") return "";
+    var result = "";
+    for(var i = 0; i < strVal.length; i++) {
+        var char = strVal[i];
+
+        if (char >= 'A' && char <= 'Z') char = " "+char;
+        if (i == 0) char = char.toUpperCase();
+
+        result = result + char;
+    }
+    return result;
+};
+
 sic.mergePlaceholders = function(str, valueMapObj) {
     if (!str) return "";
     if (typeof(valueMapObj) == "object") {

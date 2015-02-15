@@ -22,6 +22,7 @@ sic.widget.sicInput = function(args)
     this.placeholder = sic.getArg(args, "placeholder", "");
     this.readOnly = sic.getArg(args, "readOnly", false);
     this.gradient = sic.getArg(args, "gradient", null);
+    this.caption = sic.getArg(args, "caption", null);
 
     // Events
     this.onKeyDown = function(f) { _p.subscribe("onKeyDown", f); };
@@ -49,14 +50,14 @@ sic.widget.sicInput = function(args)
     if (this.readOnly)
         this.input.selector.attr("readonly", true);
 
-   this.setPlaceholder = function(newPlaceholder){
-       if (!newPlaceholder) {
-           _p.placeholder = "";
-           _p.input.selector.removeAttr("placeholder");
-       } else {
-           _p.placeholder = newPlaceholder;
-           _p.input.selector.attr("placeholder", _p.placeholder);
-       }
+    this.setPlaceholder = function(newPlaceholder){
+        if (!newPlaceholder) {
+            _p.placeholder = "";
+            _p.input.selector.removeAttr("placeholder");
+        } else {
+            _p.placeholder = newPlaceholder;
+            _p.input.selector.attr("placeholder", _p.placeholder);
+        }
     };
 
     this.getValue = function(){
@@ -113,6 +114,16 @@ sic.widget.sicInput = function(args)
     this.input.selector.keydown(_p._onKeyDown);
     this.input.selector.keypress(_p._onKeyPressed);
     this.input.selector.keyup(_p._onKeyUp);
+
+    if (!this.isButton() && this.caption === null)
+        this.caption = sic.captionize(this.name);
+
+    if (typeof(this.caption) == "string" && this.caption) {
+        this.captionDiv = new sic.widget.sicElement({ parent:this.selector, insertAtTop:true, tagName:"div" });
+        this.captionDiv.selector.addClass("sicInputCaption");
+        this.captionDiv.selector.html(this.caption);
+    }
+
 };
 
 // Id Generator
