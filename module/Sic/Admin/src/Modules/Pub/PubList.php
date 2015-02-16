@@ -7,27 +7,43 @@ use Zend\Db\Sql\Sql;
 class PubList {
     public function dataTableSelect($args) {
 
-        // Select Publications
+        $adapter = GlobalAdapterFeature::getStaticAdapter();
 
-        $publications = array(
-            array(
-                "id" => "1",
-                "name" => "Test publication",
-                "foo" => "Test publication",
-                "bar" => "Test publication"
-            )
-        );
+        $sql = new Sql($adapter);
+        $select = $sql->select()->from('publication');
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $results = $statement->execute();
+
+        $publications = array();
+
+        foreach($results as $result) {
+            $publications[] = $result;
+        }
 
         return array('data' => $publications);
     }
 
     public function dataTableDelete($args) {
 
-        $data = $args['data']; // Record to delete
+        $data = $args['data'];
         $id = $data['id'];
 
+        $adapter = GlobalAdapterFeature::getStaticAdapter();
+        $conn = $adapter->getDriver()->getConnection();
 
-        // Do delete...
+        $conn->beginTransaction();
+        try
+        {
+            $sql = new Sql($adapter);
+            $delete = $sql->delete("publication")->where(array("id"=>$id));
+            $sql->prepareStatementForSqlObject($delete)->execute();
+
+            $conn->commit();
+
+        } catch(\Exception $e)
+        {
+            $conn->rollback();
+        }
 
         return $this->dataTableSelect($args);
     }

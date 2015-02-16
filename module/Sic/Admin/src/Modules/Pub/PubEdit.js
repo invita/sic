@@ -7,7 +7,7 @@ var F = function(args) {
     var formUserData = new sic.widget.sicForm({parent:panel.firstGroup.content.selector});
     formUserData.addInput({name:"id", type:"text", placeholder:"Id...", readOnly:true});
     formUserData.addInput({name:"parentId", type:"text", placeholder:"ParentId..."});
-    formUserData.addInput({name:"parentName", type:"text", placeholder:"ParentName..."});
+    //formUserData.addInput({name:"parentName", type:"text", placeholder:"ParentName..."});
     formUserData.addInput({name:"authorName", type:"text", placeholder:"Name...", isArray:true});
     formUserData.addInput({name:"title", type:"text", placeholder:"Title...", isArray:true});
     formUserData.addInput({name:"year", type:"text", placeholder:"Year..."});
