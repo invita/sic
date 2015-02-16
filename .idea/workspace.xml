@@ -2,39 +2,42 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="81a7b28c-87e0-4530-8bc3-ad9622d3013b" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/all_test.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/all_test.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/reader/all_test.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/reader/all_test.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/callback_testcase.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/callback_testcase.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/change_log.txt" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/change_log.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/manual/css/default.css" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/manual/css/default.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/dom_testcase.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/dom_testcase.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/element_testcase.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/element_testcase.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/reader/element_testcase.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/reader/element_testcase.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/example/example_advanced_selector.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/example/example_advanced_selector.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/example/example_basic_selector.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/example/example_basic_selector.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/example/example_callback.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/example/example_callback.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/example/example_extract_html.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/example/example_extract_html.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/example/example_modify_contents.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/example/example_modify_contents.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/example/scraping/example_scraping_digg.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/example/scraping/example_scraping_digg.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/example/scraping/example_scraping_imdb.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/example/scraping/example_scraping_imdb.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/example/scraping/example_scraping_slashdot.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/example/scraping/example_scraping_slashdot.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/app/index.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/app/index.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/invalid_testcase.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/invalid_testcase.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/app/js/jquery.treeview.css" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/app/js/jquery.treeview.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/mass_test.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/mass_test.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/memory_test.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/memory_test.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/reader/memory_test.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/reader/memory_test.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/misc_testcase.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/misc_testcase.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/performance_test.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/performance_test.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/reader/performance_test.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/reader/performance_test.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/app/js/screen.css" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/app/js/screen.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/selector_testcase.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/selector_testcase.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/reader/selector_testcase.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/reader/selector_testcase.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/simple_html_dom.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/simple_html_dom.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/example/simple_html_dom_utility.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/example/simple_html_dom_utility.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/slick_test.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/slick_test.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/std_testcase.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/std_testcase.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/strip_testcase.php" afterPath="$PROJECT_DIR$/library/SimpleHtmlDom/testcase/strip_testcase.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/img/delete.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/img/delete2.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/img/insert.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/module/Sic/Admin/src/Models/IO/Console.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Pub/PubEdit.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Pub/PubEdit.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Pub/PubList.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Pub/PubList.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/User/UserEdit.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/User/UserEdit.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/User/UserList.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/User/UserList.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/js/sic/widget/sicInputArray.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/js/sic/object/sicMessageTunnel.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/data/sql/sql_sic_init.sql" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Users/ListUsers.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Users/ListUsers.php" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Users/Manage.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Users/Manage.php" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/System/Dashboard.js" afterPath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/System/Dashboard.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/System/Dashboard.php" afterPath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/System/Dashboard.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/ZF2/ZendFramework-2.3.3/library/Zend/Uri/Http.php" afterPath="$PROJECT_DIR$/library/ZF2/ZendFramework-2.3.3/library/Zend/Uri/Http.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/module/Sic/Admin/src/Controller/IndexController.php" afterPath="$PROJECT_DIR$/module/Sic/Admin/src/Controller/IndexController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/ZF2/ZendFramework-2.3.3/library/Zend/ModuleManager/ModuleManager.php" afterPath="$PROJECT_DIR$/library/ZF2/ZendFramework-2.3.3/library/Zend/ModuleManager/ModuleManager.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/ZF2/ZendFramework-2.3.3/library/Zend/Uri/Uri.php" afterPath="$PROJECT_DIR$/library/ZF2/ZendFramework-2.3.3/library/Zend/Uri/Uri.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Test/WidgetTest.js" afterPath="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Test/WidgetTest.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/module/Sic/Admin/view/layout/layout.phtml" afterPath="$PROJECT_DIR$/module/Sic/Admin/view/layout/layout.phtml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/module/Sic/Admin/view/index/login.phtml" afterPath="$PROJECT_DIR$/module/Sic/Admin/view/index/login.phtml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/css/sic.css" afterPath="$PROJECT_DIR$/public/css/sic.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/sic/sic.js" afterPath="$PROJECT_DIR$/public/js/sic/sic.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/sic/widget/sicDataTable.js" afterPath="$PROJECT_DIR$/public/js/sic/widget/sicDataTable.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/sic/widget/sicElement.js" afterPath="$PROJECT_DIR$/public/js/sic/widget/sicElement.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/sic/widget/sicForm.js" afterPath="$PROJECT_DIR$/public/js/sic/widget/sicForm.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/sic/widget/sicInput.js" afterPath="$PROJECT_DIR$/public/js/sic/widget/sicInput.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/sic/widget/sicTabPage.js" afterPath="$PROJECT_DIR$/public/js/sic/widget/sicTabPage.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/sic/util.js" afterPath="$PROJECT_DIR$/public/js/sic/util.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path=".idea/" />
@@ -60,71 +63,103 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Cobiss.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/library/Cobiss2/Cobiss.php">
+      <file leaf-file-name="Search.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/library/Cobiss2/Search.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="500" max-vertical-offset="800">
-              <caret line="25" column="5" selection-start-line="25" selection-start-column="5" selection-end-line="25" selection-end-column="5" />
+            <state vertical-scroll-proportion="-12.076923" vertical-offset="286" max-vertical-offset="1620">
+              <caret line="30" column="5" selection-start-line="30" selection-start-column="5" selection-end-line="30" selection-end-column="5" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="UserAgent.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/library/Cobiss2/UserAgent.php">
+      <file leaf-file-name="sql_sic_init.sql" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/data/sql/sql_sic_init.sql">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="460" max-vertical-offset="680">
-              <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+            <state vertical-scroll-proportion="-0.4" vertical-offset="0" max-vertical-offset="220">
+              <caret line="1" column="38" selection-start-line="0" selection-start-column="0" selection-end-line="1" selection-end-column="53" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Display.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/library/Cobiss2/Display.php">
+      <file leaf-file-name="UserList.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/User/UserList.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="240">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="440">
               <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Search.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/library/Cobiss2/Search.php">
+      <file leaf-file-name="UserList.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/User/UserList.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.24098672" vertical-offset="286" max-vertical-offset="1620">
-              <caret line="27" column="8" selection-start-line="27" selection-start-column="8" selection-end-line="27" selection-end-column="8" />
+            <state vertical-scroll-proportion="-16.153847" vertical-offset="0" max-vertical-offset="880">
+              <caret line="22" column="39" selection-start-line="12" selection-start-column="8" selection-end-line="22" selection-end-column="39" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Request.php" pinned="false" current-in-tab="false">
-        <entry file="phar://$PROJECT_DIR$/library/Cobiss/httpful.phar/Httpful/Request.php">
+      <file leaf-file-name="UserEdit.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/User/UserEdit.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="19740" max-vertical-offset="21740">
-              <caret line="20" column="6" selection-start-line="20" selection-start-column="6" selection-end-line="20" selection-end-column="6" />
+            <state vertical-scroll-proportion="-20.115385" vertical-offset="117" max-vertical-offset="1440">
+              <caret line="34" column="65" selection-start-line="34" selection-start-column="21" selection-end-line="34" selection-end-column="65" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Request.php" pinned="false" current-in-tab="false">
-        <entry file="phar://$PROJECT_DIR$/library/Httpful/httpful.phar/Httpful/Request.php">
+      <file leaf-file-name="UserEdit.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/User/UserEdit.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="15578" max-vertical-offset="22800">
-              <caret line="796" column="27" selection-start-line="796" selection-start-column="27" selection-end-line="796" selection-end-column="27" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1100">
+              <caret line="14" column="39" selection-start-line="14" selection-start-column="39" selection-end-line="14" selection-end-column="39" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Cobiss.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/library/Cobiss/Cobiss.php">
+      <file leaf-file-name="PubEdit.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/Pub/PubEdit.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="260" max-vertical-offset="7300">
-              <caret line="60" column="100" selection-start-line="60" selection-start-column="8" selection-end-line="60" selection-end-column="100" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="820">
+              <caret line="16" column="97" selection-start-line="7" selection-start-column="3" selection-end-line="16" selection-end-column="97" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PubEdit.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/Pub/PubEdit.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="79.11539" vertical-offset="2257" max-vertical-offset="3080">
+              <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+              <folding>
+                <element signature="e#40#94#0#PHP" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Sql.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/library/ZF2/ZendFramework-2.3.3/library/Zend/Db/Sql/Sql.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-10.884615" vertical-offset="1137" max-vertical-offset="2860">
+              <caret line="79" column="20" selection-start-line="79" selection-start-column="20" selection-end-line="79" selection-end-column="20" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PubList.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/Pub/PubList.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-0.14216281" vertical-offset="277" max-vertical-offset="1100">
+              <caret line="9" column="60" selection-start-line="9" selection-start-column="60" selection-end-line="9" selection-end-column="60" />
               <folding />
             </state>
           </provider>
@@ -143,9 +178,6 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/module/Zic2/Admin/view/zic2/index/index.phtml" />
-        <option value="$PROJECT_DIR$/public/index.php" />
-        <option value="$PROJECT_DIR$/library/ZF2/ZendFramework-2.3.3/library/Zend/View/Renderer/PhpRenderer.php" />
         <option value="$PROJECT_DIR$/module/Zic2/Home/view/error/404.phtml" />
         <option value="$PROJECT_DIR$/module/Zic2/Home/view/index.phtml" />
         <option value="$PROJECT_DIR$/library/ZF2/ZendFramework-2.3.3/library/Zend/Mvc/Application.php" />
@@ -194,6 +226,9 @@
         <option value="$PROJECT_DIR$/library/Cobiss2/UserAgent.php" />
         <option value="$PROJECT_DIR$/library/Cobiss2/Cobiss.php" />
         <option value="$PROJECT_DIR$/library/Cobiss2/Search.php" />
+        <option value="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Pub/PubEdit.js" />
+        <option value="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Pub/PubEdit.php" />
+        <option value="$PROJECT_DIR$/module/Sic/Admin/src/Modules/Pub/PubList.php" />
       </list>
     </option>
   </component>
@@ -272,15 +307,169 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="library" />
+              <option name="myItemId" value="module" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="ZF2" />
+              <option name="myItemId" value="Sic" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="ZendFramework-2.3.3" />
+              <option name="myItemId" value="Admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sic" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sic" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="module" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Sic" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="User" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sic" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sic" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="module" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Sic" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sic" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sic" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="module" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Sic" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Pub" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sic" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sic" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="module" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Sic" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Models" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sic" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sic" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="module" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Sic" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Admin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -297,16 +486,22 @@
               <option name="myItemId" value="library" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+          </PATH>
+          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="ZF2" />
+              <option name="myItemId" value="sic" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sic" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="ZendFramework-2.3.3" />
+              <option name="myItemId" value="data" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="library" />
+              <option name="myItemId" value="sql" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -320,129 +515,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="library" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ZF2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ZendFramework-2.3.3" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="library" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Zend" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sic" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sic" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="library" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ZF2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ZendFramework-2.3.3" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="library" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Zend" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="View" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sic" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sic" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="library" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="SimpleHtmlDom" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sic" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sic" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="library" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Httpful" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sic" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sic" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="library" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Cobiss2" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sic" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sic" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="library" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Cobiss" />
+              <option name="myItemId" value="data" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -487,15 +560,15 @@
       <BehatRunner />
       <method />
     </configuration>
+    <configuration default="true" type="PhpUnitRemoteRunConfigurationType" factoryName="PHPUnit on Server">
+      <method />
+    </configuration>
     <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
       <node-options />
       <gulpfile />
       <tasks />
       <pass-parent-env-vars>false</pass-parent-env-vars>
       <envs />
-      <method />
-    </configuration>
-    <configuration default="true" type="PhpUnitRemoteRunConfigurationType" factoryName="PHPUnit on Server">
       <method />
     </configuration>
     <list size="0" />
@@ -643,14 +716,25 @@
       <option name="project" value="LOCAL" />
       <updated>1424112346494</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="commit&#10;">
+      <created>1424112362013</created>
+      <option name="number" value="00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1424112362013</updated>
+    </task>
+    <task id="LOCAL-00024" summary="v">
+      <created>1424112453016</created>
+      <option name="number" value="00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1424112453016</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1877" height="1177" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32942238" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
@@ -660,13 +744,14 @@
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18540224" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.20848376" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20848376" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Data Sources" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32946146" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32942238" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
@@ -694,7 +779,8 @@
     <MESSAGE value="Sessions" />
     <MESSAGE value="foo" />
     <MESSAGE value="commit&#10;" />
-    <option name="LAST_COMMIT_MESSAGE" value="commit&#10;" />
+    <MESSAGE value="v" />
+    <option name="LAST_COMMIT_MESSAGE" value="v" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
   </component>
   <component name="XDebuggerManager">
@@ -704,55 +790,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/config/application.config.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.538462" vertical-offset="0" max-vertical-offset="460">
-          <caret line="15" column="10" selection-start-line="15" selection-start-column="10" selection-end-line="15" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/init_autoloader.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="849">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/.htaccess">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="849">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/library/Cobiss/example.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="19.615385" vertical-offset="510" max-vertical-offset="1320">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/css/sic.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="20" max-vertical-offset="720">
-          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/sic/widget/sicTabPage.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="260" max-vertical-offset="3660">
-          <caret line="12" column="11" selection-start-line="12" selection-start-column="11" selection-end-line="12" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/css/modules.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="480">
-          <caret line="15" column="18" selection-start-line="15" selection-start-column="18" selection-end-line="15" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/module/Sic/Admin/config/module.config.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="120" max-vertical-offset="1620">
@@ -900,13 +937,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/Users/ListUsers.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="849">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/Test/WidgetTest.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="680">
@@ -956,14 +986,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/Users/ListUsers.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.2962963" vertical-offset="0" max-vertical-offset="1080">
-          <caret line="16" column="46" selection-start-line="16" selection-start-column="46" selection-end-line="16" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/Test/Cobiss2.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="849">
@@ -982,7 +1004,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.018975332" vertical-offset="0" max-vertical-offset="1054">
           <caret line="1" column="50" selection-start-line="1" selection-start-column="50" selection-end-line="1" selection-end-column="50" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1064,8 +1085,82 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/library/Cobiss2/Search.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.24098672" vertical-offset="286" max-vertical-offset="1620">
-          <caret line="27" column="8" selection-start-line="27" selection-start-column="8" selection-end-line="27" selection-end-column="8" />
+        <state vertical-scroll-proportion="-12.076923" vertical-offset="286" max-vertical-offset="1620">
+          <caret line="30" column="5" selection-start-line="30" selection-start-column="5" selection-end-line="30" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/sql/sql_sic_init.sql">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.4" vertical-offset="0" max-vertical-offset="220">
+          <caret line="1" column="38" selection-start-line="0" selection-start-column="0" selection-end-line="1" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/User/UserEdit.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1100">
+          <caret line="14" column="39" selection-start-line="14" selection-start-column="39" selection-end-line="14" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/ZF2/ZendFramework-2.3.3/library/Zend/Db/Sql/Sql.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-10.884615" vertical-offset="1137" max-vertical-offset="2860">
+          <caret line="79" column="20" selection-start-line="79" selection-start-column="20" selection-end-line="79" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/User/UserList.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="849">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/Pub/PubEdit.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="820">
+          <caret line="16" column="97" selection-start-line="7" selection-start-column="3" selection-end-line="16" selection-end-column="97" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/User/UserEdit.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-20.115385" vertical-offset="117" max-vertical-offset="1440">
+          <caret line="34" column="65" selection-start-line="34" selection-start-column="21" selection-end-line="34" selection-end-column="65" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/User/UserList.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-16.153847" vertical-offset="0" max-vertical-offset="880">
+          <caret line="22" column="39" selection-start-line="12" selection-start-column="8" selection-end-line="22" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/Pub/PubEdit.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="79.11539" vertical-offset="2257" max-vertical-offset="3080">
+          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding>
+            <element signature="e#40#94#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/module/Sic/Admin/src/Modules/Pub/PubList.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.14216281" vertical-offset="277" max-vertical-offset="1100">
+          <caret line="9" column="60" selection-start-line="9" selection-start-column="60" selection-end-line="9" selection-end-column="60" />
           <folding />
         </state>
       </provider>

@@ -14,6 +14,13 @@ sic.widget.sicDataTable = function(args)
     // Settings - Basic
     this.name = sic.getArg(args, "name", null);
     this.caption = sic.getArg(args, "caption", "");
+    this.primaryKey = sic.getArg(args, "primaryKey", null);
+    this.entityTitle = sic.getArg(args, "entityTitle", null);
+    this.dataSource = sic.getArg(args, "dataSource", null);
+    this.editorModuleArgs = sic.getArg(args, "editorModuleArgs", null);
+
+    this.canInsert = sic.getArg(args, "canInsert", true);
+    this.canDelete = sic.getArg(args, "canDelete", true);
 
     // Settings - Appearance
     this.cssClass_holderDiv = sic.getArg(args, "cssClass_holderDiv", "sicDataTable");
@@ -65,6 +72,7 @@ sic.widget.sicDataTable = function(args)
 
         _p.createHeaderRow();
         _p.createRows();
+        _p.createInsertButton();
     };
 
     // Header
@@ -110,23 +118,46 @@ sic.widget.sicDataTable = function(args)
         }
     };
 
+    this.createInsertButton = function() {
+        _p.insertButton = new sic.widget.sicElement({parent:_p.selector, tagClass:"insertButton"});
+        _p.insertButton.img = new sic.widget.sicElement({parent:_p.insertButton.selector, tagName:"img"});
+        _p.insertButton.img.selector.addClass("icon16");
+        _p.insertButton.img.selector.attr("src", "/img/insert.png");
+        _p.insertButton.span = new sic.widget.sicElement({parent:_p.insertButton.selector, tagName:"span"});
+        _p.insertButton.span.selector.html("Insert");
+        _p.insertButton.selector.click(function(e){
+            var row = _p.createEmptyRow();
+            var tabName = sic.mergePlaceholders(_p.entityTitle, row);
+            var editorModuleArgs = sic.mergeObjects(_p.editorModuleArgs, {newTab:tabName, entityTitle:_p.entityTitle});
+            editorModuleArgs.onClosed = function(args){ _p.refresh(); };
+            sic.loadModule(editorModuleArgs);
+        });
+    };
+
     this.getEventArgs = function(){
         return { dataTable: _p };
     };
 
 
     this.getValueType = function(val) {
-        return "str";
+        if (jQuery.isNumeric(val)) {
+            return 'int';
+        }
+        return 'str';
     };
 
     this.getInitValueForType = function(valType) {
-        return "";
+        switch (valType) {
+            case 'int': return 0;
+            case 'delete': return '<img src="/img/delete.png" class="icon16" />';
+            default: return '';
+        }
     };
 
     this.createBluePrintFromData = function(tableData, onlyCheckFirstRow) {
         var bluePrint = {
             fields: {},
-            rowsPerPage: 10
+            rowsPerPage: 20
         };
         for (var i in tableData) {
             var row = tableData[i];
@@ -142,25 +173,90 @@ sic.widget.sicDataTable = function(args)
             }
             if (onlyCheckFirstRow) break;
         }
+
+        // Delete Button
+        if (_p.canDelete) {
+            var fieldDel = {};
+            fieldDel.fieldKey = '_delete';
+            fieldDel.fieldLabel = 'Delete';
+            fieldDel.fieldType = 'delete';
+            fieldDel.initValue = _p.getInitValueForType(fieldDel.fieldType);
+            bluePrint.fields['_delete'] = fieldDel;
+        }
+
         return bluePrint;
     };
 
+    this.createEmptyRow = function(){
+        var result = {};
+        for (var i in _p.bluePrint.fields) {
+            var fieldBP = _p.bluePrint.fields[i];
+            result[fieldBP.fieldKey] = _p.getInitValueForType(fieldBP.fieldType);
+        }
+        return result;
+    };
+
     this.setValue = function(tableData) {
+        for (var i = 0; i < _p.rows.length; i++){
+            if (_p.rows[i] && tableData[i]) {
+                _p.rows[i].setValue(tableData[i]);
+            } else {
+                _p.rows[i].hide();
+            }
+        }
+
+        /*
         for (var i in tableData){
             if (_p.rows[i]) {
                 _p.rows[i].setValue(tableData[i]);
             }
         }
+        */
     };
 
     this.getValue = function(){
     };
 
+    this.init = function(){
+        // if EditorModule given, bind edit events
+        if (_p.editorModuleArgs) {
+            _p.onRowDoubleClick(function(args){
+                var row = args.row.getValue();
+                var tabName = args.row.reprValue();
+                var editorModuleArgs = sic.mergeObjects(_p.editorModuleArgs, {newTab:tabName, entityTitle:_p.entityTitle});
+                editorModuleArgs.onClosed = function(args){ _p.refresh(); };
+                if (_p.primaryKey)
+                    for (var pkIdx in _p.primaryKey)
+                        editorModuleArgs[_p.primaryKey[pkIdx]] = row[_p.primaryKey[pkIdx]];
+                sic.loadModule(editorModuleArgs);
+            });
+
+            _p.onFieldClick(function(args){
+                if (args.field.fieldKey == "_delete") {
+                    if (confirm('Are you sure you want to delete record "'+args.row.reprValue()+'"?')) {
+                        var response = _p.dataSource.delete(args.row.getValue());
+                        if (response) _p.setValue(response.data);
+                    }
+                }
+            });
+        }
+    };
+
     this.initAndPopulate = function(tableData){
+        _p.init();
+        if (!tableData) tableData = _p.dataSource.select().data;
         _p.bluePrint = _p.createBluePrintFromData(tableData);
         _p.createTable();
         _p.setValue(tableData);
     };
+
+    this.refresh = function() {
+        _p.setValue(_p.dataSource.select().data);
+    };
+
+    if (this.dataSource) {
+        _p.initAndPopulate();
+    }
 };
 
 
@@ -195,6 +291,10 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
         _p.display();
     };
 
+    this.hide = function(){
+        _p.displayNone();
+    };
+
     this.setValue = function(rowData){
 
         _p.show();
@@ -205,6 +305,26 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
     };
 
     this.getValue = function(){
+        var result = {};
+        for (var i in _p.fields) {
+            if (_p.fields[i].fieldKey[0] == '_') continue;
+            result[_p.fields[i].fieldKey] = _p.fields[i].fieldValue;
+        }
+        return result;
+    };
+
+    this.reprValue = function(){
+        var reprValue = "";
+        var row = _p.getValue();
+        if (_p.dataTable.entityTitle) {
+            reprValue = sic.mergePlaceholders(_p.dataTable.entityTitle, row);
+        } else if (_p.dataTable.primaryKey) {
+            for (var i in _p.dataTable.primaryKey){
+                if (reprValue) reprValue += ', ';
+                reprValue += row[_p.dataTable.primaryKey[i]];
+            }
+        }
+        return reprValue;
     };
 
     this.getEventArgs = function(){
@@ -232,6 +352,7 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
         if (_p.dataTable.preventContextMenu) { e.preventDefault(); return false; }
     });
 };
+
 
 sic.widget.sicDataTableField = function(tableRowWnd, args) {
 
@@ -284,6 +405,26 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
 
     // Set initial value
     this.setValue(this.fieldValue);
-
 };
 
+
+sic.widget.sicDataTableDataSource = function(args) {
+    // Init
+    var _p = this;
+    this._cons = sic.object.sicEventBase;
+    this._cons();
+
+    this.moduleName = sic.getArg(args, "moduleName", null);
+    this.methodNames = sic.getArg(args, "methodNames", { select:'dataTableSelect', delete:'dataTableDelete' });
+    this.editModule =  sic.getArg(args, "editModule", null);
+
+    this.select = function(args) {
+        var data = sic.callMethod({moduleName:_p.moduleName, methodName:_p.methodNames.select, data:args});
+        return data;
+    }
+
+    this.delete = function(args) {
+        var data = sic.callMethod({moduleName:_p.moduleName, methodName:_p.methodNames.delete, data:args});
+        return data;
+    }
+}

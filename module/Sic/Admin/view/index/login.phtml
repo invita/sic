@@ -1,17 +1,26 @@
 <div id="container"></div>
 <script type="text/javascript">
     $(function(){
+        var statusDiv = new sic.widget.sicElement({parent:$("#container"), tagClass:"statusDiv"});
+        statusDiv.selector.html("Login");
+
         var panel = new sic.widget.sicPanel({parent:$("#container")});
         var form = new sic.widget.sicForm({parent:panel.firstGroup.content.selector});
-        form.addInput({name:"username", type:"text", label:"Username"});
-        form.addInput({name:"password", type:"password", label:""});
-        form.addInput({name:"login", type:"button"})
-            .setGradient("blue").selector.click(function(e){
+        form.addInput({name:"username", type:"text", placeholder:"Username...", caption:""});
+        form.addInput({name:"password", type:"password", placeholder:"Password...", caption:""});
+        form.addInput({name:"login", type:"submit", value:"Login", gradient:"blue"})
+            .selector.click(function(e){
+                statusDiv.selector.removeClass("errorDiv");
+                statusDiv.selector.html("Login...");
                 $.post("/login", form.getValue(), function(data) {
                     var d = JSON.parse(data);
-                    if(d.status) window.location = "/";
+                    if(d.status){
+                        window.location = "/";
+                    } else {
+                        statusDiv.selector.addClass("errorDiv");
+                        statusDiv.selector.html('Login incorrect.');
+                    }
                 });
             });
-
     });
 </script>

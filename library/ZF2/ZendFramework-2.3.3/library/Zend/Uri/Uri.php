@@ -868,7 +868,7 @@ class Uri implements UriInterface
     /**
      * Validate the host part
      *
-     * Users may control which host types to allow by passing a second parameter
+     * User may control which host types to allow by passing a second parameter
      * with a bitmask of HOST_* constants which are allowed. If not specified,
      * all address types will be allowed.
      *

@@ -19,38 +19,54 @@ sic.widget.sicTabPage = function(args)
     this.content = null;
     this.uniqId = sic.widget._nextTabId();
 
+    this.eventb = sic.object.sicEventBase;
+    this.eventb();
+
+    this.parentTab = null;
+    this.childTabs = {};
+
     // Settings
     this.parent = sic.getArg(args, "parent", null);
-    this.name = sic.getArg(args, "name", "newTab");
+    this.name = sic.getArg(args, "name", this.uniqId);
+    this.caption = sic.getArg(args, "caption", args.name ? this.name : "newTab");
     this.autoActive = sic.getArg(args, "autoActive", true);
     this.unique = sic.getArg(args, "unique", false);
     this.canClose = sic.getArg(args, "canClose", true);
+    this.canCloseFirstTab = sic.getArg(args, "canCloseFirstTab", false);
     this.contentText = sic.getArg(args, "contentText", "");
     this.fadeTime = sic.getArg(args, "fadeTime", sic.defaults.fadeTime);
 
-    this.defaultGradient = "gold";
-    this.selectedGradient = "blue";
+    this.activeGrad = sic.getArg(args, "activeGrad", sic.defaults.tabActiveGrad);
+    this.inactiveGrad = sic.getArg(args, "inactiveGrad", sic.defaults.tabInactiveGrad);
 
+
+    // Events
+    this.onClose = function(f) { _p.subscribe("onClose", f); };
+    this.onClosed = function(f) { _p.subscribe("onClosed", f); };
 
     // Implementation
 
     this._createHeader = function(parent){
         _p.header = new sic.widget.sicTabPageHeader({parent:parent, insertAtTop:true});
         _p.header.selector.addClass("sicTabHeader");
+        _p.header.selector.sicTabPageHeader = _p.header;
     };
 
     this._createTabButton = function(sicTabHeader){
+        var isFirstTab = sicTabHeader.children().length == 0;
         _p.tabButton = new sic.widget.sicElement({parent:sicTabHeader});
         _p.tabButton.selector.addClass("sicTabButton");
+        _p.tabButton.setGradient(_p.inactiveGrad);
 
         _p.tabButton.captionSpan = new sic.widget.sicElement({parent:_p.tabButton.selector, tagName:'span'});
         _p.tabButton.captionSpan.selector.addClass("sicTabButton_caption");
-        _p.tabButton.captionSpan.selector.html(_p.name);
+        if (_p.caption) _p.setCaption(_p.caption);
 
-        if (_p.canClose) _p._createCloseSpan();
+        if (_p.canClose && (_p.canCloseFirstTab || !isFirstTab)) _p._createCloseSpan();
 
         _p.tabButton.selector.click(function(e){
             _p.selectTab();
+            //alert("("+_p.uniqId+") Child Tabs:\n"+sic.debug(_p.childTabs, 0));
         });
     };
 
@@ -66,6 +82,7 @@ sic.widget.sicTabPage = function(args)
 
     this._createTabContent = function(sicTabHeader){
         _p.content = new sic.widget.sicElement({parent:sicTabHeader});
+        _p.content.selector.sicTabPage = _p;
         _p.content.selector.addClass("sicTabContent");
         _p.content.selector.css("display", "none");
         _p.content.selector.html(_p.contentText);
@@ -78,15 +95,23 @@ sic.widget.sicTabPage = function(args)
         for (var i in _p.header.pages) {
             var page = _p.header.pages[i];
             page.tabButton.selector.removeClass("active");
-            page.tabButton.setGradient(_p.defaultGradient);
+            page.tabButton.setGradient(_p.inactiveGrad);
             page.content.selector.css("display", "none");
         }
         _p.tabButton.selector.addClass("active");
-        _p.tabButton.setGradient(_p.selectedGradient);
+        _p.tabButton.setGradient(_p.activeGrad);
         _p.content.selector.fadeIn(_p.fadeTime);
     };
 
     this.destroyTab = function(){
+        _p.trigger("onClose", {tabPage:_p});
+
+        for (var childIdx in _p.childTabs) {
+            _p.childTabs[childIdx].destroyTab();
+        }
+        if (_p.parentTab)
+            delete _p.parentTab.childTabs[_p.uniqId];
+
         var pageToSelectAfterClose = null;
         if (_p.tabButton.selector.hasClass("active"))
             pageToSelectAfterClose = _p.header.findPageBeforeId(_p.uniqId);
@@ -97,31 +122,61 @@ sic.widget.sicTabPage = function(args)
 
         if (pageToSelectAfterClose)
             pageToSelectAfterClose.selectTab();
+
+        _p.trigger("onClosed", {});
     };
 
+    this.setCaption = function(newCaption) {
+        newCaption = newCaption.trim();
+        _p.caption = newCaption;
+        _p.tabButton.captionSpan.selector.html(newCaption);
+    };
+
+    this.alertMode = false;
     this.appendTo = function(parent, insertInFront) {
 
         var contentParent;
         if (parent.isTabPage){
 
             // Appending to parent sicTabPage
+            if (_p.alertMode) alert("append "+_p.name+" to "+_p.parent.name);
             _p.header = parent.header;
-            contentParent = parent.parent;
+            contentParent = parent.header.parent;
+
+            if (contentParent.hasClass("sicTabContent") && contentParent.sicTabPage){
+                _p.parentTab = contentParent.sicTabPage;
+                _p.parentTab.childTabs[_p.uniqId] = _p;
+            }
 
         } else if (parent.isTabPageHeader){
 
             // Appending to parent sicTabPageHeader
+            if (_p.alertMode) alert("append "+_p.name+" to another tabPage header");
             _p.header = parent;
             contentParent = parent.parent;
+
+            if (contentParent.hasClass("sicTabContent") && contentParent.sicTabPage){
+                _p.parentTab = contentParent.sicTabPage;
+                _p.parentTab.childTabs[_p.uniqId] = _p;
+            }
 
         } else {
 
             // Appending to parent sicElement
-            if (parent.isSicElement) parent = parent.selector;
+            if (parent.isSicElement) {
+                if (_p.alertMode) alert("append "+_p.name+" to sicElement");
+                parent = parent.selector;
+            }
             contentParent = parent;
 
             // Appending to an element (jquery)
+            if (_p.alertMode) alert("append "+_p.name+" to jQuery selector");
             _p._createHeader(parent);
+
+            if (parent.hasClass("sicTabContent") && parent.sicTabPage) {
+                _p.parentTab = parent.sicTabPage;
+                _p.parentTab.childTabs[_p.uniqId] = _p;
+            }
         }
 
         //sic.dump(contentParent);

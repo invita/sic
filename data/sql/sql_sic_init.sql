@@ -1,0 +1,5 @@
+ALTER TABLE `user` ADD `email` VARCHAR(64) NOT NULL;
+ALTER TABLE `user` ADD `notes` VARCHAR(256) NOT NULL;
+
+
+

@@ -1,7 +1,6 @@
 var F = function(args){
 
-    var tabPage = args.helpers.createTabPage({name:"System"});
-    var childPage = tabPage.createChildPage({name:"Dashboard", canClose:false});
-    var childPage2 = childPage.createChildPage({name:"Dashboard2"});
-
+    var tabPage = args.helpers.createTabPage({name:"Dashboard"});
+    var testData = sic.callMethod({moduleName:"System/Dashboard", methodName:"getSystemStatus"});
+    tabPage.content.selector.html(sic.debug(testData, 2, '<br/>\n'));
 };

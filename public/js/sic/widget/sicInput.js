@@ -2,75 +2,128 @@ sic.widget.sicInput = function(args)
 {
     // Init
     var _p = this;
+
     this._cons = sic.widget.sicElement;
+    this._cons({ parent:args.parent });
+    this.selector.addClass("sicInputDiv");
 
-    this.type = sic.getArg(args, "type", "text");
-    switch(this.type){
-        case "textarea": this.tagName = "textarea"; break;
-        default: this.tagName = "input"; break;
-    }
-
-    this._cons({ parent:args.parent, tagName:this.tagName });
-    this.selector.addClass("sicInput");
+    this._eventb = sic.object.sicEventBase;
+    this._eventb();
 
     // Settings
+    this.type = sic.getArg(args, "type", "text");
+    switch(this.type){
+        case "textarea": this.inputTagName = "textarea"; break;
+        default: this.inputTagName = "input"; break;
+    }
+
     this.name = sic.getArg(args, "name", null);
+    this.value = sic.getArg(args, "value", "");
+    this.placeholder = sic.getArg(args, "placeholder", "");
+    this.readOnly = sic.getArg(args, "readOnly", false);
+    this.gradient = sic.getArg(args, "gradient", null);
+    this.caption = sic.getArg(args, "caption", null);
+
+    // Events
+    this.onKeyDown = function(f) { _p.subscribe("onKeyDown", f); };
+    this.onKeyPressed = function(f) { _p.subscribe("onKeyPressed", f); };
+    this.onKeyUp = function(f) { _p.subscribe("onKeyUp", f); };
+
+
+    // Create elements
+    this.input = new sic.widget.sicElement({ parent:this.selector, tagName:this.inputTagName });
+    this.input.selector.addClass("sicInput");
+    this.inputs = [this.input];
+
+    // Implementation
     if (!this.name) this.name = sic.widget._nextInputId();
 
-    this.label = sic.getArg(args, "label", "");
-    this.value = sic.getArg(args, "value", "");
-
     if (this.type != "textarea")
-        this.selector.attr("type", this.type);
+        this.input.selector.attr("type", this.type);
 
     if (this.name)
-        this.selector.attr("name", this.name);
+        this.input.selector.attr("name", this.name);
 
     if (this.type == "button" && !this.value)
         this.value = this.name;
 
-    this.labelMode = false;
+    if (this.readOnly)
+        this.input.selector.attr("readonly", true);
 
-    this.displayLabel = function(){
-        _p.realValue = _p.selector.val();
-        _p.selector.val(_p.label);
-        _p.selector.addClass("labeled");
-        _p.labelMode = true;
-    };
-
-    this.undisplayLabel = function(){
-        _p.selector.val(_p.realValue);
-        _p.selector.removeClass("labeled");
-        _p.labelMode = false;
+    this.setPlaceholder = function(newPlaceholder){
+        if (!newPlaceholder) {
+            _p.placeholder = "";
+            _p.input.selector.removeAttr("placeholder");
+        } else {
+            _p.placeholder = newPlaceholder;
+            _p.input.selector.attr("placeholder", _p.placeholder);
+        }
     };
 
     this.getValue = function(){
-        if (_p.labelMode)
-            return _p.realValue
-        else
-            return _p.selector.val();
+        return _p.input.selector.val();
     };
 
     this.setValue = function(value){
-        _p.realValue = value;
-        _p.selector.val(value);
+        _p.input.selector.val(value);
+        _p.origValue = value;
     };
 
-    this.onEnter = function(e){
-        _p.undisplayLabel();
+    this.calcModified = function(){
+        var modified = _p.getValue() != _p.origValue;
+        if (_p.modified == modified) return;
+
+        _p.modified = modified;
+        if (_p.modified) {
+            _p.selector.addClass("modified");
+        } else {
+            _p.selector.removeClass("modified");
+        }
     };
 
-    this.onExit = function(e){
-        if (_p.getValue() === "")
-            _p.displayLabel();
-        else
-            _p.realValue = _p.getValue();
+    this.isButton = function(){
+        return _p.type == "button" || _p.type == "submit";
     };
 
-    this.selector.focus(this.onEnter);
-    this.selector.blur(this.onExit);
+    if (this.placeholder) this.setPlaceholder(this.placeholder);
     this.setValue(this.value);
-    if (!this.value) this.displayLabel();
+
+    if (this.isButton()) {
+        if (this.type == "submit" && !this.gradient) this.gradient = sic.defaults.submitGrad
+        if (this.type == "button" && !this.gradient) this.gradient = sic.defaults.buttonGrad;
+        this.selector.css('display', 'inline-table');
+    }
+
+    if (this.gradient) this.input.setGradient(this.gradient);
+
+    // Internal events
+    this._onKeyDown = function(e) {
+        e.sicInput = _p;
+        _p.trigger('onKeyDown', e);
+    };
+    this._onKeyPressed = function(e) {
+        e.sicInput = _p;
+        _p.trigger('onKeyPressed', e);
+    };
+    this._onKeyUp = function(e) {
+        e.sicInput = _p;
+        _p.calcModified();
+        _p.trigger('onKeyUp', e);
+    };
+
+    this.input.selector.keydown(_p._onKeyDown);
+    this.input.selector.keypress(_p._onKeyPressed);
+    this.input.selector.keyup(_p._onKeyUp);
+
+    if (!this.isButton() && this.caption === null)
+        this.caption = sic.captionize(this.name);
+
+    if (typeof(this.caption) == "string" && this.caption) {
+        this.captionDiv = new sic.widget.sicElement({ parent:this.selector, insertAtTop:true, tagName:"div" });
+        this.captionDiv.selector.addClass("sicInputCaption");
+        this.captionDiv.selector.html(this.caption);
+    }
+
 };
 
 // Id Generator

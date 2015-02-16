@@ -7,12 +7,14 @@
     <script src="/js/sic/sic.js"></script>
     <script src="/js/sic/util.js"></script>
     <script src="/js/sic/object/sicEventBase.js"></script>
+    <script src="/js/sic/object/sicMessageTunnel.js"></script>
     <script src="/js/sic/widget/sicElement.js"></script>
     <script src="/js/sic/widget/sicTabPage.js"></script>
     <script src="/js/sic/widget/sicDataTable.js"></script>
     <script src="/js/sic/widget/sicPanel.js"></script>
     <script src="/js/sic/widget/sicForm.js"></script>
     <script src="/js/sic/widget/sicInput.js"></script>
+    <script src="/js/sic/widget/sicInputArray.js"></script>
 
     <link rel="stylesheet" href="/lib/zurb/css/normalize.css" />
     <link rel="stylesheet" href="/lib/zurb/css/foundation.css" />
@@ -35,7 +37,7 @@
             <td ><a href="/" title="Slovenian Index of citation - Admin"><img src="/img/logo2.png" width="40"/><div class="mainTitle">Slovenian Index of citation v2</div></a></td>
             <td align="right" class="pr_20" style="vertical-align:bottom;">
                 <?php if($this->hasIdentity){ ?>
-                    <a href="/logout">Logout</a>
+                    <span class="loginName"><?php echo $this->username; ?> (<a href="/logout">Logout</a>)</span>
                 <?php } ?>
                 <?php if(!$this->hasIdentity){ ?>
                     <a href="/login">Login</a>
@@ -53,13 +55,16 @@
                 <a href="javascript:sic.loadModule({moduleName:'Test/SearchModule'});">Search</a>
             </li>
             <li class="mainMenuList">
-                <a href="javascript:sic.loadModule({moduleName:'System/Dashboard'});">System</a>
+                <a href="javascript:sic.loadModule({moduleName:'System/Dashboard', newTab:'System'});">System</a>
             </li>
             <li class="mainMenuList">
-                <a href="javascript:sic.loadModule({moduleName:'Users/ListUsers'});">Users</a>
+                <a href="javascript:sic.loadModule({moduleName:'User/UserList', newTab:'Users'});">Users</a>
             </li>
             <li class="mainMenuList">
                 <a href="javascript:sic.loadModule({moduleName:'Test/Cobiss'});">Cobiss</a>
+            </li>
+            <li class="mainMenuList">
+                <a href="javascript:sic.loadModule({moduleName:'Pub/PubList', newTab:'Publications'});">Publications</a>
             </li>
             <li class="mainMenuList">
                 <a href="javascript:sic.loadModule({moduleName:'Test/WidgetTest'});">WidgetTest</a>

@@ -119,7 +119,7 @@ class Http extends Uri
      * Validate the host part of an HTTP URI
      *
      * This overrides the common URI validation method with a DNS or IP only
-     * default. Users may still enforce allowing other host types.
+     * default. User may still enforce allowing other host types.
      *
      * @param  string  $host
      * @param  int $allowed
