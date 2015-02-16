@@ -7,8 +7,7 @@ use Zend\Db\Sql\Sql;
 class PubList {
     public function dataTableSelect($args) {
 
-        // Select Publications
-
+        // S
         $publications = array(
             array(
                 "id" => "1",

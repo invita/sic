@@ -16,6 +16,7 @@ sic.widget.sicForm = function(args)
     // Settings
     this.enterSubmits = sic.getArg(args, "enterSubmits", true);
     this.showModified = sic.getArg(args, "showModified", true);
+    this.captionWidth = sic.getArg(args, "captionWidth", null);
     this.skipTypes = ["submit", "button"];
 
     // Events
@@ -24,10 +25,18 @@ sic.widget.sicForm = function(args)
     // Implementation
     this.addInput = function(args){
         var input;
+        var defArgs = {
+            showModified: _p.showModified,
+            captionWidth:_p.captionWidth,
+            parent:_p.selector,
+            type:"text",
+            inputConstruct: sic.widget.sicInput
+        };
+        args = sic.mergeObjects(defArgs, args)
         if (args.isArray) {
             input = new sic.widget.sicInputArray({ parent:_p.selector, name:args.name, inputArgs:args });
         } else {
-            input = new sic.widget.sicInput(sic.mergeObjects({ parent:_p.selector, type:"text"}, args));
+            input = new args.inputConstruct(args);
         }
         input.onKeyPressed(_p._onKeyPressed);
         if (args.type == "submit") {

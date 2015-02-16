@@ -65,4 +65,21 @@ class UserEdit {
 
         return $this->getUser($args);
     }
+
+    public function updatePermissions($args) {
+
+        $id = $args["id"];
+        $data = $args["data"];
+
+        /*
+        $adapter = GlobalAdapterFeature::getStaticAdapter();
+        $sql = new Sql($adapter);
+        $update = $sql->update()->table('user')->set(array("password" => sha1($data["password"])))->where(array('id' => $id));
+        $statement = $sql->prepareStatementForSqlObject($update);
+        $result = $statement->execute();
+        */
+        return $this->getUser($args);
+    }
+
+
 }

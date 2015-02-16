@@ -48,9 +48,14 @@ sic.mergePlaceholders = function(str, valueMapObj) {
     if (typeof(valueMapObj) == "object") {
         for (var key in valueMapObj) {
             var searchRegEx = new RegExp('%'+key+'%', 'ig');
-            str = str.replace(searchRegEx, valueMapObj[key]);
+            var replaceVal = null;
+            if (typeof(valueMapObj[key]) == "string" || typeof(valueMapObj[key]) == "number") replaceVal = valueMapObj[key];
+            else if (typeof(valueMapObj[key]) == "object") replaceVal = valueMapObj[Object.keys(valueMapObj)[0]];
+            if (replaceVal)
+                str = str.replace(searchRegEx, valueMapObj[key]);
         }
     }
+    while (str.indexOf('%') != -1) str = str.replace('%', '[').replace('%', '=?]');
     return str;
 };
 
