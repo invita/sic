@@ -13,8 +13,12 @@ var F = function(args){
     dataTable.initAndPopulate(userData['users']);
     dataTable.selector.css("cursor", "pointer");
     dataTable.onRowDoubleClick(function(args){
-        var id = args.row.fields.id.getValue();
-        var username = args.row.fields.username.getValue();
+        //var id = args.row.fields.id.getValue();
+        //var username = args.row.fields.username.getValue();
+
+        //sic.dump(args);
+        //alert(1);
+        //alert(JSON.stringify(args));
 
         //alert(id);
         //alert(username);
