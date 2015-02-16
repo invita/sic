@@ -72,7 +72,8 @@ sic.widget.sicDataTable = function(args)
 
         _p.createHeaderRow();
         _p.createRows();
-        _p.createInsertButton();
+        if (_p.canInsert)
+            _p.createInsertButton();
     };
 
     // Header
@@ -243,15 +244,18 @@ sic.widget.sicDataTable = function(args)
     };
 
     this.initAndPopulate = function(tableData){
-        _p.init();
-        if (!tableData) tableData = _p.dataSource.select().data;
-        _p.bluePrint = _p.createBluePrintFromData(tableData);
-        _p.createTable();
+        if (!_p.initialized) {
+            _p.init();
+            if (!tableData) tableData = _p.dataSource.select().data;
+            _p.bluePrint = _p.createBluePrintFromData(tableData);
+            _p.createTable();
+            _p.initialized = true;
+        }
         _p.setValue(tableData);
     };
 
     this.refresh = function() {
-        _p.setValue(_p.dataSource.select().data);
+        if (_p.dataSource) _p.setValue(_p.dataSource.select().data);
     };
 
     if (this.dataSource) {

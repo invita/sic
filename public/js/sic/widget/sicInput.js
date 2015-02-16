@@ -23,6 +23,8 @@ sic.widget.sicInput = function(args)
     this.readOnly = sic.getArg(args, "readOnly", false);
     this.gradient = sic.getArg(args, "gradient", null);
     this.caption = sic.getArg(args, "caption", null);
+    this.captionWidth = sic.getArg(args, "captionWidth", null);
+    this.showModified = sic.getArg(args, "showModified", true);
 
     // Events
     this.onKeyDown = function(f) { _p.subscribe("onKeyDown", f); };
@@ -107,7 +109,7 @@ sic.widget.sicInput = function(args)
     };
     this._onKeyUp = function(e) {
         e.sicInput = _p;
-        _p.calcModified();
+        if (_p.showModified) _p.calcModified();
         _p.trigger('onKeyUp', e);
     };
 
@@ -121,6 +123,7 @@ sic.widget.sicInput = function(args)
     if (typeof(this.caption) == "string" && this.caption) {
         this.captionDiv = new sic.widget.sicElement({ parent:this.selector, insertAtTop:true, tagName:"div" });
         this.captionDiv.selector.addClass("sicInputCaption");
+        if (_p.captionWidth) this.captionDiv.selector.css("width", _p.captionWidth);
         this.captionDiv.selector.html(this.caption);
     }
 

@@ -4,7 +4,7 @@ var F = function(args) {
     var panel = new sic.widget.sicPanel({parent:tabPage.content.selector,
         firstGroupName:args.id ? "Update Pub (id: "+args.id+")" : "Insert Pub"});
 
-    var formUserData = new sic.widget.sicForm({parent:panel.firstGroup.content.selector});
+    var formUserData = new sic.widget.sicForm({parent:panel.firstGroup.content.selector, captionWidth:"100px"});
     formUserData.addInput({name:"id", type:"text", placeholder:"Id...", readOnly:true});
     formUserData.addInput({name:"parentId", type:"text", placeholder:"ParentId..."});
     //formUserData.addInput({name:"parentName", type:"text", placeholder:"ParentName..."});
@@ -15,7 +15,7 @@ var F = function(args) {
     formUserData.addInput({name:"issn", type:"text", placeholder:"Issn..."});
     formUserData.addInput({name:"originalId", type:"text", placeholder:"OriginalId..."});
     formUserData.addInput({name:"childId", type:"text", placeholder:"ChildId...", isArray:true});
-    formUserData.addInput({name:"save", type:"submit", value:"Save"}).selector.click(function(e){
+    formUserData.addInput({name:"save", type:"submit", value:"Save", caption:" "}).selector.click(function(e){
         var response = sic.callMethod({moduleName:"Pub/PubEdit", methodName:"pubUpdate",
             id: args.id, data:formUserData.getValue()});
         if (response && response.data) {

@@ -4,7 +4,7 @@ var F = function(args){
     var dataTable = new sic.widget.sicDataTable({
         parent:tabPage.content.selector,
         primaryKey: ['id'],
-        entityTitle: "Pub %id% - %name%",
+        entityTitle: "Pub %id% - %title%",
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Pub/PubList"
         }),

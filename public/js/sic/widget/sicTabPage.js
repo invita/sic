@@ -177,6 +177,7 @@ sic.widget.sicTabPage = function(args)
                 _p.parentTab = parent.sicTabPage;
                 _p.parentTab.childTabs[_p.uniqId] = _p;
             }
+
         }
 
         //sic.dump(contentParent);
@@ -189,11 +190,19 @@ sic.widget.sicTabPage = function(args)
             _p._createTabContent(contentParent);
             _p.header.addPageReference(_p.uniqId, _p);
         } else {
-            for (i in pageWithThatName)
+            for (var i in pageWithThatName)
                 this[i] = pageWithThatName[i];
 
             pageWithThatName.selectTab();
         }
+    };
+
+    this.createTabPage = function(args) {
+        if (!args) args = {};
+        args.parent = _p;
+        var newTabPage = new sic.widget.sicTabPage(args);
+        newTabPage.parentTabPage = _p.parentTabPage;
+        return newTabPage;
     };
 
     this.createChildPage = function(args) {
