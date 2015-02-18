@@ -8,19 +8,21 @@
         var form = new sic.widget.sicForm({parent:panel.firstGroup.content.selector});
         form.addInput({name:"username", type:"text", placeholder:"Username...", caption:""});
         form.addInput({name:"password", type:"password", placeholder:"Password...", caption:""});
-        form.addInput({name:"login", type:"submit", value:"Login", gradient:"blue"})
-            .selector.click(function(e){
-                statusDiv.selector.removeClass("errorDiv");
-                statusDiv.selector.html("Login...");
-                $.post("/login", form.getValue(), function(data) {
-                    var d = JSON.parse(data);
-                    if(d.status){
-                        window.location = "/";
-                    } else {
-                        statusDiv.selector.addClass("errorDiv");
-                        statusDiv.selector.html('Login incorrect.');
-                    }
-                });
+        form.addInput({name:"login", type:"submit", value:"Login", gradient:"blue"});
+        form.onSubmit(function(e){
+            $('img#loadingGif').css("display", "");
+            statusDiv.selector.removeClass("errorDiv");
+            statusDiv.selector.html("Login...");
+            $.post("/login", form.getValue(), function(data) {
+                var d = JSON.parse(data);
+                if(d.status){
+                    window.location = "/";
+                } else {
+                    statusDiv.selector.addClass("errorDiv");
+                    statusDiv.selector.html('Login incorrect.');
+                    $('img#loadingGif').fadeOut(sic.defaults.fadeTime);
+                }
             });
+        });
     });
 </script>
