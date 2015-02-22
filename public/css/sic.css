@@ -11,6 +11,7 @@ div.nav1 { margin-left:10px; }
 .inline { display: inline-table; }
 .margin5 { margin:5px; }
 .bold { font-weight:bold; }
+.vmid { vertical-align:middle; }
 
 table.logoTable { border:none; margin-bottom:0px; }
 div.mainTitle { display:inline-table; font-size:24px; margin-left:10px; margin-top:20px; vertical-align:top; color:#553490; }
@@ -75,17 +76,26 @@ div.multiSelectButton:hover { background:#DDEEFF;  }
 div.multiSelectButton.selected { background:#99BBDD; }
 
 /* sicDataTable */
+img.dataTableSortIcon { margin-left:6px; }
 div.sicDataTable { margin:5px; }
 div.sicDataTable > table.sicDataTable_table { margin-bottom:5px }
+div.sicDataTable > table.sicDataTable_table thead > tr {  }
+div.sicDataTable > table.sicDataTable_table thead > tr > td.clickable:hover { cursor:pointer; background:#DDEEFF; }
 div.sicDataTable > table.sicDataTable_table tbody > tr { cursor:pointer; }
 div.sicDataTable > table.sicDataTable_table tbody > tr:hover { background:#DDEEFF; }
 div.sicDataTable > div.insertButton { margin-bottom:5px; cursor:pointer; }
 div.sicDataTable > div.insertButton > span { color:#6699CC; font-weight:bold; margin-left:4px; vertical-align:middle; }
 div.sicDataTable > div.insertButton > img { vertical-align:middle; }
+div.sicDataTable > div.dsControl { margin: 2px 0px 3px 0px; }
+div.sicDataTable > div.dsControl > div.prevButton { margin-right:6px; cursor:pointer; }
+div.sicDataTable > div.dsControl > div.nextButton { margin-left:6px; cursor:pointer; }
+div.sicDataTable > div.dsControl > input.dataTable_pageInput { width:35px; text-align:center; color:#444; }
+div.sicDataTable > div.dsControl > input.dataTable_pageCount { width:35px; text-align:center; color:#444; }
 
 div.listLine { marigin:5px; }
 div.listField { margin-left:5px; vertical-align:middle; }
 
+img.icon8  { width:8px; }
 img.icon16 { width:16px; }
 img.icon24 { width:24px; }
 

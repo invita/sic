@@ -6,7 +6,8 @@ var F = function(args){
         primaryKey: ['id'],
         entityTitle: "User %id% - %username%",
         dataSource: new sic.widget.sicDataTableDataSource({
-            moduleName:"User/UserList"
+            moduleName:"User/UserList",
+            pageCount: 5
         }),
         editorModuleArgs: {
             moduleName:"User/UserEdit",

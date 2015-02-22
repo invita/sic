@@ -19,6 +19,8 @@ sic.widget.sicDataTable = function(args)
     this.dataSource = sic.getArg(args, "dataSource", null);
     this.editorModuleArgs = sic.getArg(args, "editorModuleArgs", null);
 
+    this.rowsPerPage = sic.getArg(args, "rowsPerPage", 20);
+
     this.canInsert = sic.getArg(args, "canInsert", true);
     this.canDelete = sic.getArg(args, "canDelete", true);
 
@@ -56,7 +58,11 @@ sic.widget.sicDataTable = function(args)
     // Implementation
     this.selector.addClass(_p.cssClass_holderDiv);
     this.initialized = false;
+    this.currentPage = 1;
+    this.currentPageCount = 1;
 
+    if (_p.dataSource)
+        _p.rowsPerPage = _p.dataSource.pageCount;
 
     // Table
     this.createTable = function() {
@@ -74,6 +80,8 @@ sic.widget.sicDataTable = function(args)
         _p.createRows();
         if (_p.canInsert)
             _p.createInsertButton();
+        if (_p.dataSource)
+            _p.createDSControlDiv();
     };
 
     // Header
@@ -88,18 +96,18 @@ sic.widget.sicDataTable = function(args)
         } else {
             for (var fieldKey in _p.bluePrint.fields) {
                 var fieldBP = _p.bluePrint.fields[fieldKey];
-                _p.headerRow.addField(fieldBP.fieldKey, fieldBP.fieldLabel);
+                _p.headerRow.addField(fieldBP.fieldKey, fieldBP.fieldLabel, {canSort:false !== fieldBP.canSort});
             }
         }
     };
 
     this.createRows = function() {
-        if (!_p.bluePrint) return;
-
         _p.rows = [];
 
+        if (!_p.bluePrint) return;
+
         //for (var rowIdx = -1; rowIdx < this.pageSize; rowIdx++){
-        for (var rowIdx = 0; rowIdx < _p.bluePrint.rowsPerPage; rowIdx++){
+        for (var rowIdx = 0; rowIdx < _p.rowsPerPage; rowIdx++){
 
             var row = new sic.widget.sicDataTableRow(_p.tBody.selector, {
                 dataTable: _p,
@@ -135,6 +143,52 @@ sic.widget.sicDataTable = function(args)
         });
     };
 
+    this.createDSControlDiv = function() {
+        _p.dsControl = new sic.widget.sicElement({parent:_p.selector, insertAtTop:true, tagClass:"dsControl"});
+
+        _p.dsControl.prevPage = new sic.widget.sicElement({parent:_p.dsControl.selector, tagClass:"inline prevButton vmid"});
+        _p.dsControl.prevPageImg = new sic.widget.sicElement({parent:_p.dsControl.prevPage.selector, tagName:"img", tagClass:"icon16 vmid"});
+        _p.dsControl.prevPageImg.selector.attr("src", "/img/icon/dataTable_prev.png");
+        _p.dsControl.prevPageSpan = new sic.widget.sicElement({parent:_p.dsControl.prevPage.selector, tagName:"span", tagClass:"vmid"});
+        _p.dsControl.prevPageSpan.selector.html("Prev");
+        _p.dsControl.prevPage.selector.click(function(){ _p.switchPage(_p.currentPage-1); });
+
+        _p.dsControl.pageInput = new sic.widget.sicElement({parent:_p.dsControl.selector,
+            tagName:"input", tagClass:"inline vmid dataTable_pageInput"});
+        _p.dsControl.pageInput.selector.keypress(function(e){
+            if (e.which == 13)
+                _p.switchPage(_p.dsControl.pageInput.selector.val());
+        });
+        _p.dsControl.pageInput.selector.val(1);
+
+        _p.dsControl.slashSpan = new sic.widget.sicElement({parent:_p.dsControl.selector, tagClass:"inline vmid"});
+        _p.dsControl.slashSpan.selector.html('/');
+
+        _p.dsControl.pageCount = new sic.widget.sicElement({parent:_p.dsControl.selector,
+            tagName:"input", tagClass:"inline vmid dataTable_pageCount"});
+        _p.dsControl.pageCount.selector.attr("readOnly", true);
+        _p.dsControl.pageCount.selector.val(1);
+
+        _p.dsControl.nextPage = new sic.widget.sicElement({parent:_p.dsControl.selector, tagClass:"inline nextButton vmid"});
+        _p.dsControl.nextPageSpan = new sic.widget.sicElement({parent:_p.dsControl.nextPage.selector, tagName:"span", tagClass:"vmid"});
+        _p.dsControl.nextPageSpan.selector.html("Next");
+        _p.dsControl.nextPageImg = new sic.widget.sicElement({parent:_p.dsControl.nextPage.selector, tagName:"img", tagClass:"icon16 vmid"});
+        _p.dsControl.nextPageImg.selector.attr("src", "/img/icon/dataTable_next.png");
+        _p.dsControl.nextPage.selector.click(function(){ _p.switchPage(_p.currentPage+1); });
+    };
+
+    this.switchPage = function(pageIdx) {
+        if (isNaN(pageIdx*1)) return;
+        _p.currentPage = pageIdx;
+        if (_p.currentPage > _p.currentPageCount) _p.currentPage = _p.currentPageCount;
+        if (_p.currentPage < 1) _p.currentPage = 1;
+        _p.dsControl.pageInput.selector.val(_p.currentPage);
+        if (_p.dataSource) {
+            _p.dataSource.pageStart = (_p.currentPage -1) * _p.dataSource.pageCount;
+            _p.refresh();
+        }
+    };
+
     this.getEventArgs = function(){
         return { dataTable: _p };
     };
@@ -158,7 +212,6 @@ sic.widget.sicDataTable = function(args)
     this.createBluePrintFromData = function(tableData, onlyCheckFirstRow) {
         var bluePrint = {
             fields: {},
-            rowsPerPage: 20
         };
         for (var i in tableData) {
             var row = tableData[i];
@@ -181,6 +234,7 @@ sic.widget.sicDataTable = function(args)
             fieldDel.fieldKey = '_delete';
             fieldDel.fieldLabel = 'Delete';
             fieldDel.fieldType = 'delete';
+            fieldDel.canSort = false;
             fieldDel.initValue = _p.getInitValueForType(fieldDel.fieldType);
             bluePrint.fields['_delete'] = fieldDel;
         }
@@ -190,9 +244,11 @@ sic.widget.sicDataTable = function(args)
 
     this.createEmptyRow = function(){
         var result = {};
-        for (var i in _p.bluePrint.fields) {
-            var fieldBP = _p.bluePrint.fields[i];
-            result[fieldBP.fieldKey] = _p.getInitValueForType(fieldBP.fieldType);
+        if (_p.bluePrint) {
+            for (var i in _p.bluePrint.fields) {
+                var fieldBP = _p.bluePrint.fields[i];
+                result[fieldBP.fieldKey] = _p.getInitValueForType(fieldBP.fieldType);
+            }
         }
         return result;
     };
@@ -241,21 +297,68 @@ sic.widget.sicDataTable = function(args)
                 }
             });
         }
+
+        // Sort
+        _p.onHeaderFieldClick(function(args){
+
+            if (!_p.dataSource) return;
+            if (!args.field.canSort) return;
+
+            if (_p.dataSource.sortField == args.field.fieldKey) {
+                // Change order
+                _p.dataSource.sortOrder = (_p.dataSource.sortOrder == "asc") ? "desc" : "asc"
+            } else {
+                // Change sort field
+                _p.dataSource.sortField = args.field.fieldKey;
+                _p.dataSource.sortOrder = "asc";
+            }
+            args.field.setSort(_p.dataSource.sortOrder);
+            _p.refresh();
+        });
+    };
+
+    this.setPaginator = function(rowCount) {
+        if (!rowCount) return;
+
+        _p.rowCount = rowCount;
+        _p.currentPageCount = Math.floor((rowCount -1) /_p.rowsPerPage) +1;
+
+        if (_p.currentPage > _p.currentPageCount) _p.currentPage = _p.currentPageCount;
+
+        _p.dsControl.pageInput.selector.val(_p.currentPage);
+        _p.dsControl.pageCount.selector.val(_p.currentPageCount);
     };
 
     this.initAndPopulate = function(tableData){
+        var selectResponse;
         if (!_p.initialized) {
             _p.init();
-            if (!tableData) tableData = _p.dataSource.select().data;
-            _p.bluePrint = _p.createBluePrintFromData(tableData);
+
+            if (!tableData) {
+                selectResponse = _p.dataSource.select();
+                if (selectResponse) {
+                    tableData = selectResponse.data;
+                    _p.bluePrint = _p.createBluePrintFromData(tableData);
+                }
+            }
             _p.createTable();
             _p.initialized = true;
         }
+
         _p.setValue(tableData);
+
+        if (selectResponse)
+            _p.setPaginator(selectResponse.rowCount);
     };
 
     this.refresh = function() {
-        if (_p.dataSource) _p.setValue(_p.dataSource.select().data);
+        if (!_p.dataSource) return;
+
+        var selectResponse = _p.dataSource.select();
+        if (selectResponse) {
+            _p.setValue(selectResponse.data);
+            _p.setPaginator(selectResponse.rowCount);
+        }
     };
 
     if (this.dataSource) {
@@ -286,9 +389,9 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
 
     if (!this.headerRow) this.displayNone();
 
-    this.addField = function(colName, colValue) {
-        _p.fields[colName] = new sic.widget.sicDataTableField(_p.selector, {dataTable:_p.dataTable, row:_p,
-            fieldKey:colName, fieldValue:colValue});
+    this.addField = function(colName, colValue, args) {
+        _p.fields[colName] = new sic.widget.sicDataTableField(_p.selector, sic.mergeObjects({dataTable:_p.dataTable, row:_p,
+            fieldKey:colName, fieldValue:colValue}, args));
     };
 
     this.show = function(){
@@ -367,12 +470,31 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
 
     this.fieldKey = sic.getArg(args, "fieldKey", null);
     this.fieldValue = sic.getArg(args, "fieldValue", null);
+    this.canSort = sic.getArg(args, "canSort", true);
     this.row = sic.getArg(args, "row", null);
     this.dataTable = sic.getArg(args, "dataTable", this.row ? this.row.dataTable : null);
     this.headerField = sic.getArg(args, "headerField", this.row ? this.row.headerRow : false);
     this.clearValue = sic.getArg(args, "clearValue", "");
 
-    this.valueDiv = new sic.widget.sicElement({parent:this.selector});
+    this.valueDiv = new sic.widget.sicElement({parent:this.selector, tagClass:"inline"});
+
+    if (_p.headerField) {
+        this.sortImg = new sic.widget.sicElement({parent:this.selector, tagName:"img", tagClass:"dataTableSortIcon icon8"});
+        this.sortImg.selector.css("display", "none");
+
+        if (_p.canSort)
+            this.selector.addClass("clickable");
+    }
+
+    this.setSort = function(sortOrder){
+        var sortFieldKey = _p.fieldKey
+        var field = _p.dataTable.headerRow.fields[sortFieldKey];
+        sortOrder = (sortOrder == "asc") ? "asc" : "desc";
+
+        for (var i in field.row.fields) field.row.fields[i].sortImg.selector.css("display", "none");
+        field.sortImg.selector.attr("src", "/img/icon/dataTable_"+sortOrder+".png");
+        field.sortImg.selector.css("display", "inline-table");
+    };
 
     this.setValue = function(fieldValue){
         _p.fieldValue = fieldValue;
@@ -420,15 +542,25 @@ sic.widget.sicDataTableDataSource = function(args) {
 
     this.moduleName = sic.getArg(args, "moduleName", null);
     this.methodNames = sic.getArg(args, "methodNames", { select:'dataTableSelect', delete:'dataTableDelete' });
+    this.sortField = sic.getArg(args, "sortField", null);
+    this.sortOrder = sic.getArg(args, "sortOrder", "asc");
+    this.pageStart = sic.getArg(args, "pageStart", 0);
+    this.pageCount = sic.getArg(args, "pageCount", 20);
     this.editModule =  sic.getArg(args, "editModule", null);
 
+    this.getPaginationData = function(){
+        return { sortField:_p.sortField, sortOrder:_p.sortOrder, pageStart:_p.pageStart, pageCount:_p.pageCount };
+    };
+
     this.select = function(args) {
-        var data = sic.callMethod({moduleName:_p.moduleName, methodName:_p.methodNames.select, data:args});
+        var methodCallData = {moduleName:_p.moduleName, methodName:_p.methodNames.select, data:args};
+        var data = sic.callMethod(sic.mergeObjects(methodCallData, _p.getPaginationData()));
         return data;
     }
 
     this.delete = function(args) {
-        var data = sic.callMethod({moduleName:_p.moduleName, methodName:_p.methodNames.delete, data:args});
+        var methodCallData = {moduleName:_p.moduleName, methodName:_p.methodNames.delete, data:args};
+        var data = sic.callMethod(sic.mergeObjects(methodCallData, _p.getPaginationData()));
         return data;
     }
 }
