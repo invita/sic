@@ -13,5 +13,4 @@ var F = function(args){
             tabPage:tabPage
         }
     });
-
 };

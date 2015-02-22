@@ -9,6 +9,8 @@ div.nav1 { margin-left:10px; }
 .mainMenuList { display: inline; font-weight: bold; border-right: silver solid 2px; padding:0px 3px 0px 4px; }
 .noBorder { border:none; }
 .inline { display: inline-table; }
+.margin5 { margin:5px; }
+.bold { font-weight:bold; }
 
 table.logoTable { border:none; margin-bottom:0px; }
 div.mainTitle { display:inline-table; font-size:24px; margin-left:10px; margin-top:20px; vertical-align:top; color:#553490; }
@@ -20,6 +22,7 @@ span.loginName { color:#553490; font-weight:bold; }
 
 img.logoImage { width:40px; opacity:1; position:relative; z-index:1; }
 img.loadingGif { width:59px; position:absolute; left:-4px; top:-2px; opacity:0.25; }
+
 
 /* *** Widgets *** */
 
@@ -80,6 +83,10 @@ div.sicDataTable > div.insertButton { margin-bottom:5px; cursor:pointer; }
 div.sicDataTable > div.insertButton > span { color:#6699CC; font-weight:bold; margin-left:4px; vertical-align:middle; }
 div.sicDataTable > div.insertButton > img { vertical-align:middle; }
 
+div.listLine { marigin:5px; }
+div.listField { margin-left:5px; vertical-align:middle; }
+
 img.icon16 { width:16px; }
+img.icon24 { width:24px; }
 
 
