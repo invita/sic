@@ -89,8 +89,8 @@ div.sicDataTable > div.insertButton > img { vertical-align:middle; }
 div.sicDataTable > div.dsControl { margin: 2px 0px 3px 0px; }
 div.sicDataTable > div.dsControl > div.prevButton { margin-right:6px; cursor:pointer; }
 div.sicDataTable > div.dsControl > div.nextButton { margin-left:6px; cursor:pointer; }
-div.sicDataTable > div.dsControl > input.dataTable_pageInput { width:35px; text-align:center; color:#444; }
-div.sicDataTable > div.dsControl > input.dataTable_pageCount { width:35px; text-align:center; color:#444; }
+div.sicDataTable > div.dsControl > input.dataTable_pageInput { width:35px; text-align:center; color:#444; border:none; }
+div.sicDataTable > div.dsControl > input.dataTable_pageCount { width:35px; text-align:center; color:#444; border:none; }
 
 div.listLine { marigin:5px; }
 div.listField { margin-left:5px; vertical-align:middle; }

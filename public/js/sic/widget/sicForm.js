@@ -47,6 +47,10 @@ sic.widget.sicForm = function(args)
         return input;
     };
 
+    this.addHr = function(){
+        var hr = new sic.widget.sicElement({ parent:_p.selector, tagName:"hr" });
+    };
+
     // Get Form data
     this.getValue = function(){
         var formData = {};
