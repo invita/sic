@@ -16,7 +16,7 @@ var F = function(args) {
         }
     });
     formProj.addHr();
-    formProj.addInput({name:"pubCount", type:"text", value:"3", readOnly: true, caption:"Publication Count"});
+    formProj.addInput({name:"_pubCount", type:"flat", value:"3", readOnly: true, caption:"Publication Count"});
     formProj.addInput({name:"importXml", type:"button", value:"Import Xml", caption:"Import / Export"}).selector.click(function(e){ });
     formProj.addInput({name:"exportXml", type:"button", value:"Export Xml"}).selector.click(function(e){ });
 

@@ -57,6 +57,7 @@ sic.widget.sicForm = function(args)
         for (var i in _p.inputs) {
             if (_p.skipTypes.indexOf(_p.inputs[i].type) != -1) continue;
             var key = _p.inputs[i].name;
+            if (key[0] == "_") continue;
             var val = _p.inputs[i].getValue();
             formData[key] = val;
         }

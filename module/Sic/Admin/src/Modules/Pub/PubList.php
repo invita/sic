@@ -1,19 +1,38 @@
 <?php
 namespace Sic\Admin\Modules\Pub;
 
-use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
-use Zend\Db\Sql\Sql;
+use Zend\Db\Sql\Select;
+use Zend\Db\Sql\Delete;
+use Zend\Db\Sql\Literal;
+use Sic\Admin\Models\SicModuleAbs;
+use Sic\Admin\Models\Util;
 
-class PubList {
+class PubList extends SicModuleAbs {
+
+    public function defineSqlSelect($args, Select $select)
+    {
+        $select->from('publication');
+    }
+
+    public function defineSqlDelete($args, Delete $delete)
+    {
+        $data = Util::getArg($args, 'data', null);
+        $id = Util::getArg($data, 'id', 0);
+        //if (!$id) return false;
+        $delete->from('publication_author')->where(array("publication_id" => $id));
+        $delete->from('publication_title')->where(array("publication_id" => $id));
+        $delete->from('publication')->where(array("id" => $id));
+    }
+
+    /*
+
     public function dataTableSelect($args) {
 
         $adapter = GlobalAdapterFeature::getStaticAdapter();
-
         $sql = new Sql($adapter);
         $select = $sql->select()->from('publication');
         $statement = $sql->prepareStatementForSqlObject($select);
         $results = $statement->execute();
-
         $publications = array();
 
         foreach($results as $result) {
@@ -47,4 +66,5 @@ class PubList {
 
         return $this->dataTableSelect($args);
     }
+    */
 }
