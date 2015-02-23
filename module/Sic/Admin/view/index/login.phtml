@@ -10,7 +10,7 @@
         form.addInput({name:"password", type:"password", placeholder:"Password...", caption:""});
         form.addInput({name:"login", type:"submit", value:"Login", gradient:"blue"});
         form.onSubmit(function(e){
-            $('img#loadingGif').css("display", "");
+            sic.loading.show();
             statusDiv.selector.removeClass("errorDiv");
             statusDiv.selector.html("Login...");
             $.post("/login", form.getValue(), function(data) {
@@ -20,7 +20,7 @@
                 } else {
                     statusDiv.selector.addClass("errorDiv");
                     statusDiv.selector.html('Login incorrect.');
-                    $('img#loadingGif').fadeOut(sic.defaults.fadeTime);
+                    sic.loading.hide();
                 }
             });
         });

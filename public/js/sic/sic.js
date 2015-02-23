@@ -2,6 +2,7 @@ var sic = { object:{}, widget:{}, data:{}, defaults:{} };
 
 sic.defaults = {
     fadeTime: 600,
+    loadingFadeTime: 200,
 
     buttonGrad: "blue",
     submitGrad: "orange",
@@ -10,6 +11,8 @@ sic.defaults = {
 }
 
 sic.loadModule = function(loadArgs) {
+    sic.loading.show();
+
     var moduleName = sic.getArg(loadArgs, "moduleName", null); // Module Name
     var postData = sic.getArg(loadArgs, "postData", {}); // Post data
     var tabPage = sic.getArg(loadArgs, "tabPage", null); // sicTabPage object
@@ -45,10 +48,14 @@ sic.loadModule = function(loadArgs) {
                 if (F && typeof(F) == "function") F(args);
             }
         }
+
+        sic.loading.hide();
     });
 };
 
 sic.callMethod = function(args, f) {
+    sic.loading.show();
+
     var moduleName = sic.getArg(args, "moduleName", null); // Module Name
     var methodName = sic.getArg(args, "methodName", null); // Method Name
 
@@ -63,6 +70,7 @@ sic.callMethod = function(args, f) {
 
     var result = ajaxResult.responseJSON;
     if (result) {
+        sic.loading.hide();
 
         // Alert
         if (typeof(result['alert']) != "undefined")
@@ -71,9 +79,21 @@ sic.callMethod = function(args, f) {
         // Message
         if (typeof(f) == "function")
             f(result);
+
     }
 
     return result;
+};
+
+sic.loading = {
+    show: function(){
+        //$('img#loadingGif').stop().css("display", "");
+        $('img#loadingGif').stop().fadeIn(sic.defaults.loadingFadeTime);
+    },
+    hide: function(){
+        //$('img#loadingGif').stop().css("display", "none");
+        $('img#loadingGif').stop().fadeOut(sic.defaults.loadingFadeTime);
+    }
 };
 
 $(document).ready(function(){
