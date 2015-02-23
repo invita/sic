@@ -1,6 +1,7 @@
 <?php
 namespace Sic\Admin\Modules\Pub;
 
+use Zend\Db\Sql\Expression;
 use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
 use Zend\Db\Sql\Sql;
 
@@ -10,7 +11,16 @@ class PubList {
         $adapter = GlobalAdapterFeature::getStaticAdapter();
 
         $sql = new Sql($adapter);
-        $select = $sql->select()->from('publication');
+
+        $select = $sql->select()
+            ->from("publication")
+            ->join("publication_author", 'publication_author.publication_id = publication.id',
+                array("author" => new Expression("group_concat(author separator ', ')")), \Zend\Db\Sql\Select::JOIN_LEFT)
+            ->join("publication_title", 'publication_title.publication_id = publication.id',
+                array("title" => new Expression("group_concat(title separator ', ')")), \Zend\Db\Sql\Select::JOIN_LEFT)
+            ->group("publication.id");
+
+
         $statement = $sql->prepareStatementForSqlObject($select);
         $results = $statement->execute();
 
