@@ -1,7 +1,7 @@
 <?php
 ini_set("display_errors", 1);
 
-require_once(realpath(__DIR__."/../Httpful/Httpful.phar"));
+require_once(realpath(__DIR__."/../Httpful/httpful.phar"));
 require_once(realpath(__DIR__."/../Ganon/ganon.php"));
 
 header("Content-type:text/plain;charset=utf-8;");
