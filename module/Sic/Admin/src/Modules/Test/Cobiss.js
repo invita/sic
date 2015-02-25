@@ -36,7 +36,7 @@ var F = function(){
         loadingImg.selector.css("display", "block");
         resultDiv.selector.html();
 
-        $.get("/cobiss.php?lib="+lib+"&search="+search, function(data)
+        $.get("/cobiss.html?lib="+lib+"&search="+search, function(data)
         {
             var dataArray = JSON.parse(data), dataObj;
             for(var i=0; i<dataArray.length; i++)

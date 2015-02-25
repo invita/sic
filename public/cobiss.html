@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Cobiss</title>
+    <script type="text/javascript" src="/lib/jquery/jquery-2.1.1.js"></script>
+    <style>
+        html, body { width:100%; margin:0px;}
+        #searchBar { width:100%; }
+        table#searchBar { }
+        div#paginator {width:100%;}
+        table#table {width:100%;}
+        div#paginator span {
+            display:block;
+            float:left;
+            width: 30px;
+        }
+    </style>
+</head>
+<body>
+<div id="searchBar">
+    <table align="center">
+        <tr>
+            <td>Iskani niz:</td>
+            <td><input type="text" id="search" /></td>
+            <td><input type="button" value="išči" id="submit"/></td>
+        </tr>
+    </table>
+</div>
+<div id="content"></div>
+<script type="text/javascript">
+    $(function(){
+        var dt;
+        var loading = function(){
+            $("#content").html("Loading ...");
+        };
+        var dataTable = function(data){
+            var _p = this;
+
+            _p.data = data;
+
+            var paginator = function(){
+                var div = document.createElement("div");
+                div.id = "paginator";
+                document.getElementById("content").appendChild(div);
+                for(var c=0; c<data.paginator.pages.length; c++){
+                    var page = data.paginator.pages[c];
+                    var span = document.createElement("span");
+                    div.appendChild(span);
+                    if(page.url){
+                        var a = document.createElement("a");
+                        a.href = "#";
+                        a.innerHTML = page.value;
+                        a.url = page.url;
+                        a.onclick = function(){
+                            loading();
+                            $.post("/cobiss-request.php", {action:"paginator", userAgent:_p.data.userAgent, url:this.url}, function(data){
+                                dt = new dataTable(JSON.parse(data));
+                            });
+                        }
+                        span.appendChild(a);
+                    } else {
+                        span.innerHTML = page.value;
+                    }
+                }
+            };
+            var table = function(){
+                var table = document.createElement("table");
+                table.id = "table";
+                document.getElementById("content").appendChild(table);
+                var thead = document.createElement("thead");
+                table.appendChild(thead);
+                var tr, th, td, a;
+                tr = document.createElement("tr");
+                thead.appendChild(tr);
+                th = document.createElement("th");
+                th.innerHTML = "Št.";
+                tr.appendChild(th);
+                th = document.createElement("th");
+                th.innerHTML = "Avtor";
+                tr.appendChild(th);
+                th = document.createElement("th");
+                th.innerHTML = "Naslov";
+                tr.appendChild(th);
+                th = document.createElement("th");
+                th.innerHTML = "Jezik";
+                tr.appendChild(th);
+                th = document.createElement("th");
+                th.innerHTML = "Leto";
+                tr.appendChild(th);
+
+                for(var i=0; i<data.dataTable.rows.length; i++){
+                    var row = data.dataTable.rows[i];
+                    tr = document.createElement("tr");
+                    thead.appendChild(tr);
+                    td = document.createElement("td");
+                    td.innerHTML = row.number;
+                    tr.appendChild(td);
+                    td = document.createElement("td");
+                    td.innerHTML = row.author;
+                    tr.appendChild(td);
+                    td = document.createElement("td");
+                    tr.appendChild(td);
+                    a = document.createElement("a");
+                    a.innerHTML = row.title;
+                    a.href = "#";
+                    a.url = row.url;
+                    a.onclick = function(){
+                        alert(this.url);
+                    };
+                    td.appendChild(a);
+                    td = document.createElement("td");
+                    td.innerHTML = row.language;
+                    tr.appendChild(td);
+                    td = document.createElement("td");
+                    td.innerHTML = row.year;
+                    tr.appendChild(td);
+                }
+            }
+
+            $("#content").html("");
+
+            paginator();
+            table();
+        }
+
+
+        $("#submit").click(function(){
+            var search = $("#search").val();
+            if(search.length < 3) {
+                alert("Vpisati morate najmnaj 3 znake");
+                return;
+            }
+            loading();
+            $.post("/cobiss-request.php", {action:"search", search:search}, function(data){
+                dt = new dataTable(JSON.parse(data));
+            });
+        });
+    });
+</script>
+</body>
+</html>

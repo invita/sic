@@ -1,367 +1,771 @@
 <?php
-/*
- * Httpful requires curl enabled! (php_curl extension)
- * If curl doesn't work:
- * 		http://stackoverflow.com/questions/10939248/php-curl-not-working-wamp-on-windows-7-64-bit
- * 		http://www.anindya.com/php-5-4-3-and-php-5-3-13-x64-64-bit-for-windows/
- *
- * Also PHP 5.4+ is required for short array syntax support.
- */
+ini_set("display_errors", 1);
 
-include(__DIR__.'/httpful.phar');
+require_once(realpath(__DIR__."/../Httpful/Httpful.phar"));
+require_once(realpath(__DIR__."/../Ganon/ganon.php"));
 
-/*
- * Cobiss Parser
- */
-class Cobiss
+header("Content-type:text/plain;charset=utf-8;");
+
+
+class Cobiss_Search_Window
 {
-	private $cookie;
-	private $server_digit;
-	private $session_id;
+    /**
+     * @var string
+     */
+    private $userAgent;
 
-	private $userAgent;
-	private $libraryId;
-	
-	private $prepared = false;
+    /**
+     * @return string
+     */
+    public function getUserAgent(){ return $this->userAgent; }
 
-	public $userAgents = array(
-		'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:26.0) Gecko/20100101 Firefox/26.0',
-		'Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1667.0 Safari/537.36',
-		'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.107 Safari/537.36',
-		'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/537.36 (KHTML, like Gecko)',
-		'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0',
-		'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)', // WATCH OUT WE GOT A BADASS OVER HERE!
-		'Mozilla/5.0 (Windows; U; MSIE 9.0; Windows NT 9.0; en-US)',
-		'Mozilla/5.0 (iPad; U; CPU OS 3_2_1 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Mobile/7B405'
-    );
-	public $libraryIds = array( // Keys mustn't be numeric (is_numeric) !
-		'Ptuj' => '50360',
-		'Ormoz' => '50395',
-		'Kranj' => '50250',
-		'FMF' => '50028',
-		'CTK' => '50002',
-		'NUK' => '',
-    );
+    /**
+     * @param string $userAgent
+     */
+    public function setUserAgent($userAgent) { $this->userAgent = $userAgent; }
 
-	public $debug = false;
+    /**
+     * @var \Httpful\Request
+     */
+    private $lastResponse;
 
-	/*
-	 *
-	 */
-	public function __construct($libraryId = null)
-	{
-		$this->libraryId = $libraryId === null ? $this->libraryIds['FMF'] : (is_numeric($libraryId) ? $libraryId : $this->libraryIds[$libraryId]);
+    /**
+     * @return \Httpful\Response
+     */
+    public function getLastResponse(){ return $this->lastResponse; }
 
-		// Select a random user agent
-		$rand = mt_rand(0, count($this->userAgents) - 1);
-		$this->userAgent = $this->userAgents[$rand];
+    /**
+     * @param \Httpful\Response $response
+     */
+    public function setLastResponse(Httpful\Response $response){ $this->lastResponse = $response; }
 
-		// Let's visit the main page to extract server_digit and session_id
-		$uri = 'http://www.cobiss.si/scripts/cobiss?ukaz=getid&lani=si';
-		$response = \Httpful\Request::get($uri)->addHeader('User-agent:', $this->userAgent)->send();
-		//var_dump($response);
-		//print $response->raw_body;
+    /**
+     * @var Cobiss_Form
+     */
+    private $form;
 
-		$p = <<<EOT
-	|a href="http://cobiss(\d*?)\.izum\.si/scripts/cobiss\?ukaz=SFRM&amp;id=(\d*?)" title="Iskanje"|
-EOT;
-		$matches = array();
-		preg_match_all($p, $response->body, $matches);
-		//var_dump($matches);
-		if (false) die('SESSION_ERROR');
-		$this->server_digit = $matches[1][0];
-		$this->session_id = $matches[2][0];
-		//var_dump($this->session_id, $this->server_digit);
+    /**
+     * @return Cobiss_Form
+     */
+    public function getForm(){ return $this->form; }
 
-		$matches = array();
-		preg_match_all("/Set-Cookie: (.*)/", $response->raw_headers, $matches);
-		//if ($matches != []) var_dump($matches);
-		$this->cookie = $matches[1][0];
-		//var_dump($this->cookie);
-	}
+    /**
+     * @param Cobiss_Form $form
+     */
+    public function setForm(Cobiss_Form $form){ $this->form = $form; }
 
-	/*
-	 *
-	 */
-	public function prepare()
-	{
-		// Visit to the library page
-		$uri = 'http://cobiss' . $this->server_digit . '.izum.si/scripts/cobiss?ukaz=BASE&bno=' . $this->libraryId . '&id=' . $this->session_id;
-		$request = \Httpful\Request::get($uri)->addHeader('User-agent:', $this->userAgent)->addHeader('Set-Cookie', $this->cookie);
-		$response = $request->send();
-		//var_dump($response);
-		//print($response->raw_body);
+    /**
+     * @var Cobiss_Paginator
+     */
+    private $paginator;
 
-		// Select 'Osnovno iskanje' tab
-		$uri = 'http://cobiss' . $this->server_digit . '.izum.si/scripts/cobiss?ukaz=SFRM&mode=7&id=' . $this->session_id;
-		$response = \Httpful\Request::get($uri)->addHeader('User-agent:', $this->userAgent)->addHeader('Set-Cookie', $this->cookie)->send();
+    /**
+     * @return Cobiss_Paginator
+     */
+    public function getPaginator(){ return $this->paginator; }
 
-		$this->prepared = true;
-	}
+    /**
+     * @param Cobiss_Paginator $paginator
+     */
+    public function setPaginator(Cobiss_Paginator $paginator){ $this->paginator = $paginator; }
 
-	/*
-	 *
-	 */
-	public function search($query)
-	{
-		if (!$this->prepared) $this->prepare();
-		//$this->prepared = false; // Cobiss does not require us to prepare() to search again
+    /**
+     * @var Cobiss_DataTable
+     */
+    private $dataTable;
 
-		// Search
-		$uri = 'http://cobiss' . $this->server_digit . '.izum.si/scripts/cobiss?id=' . $this->session_id;
-		$data = array(
-			'ukaz' => 'SEAR',
-			'ID' => $this->session_id,
-			'keysbm' => '',
-			'mat' => '66', // Izbor gradiva: 51 - vse gradivo (tudi e-viri), 66 - knjige
-			'lan' => '',
-			'ss1' => $query,
-			'find' => 'isci'
+    /**
+     * @return Cobiss_DataTable
+     */
+    public function getDataTable(){ return $this->dataTable; }
+
+    /**
+     * @param Cobiss_DataTable $dataTable
+     */
+    public function setDataTable(Cobiss_DataTable $dataTable) { $this->dataTable = $dataTable; }
+
+    public function __construct(){
+        $this->userAgent = $this->getRandomUserAgent();
+    }
+
+    /**
+     * @param string $search
+     * @return bool
+     */
+    public function search($search){
+        $uri = 'http://www.cobiss.si/scripts/cobiss';
+        $payload = "base=99999&command=SEARCH&srch=".$search;
+        $response = Httpful\Request::post($uri, $payload)->addHeader('User-agent:', $this->userAgent)->send();
+        $this->setLastResponse($response);
+        return $this->parseResponse();
+    }
+
+    /**
+     * @param string $url
+     * @return bool
+     */
+    public function loadFromUrl($url){
+        $response = \Httpful\Request::get($url)->addHeader('User-agent:', $this->userAgent)->send();
+        $this->setLastResponse($response);
+        return $this->parseResponse();
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray(){
+        $array = array();
+        $array["userAgent"] = $this->getUserAgent();
+        $array["form"] = $this->getForm()->toArray();
+        $array["paginator"] = $this->getPaginator()->toArray();
+        $array["dataTable"] = $this->getDataTable()->toArray();
+        return $array;
+    }
+
+    /**
+     * @return string
+     */
+    public function toJSON(){
+        return json_encode($this->toArray());
+    }
+
+    /**
+     * @return string
+     */
+    private function getRandomUserAgent(){
+        $userAgents = array(
+            'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:26.0) Gecko/20100101 Firefox/26.0',
+            'Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1667.0 Safari/537.36',
+            'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.107 Safari/537.36',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/537.36 (KHTML, like Gecko)',
+            'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0',
+            'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)',
+            'Mozilla/5.0 (Windows; U; MSIE 9.0; Windows NT 9.0; en-US)',
+            'Mozilla/5.0 (iPad; U; CPU OS 3_2_1 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Mobile/7B405'
         );
-		$data = http_build_query($data);
-		$request = \Httpful\Request::post($uri, $data)->addHeader('User-agent:', $this->userAgent)->addHeader('Set-Cookie', $this->cookie);
-		$response = $request->send();
-		//var_dump($response);
-		//var_dump($response->headers);
-		//print $response->raw_body;
+        return $userAgents[mt_rand(0, count($userAgents)-1)];
+    }
 
-		$p = <<<EOT
-			|<div class="left">Število najdenih zapisov:&nbsp;<b>(\d*)</b></div>|
-EOT;
-		$matches = array();
-		preg_match_all($p, $response->raw_body, $matches);
-		//var_dump($matches);
+    /**
+     * @return bool
+     */
+    private function parseResponse(){
+        $dom = str_get_dom($this->lastResponse->body);
+        $formNode = $dom("form#dirform", 0);
+        if(!$formNode) return false;
+        $this->parseForm($formNode);
+        $this->parsePaginator($formNode);
+        $this->parseDataTable($formNode);
+        return true;
+    }
 
-		if (count($matches[0]) == 0) {
-			if (preg_match("|zapis \[1/1\]|", $response->raw_body)) { // Exact match!
-				return array('nrResults' => -1, 'results' => $response->raw_body); // -1 means an exact match and we need to treat it differently
-			} else if (preg_match("|Število najdenih zapisov: 0|", $response->raw_body)) { // Pointless (because of the else statement)
-				return array('nrResults' => 0, 'results' => array());
-			} else {
-				return array('nrResults' => 0, 'results' => array());
-			}
-		}
+    /**
+     * @param HTML_Node $formNode
+     */
+    private function parseForm(HTML_Node $formNode){
+        $action = $formNode->getAttribute('action');
+        $form = new Cobiss_Form($action);
+        $inputNames = array("ctrlh", "ukaz", "ID", "chng", "chnum", "sid");
+        for($i=0; $i<count($inputNames); $i++){
+            $name = $inputNames[$i];
+            $inputNode = $formNode("input[name=".$name."]", 0);
+            $value = $inputNode->getAttribute("value");
+            $input = new Cobiss_Form_Input($name, $value);
+            $form->addInput($input);
+        }
+        $selectNames = array("sortl", "perpg");
+        for($i=0; $i<count($selectNames); $i++){
+            $id = $selectNames[$i];
+            $selectNode = $formNode("select#".$id, 0);
+            $name = $selectNode->getAttribute("name");
+            $select = new Cobiss_Form_Select($name);
+            foreach($selectNode("option") as $optionNode){
+                $value = $optionNode->getAttribute("value");
+                $selected = $optionNode->getAttribute("selected");
+                $text = $optionNode->getInnerText();
+                $option = new Cobiss_Form_Select_Option($value, $text);
+                if($selected) $option->setSelected(true);
+                $select->addOption($option);
+            }
+            $form->addSelect($select);
+        }
+        $this->setForm($form);
+    }
 
-		$nrResults = $matches[1][0];
-		if ($this->debug) print 'Število najdenih rezultatov: <b>' . $nrResults . '</b>';
+    /**
+     * @param HTML_Node $formNode
+     */
+    private function parsePaginator(HTML_Node $formNode){
+        $paginatorNode = $formNode("ol#paginator", 0);
+        $paginator = new Cobiss_Paginator();
+        foreach($paginatorNode("li") as $liNode){
+            $liId = $liNode->getAttribute("id");
+            $liClass = $liNode->getAttribute("class");
+            $countA = count($liNode("a"));
+            $url = null;
+            $url2 = null;
+            $value2 = null;
+            $insertSecondPage = false;
+            $secondPageFirst = false;
+            if($liClass == "first"){
+                if( $liId == "red" ){
+                    if($countA == 0){
+                        $value = $liNode->getInnerText();
+                    } else if($countA == 1){
+                        $aNode = $liNode("a", 0);
+                        $value = trim($liNode->getPlainText());
+                        preg_match_all('/\d+/', $value, $matches);
+                        $value = $matches[0][0];
+                        $value2 = "...";
+                        $url2 = $aNode->getAttribute("href");
+                        $insertSecondPage = true;
+                        $secondPageFirst = true;
+                    }
+                } else {
+                    if($countA == 1){
+                        $aNode = $liNode("a", 0);
+                        $url = $aNode->getAttribute("href");
+                        $value = $aNode->getInnerText();
+                    } else if($countA == 2){
+                        $aNode = $liNode("a", 1);
+                        $url = $aNode->getAttribute("href");
+                        $value = $aNode->getInnerText();
+                        $aNode2 = $liNode("a", 0);
+                        $url2 = $aNode2->getAttribute("href");
+                        $value2 = $aNode2->getInnerText();
+                        $insertSecondPage = true;
+                        $secondPageFirst = true;
+                    }
+                }
+            } else if($liClass == "last"){
+                if( $liId == "red" ){
+                    if($countA == 0){
+                        $value = $liNode->getInnerText();
+                    } else if($countA == 1){
+                        $aNode = $liNode("a", 0);
+                        $value = trim($liNode->getPlainText());
+                        preg_match_all('/\d+/', $value, $matches);
+                        $value = $matches[0][0];
+                        $value2 = "...";
+                        $url2 = $aNode->getAttribute("href");
+                        $insertSecondPage = true;
+                    }
+                } else {
+                    if($countA == 1){
+                        $aNode = $liNode("a", 0);
+                        $url = $aNode->getAttribute("href");
+                        $value = $aNode->getInnerText();
+                    } else if($countA == 2){
+                        $aNode = $liNode("a", 0);
+                        $url = $aNode->getAttribute("href");
+                        $value = $aNode->getInnerText();
+                        $aNode2 = $liNode("a", 1);
+                        $url2 = $aNode2->getAttribute("href");
+                        $value2 = $aNode2->getInnerText();
+                        $insertSecondPage = true;
+                    }
+                }
+            } else {
+                if( $liId == "red" ){
+                    $value = $liNode->getInnerText();
+                } else {
+                    $aNode = $liNode("a", 0);
+                    $url = $aNode->getAttribute("href");
+                    $value = $aNode->getInnerText();
+                }
+            }
 
-		// Parse rows
-		$p = '|<tr>.*?</tr>|s';
-		$matches = array();
-		preg_match_all($p, $response->raw_body, $matches);
-		//var_dump($matches);
-		if (count($matches[0]) <= 2) return array('nrResults' => 0, 'results' => array());
+            if($insertSecondPage && $url2 && $value2 && $secondPageFirst){
+                $page = new Cobiss_Paginator_Page($value2, $url2);
+                $paginator->addPage($page);
+                $url2 = null;
+                $value2 = null;
+                $insertSecondPage = false;
+                $secondPageFirst = false;
+            }
 
-		$results = array_slice($matches[0], 2);
-		if ($this->debug) var_dump($results);
+            $page = new Cobiss_Paginator_Page($value, $url);
+            $paginator->addPage($page);
 
-		return array('nrResults' => $nrResults, 'results' => $results);
-	}
+            if($insertSecondPage && $url2 && $value2 && !$secondPageFirst){
+                $page = new Cobiss_Paginator_Page($value2, $url2);
+                $paginator->addPage($page);
+                $url2 = null;
+                $value2 = null;
+                $insertSecondPage = false;
+                $secondPageFirst = false;
+            }
+        }
+        $this->setPaginator($paginator);
+    }
 
-	/*
-	 *
-	 */
-	public static function parse($response) {
-		$results = $response['results'];
-		if ($response['nrResults'] > 0) {
-			// A list of matches
-			$data = array();
-			foreach ($results as $r) $data[] = Cobiss::parseResult($r);
-			return $data;
-		} else if ($response['nrResults'] == -1) {
-			// Exact match
-			$result = Cobiss::parseExactMatch($results);
-			return array($result);
-		} else {
-			// No matches
-			return array();
-		}
-	}
+    /**
+     * @param HTML_Node $formNode
+     */
+    private function parseDataTable(HTML_Node $formNode){
+        $dataTable = new Cobiss_DataTable();
+        $tbodyNode = $formNode("table#nolist-full tbody", 0);
+        foreach($tbodyNode("tr") as $trNode){
+            $tdNodeNumberNode = $trNode("td", 1);
+            $tdNodeAuthorNode = $trNode("td", 3);
+            $tdNodeTitleNode = $trNode("td", 4);
+            $tdNodeLanguageNode = $trNode("td", 6);
+            $tdNodeYearNode = $trNode("td", 7);
+            $value = trim($tdNodeNumberNode->getPlainText());
+            preg_match_all('/\d+/', $value, $matches);
+            $number = $matches[0][0];
+            $author = $tdNodeAuthorNode->getPlainText();
+            $aNode = $tdNodeTitleNode("a", 0);
+            if($aNode){
+                $title = $aNode->getPlainText();
+                $url = $aNode->getAttribute("href");
+            } else {
+                $title = $tdNodeTitleNode->getPlainText();
+                $url = null;
+            }
+            $language = $tdNodeLanguageNode->getPlainText();
+            $year = $tdNodeYearNode->getPlainText();
 
+            $row = new Cobiss_DataTable_Row();
+            $row->setNumber($number);
+            $row->setAuthor($author);
+            $row->setTitle($title);
+            $row->setUrl($url);
+            $row->setLanguage($language);
+            $row->setYear($year);
 
-	/* --- Multiple results --- */
+            $dataTable->addRow($row);
+        }
+        $this->setDataTable($dataTable);
+    }
+}
 
-	/*
-	 *
-	 */
-	public static function parseResult($result)
-	{
-		$p = "|<td.*?>(.*?)</td>|s";
-		$matches = array();
-		preg_match_all($p, $result, $matches);
+class Cobiss_Form
+{
+    /**
+     * @var string
+     */
+    private $method = "POST";
 
-		if (count($matches[0]) != 10) return array();
+    /**
+     * @var string
+     */
+    private $action = "";
 
-		$author = $matches[1][3];
-		$titleString = $matches[1][4];
-		$genreString = $matches[1][5];
-		$lang = $matches[1][6];
-		$year = $matches[1][7];
-		$isbnString = $matches[1][9];
+    /**
+     * @return string
+     */
+    public function getAction(){ return $this->action; }
 
-		$parsedTitle = self::parseTitle($titleString);
-		$title = $parsedTitle['title'];
-		$titleURL = $parsedTitle['titleURL'];
+    /**
+     * @param $action
+     */
+    public function setAction($action){ $this->action = $action; }
 
-		$isbn = self::parseISBN($isbnString);
+    /**
+     * @var Cobiss_Form_Input[]
+     */
+    private $inputArray = array();
 
-		$genre = self::parseGenre($genreString);
-		
-		return array(
-			'author' => $author, 'title' => $title, 
-			'genre' => $genre, 'lang' => $lang, 'year' => $year, 
-			'isbn' => $isbn, 'titleUrl' => $titleURL
-        );
-	}
+    /**
+     * @return Cobiss_Form_Input[]
+     */
+    public function getInputArray(){ return $this->inputArray; }
 
-	/*
-	 *
-	 */
-	public static function parseTitle($subject)
-	{
-		$titleP = '/<a href="(.*?)">(.*?)<\/a>/';
-		$titleMatches = array();
-		preg_match_all($titleP, $subject, $titleMatches);
-		$title = $titleMatches[2][0];
-		$titleURL = $titleMatches[1][0];
-		return array('title' => $title, 'titleURL' => $titleURL);
-	}
+    /**
+     * @param Cobiss_Form_Input $input
+     */
+    public function addInput(Cobiss_Form_Input $input){ array_push($this->inputArray, $input); }
 
-	/*
-	 *
-	 */
-	public static function parseISBN($subject)
-	{
-		$isbnP = '|rft\.isbn=([0-9x\-]*)&|i';
-		$isbnMatches = array();
-		preg_match_all($isbnP, $subject, $isbnMatches);
-		if (count($isbnMatches[1]) > 0) {
-			return $isbnMatches[1][0];
-		}
-		return '';
-	}
+    /**
+     * @var Cobiss_Form_Select[]
+     */
+    private $selectArray = array();
 
-	/*
-	 *
-	 */
-	public static function parseGenre($subject)
-	{
-		$genreP = '|<.*?> *(.*)|';
-		$genreMatches = array();
-		preg_match_all($genreP, $subject, $genreMatches);
-		return $genreMatches[1][0];
-	}
+    /**
+     * @return Cobiss_Form_Select[]
+     */
+    public function getSelectArray(){ return $this->selectArray; }
 
+    /**
+     * @param Cobiss_Form_Select $select
+     */
+    public function addSelect(Cobiss_Form_Select $select){ array_push($this->selectArray, $select); }
 
-	/* --- Exact Match --- */
+    /**
+     * @param string $action
+     */
+    public function __construct($action){
+        $this->setAction($action);
+    }
 
-	/*
-	 *
-	 */
-	public static function parseExactMatch($result)
-	{
-		$p = "|<th.*?>(.*?)</th><td.*?>(.*?)</td>|s";
-		$matches = array();
-		preg_match_all($p, $result, $matches);
+    /**
+     * @return array
+     */
+    public function toArray(){
+        $array = array();
+        $array["inputArray"] = array();
+        $array["selectArray"] = array();
+        return $array;
+    }
+}
 
-		//var_dump($matches);
+class Cobiss_Form_Input
+{
+    /**
+     * @var string
+     */
+    private $name;
 
-		$authorString = self::pEMFindAttribute('Avtor', $matches);
-		$titleString = self::pEMFindAttribute('Naslov', $matches);
-		$genre = self::pEMFindAttribute('Vrsta/vsebina', $matches);
-		$lang = self::pEMFindAttribute('Jezik', $matches);
-		$year = self::pEMFindAttribute('Leto', $matches);
-		$isbnString = self::pEMFindAttribute('ISBN', $matches);
-		$additional = self::pEMFindAttribute('Založništvo in izdelava', $matches);
-		$collectionOrig = self::pEMFindAttribute('Zbirka', $matches);
+    /**
+     * @return string
+     */
+    public function getName(){ return $this->name; }
 
-		$author = self::pEMAuthor($authorString);
-		$title = self::pEMTitle($titleString);
-		$genre = self::parseGenre($genre);
-		$isbn = self::pEMISBN($isbnString);
-		$collection = self::pEMCollection($collectionOrig);
+    /**
+     * @param string $name
+     */
+    public function setName($name){ $this->name = $name; }
 
-		$additional = self::pEMAdditional($additional);
+    /**
+     * @var string
+     */
+    private $value;
 
-		return array_merge(array(
-			'author' => $author, 'title' => $title, 
-			'genre' => $genre, 'lang' => $lang, 'year' => $year, 
-			'collection' => $collection, 'collectionOrig' => $collectionOrig, 
-			'isbn' => $isbn, 
-        ), $additional);
-	}
+    /**
+     * @return string
+     */
+    public function getValue(){ return $this->value; }
 
-	/*
-	 *
-	 *
-	 * pEM = parseExactMatch
-	 */
-	public static function pEMAuthor($subject)
-	{
-		$p = '|<a .*?>(.*?)</a>|';
-		$matches = array();
-		preg_match_all($p, $subject, $matches);
-		return $matches[1][0];
-	}
+    /**
+     * @param string $value
+     */
+    public function setValue($value){ $this->value = $value; }
 
-	/*
-	 *
-	 */
-	public static function pEMTitle($title)
-	{
-		/*$i = strpos($title, ' :');
-		return substr($title, 0, $i);*/
-		$p = '| *(.*?) [/;:]|';
-		$matches = array();
-		preg_match_all($p, $title, $matches);
-		return $matches[1][0];
-	}
+    /**
+     * @param string $name
+     * @param string $value
+     */
+    public function __construct($name, $value){
+        $this->setName($name);
+        $this->setValue($value);
+    }
 
-	/*
-	 *
-	 */
-	public static function pEMAdditional($subject)
-	{
-		$p = '|(.*?) : (.*?), (\d*)|';
-		$matches = array();
-		preg_match_all($p, $subject, $matches);
-		//var_dump($matches);
-		return array('publisher' => $matches[2][0], 'publishedYear' => $matches[3][0], 'publishedCity' => $matches[1][0]);
-	}
+}
 
-	/*
-	 *
-	 */
-	public static function pEMISBN($isbn)
-	{
-		$i = strpos($isbn, ' :');
-		if ($i !== false) $isbn = substr($isbn, 0, $i);
-        $e = explode(" ", $isbn);
-		return $e[1];
-	}
+class Cobiss_Form_Select
+{
+    /**
+     * @var string
+     */
+    private $name;
 
-	/*
-	 *
-	 */
-	public static function pEMCollection($subject)
-	{
-		$p = '|Zbirka (.*?) /|';
-		$matches = array();
-		preg_match_all($p, $subject, $matches);
-		if (count($matches[0]) > 0) return $matches[1][0];
-		return $subject;
-	}
+    /**
+     * @return string
+     */
+    public function getName(){ return $this->name; }
 
-	/*
-	 *
-	 */
-	public static function pEMFindAttribute($attr, $matches)
-	{
-		foreach ($matches[1] as $i => $a) {
-			if ($a == $attr) {
-				return $matches[2][$i];
-			}
-		}
-		return '';
-	}
+    /**
+     * @param string $name
+     */
+    public function setName($name){ $this->name = $name; }
+
+    /**
+     * @var Cobiss_Form_Select_Option[]
+     */
+    private $option = array();
+
+    /**
+     * @param Cobiss_Form_Select_Option $option
+     */
+    public function addOption(Cobiss_Form_Select_Option $option){ array_push($this->option, $option); }
+
+    /**
+     * @param string $name
+     */
+    public function __construct($name){
+        $this->setName($name);
+    }
+}
+
+class Cobiss_Form_Select_Option
+{
+    /**
+     * @var string
+     */
+    private $value;
+
+    /**
+     * @return string
+     */
+    public function getValue(){ return $this->value; }
+
+    /**
+     * @param string $value
+     */
+    public function setValue($value){ $this->value = $value; }
+
+    /**
+     * @var bool
+     */
+    private $selected = false;
+
+    /**
+     * @return bool
+     */
+    public function getSelected(){ return $this->selected; }
+
+    /**
+     * @param bool $selected
+     */
+    public function setSelected($selected){ $this->selected = $selected; }
+
+    /**
+     * @var string
+     */
+    private $text;
+
+    /**
+     * @return string
+     */
+    public function getText(){ return $this->text; }
+
+    /**
+     * @param string $text
+     */
+    public function setText($text){ $this->text = $text; }
+
+    /**
+     * @param string $value
+     * @param string $text
+     */
+    public function __construct($value, $text){
+        $this->setValue($value);
+        $this->setText($text);
+    }
+}
+
+class Cobiss_Paginator
+{
+    /**
+     * @var Cobiss_Paginator_Page[]
+     */
+    private $pages = array();
+
+    /**
+     * @return Cobiss_Paginator_Page[]
+     */
+    public function getPages(){ return $this->pages; }
+
+    /**
+     * @param Cobiss_Paginator_Page $page
+     */
+    public function addPage(Cobiss_Paginator_Page $page){ array_push($this->pages, $page); }
+
+    /**
+     * @return array
+     */
+    public function toArray(){
+        $array = array();
+        $array["pages"] = array();
+        foreach($this->getPages() as $page){
+            array_push($array["pages"], $page->toArray());
+        }
+        return $array;
+    }
+}
+
+class Cobiss_Paginator_Page
+{
+    /**
+     * @var int|string
+     */
+    private $value;
+
+    /**
+     * @return int|string
+     */
+    public function getValue(){ return $this->value; }
+
+    /**
+     * @param int|string $value
+     */
+    public function setValue($value){ $this->value = $value; }
+
+    /**
+     * @var string|null
+     */
+    private $url;
+
+    /**
+     * @return string|null
+     */
+    public function getUrl(){ return $this->url; }
+
+    /**
+     * @param string|null $url
+     */
+    public function setUrl($url){ $this->url = $url; }
+
+    /**
+     * @param string $value
+     * @param string|null $url
+     */
+    public function __construct($value, $url){
+        $this->setValue($value);
+        $this->setUrl($url);
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray(){
+        $array = array();
+        $array["value"] = $this->getValue();
+        $array["url"] = $this->getUrl();
+        return $array;
+    }
+}
+
+class Cobiss_DataTable
+{
+    /**
+     * @var Cobiss_DataTable_Row[]
+     */
+    private $rows = array();
+
+    /**
+     * @return Cobiss_DataTable_Row[]
+     */
+    public function getRows(){ return $this->rows; }
+
+    /**
+     * @param Cobiss_DataTable_Row $row
+     */
+    public function addRow(Cobiss_DataTable_Row $row){ array_push($this->rows, $row); }
+
+    /**
+     * @return array
+     */
+    public function toArray(){
+        $array = array();
+        $array["rows"] = array();
+        foreach($this->getRows() as $row){
+            array_push($array["rows"], $row->toArray());
+        }
+        return $array;
+    }
+}
+
+class Cobiss_DataTable_Row
+{
+    /**
+     * @var int
+     */
+    private $number;
+
+    /**
+     * @return int
+     */
+    public function getNumber(){ return $this->number; }
+
+    /**
+     * @param int $number
+     */
+    public function setNumber($number){ $this->number = $number; }
+
+    /**
+     * @var string
+     */
+    private $author;
+
+    /**
+     * @return string
+     */
+    public function getAuthor(){ return $this->author; }
+
+    /**
+     * @param string $author
+     */
+    public function setAuthor($author){ $this->author = $author; }
+
+    /**
+     * @var string
+     */
+    private $title;
+
+    /**
+     * @return string
+     */
+    public function getTitle(){ return $this->title; }
+
+    /**
+     * @param string $title
+     */
+    public function setTitle($title){ $this->title = $title; }
+
+    /**
+     * @var string
+     */
+    private $url;
+
+    /**
+     * @return string
+     */
+    public function getUrl(){ return $this->url; }
+
+    /**
+     * @param string $url
+     */
+    public function setUrl($url){ $this->url = $url; }
+
+    /**
+     * @var string
+     */
+    private $language;
+
+    /**
+     * @return string
+     */
+    public function getLanguage(){ return $this->language; }
+
+    /**
+     * @param string $language
+     */
+    public function setLanguage($language){ $this->language = $language; }
+
+    /**
+     * @var int
+     */
+    private $year;
+
+    /**
+     * @return int
+     */
+    public function getYear(){ return $this->year; }
+
+    /**
+     * @param int $year
+     */
+    public function setYear($year){ $this->year = $year; }
+
+    /**
+     * @return array
+     */
+    public function toArray(){
+        $array = array();
+        $array["number"] = $this->getNumber();
+        $array["author"] = $this->getAuthor();
+        $array["title"] = $this->getTitle();
+        $array["url"] = $this->getUrl();
+        $array["language"] = $this->getLanguage();
+        $array["year"] = $this->getYear();
+        return $array;
+    }
+}
+
+class Cobiss_Data
+{
+    private $data = array();
+    public function setDataRow($key, $value){ $this->data[$key] = $value; }
 }
