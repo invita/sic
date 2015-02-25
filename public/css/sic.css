@@ -22,7 +22,7 @@ div.errorDiv { color:#996666; }
 span.loginName { color:#553490; font-weight:bold; }
 
 img.logoImage { width:40px; opacity:1; position:relative; z-index:1; }
-img.loadingGif { width:59px; position:absolute; left:-4px; top:-2px; opacity:0.25; }
+img.loadingGif { width:59px; position:absolute; left:-4px; z-index:2; /*top:-2px; opacity:0.6;*/ top:20px; opacity:1; }
 
 
 /* *** Widgets *** */

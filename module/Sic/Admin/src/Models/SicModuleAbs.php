@@ -11,8 +11,9 @@ use Sic\Admin\Models\Util;
 abstract class SicModuleAbs
 {
 
-    // *** DataTable Select ***
+//<editor-fold desc="*** DataTable ***">
 
+    //<editor-fold desc="DataTable Select">
     public function defineSqlSelect($args, Select $select) {
 
     }
@@ -76,9 +77,9 @@ abstract class SicModuleAbs
         );
     }
 
+    //</editor-fold>
 
-    // *** DataTable Delete ***
-
+    //<editor-fold desc="DataTable Delete">
     public function defineSqlDelete($args, Delete $delete) {
 
     }
@@ -108,5 +109,12 @@ abstract class SicModuleAbs
         $result['rowsAffected'] = $rowsAffected;
         return $result;
     }
+    //</editor-fold>
+
+//</editor-fold>
+
+//<editor-fold desc="*** Form ***">
+
+//</editor-fold>
 
 }
