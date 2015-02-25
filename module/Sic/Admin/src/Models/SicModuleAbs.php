@@ -47,7 +47,8 @@ abstract class SicModuleAbs
         $select->columns(array("count" => new \Zend\Db\Sql\Expression('COUNT(*)')));
         $statement = $sql->prepareStatementForSqlObject($select);
         $sqlResult = $statement->execute();
-        $rowCount = $sqlResult->current()['count'];
+        $row = $sqlResult->current();
+        $rowCount = Util::getArg($row, 'count', 0);
         return $rowCount;
     }
 

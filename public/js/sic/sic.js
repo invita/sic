@@ -58,31 +58,37 @@ sic.callMethod = function(args, f) {
 
     var moduleName = sic.getArg(args, "moduleName", null); // Module Name
     var methodName = sic.getArg(args, "methodName", null); // Method Name
+    var aSync = sic.getArg(args, "aSync", false); // Asynchronous call
+
+    var successF = function(result) {
+        sic.loading.hide();
+        if (result) {
+            // Alert
+            if (typeof(result['alert']) != "undefined")
+                alert(result['alert']);
+
+            // Message
+            if (typeof(f) == "function")
+                f(result);
+        }
+    };
+
+    var errorF = function(e) {
+        sic.loading.hide();
+        sic.dump(e);
+    };
 
     var ajaxResult = $.ajax({
         type: 'POST',
         url: '/callMethod',
         data: {args:args},
-        success: function(e){},
+        success: successF,
+        error: errorF,
         dataType: "json",
-        async:false
+        async:aSync
     });
 
-    var result = ajaxResult.responseJSON;
-    if (result) {
-        sic.loading.hide();
-
-        // Alert
-        if (typeof(result['alert']) != "undefined")
-            alert(result['alert']);
-
-        // Message
-        if (typeof(f) == "function")
-            f(result);
-
-    }
-
-    return result;
+    return ajaxResult.responseJSON;
 };
 
 sic.loading = {

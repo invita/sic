@@ -19,7 +19,7 @@ sic.widget.sicDataTable = function(args)
     this.dataSource = sic.getArg(args, "dataSource", null);
     this.editorModuleArgs = sic.getArg(args, "editorModuleArgs", null);
 
-    this.rowsPerPage = sic.getArg(args, "rowsPerPage", 20);
+    this.rowsPerPage = sic.getArg(args, "rowsPerPage", 20); // Ignored if dataSource is given
 
     this.canInsert = sic.getArg(args, "canInsert", true);
     this.canDelete = sic.getArg(args, "canDelete", true);
@@ -61,8 +61,10 @@ sic.widget.sicDataTable = function(args)
     this.currentPage = 1;
     this.currentPageCount = 1;
 
-    if (_p.dataSource)
+    if (_p.dataSource) {
+        _p.dataSource.dataTable = _p;
         _p.rowsPerPage = _p.dataSource.pageCount;
+    }
 
     // Table
     this.createTable = function() {
@@ -211,7 +213,7 @@ sic.widget.sicDataTable = function(args)
 
     this.createBluePrintFromData = function(tableData, onlyCheckFirstRow) {
         var bluePrint = {
-            fields: {},
+            fields: {}
         };
         for (var i in tableData) {
             var row = tableData[i];
@@ -274,7 +276,12 @@ sic.widget.sicDataTable = function(args)
     this.getValue = function(){
     };
 
-    this.init = function(){
+    this.init = function(bluePrint){
+
+        if (_p.dataSource) {
+            _p.dataSource.callbacks.feedData = _p.feedData;
+        }
+
         // if EditorModule given, bind edit events
         if (_p.editorModuleArgs) {
             _p.onRowDoubleClick(function(args){
@@ -315,6 +322,10 @@ sic.widget.sicDataTable = function(args)
             args.field.setSort(_p.dataSource.sortOrder);
             _p.refresh();
         });
+
+        _p.bluePrint = bluePrint;
+        _p.createTable();
+        _p.initialized = true;
     };
 
     this.setPaginator = function(rowCount) {
@@ -329,36 +340,68 @@ sic.widget.sicDataTable = function(args)
         _p.dsControl.pageCount.selector.val(_p.currentPageCount);
     };
 
+    this.feedData = function(args) {
+
+        if (!_p.initialized) {
+            _p.init(_p.createBluePrintFromData(args.data));
+        }
+
+        _p.setValue(args.data);
+        _p.setPaginator(args.rowCount);
+
+        //alert('FeedData '+args);
+        /*
+        if (!args) return;
+        if (!_p.initialized) {
+            _p.initAndPopulate(args);
+        } else {
+            _p.setValue(args.data);
+            _p.setPaginator(args.rowCount);
+        }
+        */
+    };
+
     this.initAndPopulate = function(tableData){
-        var selectResponse;
+        if (tableData) {
+            _p.feedData(tableData);
+        }
+        else {
+            if (!_p.dataSource) return;
+            _p.dataSource.callbacks.feedData = _p.feedData;
+            _p.dataSource.select();
+        }
+        /*
+        alert('InitAndPopulate '+tableData);
+        if (!tableData) {
+            if (!_p.dataSource) return;
+            _p.dataSource.aSync = true;
+            _p.dataSource.callbacks.feedData = _p.feedData;
+            _p.dataSource.select();
+            return;
+        } else {
+            setTimeout(function(){_p.feedData(tableData)}, 100);
+        }
+
         if (!_p.initialized) {
             _p.init();
-
-            if (!tableData) {
-                selectResponse = _p.dataSource.select();
-                if (selectResponse) {
-                    tableData = selectResponse.data;
-                    _p.bluePrint = _p.createBluePrintFromData(tableData);
-                }
-            }
+            _p.bluePrint = _p.createBluePrintFromData(tableData);
             _p.createTable();
             _p.initialized = true;
         }
-
-        _p.setValue(tableData);
-
-        if (selectResponse)
-            _p.setPaginator(selectResponse.rowCount);
+        */
     };
 
     this.refresh = function() {
         if (!_p.dataSource) return;
+        _p.dataSource.select();
 
+        /*
         var selectResponse = _p.dataSource.select();
         if (selectResponse) {
             _p.setValue(selectResponse.data);
             _p.setPaginator(selectResponse.rowCount);
         }
+        */
     };
 
     if (this.dataSource) {
@@ -546,21 +589,25 @@ sic.widget.sicDataTableDataSource = function(args) {
     this.sortOrder = sic.getArg(args, "sortOrder", "asc");
     this.pageStart = sic.getArg(args, "pageStart", 0);
     this.pageCount = sic.getArg(args, "pageCount", 20);
-    this.editModule =  sic.getArg(args, "editModule", null);
+    this.editModule = sic.getArg(args, "editModule", null);
+
+    this.callbacks = {};
+    this.callbacks.feedData = function(args) { };
+    this.aSync = true;
 
     this.getPaginationData = function(){
         return { sortField:_p.sortField, sortOrder:_p.sortOrder, pageStart:_p.pageStart, pageCount:_p.pageCount };
     };
 
     this.select = function(args) {
-        var methodCallData = {moduleName:_p.moduleName, methodName:_p.methodNames.select, data:args};
-        var data = sic.callMethod(sic.mergeObjects(methodCallData, _p.getPaginationData()));
+        var methodCallData = {moduleName:_p.moduleName, methodName:_p.methodNames.select, aSync:_p.aSync, data:args};
+        var data = sic.callMethod(sic.mergeObjects(methodCallData, _p.getPaginationData()), _p.callbacks.feedData);
         return data;
     }
 
     this.delete = function(args) {
-        var methodCallData = {moduleName:_p.moduleName, methodName:_p.methodNames.delete, data:args};
-        var data = sic.callMethod(sic.mergeObjects(methodCallData, _p.getPaginationData()));
+        var methodCallData = {moduleName:_p.moduleName, methodName:_p.methodNames.delete, aSync:_p.aSync, data:args};
+        var data = sic.callMethod(sic.mergeObjects(methodCallData, _p.getPaginationData()), _p.callbacks.feedData);
         return data;
     }
 }
