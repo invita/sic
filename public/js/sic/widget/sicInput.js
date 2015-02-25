@@ -12,8 +12,10 @@ sic.widget.sicInput = function(args)
 
     // Settings
     this.type = sic.getArg(args, "type", "text");
+    this.inputType = this.type;
     switch(this.type){
         case "textarea": this.inputTagName = "textarea"; break;
+        case "flat": this.inputTagName = "input"; this.inputType = "text"; break;
         default: this.inputTagName = "input"; break;
     }
 
@@ -40,14 +42,17 @@ sic.widget.sicInput = function(args)
     // Implementation
     if (!this.name) this.name = sic.widget._nextInputId();
 
-    if (this.type != "textarea")
-        this.input.selector.attr("type", this.type);
+    if (this.inputType != "textarea")
+        this.input.selector.attr("type", this.inputType);
 
     if (this.name)
         this.input.selector.attr("name", this.name);
 
     if (this.type == "button" && !this.value)
         this.value = this.name;
+
+    if (this.type == "flat")
+        this.input.selector.addClass("flat");
 
     if (this.readOnly)
         this.input.selector.attr("readonly", true);

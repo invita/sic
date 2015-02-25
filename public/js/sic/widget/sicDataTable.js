@@ -147,7 +147,7 @@ sic.widget.sicDataTable = function(args)
         _p.dsControl = new sic.widget.sicElement({parent:_p.selector, insertAtTop:true, tagClass:"dsControl"});
 
         _p.dsControl.prevPage = new sic.widget.sicElement({parent:_p.dsControl.selector, tagClass:"inline prevButton vmid"});
-        _p.dsControl.prevPageImg = new sic.widget.sicElement({parent:_p.dsControl.prevPage.selector, tagName:"img", tagClass:"icon16 vmid"});
+        _p.dsControl.prevPageImg = new sic.widget.sicElement({parent:_p.dsControl.prevPage.selector, tagName:"img", tagClass:"icon8 vmid"});
         _p.dsControl.prevPageImg.selector.attr("src", "/img/icon/dataTable_prev.png");
         _p.dsControl.prevPageSpan = new sic.widget.sicElement({parent:_p.dsControl.prevPage.selector, tagName:"span", tagClass:"vmid"});
         _p.dsControl.prevPageSpan.selector.html("Prev");
@@ -172,7 +172,7 @@ sic.widget.sicDataTable = function(args)
         _p.dsControl.nextPage = new sic.widget.sicElement({parent:_p.dsControl.selector, tagClass:"inline nextButton vmid"});
         _p.dsControl.nextPageSpan = new sic.widget.sicElement({parent:_p.dsControl.nextPage.selector, tagName:"span", tagClass:"vmid"});
         _p.dsControl.nextPageSpan.selector.html("Next");
-        _p.dsControl.nextPageImg = new sic.widget.sicElement({parent:_p.dsControl.nextPage.selector, tagName:"img", tagClass:"icon16 vmid"});
+        _p.dsControl.nextPageImg = new sic.widget.sicElement({parent:_p.dsControl.nextPage.selector, tagName:"img", tagClass:"icon8 vmid"});
         _p.dsControl.nextPageImg.selector.attr("src", "/img/icon/dataTable_next.png");
         _p.dsControl.nextPage.selector.click(function(){ _p.switchPage(_p.currentPage+1); });
     };

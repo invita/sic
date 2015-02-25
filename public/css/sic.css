@@ -51,6 +51,7 @@ div.sicPanelGroup > div.content {}
 div.sicInputDiv { }
 
 input.sicInput, textarea.sicInput { margin:0px 0px 2px 0px; color:#444; }
+input.sicInput.flat { border:none; box-shadow:none; }
 
 input.sicInput[type=text], textarea.sicInput { width:200px; }
 div.sicInputDiv.modified > .sicInput { border: orange solid 1px; }
@@ -87,8 +88,13 @@ div.sicDataTable > div.insertButton { margin-bottom:5px; cursor:pointer; }
 div.sicDataTable > div.insertButton > span { color:#6699CC; font-weight:bold; margin-left:4px; vertical-align:middle; }
 div.sicDataTable > div.insertButton > img { vertical-align:middle; }
 div.sicDataTable > div.dsControl { margin: 2px 0px 3px 0px; }
-div.sicDataTable > div.dsControl > div.prevButton { margin-right:6px; cursor:pointer; }
-div.sicDataTable > div.dsControl > div.nextButton { margin-left:6px; cursor:pointer; }
+
+div.sicDataTable > div.dsControl > div.prevButton { margin-right:6px; cursor:pointer; color:#666; font-weight:bold; }
+div.sicDataTable > div.dsControl > div.prevButton:hover { color:#6699CC; }
+div.sicDataTable > div.dsControl > div.prevButton > img { margin:1px 2px; }
+div.sicDataTable > div.dsControl > div.nextButton { margin-left:6px; cursor:pointer; color:#666; font-weight:bold; }
+div.sicDataTable > div.dsControl > div.nextButton:hover { color:#6699CC; }
+div.sicDataTable > div.dsControl > div.nextButton > img { margin:1px 3px; }
 div.sicDataTable > div.dsControl > input.dataTable_pageInput { width:35px; text-align:center; color:#444; border:none; }
 div.sicDataTable > div.dsControl > input.dataTable_pageCount { width:35px; text-align:center; color:#444; border:none; }
 
@@ -96,6 +102,7 @@ div.listLine { marigin:5px; }
 div.listField { margin-left:5px; vertical-align:middle; }
 
 img.icon8  { width:8px; }
+img.icon12 { width:12px; }
 img.icon16 { width:16px; }
 img.icon24 { width:24px; }
 
