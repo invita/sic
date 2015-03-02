@@ -3,146 +3,78 @@ namespace Sic\Admin\Modules\Pub;
 
 use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
 use Zend\Db\Sql\Sql;
-use Zend\Authentication\Result;
-use Zend\Math\BigInteger\Exception\DivisionByZeroException;
+use Sic\Admin\Models\Util;
+use Sic\Admin\Models\DbUtil;
 
 class PubEdit {
     public function pubSelect($args) {
 
-        $id = $args['id'];
-
-        $adapter = GlobalAdapterFeature::getStaticAdapter();
-
-        $sql = new Sql($adapter);
-        $select = $sql->select()->from('publication')->where(array("id"=>$id));
-        $statement = $sql->prepareStatementForSqlObject($select);
-        $results = $statement->execute();
-
-        foreach($results as $result) {
-            $publication = $result;
-        }
-
-        return array("data" => $publication);
+        $id = Util::getArg($args, 'id', null);
+        $row = DbUtil::selectRow('publication', null, array('id' => $id));
+        $row['author'] = DbUtil::selectFrom('publication_author', 'author', array('publication_id' => $id));
+        $row['title'] = DbUtil::selectFrom('publication_title', 'title', array('publication_id' => $id));
+        $row['child_id'] = DbUtil::selectFrom('publication', 'id', array('parent_id' => $id));
+        return array("data" => $row);
     }
 
     public function pubUpdate($args) {
 
-        $id = isset($args["id"]) ? $args["id"] : null;
+        $id = Util::getArg($args, 'id', null);
         if (!$id) return $this->pubInsert($args);
 
-        $data = $args["data"];
-        $parentId = isset($data["parentId"]) ? $data["parentId"] : 0;
-        $year = isset($data["year"]) ? $data["year"] : 0;
-        $cobiss = isset($data["cobiss"]) ? $data["cobiss"] : 0;
-        $issn = isset($data["issn"]) ? $data["issn"] : 0;
-        $originalId = isset($data["originalId"]) ? $data["originalId"] : 0;
+        $data = Util::getArg($args, 'data', array());
 
-        $authors = isset($data["authorName"]) ? $data["authorName"] : array();
-        $titles = isset($data["title"]) ? $data["title"] : array();
+        $pubData = array(
+            "parent_id" => Util::getArg($data, 'parent_id', 0),
+            "year" => Util::getArg($data, 'year', 0),
+            "cobiss" => Util::getArg($data, 'cobiss', ''),
+            "issn" => Util::getArg($data, 'issn', ''),
+            "original_id" => Util::getArg($data, 'original_id', 0)
+        );
+        DbUtil::updateTable('publication', $pubData, array('id' => $id));
 
-        $adapter = GlobalAdapterFeature::getStaticAdapter();
-        $conn = $adapter->getDriver()->getConnection();
-
-        $conn->beginTransaction();
-        try
-        {
-            $sql = new Sql($adapter);
-
-            $values = array(
-                "parent_id" => $parentId,
-                "year" => $year,
-                "cobiss" => $cobiss,
-                "issn" => $issn,
-                "original_id" => $originalId
-            );
-            $update = $sql->update("publication")->set($values)->where(array("id"=>$id));
-            $sql->prepareStatementForSqlObject($update)->execute();
-
-            $delete = $sql->delete("publication_author")->where(array("id"=>$id));
-            $sql->prepareStatementForSqlObject($delete)->execute();
-            $values = array("publication_id"=>$id);
-            for($c=0; $c<count($authors); $c++)
-            {
-                $values["author"] = $authors[$c];
-                $insert = $sql->insert("publication_author")->values($values);
-                $sql->prepareStatementForSqlObject($insert)->execute();
-            }
-
-            $delete = $sql->delete("publication_title")->where(array("id"=>$id));
-            $sql->prepareStatementForSqlObject($delete)->execute();
-            $values = array("publication_id"=>$id);
-            for($c=0; $c<count($titles); $c++)
-            {
-                $values["title"] = $titles[$c];
-                $insert = $sql->insert("publication_title")->values($values);
-                $sql->prepareStatementForSqlObject($insert)->execute();
-            }
-
-            $conn->commit();
-
-        } catch(\Exception $e)
-        {
-            $conn->rollback();
-        }
+        $this->updateArrayFields($args);
 
         return $this->pubSelect($args);
     }
 
-    public function pubInsert($args) {
+    public function pubInsert($args)
+    {
 
-        $data = $args["data"];
-        $parentId = isset($data["parentId"]) ? $data["parentId"] : 0;
-        $year = isset($data["year"]) ? $data["year"] : 0;
-        $cobiss = isset($data["cobiss"]) ? $data["cobiss"] : 0;
-        $issn = isset($data["issn"]) ? $data["issn"] : 0;
-        $originalId = isset($data["originalId"]) ? $data["originalId"] : 0;
+        $data = Util::getArg($args, 'data', array());
 
-        $authors = isset($data["authorName"]) ? $data["authorName"] : array();
-        $titles = isset($data["title"]) ? $data["title"] : array();
+        $pubData = array(
+            "parent_id" => Util::getArg($data, 'parent_id', 0),
+            "year" => Util::getArg($data, 'year', 0),
+            "cobiss" => Util::getArg($data, 'cobiss', ''),
+            "issn" => Util::getArg($data, 'issn', ''),
+            "original_id" => Util::getArg($data, 'original_id', 0)
+        );
+        DbUtil::insertInto('publication', $pubData);
 
-        $adapter = GlobalAdapterFeature::getStaticAdapter();
-        $conn = $adapter->getDriver()->getConnection();
+        $args['id'] = DbUtil::$lastInsertId;
 
-        $conn->beginTransaction();
-        try
-        {
-            $sql = new Sql($adapter);
-            $values = array(
-                "parent_id" => $parentId,
-                "year" => $year,
-                "cobiss" => $cobiss,
-                "issn" => $issn,
-                "original_id" => $originalId
-            );
-            $insert = $sql->insert("publication")->values($values);
-            $sql->prepareStatementForSqlObject($insert)->execute();
+        $this->updateArrayFields($args);
 
-            $publication_id = $conn->getLastGeneratedValue();
+        return $this->pubSelect($args);
+    }
 
-            $values = array("publication_id"=>$publication_id);
-            for($c=0; $c<count($authors); $c++)
-            {
-                $values["author"] = $authors[$c];
-                $insert = $sql->insert("publication_author")->values($values);
-                $sql->prepareStatementForSqlObject($insert)->execute();
-            }
 
-            $values = array("publication_id"=>$publication_id);
-            for($c=0; $c<count($titles); $c++)
-            {
-                $values["title"] = $titles[$c];
-                $insert = $sql->insert("publication_title")->values($values);
-                $sql->prepareStatementForSqlObject($insert)->execute();
-            }
+    private function updateArrayFields($args) {
 
-            $conn->commit();
+        $id = Util::getArg($args, 'id', null);
+        $data = Util::getArg($args, 'data', array());
 
-        } catch(\Exception $e)
-        {
-            $conn->rollback();
-        }
+        $author = Util::getArg($data, 'author', array());
+        DbUtil::deleteFrom('publication_author', array('publication_id' => $id));
+        for ($idx = 0; $idx < count($author); $idx++)
+            DbUtil::insertInto('publication_author', array('publication_id' => $id, 'idx' => $idx, 'author' => $author[$idx]));
 
-        return $this->pubSelect(array("id"=>$publication_id));
+        $title = Util::getArg($data, 'title', array());
+        DbUtil::deleteFrom('publication_title', array('publication_id' => $id));
+        for ($idx = 0; $idx < count($title); $idx++)
+            DbUtil::insertInto('publication_title', array('publication_id' => $id, 'idx' => $idx, 'title' => $title[$idx]));
+
     }
 
 }

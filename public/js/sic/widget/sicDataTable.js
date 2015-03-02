@@ -221,7 +221,7 @@ sic.widget.sicDataTable = function(args)
                 if (!bluePrint.fields[fieldName]) {
                     var fieldBP = {};
                     fieldBP.fieldKey = fieldName;
-                    fieldBP.fieldLabel = sic.capitalize(fieldName);
+                    fieldBP.fieldLabel = sic.captionize(fieldName);
                     fieldBP.fieldType = _p.getValueType(row[fieldName]);
                     fieldBP.initValue = _p.getInitValueForType(fieldBP.fieldType);
                     bluePrint.fields[fieldName] = fieldBP;

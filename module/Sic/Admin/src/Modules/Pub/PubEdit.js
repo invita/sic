@@ -6,15 +6,15 @@ var F = function(args) {
 
     var formUserData = new sic.widget.sicForm({parent:panel.firstGroup.content.selector, captionWidth:"100px"});
     formUserData.addInput({name:"id", type:"text", placeholder:"Id...", readOnly:true});
-    formUserData.addInput({name:"parentId", type:"text", placeholder:"ParentId..."});
+    formUserData.addInput({name:"parent_id", type:"text", placeholder:"ParentId..."});
     //formUserData.addInput({name:"parentName", type:"text", placeholder:"ParentName..."});
-    formUserData.addInput({name:"authorName", type:"text", placeholder:"Name...", isArray:true});
+    formUserData.addInput({name:"author", type:"text", placeholder:"Author...", isArray:true});
     formUserData.addInput({name:"title", type:"text", placeholder:"Title...", isArray:true});
     formUserData.addInput({name:"year", type:"text", placeholder:"Year..."});
     formUserData.addInput({name:"cobiss", type:"text", placeholder:"Cobiss..."});
     formUserData.addInput({name:"issn", type:"text", placeholder:"Issn..."});
-    formUserData.addInput({name:"originalId", type:"text", placeholder:"OriginalId..."});
-    formUserData.addInput({name:"childId", type:"text", placeholder:"ChildId...", isArray:true});
+    formUserData.addInput({name:"original_id", type:"text", placeholder:"OriginalId..."});
+    formUserData.addInput({name:"child_id", type:"text", placeholder:"ChildId...", isArray:true});
     formUserData.addInput({name:"save", type:"submit", value:"Save", caption:" "}).selector.click(function(e){
         var response = sic.callMethod({moduleName:"Pub/PubEdit", methodName:"pubUpdate",
             id: args.id, data:formUserData.getValue()});

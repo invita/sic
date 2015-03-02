@@ -73,9 +73,9 @@ sic.callMethod = function(args, f) {
         }
     };
 
-    var errorF = function(e) {
+    var errorF = function(xhr, status, statusText) {
         sic.loading.hide();
-        sic.dump(e);
+        alert('['+sic.capitalize(status)+']\n\nmoduleName: '+moduleName+'\nmethodName: '+methodName+'\n\n'+statusText);
     };
 
     var ajaxResult = $.ajax({

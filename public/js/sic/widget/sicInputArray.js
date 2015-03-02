@@ -39,6 +39,14 @@ sic.widget.sicInputArray = function(args)
 
     };
 
+    this.removeInput = function() {
+        if (_p.inputs.length > 1) {
+            var delInput = _p.inputs[_p.inputs.length -1];
+            delInput.selector.remove();
+            _p.inputs.splice(_p.inputs.length -1, 1);
+        }
+    };
+
     this.getValue = function(){
         var result = [];
         for (var i in _p.inputs) result.push(_p.inputs[i].getValue());
@@ -46,11 +54,18 @@ sic.widget.sicInputArray = function(args)
     };
 
     this.setValue = function(value){
-        if (value && value.length > _p.inputs.length) {
-            while (_p.inputs.length < value.length) _p.addInput();
+        var oldLength = _p.inputs.length;
+        while (value && _p.inputs.length < value.length) {
+            _p.addInput();
+            if (_p.inputs.length == oldLength) break;
         }
         for (var i in value) {
             if (_p.inputs[i]) _p.inputs[i].setValue(value[i]);
+        }
+        oldLength = _p.inputs.length;
+        while (value && _p.inputs.length > value.length) {
+            _p.removeInput();
+            if (_p.inputs.length == oldLength) break;
         }
     };
 
@@ -63,11 +78,7 @@ sic.widget.sicInputArray = function(args)
     this.delButton = new sic.widget.sicElement({ parent:this.mainInput.selector, tagName:"div" });
     this.delButton.selector.addClass("inputButton delButton").html("-");
     this.delButton.selector.click(function(e){
-        if (_p.inputs.length > 1) {
-            var delInput = _p.inputs[_p.inputs.length -1];
-            delInput.selector.remove();
-            _p.inputs.splice(_p.inputs.length -1, 1);
-        }
+        _p.removeInput();
     });
     this.addButton = new sic.widget.sicElement({ parent:this.mainInput.selector, tagName:"div" });
     this.addButton.selector.addClass("inputButton addButton").html("+");
