@@ -99,6 +99,8 @@ div.sicDataTable > div.dsControl > div.nextButton > img { margin:1px 3px; }
 div.sicDataTable > div.dsControl > input.dataTable_pageInput { width:35px; text-align:center; color:#444; border:none; }
 div.sicDataTable > div.dsControl > input.dataTable_pageCount { width:35px; text-align:center; color:#444; border:none; }
 
+div.sicDataTable > div.infoDiv { color:#222; background:#F5F5F5; display:inline-table; padding:5px; font-size:12px; border:#DDD solid 1px; font-weight:bold; }
+
 div.listLine { marigin:5px; }
 div.listField { margin-left:5px; vertical-align:middle; }
 
