@@ -44,12 +44,17 @@ class ProjectEdit {
 
         $select = $sql->select()->from('project')->columns(array("maxId" => new \Zend\Db\Sql\Expression('MAX(id)')));
         $statement = $sql->prepareStatementForSqlObject($select);
-        $result = $statement->execute();
-        if ($result->current())
-            $data['id'] = ($result->current()) ? $result->current()['maxId'] +1 : 1;
+        $result = $statement->execute()->current();
+
+        if ($result) {
+            $data['id'] = ($result) ? $result['maxId'] +1 : 1;
+        }
 
 
         //print_r($data); die();
+
+        $data['date_created'] = new \Zend\Db\Sql\Expression('CURDATE()');
+
         $insert = $sql->insert()->into('project')->values($data);
         $statement = $sql->prepareStatementForSqlObject($insert);
         $result = $statement->execute();

@@ -2,7 +2,6 @@
 
 chdir(realpath(__DIR__."/../"));
 
-
 // *** Prepare global error handling
 error_reporting(E_ALL);
 ini_set('display_errors', 1);

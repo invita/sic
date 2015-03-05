@@ -11,7 +11,7 @@ var F = function(args){
 
     var group2 = panel.addGroup("Group2");
     var form2 = new sic.widget.sicForm({parent:group2.content.selector, captionWidth:"100px"});
-    form2.addInput({name:"Test2", type:"text", placeholder:"Name...", isArray: true});
+    form2.addInput({name:"Test2", type:"text", placeholder:"Name...", isArray: true, focus:true});
     form2.addInput({name:"Test3", type:"text", placeholder:"Year..."});
     form2.addInput({name:"Test4", type:"text", placeholder:"Companies", caption: "Multiselect",
             inputConstruct:sic.widget.sicMultiSelect,

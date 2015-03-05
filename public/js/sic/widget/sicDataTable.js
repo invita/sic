@@ -276,56 +276,58 @@ sic.widget.sicDataTable = function(args)
     this.getValue = function(){
     };
 
-    this.init = function(bluePrint){
+    this.init = function(args){
 
-        if (_p.dataSource) {
-            _p.dataSource.callbacks.feedData = _p.feedData;
-        }
-
-        // if EditorModule given, bind edit events
-        if (_p.editorModuleArgs) {
-            _p.onRowDoubleClick(function(args){
-                var row = args.row.getValue();
-                var tabName = args.row.reprValue();
-                var editorModuleArgs = sic.mergeObjects(_p.editorModuleArgs, {newTab:tabName, entityTitle:_p.entityTitle});
-                editorModuleArgs.onClosed = function(args){ _p.refresh(); };
-                if (_p.primaryKey)
-                    for (var pkIdx in _p.primaryKey)
-                        editorModuleArgs[_p.primaryKey[pkIdx]] = row[_p.primaryKey[pkIdx]];
-                sic.loadModule(editorModuleArgs);
-            });
-
-            _p.onFieldClick(function(args){
-                if (args.field.fieldKey == "_delete") {
-                    if (confirm('Are you sure you want to delete record "'+args.row.reprValue()+'"?')) {
-                        var response = _p.dataSource.delete(args.row.getValue());
-                        if (response) _p.setValue(response.data);
-                    }
-                }
-            });
-        }
-
-        // Sort
-        _p.onHeaderFieldClick(function(args){
-
-            if (!_p.dataSource) return;
-            if (!args.field.canSort) return;
-
-            if (_p.dataSource.sortField == args.field.fieldKey) {
-                // Change order
-                _p.dataSource.sortOrder = (_p.dataSource.sortOrder == "asc") ? "desc" : "asc"
-            } else {
-                // Change sort field
-                _p.dataSource.sortField = args.field.fieldKey;
-                _p.dataSource.sortOrder = "asc";
+        if (args && args.data && args.data.length) {
+            if (_p.dataSource) {
+                _p.dataSource.callbacks.feedData = _p.feedData;
             }
-            args.field.setSort(_p.dataSource.sortOrder);
-            _p.refresh();
-        });
 
-        _p.bluePrint = bluePrint;
-        _p.createTable();
-        _p.initialized = true;
+            // if EditorModule given, bind edit events
+            if (_p.editorModuleArgs) {
+                _p.onRowDoubleClick(function(args){
+                    var row = args.row.getValue();
+                    var tabName = args.row.reprValue();
+                    var editorModuleArgs = sic.mergeObjects(_p.editorModuleArgs, {newTab:tabName, entityTitle:_p.entityTitle});
+                    editorModuleArgs.onClosed = function(args){ _p.refresh(); };
+                    if (_p.primaryKey)
+                        for (var pkIdx in _p.primaryKey)
+                            editorModuleArgs[_p.primaryKey[pkIdx]] = row[_p.primaryKey[pkIdx]];
+                    sic.loadModule(editorModuleArgs);
+                });
+
+                _p.onFieldClick(function(args){
+                    if (args.field.fieldKey == "_delete") {
+                        if (confirm('Are you sure you want to delete record "'+args.row.reprValue()+'"?')) {
+                            var response = _p.dataSource.delete(args.row.getValue());
+                            if (response) _p.setValue(response.data);
+                        }
+                    }
+                });
+            }
+
+            // Sort
+            _p.onHeaderFieldClick(function(args){
+
+                if (!_p.dataSource) return;
+                if (!args.field.canSort) return;
+
+                if (_p.dataSource.sortField == args.field.fieldKey) {
+                    // Change order
+                    _p.dataSource.sortOrder = (_p.dataSource.sortOrder == "asc") ? "desc" : "asc"
+                } else {
+                    // Change sort field
+                    _p.dataSource.sortField = args.field.fieldKey;
+                    _p.dataSource.sortOrder = "asc";
+                }
+                args.field.setSort(_p.dataSource.sortOrder);
+                _p.refresh();
+            });
+
+            _p.bluePrint = _p.createBluePrintFromData(args.data);
+            _p.createTable();
+            _p.initialized = true;
+        }
     };
 
     this.setPaginator = function(rowCount) {
@@ -343,11 +345,13 @@ sic.widget.sicDataTable = function(args)
     this.feedData = function(args) {
 
         if (!_p.initialized) {
-            _p.init(_p.createBluePrintFromData(args.data));
+            _p.init(args);
         }
 
-        _p.setValue(args.data);
-        _p.setPaginator(args.rowCount);
+        if (_p.initialized){
+            _p.setValue(args.data);
+            _p.setPaginator(args.rowCount);
+        }
 
         //alert('FeedData '+args);
         /*

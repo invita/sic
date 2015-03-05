@@ -23,6 +23,7 @@ sic.widget.sicInput = function(args)
     this.value = sic.getArg(args, "value", "");
     this.placeholder = sic.getArg(args, "placeholder", "");
     this.readOnly = sic.getArg(args, "readOnly", false);
+    this.focus = sic.getArg(args, "focus", false);
     this.gradient = sic.getArg(args, "gradient", null);
     this.caption = sic.getArg(args, "caption", null);
     this.captionWidth = sic.getArg(args, "captionWidth", null);
@@ -56,6 +57,9 @@ sic.widget.sicInput = function(args)
 
     if (this.readOnly)
         this.input.selector.attr("readonly", true);
+
+    if (this.focus)
+        this.input.selector.focus();
 
     this.setPlaceholder = function(newPlaceholder){
         if (!newPlaceholder) {
