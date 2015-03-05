@@ -27,7 +27,8 @@ var F = function(args) {
         primaryKey: ['id'],
         entityTitle: "Pub %id% - %title%",
         dataSource: new sic.widget.sicDataTableDataSource({
-            moduleName:"Pub/PubList"
+            moduleName:"Pub/PubList",
+            staticData: { projectId: args.id }
         }),
         editorModuleArgs: {
             moduleName:"Pub/PubEdit",

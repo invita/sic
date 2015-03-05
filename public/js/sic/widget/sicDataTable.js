@@ -608,6 +608,7 @@ sic.widget.sicDataTableDataSource = function(args) {
     this.pageStart = sic.getArg(args, "pageStart", 0);
     this.pageCount = sic.getArg(args, "pageCount", 20);
     this.editModule = sic.getArg(args, "editModule", null);
+    this.staticData = sic.getArg(args, "staticData", {});
 
     this.callbacks = {};
     this.callbacks.feedData = function(args) { };
@@ -617,15 +618,26 @@ sic.widget.sicDataTableDataSource = function(args) {
         return { sortField:_p.sortField, sortOrder:_p.sortOrder, pageStart:_p.pageStart, pageCount:_p.pageCount };
     };
 
+    this.getMethodCallData = function(methodName, args) {
+        var methodCallData = {
+            moduleName:_p.moduleName,
+            methodName:methodName,
+            aSync:_p.aSync,
+            data:args
+        };
+
+        if (_p.staticData) methodCallData.staticData = _p.staticData;
+
+        methodCallData = sic.mergeObjects(methodCallData, _p.getPaginationData());
+
+        return methodCallData;
+    }
+
     this.select = function(args) {
-        var methodCallData = {moduleName:_p.moduleName, methodName:_p.methodNames.select, aSync:_p.aSync, data:args};
-        var data = sic.callMethod(sic.mergeObjects(methodCallData, _p.getPaginationData()), _p.callbacks.feedData);
-        return data;
+        return sic.callMethod(_p.getMethodCallData(_p.methodNames.select, args), _p.callbacks.feedData);
     }
 
     this.delete = function(args) {
-        var methodCallData = {moduleName:_p.moduleName, methodName:_p.methodNames.delete, aSync:_p.aSync, data:args};
-        var data = sic.callMethod(sic.mergeObjects(methodCallData, _p.getPaginationData()), _p.callbacks.feedData);
-        return data;
+        return sic.callMethod(_p.getMethodCallData(_p.methodNames.delete, args), _p.callbacks.feedData);
     }
 }
