@@ -153,6 +153,8 @@ sic.widget.sicDataTable = function(args)
             var tabName = sic.mergePlaceholders(_p.entityTitle, row);
             var editorModuleArgs = sic.mergeObjects(_p.editorModuleArgs, {newTab:tabName, entityTitle:_p.entityTitle});
             editorModuleArgs.onClosed = function(args){ _p.refresh(); };
+            if (_p.dataSource && _p.dataSource.staticData)
+                editorModuleArgs.staticData = sic.mergeObjects(_p.dataSource.staticData, editorModuleArgs.staticData);
             sic.loadModule(editorModuleArgs);
         });
     };

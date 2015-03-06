@@ -21,7 +21,26 @@ var F = function(args) {
     formProj.addInput({name:"exportXml", type:"button", value:"Export Xml"}).selector.click(function(e){ });
 
 
-    var panelPubList = panel.addGroup("Publication List");
+    var panelTmpLinesList = panel.addGroup("Project Lines List");
+    var tmpLinesTable = new sic.widget.sicDataTable({
+        parent:panelTmpLinesList.content.selector,
+        primaryKey: ['id'],
+        entityTitle: "Line %id% - %title%",
+        canInsert: false,
+        canDelete: false,
+        dataSource: new sic.widget.sicDataTableDataSource({
+            moduleName:"Project/ProjectEdit_TmpLinesDT",
+            staticData: { projectId: args.id }
+        })
+        /*
+        editorModuleArgs: {
+            moduleName:"Pub/PubEdit",
+            tabPage:tabPage
+        }
+        */
+    });
+
+    var panelPubList = panel.addGroup("Project Publication List");
     var pubListTable = new sic.widget.sicDataTable({
         parent:panelPubList.content.selector,
         primaryKey: ['id'],

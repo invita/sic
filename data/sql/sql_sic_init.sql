@@ -30,7 +30,7 @@ CREATE TABLE `project` (
 `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `title` varchar(100) NOT NULL,
   `date_created` date NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 ALTER TABLE `publication` ADD `is_temp` int(1) NOT NULL;
 ALTER TABLE `publication` CHANGE `cobiss` `cobiss` VARCHAR(64) NOT NULL;
@@ -45,6 +45,25 @@ ALTER TABLE publication_author ADD PRIMARY KEY (publication_id, idx);
 ALTER TABLE publication_title DROP PRIMARY KEY;
 ALTER TABLE `publication_title` CHANGE `id` `idx` INT(11) NOT NULL AFTER `publication_id`;
 ALTER TABLE publication_title ADD PRIMARY KEY (publication_id, idx);
+
+
+CREATE TABLE `publication_project_link` (
+`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `publication_id` int(11) NOT NULL,
+  `project_id` int(11) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+ALTER TABLE `publication_project_link` ADD INDEX `publication_id` ( `publication_id` );
+ALTER TABLE `publication_project_link` ADD INDEX `project_id` ( `project_id` );
+
+
+CREATE TABLE `project_tmplines` (
+`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `project_id` int(11) NOT NULL,
+  `title` varchar(100) NOT NULL,
+  `cobiss` VARCHAR(64) NOT NULL,
+  `issn` VARCHAR(16) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
 
