@@ -38,12 +38,12 @@ ALTER TABLE `publication` CHANGE `issn` `issn` VARCHAR(16) NOT NULL;
 ALTER TABLE `publication` CHANGE `id` `id` INT(11) NOT NULL AUTO_INCREMENT;
 
 
-ALTER TABLE publication_author DROP PRIMARY KEY;
 ALTER TABLE `publication_author` CHANGE `id` `idx` INT(11) NOT NULL AFTER `publication_id`;
+ALTER TABLE publication_author DROP PRIMARY KEY;
 ALTER TABLE publication_author ADD PRIMARY KEY (publication_id, idx);
 
-ALTER TABLE publication_title DROP PRIMARY KEY;
 ALTER TABLE `publication_title` CHANGE `id` `idx` INT(11) NOT NULL AFTER `publication_id`;
+ALTER TABLE publication_title DROP PRIMARY KEY;
 ALTER TABLE publication_title ADD PRIMARY KEY (publication_id, idx);
 
 
