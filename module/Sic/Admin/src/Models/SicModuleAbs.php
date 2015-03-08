@@ -43,6 +43,8 @@ abstract class SicModuleAbs
     }
 
     public function defineRowCount($args, Select $select) {
+
+        /*
         $adapter = GlobalAdapterFeature::getStaticAdapter();
         $sql = new Sql($adapter);
         $select->columns(array("count" => new \Zend\Db\Sql\Expression('COUNT(*)')));
@@ -51,6 +53,13 @@ abstract class SicModuleAbs
         $row = $sqlResult->current();
         $rowCount = Util::getArg($row, 'count', 0);
         return $rowCount;
+        */
+
+        $adapter = GlobalAdapterFeature::getStaticAdapter();
+        $sql = new Sql($adapter);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $sqlResult = $statement->execute();
+        return $sqlResult->getAffectedRows();
     }
 
     public function dataTableSelect($args) {

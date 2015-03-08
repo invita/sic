@@ -56,6 +56,17 @@ class PubEdit {
 
         $this->updateArrayFields($args);
 
+        $projectId = Util::getArg($args, 'projectId', null);
+        if ($projectId) {
+            $row = DbUtil::selectRow('publication_project_link', array('id'),
+                array('publication_id' => $args['id'], 'project_id' => $projectId));
+
+            if (!isset($row['id']) || !$row['id']) {
+                DbUtil::insertInto('publication_project_link',
+                    array('publication_id' => $args['id'], 'project_id' => $projectId));
+            }
+        }
+
         return $this->pubSelect($args);
     }
 

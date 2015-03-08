@@ -11,18 +11,19 @@ class ProjectEdit_TmpLinesDT extends SicModuleAbs {
 
     public function defineSqlSelect($args, Select $select)
     {
-        $data = Util::getArg($args, 'data', null);
-        $projectId = Util::getArg($data, 'projectId', 0);
+        $staticData = Util::getArg($args, 'staticData', null);
+        $projectId = Util::getArg($staticData, 'projectId', 0);
 
-        $select->from('project_tmplines');
+        $select->from('project_tmplines')->where(array('project_id' => $projectId));
 
         if ($projectId) $select->where(array('project_id', $projectId));
     }
 
     public function defineSqlDelete($args, Delete $delete)
     {
+        $staticData = Util::getArg($args, 'staticData', null);
+        $projectId = Util::getArg($staticData, 'projectId', 0);
         $data = Util::getArg($args, 'data', null);
-        $projectId = Util::getArg($data, 'projectId', 0);
         $id = Util::getArg($data, 'id', 0);
         if (!$id) return false;
 

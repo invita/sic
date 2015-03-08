@@ -7,6 +7,7 @@ return array(
             'logout' => array('type'=>'literal','options'=>array('route'=>'/logout','defaults'=>array('controller'=>'Sic\Admin\Controller\Index','action'=>'logout'))),
             'loadModule' => array('type'=>'literal','options'=>array('route'=>'/loadModule','defaults'=>array('controller'=>'Sic\Admin\Controller\Index','action'=>'loadModule'))),
             'callMethod' => array('type'=>'literal','options'=>array('route'=>'/callMethod','defaults'=>array('controller'=>'Sic\Admin\Controller\Index','action'=>'callMethod'))),
+            'uploadFile' => array('type'=>'literal','options'=>array('route'=>'/uploadFile','defaults'=>array('controller'=>'Sic\Admin\Controller\Index','action'=>'uploadFile'))),
         ),
     ),
     'service_manager' => array(
@@ -72,5 +73,8 @@ return array(
             'Zend\Session\Validator\RemoteAddr',
             'Zend\Session\Validator\HttpUserAgent',
         ),
+    ),
+    'sic' => array(
+        'uploadPath' => 'data/upload'
     ),
 );

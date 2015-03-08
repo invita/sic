@@ -1,6 +1,7 @@
 <?php
 namespace Sic\Admin\Modules\Project;
 
+use Sic\Admin\Models\DbUtil;
 use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
 use Zend\Db\Sql\Sql;
 use Sic\Admin\Models\Util;
@@ -63,4 +64,34 @@ class ProjectEdit {
         return $this->projSelect(array("id"=>$args['id']));
     }
 
+    public function loadXml($args)
+    {
+        $projectId = Util::getArg($args, 'id', null);
+        $fileName = Util::getArg($args, 'fileName', null);
+
+        if (!$projectId) {echo json_encode(array('alert' => 'No projectId!')); return; }
+        if (!$fileName) {echo json_encode(array('alert' => 'No fileName!')); return; }
+
+        $contents = file_get_contents(Util::getUploadPath().$fileName);
+        $xml = new \SimpleXMLElement($contents);
+
+        $lines = array();
+        foreach($xml->line as $line){
+            $lines[] = array(
+                "title" => trim((string)$line->title),
+                "author" => trim((string)$line->author),
+                "cobiss" => trim((string)$line->cobiss),
+                "issn" => trim((string)$line->issn),
+            );
+        }
+
+        DbUtil::deleteFrom('project_tmplines', array('project_id' => $projectId));
+
+        foreach ($lines as $line) {
+            $line['project_id'] = $projectId;
+            DbUtil::insertInto('project_tmplines', $line);
+        }
+
+        return array('status' => true);
+    }
 }

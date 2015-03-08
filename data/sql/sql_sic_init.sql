@@ -61,9 +61,11 @@ CREATE TABLE `project_tmplines` (
 `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `project_id` int(11) NOT NULL,
   `title` varchar(100) NOT NULL,
+  `author` varchar(100) NOT NULL,
   `cobiss` VARCHAR(64) NOT NULL,
   `issn` VARCHAR(16) NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
 
 
 

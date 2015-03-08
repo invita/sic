@@ -17,7 +17,13 @@ var F = function(args) {
     });
     formProj.addHr();
     formProj.addInput({name:"_pubCount", type:"flat", value:"3", readOnly: true, caption:"Publication Count"});
-    formProj.addInput({name:"importXml", type:"button", value:"Import Xml", caption:"Import / Export"}).selector.click(function(e){ });
+    formProj.addInput({name:"importXml", type:"button", value:"Import Xml", caption:"Import / Export"}).selector.click(function(e){
+        var fileUploader = new sic.object.sicFileUploader({ fileNamePrefix: 'project'+args.id+'_' });
+        fileUploader.onUploadComplete(function(data){
+            sic.callMethod({moduleName:"Project/ProjectEdit", methodName:"loadXml",
+                id: args.id, fileName:fileUploader.getFileName() }, function(args) {tmpLinesTable.refresh();});
+        });
+    });
     formProj.addInput({name:"exportXml", type:"button", value:"Export Xml"}).selector.click(function(e){ });
 
 
@@ -27,17 +33,15 @@ var F = function(args) {
         primaryKey: ['id'],
         entityTitle: "Line %id% - %title%",
         canInsert: false,
-        canDelete: false,
+        //canDelete: false,
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Project/ProjectEdit_TmpLinesDT",
             staticData: { projectId: args.id }
         })
-        /*
-        editorModuleArgs: {
-            moduleName:"Pub/PubEdit",
-            tabPage:tabPage
-        }
-        */
+        //editorModuleArgs: {
+        //    moduleName:"Pub/PubEdit",
+        //    tabPage:tabPage
+        //}
     });
 
     var panelPubList = panel.addGroup("Project Publication List");

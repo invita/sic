@@ -19,7 +19,7 @@ sic.widget.sicDataTable = function(args)
     this.dataSource = sic.getArg(args, "dataSource", null);
     this.editorModuleArgs = sic.getArg(args, "editorModuleArgs", null);
 
-    this.rowsPerPage = sic.getArg(args, "rowsPerPage", 20); // Ignored if dataSource is given
+    this.rowsPerPage = sic.getArg(args, "rowsPerPage", 5); // Ignored if dataSource is given
 
     this.canInsert = sic.getArg(args, "canInsert", true);
     this.canDelete = sic.getArg(args, "canDelete", true);
@@ -383,17 +383,27 @@ sic.widget.sicDataTable = function(args)
 
     // if EditorModule given, bind edit events
     if (_p.editorModuleArgs) {
-        _p.onRowDoubleClick(function(args){
+        _p.onRowDoubleClick(function (args) {
             var row = args.row.getValue();
             var tabName = args.row.reprValue();
-            var editorModuleArgs = sic.mergeObjects(_p.editorModuleArgs, {newTab:tabName, entityTitle:_p.entityTitle});
-            editorModuleArgs.onClosed = function(args){ _p.refresh(); };
+            var editorModuleArgs = sic.mergeObjects(_p.editorModuleArgs, {
+                newTab: tabName,
+                entityTitle: _p.entityTitle
+            });
+            editorModuleArgs.onClosed = function (args) {
+                _p.refresh();
+            };
+            if (_p.dataSource && _p.dataSource.staticData)
+                editorModuleArgs.staticData = sic.mergeObjects(_p.dataSource.staticData, editorModuleArgs.staticData);
             if (_p.primaryKey)
                 for (var pkIdx in _p.primaryKey)
                     editorModuleArgs[_p.primaryKey[pkIdx]] = row[_p.primaryKey[pkIdx]];
             sic.loadModule(editorModuleArgs);
         });
+    }
 
+    // if canDelete, bind delete click event
+    if (_p.canDelete) {
         _p.onFieldClick(function(args){
             if (args.field.fieldKey == "_delete") {
                 if (confirm('Are you sure you want to delete record "'+args.row.reprValue()+'"?')) {
@@ -608,7 +618,7 @@ sic.widget.sicDataTableDataSource = function(args) {
     this.sortField = sic.getArg(args, "sortField", null);
     this.sortOrder = sic.getArg(args, "sortOrder", "asc");
     this.pageStart = sic.getArg(args, "pageStart", 0);
-    this.pageCount = sic.getArg(args, "pageCount", 20);
+    this.pageCount = sic.getArg(args, "pageCount", 5);
     this.editModule = sic.getArg(args, "editModule", null);
     this.staticData = sic.getArg(args, "staticData", {});
 

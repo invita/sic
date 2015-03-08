@@ -7,6 +7,7 @@ use Zend\Db\Sql\Literal;
 use Zend\Db\Sql\Expression;
 use Sic\Admin\Models\SicModuleAbs;
 use Sic\Admin\Models\Util;
+use Sic\Admin\Models\DbUtil;
 
 class PubList extends SicModuleAbs {
 
@@ -18,6 +19,8 @@ class PubList extends SicModuleAbs {
                 array('project_id' => new Expression('GROUP_CONCAT(publication_project_link.project_id)')), Select::JOIN_LEFT)
             ->join('publication_title', 'publication.id = publication_title.publication_id',
                 array('title' => new Expression('SUBSTR(GROUP_CONCAT(publication_title.title), 1, 100)')), Select::JOIN_LEFT)
+            //->join('publication_author', 'publication.id = publication_author.publication_id',
+            //    array('author' => new Expression('SUBSTR(GROUP_CONCAT(publication_author.author), 1, 100)')), Select::JOIN_LEFT)
             ->group('publication.id');
 
         $staticData = Util::getArg($args, 'staticData', array());

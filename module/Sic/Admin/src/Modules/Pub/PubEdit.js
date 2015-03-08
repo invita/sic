@@ -1,6 +1,8 @@
 var F = function(args) {
     var tabPage = args.helpers.createTabPage({name:"Basic"});
 
+    args.projectId = sic.getArg(args.staticData, 'projectId',null);
+
     var panel = new sic.widget.sicPanel({parent:tabPage.content.selector,
         firstGroupName:args.id ? "Update Pub (id: "+args.id+")" : "Insert Pub"});
 
@@ -17,7 +19,7 @@ var F = function(args) {
     formUserData.addInput({name:"child_id", type:"text", placeholder:"ChildId...", isArray:true});
     formUserData.addInput({name:"save", type:"submit", value:"Save", caption:" "}).selector.click(function(e){
         var response = sic.callMethod({moduleName:"Pub/PubEdit", methodName:"pubUpdate",
-            id: args.id, data:formUserData.getValue()});
+            id: args.id, projectId: args.projectId, data:formUserData.getValue()});
         if (response && response.data) {
             formUserData.setValue(response.data);
             args.id = response.data.id;
