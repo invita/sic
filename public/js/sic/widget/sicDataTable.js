@@ -15,7 +15,7 @@ sic.widget.sicDataTable = function(args)
     this.name = sic.getArg(args, "name", null);
     this.caption = sic.getArg(args, "caption", "");
     this.primaryKey = sic.getArg(args, "primaryKey", null);
-    this.hiddenFields = sic.getArg(args, "hiddenFields", null);
+    this.fields = sic.getArg(args, "fields", {});
     this.entityTitle = sic.getArg(args, "entityTitle", null);
     this.dataSource = sic.getArg(args, "dataSource", null);
     this.editorModuleArgs = sic.getArg(args, "editorModuleArgs", null);
@@ -241,12 +241,11 @@ sic.widget.sicDataTable = function(args)
             var row = tableData[i];
             for (var fieldName in row) {
                 if (!bluePrint.fields[fieldName]) {
-                    var fieldBP = {};
+                    var fieldBP = sic.mergeObjects({}, _p.fields[fieldName]);
                     fieldBP.fieldKey = fieldName;
                     fieldBP.fieldLabel = sic.captionize(fieldName);
                     fieldBP.fieldType = _p.getValueType(row[fieldName]);
                     fieldBP.initValue = _p.getInitValueForType(fieldBP.fieldType);
-                    fieldBP.visible = !_p.hiddenFields || _p.hiddenFields.indexOf(fieldName) == -1;
                     bluePrint.fields[fieldName] = fieldBP;
                 }
             }
@@ -255,14 +254,14 @@ sic.widget.sicDataTable = function(args)
 
         // Delete Button
         if (_p.canDelete) {
-            var fieldDel = {};
-            fieldDel.fieldKey = '_delete';
-            fieldDel.fieldLabel = 'Delete';
-            fieldDel.fieldType = 'delete';
-            fieldDel.canSort = false;
-            fieldDel.initValue = _p.getInitValueForType(fieldDel.fieldType);
-            fieldDel.visible = !_p.hiddenFields || _p.hiddenFields.indexOf(fieldDel.fieldKey) == -1;
-            bluePrint.fields['_delete'] = fieldDel;
+            var fieldName = '_delete';
+            var fieldBP = sic.mergeObjects({}, _p.fields[fieldName]);
+            fieldBP.fieldKey = fieldName;
+            fieldBP.fieldLabel = 'Delete';
+            fieldBP.fieldType = 'delete';
+            fieldBP.canSort = false;
+            fieldBP.initValue = _p.getInitValueForType(fieldBP.fieldType);
+            bluePrint.fields[fieldName] = fieldBP;
         }
 
         return bluePrint;
@@ -559,6 +558,9 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
     this.clearValue = sic.getArg(args, "clearValue", "");
     this.visible = sic.getArg(args, "visible", true);
 
+    this.cellDataTable = sic.getArg(args, "cellDataTable", null);
+    this.formView = sic.getArg(args, "formView", null);
+
     this.valueDiv = new sic.widget.sicElement({parent:this.selector, tagClass:"inline"});
 
     if (_p.headerField) {
@@ -581,7 +583,26 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
 
     this.setValue = function(fieldValue){
         _p.fieldValue = fieldValue;
-        this.valueDiv.selector.html(_p.fieldValue);
+        if (!_p.headerField && _p.cellDataTable) {
+            _p.valueDiv.selector.empty();
+            _p.cellDataTableInstance = new sic.widget.sicDataTable({
+                parent: _p.valueDiv.selector,
+                canInsert: false,
+                canDelete: false
+            });
+            _p.cellDataTable.initAndPopulate(_p.fieldValue);
+
+        } else if (!_p.headerField && _p.formView) {
+            _p.valueDiv.selector.empty();
+            _p.formViewInstance = new sic.widget.sicForm(
+                sic.mergeObjects({parent:_p.valueDiv.selector, captionWidth:"100px"}, _p.formView));
+            for (var fKey in _p.fieldValue) {
+                var fVal = _p.fieldValue[fKey];
+                _p.formViewInstance.addInput({name:fKey, type:"flat", placeholder:fKey+"...", value:fVal, readOnly:true});
+            }
+        } else {
+            _p.valueDiv.selector.html(_p.fieldValue);
+        }
     };
 
     this.getValue = function(){

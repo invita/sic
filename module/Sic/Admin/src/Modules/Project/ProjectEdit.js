@@ -40,7 +40,6 @@ var F = function(args) {
     var linesTable = new sic.widget.sicDataTable({
         parent: panelPub.firstGroup.content.selector,
         primaryKey: ['id', 'idx', 'project_id'],
-        hiddenFields: ['id'],
         entityTitle: "Line %idx% - %title%",
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Project/ProjectEdit_ProjectLinesDT",
@@ -49,6 +48,13 @@ var F = function(args) {
         editorModuleArgs: {
             moduleName:"Project/ProjectLineEdit",
             tabPage:tabPagePub
+        },
+        fields: {
+            id: { visible: false },
+            idx: { visible: false },
+            title: { visible: false },
+            line: { formView: {} },
+            publication: { formView: {} }
         }
     });
     linesTable.onDataFeed(function(data){ formProj.inputs['_pubCount'].setValue(data['rowCount']); });

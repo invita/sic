@@ -23,11 +23,16 @@ class ProjectEdit_ProjectLinesDT extends SicModuleAbs {
     public function defineDataTableResponseData($args, ResultInterface $result) {
         $responseData = array();
         foreach($result as $row) {
+            $line = array();
+
+            $line['idx'] = $row['idx'];
+            $line['title'] = $row['title'];
+
+            $line['line'] = $row;
             if ($row['publication_id']) {
-                $row['publication'] = DbUtil::selectRow('publication', null, array('id' => $row['publication_id']));
-                //$row['publication']['_valueType'] = '';
+                $line['publication'] = DbUtil::selectRow('publication', null, array('id' => $row['publication_id']));
             }
-            $responseData[] = $row;
+            $responseData[] = $line;
         }
         return $responseData;
     }
