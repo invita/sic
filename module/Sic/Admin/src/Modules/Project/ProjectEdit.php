@@ -4,6 +4,8 @@ namespace Sic\Admin\Modules\Project;
 use Sic\Admin\Models\DbUtil;
 use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
 use Zend\Db\Sql\Sql;
+use Zend\Db\Sql\Literal;
+use Zend\Db\Sql\Expression;
 use Sic\Admin\Models\Util;
 
 class ProjectEdit {
@@ -66,7 +68,7 @@ class ProjectEdit {
 
     public function loadXml($args)
     {
-        $projectId = Util::getArg($args, 'id', null);
+        $projectId = Util::getArg($args, 'id', 0);
         $fileName = Util::getArg($args, 'fileName', null);
 
         if (!$projectId) {echo json_encode(array('alert' => 'No projectId!')); return; }
@@ -76,22 +78,34 @@ class ProjectEdit {
         $xml = new \SimpleXMLElement($contents);
 
         $lines = array();
+        $idx = 1;
         foreach($xml->line as $line){
             $lines[] = array(
+                "idx" => $idx,
                 "title" => trim((string)$line->title),
                 "author" => trim((string)$line->author),
                 "cobiss" => trim((string)$line->cobiss),
                 "issn" => trim((string)$line->issn),
             );
+            $idx++;
         }
 
-        DbUtil::deleteFrom('project_tmplines', array('project_id' => $projectId));
+        DbUtil::deleteFrom('project_lines', array('project_id' => $projectId));
 
         foreach ($lines as $line) {
             $line['project_id'] = $projectId;
-            DbUtil::insertInto('project_tmplines', $line);
+            DbUtil::insertInto('project_lines', $line);
         }
 
-        return array('status' => true);
+        try {
+            $rowCount = DbUtil::selectOne('project_lines',
+                array('cnt' => new Expression('COUNT(*)')), array('project_id' => $projectId));
+
+        } catch (Exception $e) {
+            echo DbUtil::$lastSqlSelect->getSqlString();
+        }
+
+
+        return array('status' => true, 'count' => $rowCount);
     }
 }

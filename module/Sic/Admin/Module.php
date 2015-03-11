@@ -16,6 +16,7 @@ use Zend\Session\SaveHandler\DbTableGateway;
 use Zend\Session\SaveHandler\DbTableGatewayOptions;
 use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
 use Sic\Admin\Models\Util;
+use Zend\Debug\Debug;
 
 
 
@@ -30,6 +31,17 @@ class Module
         $this->bootstrapDatabase($e);
         $this->bootstrapSession($e);
         $this->bootstrapConfig($e);
+
+        $eventManager->attach(\Zend\Mvc\MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'handleError'));
+        $eventManager->attach(\Zend\Mvc\MvcEvent::EVENT_RENDER_ERROR, array($this, 'handleError'));
+    }
+
+    public function handleError(MvcEvent $e)
+    {
+        $exception = $e->getParam('exception');
+        echo $exception->getMessage(); die();
+        //var_dump($exception); die();
+        //print_r($exception); die();
     }
 
     public function getConfig()

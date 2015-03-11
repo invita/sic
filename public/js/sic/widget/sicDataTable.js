@@ -231,7 +231,7 @@ sic.widget.sicDataTable = function(args)
             fields: {}
         };
 
-        bluePrint.modified = !_p.bluePrint || _p._lastTableData.length != tableData.length;
+        bluePrint.modified = !_p.bluePrint || !_p._lastTableData || _p._lastTableData.length != tableData.length;
         bluePrint.noData = !tableData || !Object.keys(tableData).length;
         _p._lastTableData = tableData;
 
@@ -276,6 +276,7 @@ sic.widget.sicDataTable = function(args)
     };
 
     this.setValue = function(tableData) {
+        if (!tableData) return;
         for (var i = 0; i < _p.rows.length; i++){
             if (_p.rows[i] && tableData[i]) {
                 _p.rows[i].setValue(tableData[i]);
@@ -308,6 +309,7 @@ sic.widget.sicDataTable = function(args)
 
     this.setPaginator = function(rowCount) {
         if (!rowCount) return;
+        if (!_p.dsControl) return;
 
         _p.rowCount = rowCount;
         _p.currentPageCount = Math.floor((rowCount -1) /_p.rowsPerPage) +1;
@@ -388,7 +390,8 @@ sic.widget.sicDataTable = function(args)
             var tabName = args.row.reprValue();
             var editorModuleArgs = sic.mergeObjects(_p.editorModuleArgs, {
                 newTab: tabName,
-                entityTitle: _p.entityTitle
+                entityTitle: _p.entityTitle,
+                row: row
             });
             editorModuleArgs.onClosed = function (args) {
                 _p.refresh();

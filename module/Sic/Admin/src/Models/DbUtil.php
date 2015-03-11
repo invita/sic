@@ -8,6 +8,7 @@ class DbUtil
 {
     public static $lastInsertId = 0;
     public static $lastRowsAffected = 0;
+    public static $lastSqlSelect = 0;
 
 
     public static function selectFrom($table, $fields = null, $where = null, $limit = null) {
@@ -22,12 +23,14 @@ class DbUtil
         }
         if ($where) $select->where($where);
         if ($limit) $select->limit($limit);
+
         $statement = $sql->prepareStatementForSqlObject($select);
         $result = $statement->execute();
 
         $conn = $adapter->getDriver()->getConnection();
         self::$lastInsertId = $conn->getLastGeneratedValue();
         self::$lastRowsAffected = $result->getAffectedRows();
+        self::$lastSqlSelect = $select;
 
         $array = array();
         foreach($result as $row) {
@@ -45,6 +48,12 @@ class DbUtil
         $row = array();
         if ($result && isset($result[0])) $row = $result[0];
         return $row;
+    }
+
+    public static function selectOne($table, $fields = null, $where = null) {
+        $result = self::selectRow($table, $fields, $where);
+        if ($result && count($result)) return array_pop($result);
+        return null;
     }
 
     public static function insertInto($table, $values){

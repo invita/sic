@@ -11,9 +11,9 @@ var F = function(args) {
         parent:tabPage.content.selector,
         primaryKey: ['id'],
         entityTitle: "Pub %id% - %title%",
-        //dataSource: new sic.widget.sicDataTableDataSource({
-        //    moduleName:"Pub/PubSearch"
-        //}),
+        dataSource: new sic.widget.sicDataTableDataSource({
+            moduleName:"Pub/PubSearch"
+        }),
         editorModuleArgs: {
             moduleName:"Pub/PubEdit",
             tabPage:tabPage
@@ -24,8 +24,10 @@ var F = function(args) {
 
 
     searchForm.onSubmit(function(sicForm){
-        var response = sic.callMethod({moduleName:"Pub/PubSearch", methodName:"search", data:searchForm.getValue()});
-        dataTable.initAndPopulate(response);
+        dataTable.dataSource.staticData = searchForm.getValue();
+        dataTable.refresh();
+        //var response = sic.callMethod({moduleName:"Pub/PubSearch", methodName:"search", data:searchForm.getValue()});
+        //dataTable.initAndPopulate(response);
     });
 
 

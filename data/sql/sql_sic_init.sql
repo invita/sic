@@ -57,14 +57,53 @@ ALTER TABLE `publication_project_link` ADD INDEX `publication_id` ( `publication
 ALTER TABLE `publication_project_link` ADD INDEX `project_id` ( `project_id` );
 
 
-CREATE TABLE `project_tmplines` (
-`id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+DROP TABLE project_tmplines;
+CREATE TABLE `project_lines` (
+  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `idx` int(11) NOT NULL,
   `project_id` int(11) NOT NULL,
   `title` varchar(100) NOT NULL,
   `author` varchar(100) NOT NULL,
   `cobiss` VARCHAR(64) NOT NULL,
-  `issn` VARCHAR(16) NOT NULL
+  `issn` VARCHAR(16) NOT NULL,
+  `publication_id` int(11) NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+ALTER TABLE `project_lines` ADD `idx` int(11) NOT NULL AFTER `id`;
+
+
+CREATE OR REPLACE VIEW view_publication_list AS
+SELECT
+    publication.id AS id,
+    publication.parent_id AS parent_id,
+    publication.year AS year,
+    publication.cobiss AS cobiss,
+    publication.issn AS issn,
+    publication.original_id AS original_id,
+    publication.is_temp AS is_temp,
+    (
+      SELECT GROUP_CONCAT(publication_author.author SEPARATOR ', ')
+			FROM publication_author WHERE publication_author.publication_id = publication.id
+			ORDER BY publication_author.idx
+    ) AS author,
+    (
+      SELECT GROUP_CONCAT(publication_title.title SEPARATOR ', ')
+			FROM publication_title WHERE publication_title.publication_id = publication.id
+			ORDER BY publication_title.idx
+    ) AS title,
+    (
+      SELECT GROUP_CONCAT(publication_project_link.project_id SEPARATOR ', ')
+			FROM publication_project_link WHERE publication_project_link.publication_id = publication.id
+			ORDER BY publication_project_link.id
+    ) AS project_id
+
+FROM publication;
+
+
+
+
+
+
 
 
 

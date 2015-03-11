@@ -11,7 +11,8 @@ class ProjectList extends SicModuleAbs {
 
     public function defineSqlSelect($args, Select $select)
     {
-        $select->from('project');
+        $select->from('project')->columns(array('id','title','date_created',
+            'lines_count' => new Literal('(SELECT COUNT(*) FROM project_lines WHERE project_lines.project_id = project.id)')));
     }
 
     public function defineSqlDelete($args, Delete $delete)

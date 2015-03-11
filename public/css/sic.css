@@ -83,7 +83,7 @@ div.sicDataTable { margin:5px; }
 div.sicDataTable > table.sicDataTable_table { margin-bottom:5px }
 div.sicDataTable > table.sicDataTable_table thead > tr {  }
 div.sicDataTable > table.sicDataTable_table thead > tr > td.clickable:hover { cursor:pointer; background:#DDEEFF; }
-div.sicDataTable > table.sicDataTable_table tbody > tr { cursor:pointer; }
+div.sicDataTable > table.sicDataTable_table tbody > tr { cursor:pointer; height:28px; }
 div.sicDataTable > table.sicDataTable_table tbody > tr:hover { background:#DDEEFF; }
 div.sicDataTable > div.insertButton { margin-bottom:5px; cursor:pointer; }
 div.sicDataTable > div.insertButton > span { color:#6699CC; font-weight:bold; margin-left:4px; vertical-align:middle; }
