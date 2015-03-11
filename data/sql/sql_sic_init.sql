@@ -58,7 +58,7 @@ ALTER TABLE `publication_project_link` ADD INDEX `project_id` ( `project_id` );
 
 
 DROP TABLE project_tmplines;
-CREATE TABLE `project_lines` (
+CREATE TABLE `project_line` (
   `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `idx` int(11) NOT NULL,
   `project_id` int(11) NOT NULL,
@@ -68,8 +68,7 @@ CREATE TABLE `project_lines` (
   `issn` VARCHAR(16) NOT NULL,
   `publication_id` int(11) NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
-
-ALTER TABLE `project_lines` ADD `idx` int(11) NOT NULL AFTER `id`;
+--ALTER TABLE `project_line` ADD `idx` int(11) NOT NULL AFTER `id`;
 
 
 CREATE OR REPLACE VIEW view_publication_list AS

@@ -1,4 +1,4 @@
-var F = function(args){
+var F = function(args) {
 
     var tabPage = args.helpers.createTabPage({name:"List"});
     var dataTable = new sic.widget.sicDataTable({

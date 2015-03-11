@@ -27,7 +27,6 @@ var F = function(args) {
             var upArgs = {moduleName:"Project/ProjectEdit", methodName:"loadXml", id: args.id, fileName:fileUploader.getFileName()};
             sic.callMethod(upArgs, function(args) {
                 linesTable.refresh(); tabPagePub.selectTab();
-                formProj.inputs['_pubCount'].setValue(args['count']);
             });
         });
     });
@@ -35,25 +34,24 @@ var F = function(args) {
 
 
     var hasLines = args.id && args.row && parseInt(args.row['lines_count']) ? true : false;
-    if (hasLines) formProj.inputs['_pubCount'].setValue(args.row['lines_count']);
     var tabPagePub = tabPageBasic.createTabPage({name:"Publications", canClose:false, autoActive: hasLines });
     var panelPub = new sic.widget.sicPanel({parent:tabPagePub.content.selector, firstGroupName: "Project Lines List"});
 
     var linesTable = new sic.widget.sicDataTable({
         parent: panelPub.firstGroup.content.selector,
-        primaryKey: ['id'],
-        entityTitle: "Line %id% - %title%",
-        canInsert: false,
-        //canDelete: false,
+        primaryKey: ['id', 'idx', 'project_id'],
+        hiddenFields: ['id'],
+        entityTitle: "Line %idx% - %title%",
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Project/ProjectEdit_ProjectLinesDT",
             staticData: { projectId: args.id }
-        })
-        //editorModuleArgs: {
-        //    moduleName:"Pub/PubEdit",
-        //    tabPage:tabPageBasic
-        //}
+        }),
+        editorModuleArgs: {
+            moduleName:"Project/ProjectLineEdit",
+            tabPage:tabPagePub
+        }
     });
+    linesTable.onDataFeed(function(data){ formProj.inputs['_pubCount'].setValue(data['rowCount']); });
     /*
 
     var panelPubList = panelPub.addGroup("Project Publication List");

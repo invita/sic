@@ -12,7 +12,7 @@ class ProjectList extends SicModuleAbs {
     public function defineSqlSelect($args, Select $select)
     {
         $select->from('project')->columns(array('id','title','date_created',
-            'lines_count' => new Literal('(SELECT COUNT(*) FROM project_lines WHERE project_lines.project_id = project.id)')));
+            'lines_count' => new Literal('(SELECT COUNT(*) FROM project_line WHERE project_line.project_id = project.id)')));
     }
 
     public function defineSqlDelete($args, Delete $delete)
@@ -20,6 +20,17 @@ class ProjectList extends SicModuleAbs {
         $data = Util::getArg($args, 'data', null);
         $id = Util::getArg($data, 'id', 0);
         if (!$id) return false;
-        $delete->from('project')->where(array("id" => $id));
+
+        $deleteArray = array();
+
+        $deleteSql = new Delete();
+        $deleteSql->from('project')->where(array("id" => $id));
+        $deleteArray[] = $deleteSql;
+
+        $deleteSql = new Delete();
+        $deleteSql->from('project_line')->where(array("project_id" => $id));
+        $deleteArray[] = $deleteSql;
+
+        return $deleteArray;
     }
 }

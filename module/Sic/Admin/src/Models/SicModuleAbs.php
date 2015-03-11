@@ -102,15 +102,20 @@ abstract class SicModuleAbs
             $adapter = GlobalAdapterFeature::getStaticAdapter();
             $sql = new Sql($adapter);
             $delete = $sql->delete();
-            if ($this->defineSqlDelete($args, $delete) !== false) {
+            $deleteArray = $this->defineSqlDelete($args, $delete);
+            if ($deleteArray !== false) {
+                if (!is_array($deleteArray)) {
+                    $deleteArray = array($delete);
+                }
+
                 $conn = $adapter->getDriver()->getConnection();
-
                 $conn->beginTransaction();
-                $statement = $sql->prepareStatementForSqlObject($delete);
-                $sqlResult = $statement->execute();
+                foreach ($deleteArray as $deleteSql) {
+                    $statement = $sql->prepareStatementForSqlObject($deleteSql);
+                    $sqlResult = $statement->execute();
+                    $rowsAffected = $rowsAffected + $sqlResult->getAffectedRows();
+                }
                 $conn->commit();
-
-                $rowsAffected = $sqlResult->getAffectedRows();
             }
         }
 

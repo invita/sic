@@ -7,7 +7,9 @@ sic.defaults = {
     buttonGrad: "blue",
     submitGrad: "orange",
     tabActiveGrad: "blue",
-    tabInactiveGrad: "gold"
+    tabInactiveGrad: "gold",
+
+    dataTableRowsPerPage: 10
 }
 
 sic.loadModule = function(loadArgs) {

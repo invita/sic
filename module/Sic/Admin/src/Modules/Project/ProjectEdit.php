@@ -90,15 +90,15 @@ class ProjectEdit {
             $idx++;
         }
 
-        DbUtil::deleteFrom('project_lines', array('project_id' => $projectId));
+        DbUtil::deleteFrom('project_line', array('project_id' => $projectId));
 
         foreach ($lines as $line) {
             $line['project_id'] = $projectId;
-            DbUtil::insertInto('project_lines', $line);
+            DbUtil::insertInto('project_line', $line);
         }
 
         try {
-            $rowCount = DbUtil::selectOne('project_lines',
+            $rowCount = DbUtil::selectOne('project_line',
                 array('cnt' => new Expression('COUNT(*)')), array('project_id' => $projectId));
 
         } catch (Exception $e) {

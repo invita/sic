@@ -1,7 +1,6 @@
 var F = function(args) {
 
     var tabPage = args.helpers.createTabPage({name:"Search"});
-
     var searchForm = new sic.widget.sicForm({parent:tabPage.content.selector});
     var searchBox = searchForm.addInput({name:"search"});
     searchBox.selector.addClass("inline");

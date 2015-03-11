@@ -15,11 +15,12 @@ sic.widget.sicDataTable = function(args)
     this.name = sic.getArg(args, "name", null);
     this.caption = sic.getArg(args, "caption", "");
     this.primaryKey = sic.getArg(args, "primaryKey", null);
+    this.hiddenFields = sic.getArg(args, "hiddenFields", null);
     this.entityTitle = sic.getArg(args, "entityTitle", null);
     this.dataSource = sic.getArg(args, "dataSource", null);
     this.editorModuleArgs = sic.getArg(args, "editorModuleArgs", null);
 
-    this.rowsPerPage = sic.getArg(args, "rowsPerPage", 5); // Ignored if dataSource is given
+    this.rowsPerPage = sic.getArg(args, "rowsPerPage", sic.defaults.dataTableRowsPerPage); // Ignored if dataSource is given
 
     this.canInsert = sic.getArg(args, "canInsert", true);
     this.canDelete = sic.getArg(args, "canDelete", true);
@@ -29,6 +30,7 @@ sic.widget.sicDataTable = function(args)
     this.cssClass_table = sic.getArg(args, "cssClass_table", "sicDataTable_table");
 
     // Events
+    this.onDataFeed = function(f) { _p.subscribe("dataFeed", f); };
 
     // Data Fields Events
     this.onRowClick = function(f) { _p.subscribe("dataRowClick", f); };
@@ -105,7 +107,7 @@ sic.widget.sicDataTable = function(args)
         } else {
             for (var fieldKey in _p.bluePrint.fields) {
                 var fieldBP = _p.bluePrint.fields[fieldKey];
-                _p.headerRow.addField(fieldBP.fieldKey, fieldBP.fieldLabel, {canSort:false !== fieldBP.canSort});
+                _p.headerRow.addField(fieldBP.fieldKey, fieldBP.fieldLabel, fieldBP);
             }
         }
     };
@@ -132,7 +134,7 @@ sic.widget.sicDataTable = function(args)
             } else {
                 for (var fieldKey in _p.bluePrint.fields) {
                     var fieldBP = _p.bluePrint.fields[fieldKey];
-                    row.addField(fieldBP.fieldKey, fieldBP.initValue);
+                    row.addField(fieldBP.fieldKey, fieldBP.initValue, fieldBP);
                 }
             }
 
@@ -244,6 +246,7 @@ sic.widget.sicDataTable = function(args)
                     fieldBP.fieldLabel = sic.captionize(fieldName);
                     fieldBP.fieldType = _p.getValueType(row[fieldName]);
                     fieldBP.initValue = _p.getInitValueForType(fieldBP.fieldType);
+                    fieldBP.visible = !_p.hiddenFields || _p.hiddenFields.indexOf(fieldName) == -1;
                     bluePrint.fields[fieldName] = fieldBP;
                 }
             }
@@ -258,6 +261,7 @@ sic.widget.sicDataTable = function(args)
             fieldDel.fieldType = 'delete';
             fieldDel.canSort = false;
             fieldDel.initValue = _p.getInitValueForType(fieldDel.fieldType);
+            fieldDel.visible = !_p.hiddenFields || _p.hiddenFields.indexOf(fieldDel.fieldKey) == -1;
             bluePrint.fields['_delete'] = fieldDel;
         }
 
@@ -321,6 +325,8 @@ sic.widget.sicDataTable = function(args)
     };
 
     this.feedData = function(args) {
+
+        _p.trigger('dataFeed', args);
 
         _p.reconstruct(args);
         _p.setValue(args.data);
@@ -551,6 +557,7 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
     this.dataTable = sic.getArg(args, "dataTable", this.row ? this.row.dataTable : null);
     this.headerField = sic.getArg(args, "headerField", this.row ? this.row.headerRow : false);
     this.clearValue = sic.getArg(args, "clearValue", "");
+    this.visible = sic.getArg(args, "visible", true);
 
     this.valueDiv = new sic.widget.sicElement({parent:this.selector, tagClass:"inline"});
 
@@ -607,6 +614,8 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
 
     // Set initial value
     this.setValue(this.fieldValue);
+
+    if (!this.visible) this.displayNone();
 };
 
 
@@ -621,7 +630,7 @@ sic.widget.sicDataTableDataSource = function(args) {
     this.sortField = sic.getArg(args, "sortField", null);
     this.sortOrder = sic.getArg(args, "sortOrder", "asc");
     this.pageStart = sic.getArg(args, "pageStart", 0);
-    this.pageCount = sic.getArg(args, "pageCount", 5);
+    this.pageCount = sic.getArg(args, "pageCount", sic.defaults.dataTableRowsPerPage);
     this.editModule = sic.getArg(args, "editModule", null);
     this.staticData = sic.getArg(args, "staticData", {});
 
