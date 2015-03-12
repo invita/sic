@@ -51,12 +51,12 @@ div.sicPanelGroup > div.content {}
 div.sicInputDiv { }
 
 input.sicInput, textarea.sicInput { margin:0px 0px 2px 0px; color:#444; }
-input.sicInput.flat { border:none; box-shadow:none; }
+input.sicInput.flat { border:none; box-shadow:none; background:inherit; }
 
 input.sicInput[type=text], textarea.sicInput { width:200px; }
 div.sicInputDiv.modified > .sicInput { border: orange solid 1px; }
 
-.sicInputCaption { display:inline-table; /* width:100px; */ margin:5px; color:#888;}
+.sicInputCaption { display:inline-table; /* width:100px; */ margin:5px; color:#888; font-size:11px; }
 div.sicInputDiv > .sicInput { display:inline-table; }
 div.sicInputDiv > .inputButton { display:inline-table; width:24px; height:24px; border:silver solid 1px;
     text-align:center; margin:0px 0px 0px 2px; padding-top:5px; vertical-align:top; cursor:pointer;
@@ -109,4 +109,4 @@ img.icon12 { width:12px; }
 img.icon16 { width:16px; }
 img.icon24 { width:24px; }
 
-
+.minWidth300 { min-width:300px; }

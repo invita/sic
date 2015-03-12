@@ -14,10 +14,10 @@ class ProjectEdit_ProjectLinesDT extends SicModuleAbs {
     public function defineSqlSelect($args, Select $select)
     {
         $staticData = Util::getArg($args, 'staticData', null);
-        $projectId = Util::getArg($staticData, 'projectId', 0);
-        $select->columns(array('id', 'idx', 'title','author','cobiss','issn','publication_id'))
+        $proj_id = Util::getArg($staticData, 'proj_id', 0);
+        $select->columns(array('line_id', 'idx', 'title','author','cobiss','issn','pub_id'))
             ->from('project_line')
-            ->where(array('project_id' => $projectId));
+            ->where(array('proj_id' => $proj_id));
     }
 
     public function defineDataTableResponseData($args, ResultInterface $result) {
@@ -25,12 +25,15 @@ class ProjectEdit_ProjectLinesDT extends SicModuleAbs {
         foreach($result as $row) {
             $line = array();
 
+            $line['line_id'] = $row['line_id'];
             $line['idx'] = $row['idx'];
             $line['title'] = $row['title'];
 
             $line['line'] = $row;
-            if ($row['publication_id']) {
-                $line['publication'] = DbUtil::selectRow('publication', null, array('id' => $row['publication_id']));
+            $line['publication'] = array();
+
+            if ($row['pub_id']) {
+                $line['publication'] = DbUtil::selectRow('view_publication_list', null, array('pub_id' => $row['pub_id']));
             }
             $responseData[] = $line;
         }
@@ -40,11 +43,11 @@ class ProjectEdit_ProjectLinesDT extends SicModuleAbs {
     public function defineSqlDelete($args, Delete $delete)
     {
         $staticData = Util::getArg($args, 'staticData', null);
-        $projectId = Util::getArg($staticData, 'projectId', 0);
+        $proj_id = Util::getArg($staticData, 'proj_id', 0);
         $data = Util::getArg($args, 'data', null);
-        $id = Util::getArg($data, 'id', 0);
-        if (!$id) return false;
+        $line_id = Util::getArg($data, 'line_id', 0);
+        if (!$line_id) return false;
 
-        $delete->from('project_line')->where(array('project_id' => $projectId, 'id' => $id));
+        $delete->from('project_line')->where(array('proj_id' => $proj_id, 'line_id' => $line_id));
     }
 }

@@ -14,54 +14,30 @@ class PubList extends SicModuleAbs {
     public function defineSqlSelect($args, Select $select)
     {
         $select->from('view_publication_list');
-
-            /*
-            ->columns(array('id', 'parent_id', 'year', 'cobiss', 'issn', 'original_id',
-                'author' => new Literal('(SELECT SUBSTR(GROUP_CONCAT(author SEPARATOR \', \'), 1, 100) FROM publication_author WHERE
-                            publication_author.publication_id = publication.id)'),
-                'title' => new Literal('(SELECT SUBSTR(GROUP_CONCAT(title  SEPARATOR \', \'), 1, 100) FROM publication_title WHERE
-                            publication_title.publication_id = publication.id)'),
-                'project_id' => new Literal('(SELECT SUBSTR(GROUP_CONCAT(project_id SEPARATOR \', \'), 1, 100) FROM publication_project_link WHERE
-                            publication_project_link.publication_id = publication.id)')
-                //"title" => new Expression('SUBSTR(GROUP_CONCAT(publication_title.title), 1, 100)'),
-                //"author" => new Expression('SUBSTR(GROUP_CONCAT(publication_author.author), 1, 100)')
-            ))
-            //->join('publication_project_link', 'publication.id = publication_project_link.publication_id',
-            //    array('project_id' => new Expression('GROUP_CONCAT(publication_project_link.project_id)')), Select::JOIN_LEFT)
-            //->join('publication_title', 'publication.id = publication_title.publication_id',
-            //    array('title' => new Expression('SUBSTR(GROUP_CONCAT(publication_title.title), 1, 100)')), Select::JOIN_LEFT)
-            //->join('publication_author', 'publication.id = publication_author.publication_id',
-            //    array('author' => new Expression('SUBSTR(GROUP_CONCAT(publication_author.author), 1, 100)')), Select::JOIN_LEFT)
-            ->group('publication.id');
-            */
-
-        //$select->where(array('title' => 'Naslov 1,Naslov 2'));
-        //echo $select->getSqlString(); die();
-
         $staticData = Util::getArg($args, 'staticData', array());
-        $projectId = Util::getArg($staticData, 'projectId', null);
+        $proj_id = Util::getArg($staticData, 'proj_id', null);
 
-        // Filter on projectId
-        if ($projectId) {
-            $select->join('publication_project_link', 'publication.id = publication_project_link.publication_id',
-                array('filter_project_id' => 'project_id'))->where(array('filter_project_id' => $projectId));
+        // Filter on project Id
+        if ($proj_id) {
+            $select->join('publication_project_link', 'publication.pub_id = publication_project_link.pub_id',
+                array('filter_proj_id' => 'proj_id'))->where(array('filter_proj_id' => $proj_id));
         }
     }
 
     public function defineSqlDelete($args, Delete $delete)
     {
         $data = Util::getArg($args, 'data', null);
-        $id = Util::getArg($data, 'id', 0);
+        $pub_id = Util::getArg($data, 'pub_id', 0);
         $staticData = Util::getArg($args, 'staticData', array());
-        $projectId = Util::getArg($staticData, 'projectId', null);
+        $proj_id = Util::getArg($staticData, 'proj_id', null);
 
-        // If projectId, only delete relation between project and publication
-        if ($projectId) {
-            $delete->from('publication_project_link')->where(array("publication_id" => $id, "project_id" => $projectId));
+        // If proj_id, only delete relation between project and publication
+        if ($proj_id) {
+            $delete->from('publication_project_link')->where(array("pub_id" => $pub_id, "proj_id" => $proj_id));
         } else {
-            $delete->from('publication_author')->where(array("publication_id" => $id));
-            $delete->from('publication_title')->where(array("publication_id" => $id));
-            $delete->from('publication')->where(array("id" => $id));
+            $delete->from('publication_author')->where(array("pub_id" => $pub_id));
+            $delete->from('publication_title')->where(array("pub_id" => $pub_id));
+            $delete->from('publication')->where(array("pub_id" => $pub_id));
         }
     }
 

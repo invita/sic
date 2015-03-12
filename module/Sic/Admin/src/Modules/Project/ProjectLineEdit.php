@@ -10,15 +10,15 @@ use Sic\Admin\Models\DbUtil;
 class ProjectLineEdit {
     public function projLineSelect($args) {
 
-        $id = Util::getArg($args, 'id', null);
-        $row = DbUtil::selectRow('project_line', null, array('id' => $id));
+        $line_id = Util::getArg($args, 'line_id', null);
+        $row = DbUtil::selectRow('project_line', null, array('line_id' => $line_id));
         return array("data" => $row);
     }
 
     public function projLineUpdate($args) {
 
-        $id = Util::getArg($args, 'id', null);
-        if (!$id) return $this->projLineInsert($args);
+        $line_id = Util::getArg($args, 'line_id', null);
+        if (!$line_id) return $this->projLineInsert($args);
 
         $data = Util::getArg($args, 'data', array());
 
@@ -27,9 +27,9 @@ class ProjectLineEdit {
             "author" => Util::getArg($data, 'author', ''),
             "cobiss" => Util::getArg($data, 'cobiss', ''),
             "issn" => Util::getArg($data, 'issn', ''),
-            "publication_id" => Util::getArg($data, 'publication_id', 0)
+            "pub_id" => Util::getArg($data, 'pub_id', 0)
         );
-        DbUtil::updateTable('project_line', $projLineData, array('id' => $id));
+        DbUtil::updateTable('project_line', $projLineData, array('line_id' => $line_id));
 
         return $this->projLineSelect($args);
     }
@@ -38,24 +38,24 @@ class ProjectLineEdit {
     {
 
         $data = Util::getArg($args, 'data', array());
-        $projectId = Util::getArg($args, 'projectId', 0);
+        $proj_id = Util::getArg($args, 'proj_id', 0);
 
-        $lastIdx = DbUtil::selectOne('project_line', array('idx' => new Literal('MAX(idx)')), array('project_id' => $projectId));
+        $lastIdx = DbUtil::selectOne('project_line', array('idx' => new Literal('MAX(idx)')), array('proj_id' => $proj_id));
 
         $newIdx = $lastIdx ? $lastIdx +1 : 1;
 
         $projLineData = array(
             "idx" => $newIdx,
-            "project_id" => $projectId,
+            "proj_id" => $proj_id,
             "title" => Util::getArg($data, 'title', ''),
             "author" => Util::getArg($data, 'author', ''),
             "cobiss" => Util::getArg($data, 'cobiss', ''),
             "issn" => Util::getArg($data, 'issn', ''),
-            "publication_id" => Util::getArg($data, 'publication_id', 0)
+            "pub_id" => Util::getArg($data, 'pub_id', 0)
         );
         DbUtil::insertInto('project_line', $projLineData);
 
-        $args['id'] = DbUtil::$lastInsertId;
+        $args['line_id'] = DbUtil::$lastInsertId;
 
         return $this->projLineSelect($args);
     }

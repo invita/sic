@@ -8,8 +8,8 @@ var F = function(args) {
 
     var dataTable = new sic.widget.sicDataTable({
         parent:tabPage.content.selector,
-        primaryKey: ['id'],
-        entityTitle: "Pub %id% - %title%",
+        primaryKey: ['pub_id'],
+        entityTitle: "Pub %pub_id% - %title%",
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Pub/PubSearch"
         }),

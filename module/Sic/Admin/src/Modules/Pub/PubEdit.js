@@ -1,13 +1,13 @@
 var F = function(args) {
     var tabPage = args.helpers.createTabPage({name:"Basic"});
 
-    args.projectId = sic.getArg(args.staticData, 'projectId',null);
+    args.proj_id = sic.getArg(args.staticData, 'proj_id',null);
 
     var panel = new sic.widget.sicPanel({parent:tabPage.content.selector,
-        firstGroupName:args.id ? "Update Pub (id: "+args.id+")" : "Insert Pub"});
+        firstGroupName:"Update Publication"});
 
     var formUserData = new sic.widget.sicForm({parent:panel.firstGroup.content.selector, captionWidth:"100px"});
-    formUserData.addInput({name:"id", type:"text", placeholder:"Id...", readOnly:true});
+    formUserData.addInput({name:"pub_id", type:"text", placeholder:"Id...", readOnly:true});
     formUserData.addInput({name:"parent_id", type:"text", placeholder:"ParentId..."});
     //formUserData.addInput({name:"parentName", type:"text", placeholder:"ParentName..."});
     formUserData.addInput({name:"author", type:"text", placeholder:"Author...", isArray:true});
@@ -19,11 +19,10 @@ var F = function(args) {
     formUserData.addInput({name:"child_id", type:"text", placeholder:"ChildId...", isArray:true});
     formUserData.addInput({name:"save", type:"submit", value:"Save", caption:" "}).selector.click(function(e){
         var response = sic.callMethod({moduleName:"Pub/PubEdit", methodName:"pubUpdate",
-            id: args.id, projectId: args.projectId, data:formUserData.getValue()});
+            pub_id: args.pub_id, proj_id: args.proj_id, data:formUserData.getValue()});
         if (response && response.data) {
             formUserData.setValue(response.data);
-            args.id = response.data.id;
-            panel.firstGroup.setName("Update Pub (id: "+response.data.id+")");
+            args.pub_id = response.data.pub_id;
             tabPage.parentTab.setCaption(sic.mergePlaceholders(args.entityTitle, response.data));
         }
     });
@@ -31,8 +30,8 @@ var F = function(args) {
     formUserData.addInput({name:"clear", type:"button", value:"Clear"}).selector.click(function(e){ });
 
 
-    if (args.id){
-        var response = sic.callMethod({moduleName:"Pub/PubEdit", methodName:"pubSelect", id: args.id});
+    if (args.pub_id){
+        var response = sic.callMethod({moduleName:"Pub/PubEdit", methodName:"pubSelect", pub_id: args.pub_id});
         if (response && response.data) formUserData.setValue(response.data);
     }
 };

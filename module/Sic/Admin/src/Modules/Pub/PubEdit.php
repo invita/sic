@@ -9,18 +9,18 @@ use Sic\Admin\Models\DbUtil;
 class PubEdit {
     public function pubSelect($args) {
 
-        $id = Util::getArg($args, 'id', null);
-        $row = DbUtil::selectRow('publication', null, array('id' => $id));
-        $row['author'] = DbUtil::selectFrom('publication_author', 'author', array('publication_id' => $id));
-        $row['title'] = DbUtil::selectFrom('publication_title', 'title', array('publication_id' => $id));
-        $row['child_id'] = DbUtil::selectFrom('publication', 'id', array('parent_id' => $id));
+        $pub_id = Util::getArg($args, 'pub_id', null);
+        $row = DbUtil::selectRow('publication', null, array('pub_id' => $pub_id));
+        $row['author'] = DbUtil::selectFrom('publication_author', 'author', array('pub_id' => $pub_id));
+        $row['title'] = DbUtil::selectFrom('publication_title', 'title', array('pub_id' => $pub_id));
+        $row['child_id'] = DbUtil::selectFrom('publication', 'pub_id', array('parent_id' => $pub_id));
         return array("data" => $row);
     }
 
     public function pubUpdate($args) {
 
-        $id = Util::getArg($args, 'id', null);
-        if (!$id) return $this->pubInsert($args);
+        $pub_id = Util::getArg($args, 'pub_id', null);
+        if (!$pub_id) return $this->pubInsert($args);
 
         $data = Util::getArg($args, 'data', array());
 
@@ -31,7 +31,7 @@ class PubEdit {
             "issn" => Util::getArg($data, 'issn', ''),
             "original_id" => Util::getArg($data, 'original_id', 0)
         );
-        DbUtil::updateTable('publication', $pubData, array('id' => $id));
+        DbUtil::updateTable('publication', $pubData, array('pub_id' => $pub_id));
 
         $this->updateArrayFields($args);
 
@@ -52,18 +52,18 @@ class PubEdit {
         );
         DbUtil::insertInto('publication', $pubData);
 
-        $args['id'] = DbUtil::$lastInsertId;
+        $args['pub_id'] = DbUtil::$lastInsertId;
 
         $this->updateArrayFields($args);
 
-        $projectId = Util::getArg($args, 'projectId', null);
-        if ($projectId) {
+        $proj_id = Util::getArg($args, 'proj_id', null);
+        if ($proj_id) {
             $row = DbUtil::selectRow('publication_project_link', array('id'),
-                array('publication_id' => $args['id'], 'project_id' => $projectId));
+                array('pub_id' => $args['pub_id'], 'proj_id' => $proj_id));
 
             if (!isset($row['id']) || !$row['id']) {
                 DbUtil::insertInto('publication_project_link',
-                    array('publication_id' => $args['id'], 'project_id' => $projectId));
+                    array('pub_id' => $args['pub_id'], 'proj_id' => $proj_id));
             }
         }
 
@@ -73,18 +73,18 @@ class PubEdit {
 
     private function updateArrayFields($args) {
 
-        $id = Util::getArg($args, 'id', null);
+        $pub_id = Util::getArg($args, 'pub_id', null);
         $data = Util::getArg($args, 'data', array());
 
         $author = Util::getArg($data, 'author', array());
-        DbUtil::deleteFrom('publication_author', array('publication_id' => $id));
+        DbUtil::deleteFrom('publication_author', array('pub_id' => $pub_id));
         for ($idx = 0; $idx < count($author); $idx++)
-            DbUtil::insertInto('publication_author', array('publication_id' => $id, 'idx' => $idx, 'author' => $author[$idx]));
+            DbUtil::insertInto('publication_author', array('pub_id' => $pub_id, 'idx' => $idx, 'author' => $author[$idx]));
 
         $title = Util::getArg($data, 'title', array());
-        DbUtil::deleteFrom('publication_title', array('publication_id' => $id));
+        DbUtil::deleteFrom('publication_title', array('pub_id' => $pub_id));
         for ($idx = 0; $idx < count($title); $idx++)
-            DbUtil::insertInto('publication_title', array('publication_id' => $id, 'idx' => $idx, 'title' => $title[$idx]));
+            DbUtil::insertInto('publication_title', array('pub_id' => $pub_id, 'idx' => $idx, 'title' => $title[$idx]));
 
     }
 

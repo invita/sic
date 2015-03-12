@@ -58,9 +58,16 @@ sic.mergePlaceholders = function(str, valueMapObj) {
             var searchRegEx = new RegExp('%'+key+'%', 'ig');
             var replaceVal = undefined;
             if (typeof(valueMapObj[key]) == "string" || typeof(valueMapObj[key]) == "number") replaceVal = valueMapObj[key];
-            else if (typeof(valueMapObj[key]) == "object") replaceVal = valueMapObj[Object.keys(valueMapObj)[0]];
-            if (replaceVal !== undefined)
-                str = str.replace(searchRegEx, valueMapObj[key]);
+            else if (valueMapObj[key] && typeof(valueMapObj[key]) == "object" && Object.keys(valueMapObj).length) {
+                replaceVal = "";
+                for (var k in valueMapObj[key]){
+                    if (replaceVal) replaceVal += ', ';
+                    replaceVal += valueMapObj[key][k];
+                }
+            }
+            if (replaceVal !== undefined) {
+                str = str.replace(searchRegEx, replaceVal);
+            }
         }
     }
     while (str.indexOf('%') != -1) str = str.replace('%', '[').replace('%', '=?]');

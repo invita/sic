@@ -208,6 +208,24 @@ sic.widget.sicDataTable = function(args)
         }
     };
 
+    this.rowReprValue = function(row, entityTitle, primaryKey){
+        if (!entityTitle) entityTitle = _p.entityTitle;
+        if (!primaryKey) primaryKey = _p.primaryKey;
+        var reprValue = "";
+        //var row = _p.getValue();
+
+        if (entityTitle) {
+            reprValue = sic.mergePlaceholders(entityTitle, row);
+        } else if (primaryKey) {
+            reprValue = "Record ";
+            for (var i in primaryKey){
+                if (reprValue) reprValue += ', ';
+                reprValue += row[primaryKey[i]];
+            }
+        }
+        return reprValue;
+    };
+
     this.getEventArgs = function(){
         return { dataTable: _p };
     };
@@ -352,52 +370,37 @@ sic.widget.sicDataTable = function(args)
             _p.dataSource.callbacks.feedData = _p.feedData;
             _p.dataSource.select();
         }
-        /*
-        alert('InitAndPopulate '+tableData);
-        if (!tableData) {
-            if (!_p.dataSource) return;
-            _p.dataSource.aSync = true;
-            _p.dataSource.callbacks.feedData = _p.feedData;
-            _p.dataSource.select();
-            return;
-        } else {
-            setTimeout(function(){_p.feedData(tableData)}, 100);
-        }
-
-        if (!_p.initialized) {
-            _p.init();
-            _p.bluePrint = _p.createBluePrintFromData(tableData);
-            _p.createTable();
-            _p.initialized = true;
-        }
-        */
     };
 
     this.refresh = function() {
         if (!_p.dataSource) return;
         _p.infoDiv.selector.css("display", "none");
         _p.dataSource.select();
-
-        /*
-        var selectResponse = _p.dataSource.select();
-        if (selectResponse) {
-            _p.setValue(selectResponse.data);
-            _p.setPaginator(selectResponse.rowCount);
-        }
-        */
     };
 
 
     // if EditorModule given, bind edit events
     if (_p.editorModuleArgs) {
-        _p.onRowDoubleClick(function (args) {
+        _p.onFieldDoubleClick(function (args) {
+            var fieldKey = args.field.fieldKey;
+            var editorModuleArgs = _p.editorModuleArgs;
             var row = args.row.getValue();
-            var tabName = args.row.reprValue();
-            var editorModuleArgs = sic.mergeObjects(_p.editorModuleArgs, {
-                newTab: tabName,
+            if (_p.editorModuleArgs[fieldKey]) {
+                editorModuleArgs = _p.editorModuleArgs[fieldKey];
+            }
+            if (typeof(editorModuleArgs.parseRow) == "function") row = editorModuleArgs.parseRow(row);
+
+            //var tabName = args.row.reprValue();
+            editorModuleArgs = sic.mergeObjects({
                 entityTitle: _p.entityTitle,
+                primaryKey: _p.primaryKey
+            }, editorModuleArgs);
+
+            editorModuleArgs = sic.mergeObjects(editorModuleArgs, {
+                newTab: _p.rowReprValue(row, editorModuleArgs.entityTitle, editorModuleArgs.primaryKey),
                 row: row
             });
+
             editorModuleArgs.onClosed = function (args) {
                 _p.refresh();
             };
@@ -406,6 +409,8 @@ sic.widget.sicDataTable = function(args)
             if (_p.primaryKey)
                 for (var pkIdx in _p.primaryKey)
                     editorModuleArgs[_p.primaryKey[pkIdx]] = row[_p.primaryKey[pkIdx]];
+
+            //sic.dump(editorModuleArgs, 0);
             sic.loadModule(editorModuleArgs);
         });
     }
@@ -502,17 +507,7 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
     };
 
     this.reprValue = function(){
-        var reprValue = "";
-        var row = _p.getValue();
-        if (_p.dataTable.entityTitle) {
-            reprValue = sic.mergePlaceholders(_p.dataTable.entityTitle, row);
-        } else if (_p.dataTable.primaryKey) {
-            for (var i in _p.dataTable.primaryKey){
-                if (reprValue) reprValue += ', ';
-                reprValue += row[_p.dataTable.primaryKey[i]];
-            }
-        }
-        return reprValue;
+        return _p.dataTable.rowReprValue(_p.getValue());
     };
 
     this.getEventArgs = function(){
@@ -557,6 +552,7 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
     this.headerField = sic.getArg(args, "headerField", this.row ? this.row.headerRow : false);
     this.clearValue = sic.getArg(args, "clearValue", "");
     this.visible = sic.getArg(args, "visible", true);
+    this.tagClass = sic.getArg(args, "tagClass", "");
 
     this.cellDataTable = sic.getArg(args, "cellDataTable", null);
     this.formView = sic.getArg(args, "formView", null);
@@ -637,6 +633,7 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
     this.setValue(this.fieldValue);
 
     if (!this.visible) this.displayNone();
+    if (this.tagClass) this.selector.addClass(this.tagClass);
 };
 
 
