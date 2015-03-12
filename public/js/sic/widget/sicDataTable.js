@@ -16,9 +16,13 @@ sic.widget.sicDataTable = function(args)
     this.caption = sic.getArg(args, "caption", "");
     this.primaryKey = sic.getArg(args, "primaryKey", null);
     this.fields = sic.getArg(args, "fields", {});
+    this.actions = sic.getArg(args, "actions", {});
     this.entityTitle = sic.getArg(args, "entityTitle", null);
     this.dataSource = sic.getArg(args, "dataSource", null);
     this.editorModuleArgs = sic.getArg(args, "editorModuleArgs", null);
+    this.hoverRows = sic.getArg(args, "hoverRows", true);
+    this.hoverCells = sic.getArg(args, "hoverCells", !this.hoverRows);
+    this.selectCallback = sic.getArg(args, "selectCallback", null);
 
     this.rowsPerPage = sic.getArg(args, "rowsPerPage", sic.defaults.dataTableRowsPerPage); // Ignored if dataSource is given
 
@@ -270,6 +274,18 @@ sic.widget.sicDataTable = function(args)
             if (onlyCheckFirstRow) break;
         }
 
+        // Actions Field
+        if (Object.keys(_p.actions).length) {
+            var actionName = '_actions';
+            var actionBP = sic.mergeObjects({}, _p.fields[actionName]);
+            actionBP.fieldKey = actionName;
+            actionBP.fieldLabel = 'Actions';
+            actionBP.fieldType = 'actions';
+            actionBP.canSort = false;
+            actionBP.actions = _p.actions;
+            bluePrint.fields[actionName] = actionBP;
+        }
+
         // Delete Button
         if (_p.canDelete) {
             var fieldName = '_delete';
@@ -382,6 +398,12 @@ sic.widget.sicDataTable = function(args)
     // if EditorModule given, bind edit events
     if (_p.editorModuleArgs) {
         _p.onFieldDoubleClick(function (args) {
+            if (typeof(_p.selectCallback) == "function") {
+                _p.selectCallback(args);
+                if (_p.parent.tabPage)
+                    _p.parent.tabPage.destroyTab();
+                return;
+            }
             var fieldKey = args.field.fieldKey;
             var editorModuleArgs = _p.editorModuleArgs;
             var row = args.row.getValue();
@@ -468,11 +490,11 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
 
     // Settings
     this.headerRow = sic.getArg(args, "headerRow", false);
-    //this.gradColor = sic.getArg(args, "gradColor", "silver");
-    //this.hoverColor = sic.getArg(args, "hoverColor", "gray");
     this.dataTable = sic.getArg(args, "dataTable", null);
-    //this.primaryKey = Cap.Util.getArg(args, "primaryKey", null);
 
+
+    // Implementation
+    if (this.dataTable.hoverRows) this.selector.addClass("hoverable");
     if (!this.headerRow) this.displayNone();
 
     this.addField = function(colName, colValue, args) {
@@ -556,6 +578,7 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
 
     this.cellDataTable = sic.getArg(args, "cellDataTable", null);
     this.formView = sic.getArg(args, "formView", null);
+    this.actions = sic.getArg(args, "actions", null);
 
     this.valueDiv = new sic.widget.sicElement({parent:this.selector, tagClass:"inline"});
 
@@ -564,7 +587,9 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
         this.sortImg.selector.css("display", "none");
 
         if (_p.canSort)
-            this.selector.addClass("clickable");
+            this.selector.addClass("sortable");
+    } else {
+        if (this.dataTable.hoverCells) this.selector.addClass("hoverable");
     }
 
     this.setSort = function(sortOrder){
@@ -594,8 +619,33 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
                 sic.mergeObjects({parent:_p.valueDiv.selector, captionWidth:"100px"}, _p.formView));
             for (var fKey in _p.fieldValue) {
                 var fVal = _p.fieldValue[fKey];
-                _p.formViewInstance.addInput({name:fKey, type:"flat", placeholder:fKey+"...", value:fVal, readOnly:true});
+                _p.formViewInstance.addInput({name:fKey, type:"flat", value:fVal, readOnly:true});
             }
+        } else if (!_p.headerField && _p.actions) {
+            for (var aKey in _p.actions) {
+                var actionArgs = _p.actions[aKey];
+                var actionType = sic.getArg(actionArgs, 'type', 'link');
+                var actionLabel = sic.getArg(actionArgs, 'label', sic.captionize(aKey));
+                var actionOnClick = sic.getArg(actionArgs, 'onClick', function(args) {});
+                var action;
+                _p.valueDiv.actions = {};
+                switch (actionType) {
+                    case "link": default:
+                        action = new sic.widget.sicElement({parent:_p.valueDiv.selector});
+                        action.selector.html(actionLabel);
+                        break;
+                    case "button":
+                        action = new sic.widget.sicInput({parent:_p.valueDiv.selector, type:'button'});
+                        action.setValue(actionLabel);
+                        break;
+                }
+                action.selector.click(function(e){
+                    var clickArgs = sic.mergeObjects(_p.getEventArgs(), {action: actionArgs});
+                    actionOnClick(clickArgs);
+                });
+                _p.valueDiv.actions[aKey] = action;
+            }
+            //_p.valueDiv.selector.html('Actions!');
         } else {
             _p.valueDiv.selector.html(_p.fieldValue);
         }
@@ -621,6 +671,7 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
         if (!_p.headerField) _p.dataTable.trigger("dataFieldDoubleClick", _p.getEventArgs());
         _p.dataTable.trigger("fieldDoubleClick", _p.getEventArgs());
         e.preventDefault();
+        return false;
     });
     this.selector.bind("contextmenu", function(e){
         if (_p.headerField) _p.dataTable.trigger("headerFieldRightClick", _p.getEventArgs());

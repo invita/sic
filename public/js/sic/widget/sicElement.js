@@ -109,8 +109,6 @@ sic.widget.sicElement = function(args)
      */
 
     this.setGradient = function(newGrad, hoverP, activeP) {
-        hoverP = true; activeP = true;
-
         this.gradient = newGrad;
 
         var classNames = this.selector.attr("class").split(' ');

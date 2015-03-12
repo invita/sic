@@ -82,9 +82,10 @@ img.dataTableSortIcon { margin-left:6px; }
 div.sicDataTable { margin:5px; }
 div.sicDataTable > table.sicDataTable_table { margin-bottom:5px }
 div.sicDataTable > table.sicDataTable_table thead > tr {  }
-div.sicDataTable > table.sicDataTable_table thead > tr > td.clickable:hover { cursor:pointer; background:#DDEEFF; }
+div.sicDataTable > table.sicDataTable_table thead > tr > td.sortable:hover { cursor:pointer; background:#DDEEFF; }
 div.sicDataTable > table.sicDataTable_table tbody > tr { cursor:pointer; height:28px; }
-div.sicDataTable > table.sicDataTable_table tbody > tr:hover { background:#DDEEFF; }
+div.sicDataTable > table.sicDataTable_table tbody > tr.hoverable:hover { background:#DDEEFF; }
+div.sicDataTable > table.sicDataTable_table tbody > tr > td.hoverable:hover { cursor:pointer; background:#DDEEFF; }
 div.sicDataTable > div.insertButton { margin-bottom:5px; cursor:pointer; }
 div.sicDataTable > div.insertButton > span { color:#6699CC; font-weight:bold; margin-left:4px; vertical-align:middle; }
 div.sicDataTable > div.insertButton > img { vertical-align:middle; }
@@ -103,6 +104,22 @@ div.sicDataTable > div.infoDiv { color:#222; background:#F5F5F5; display:inline-
 
 div.listLine { marigin:5px; }
 div.listField { margin-left:5px; vertical-align:middle; }
+
+
+div.sicDialog { /*position:absolute;*/ position:fixed; left:0px; top:0px; width:100%; height:100%; text-align:center;
+    vertical-align: middle; }
+div.sicDialog > div.dialogBg { position:fixed; background:black; top:0px; left:0px;
+    width:100%; height:100%; z-index:1001; opacity:0.40; }
+div.sicDialog > div.dialogContainer { position:relative; border:white solid 1px; z-index:1002;
+    top: 10%; display: inline-table; box-shadow: black 2px 2px 2px; background: white; }
+div.sicDialog > div.dialogContainer > div.dialogHeader { border:silver solid 1px;  z-index:1003;
+    text-align: center; padding:4px; font-weight:bold; }
+div.sicDialog > div.dialogContainer > div.dialogHeader > div.titleDiv { display:inline-table; color:inherit; }
+div.sicDialog > div.dialogContainer > div.dialogHeader > div.closeDiv { display:inline-table; color:inherit;
+    opacity:0.6; float:right; cursor:pointer; margin:0px 2px 0px 5px; }
+div.sicDialog > div.dialogContainer > div.dialogHeader > div.closeDiv:hover { opacity:1; }
+div.sicDialog > div.dialogContainer > div.dialogContent { z-index:1003; padding:5px; text-align:left; }
+
 
 img.icon8  { width:8px; }
 img.icon12 { width:12px; }

@@ -19,11 +19,22 @@ sic.loadModule = function(loadArgs) {
     var postData = sic.getArg(loadArgs, "postData", {}); // Post data
     var tabPage = sic.getArg(loadArgs, "tabPage", null); // sicTabPage object
     var newTab = sic.getArg(loadArgs, "newTab", null); // new TabPage Name string
+    var inDialog = sic.getArg(loadArgs, "inDialog", false); // Open module in new sicDialog
 
     $.post("/loadModule", {args: {moduleName:moduleName, postData:postData}}, function(data) {
         var dataObj = JSON.parse(data);
         if (dataObj) {
             var args = sic.mergeObjects(loadArgs, dataObj.args);
+
+            if (inDialog) {
+                var dialogTitle = "Dialog";
+                if (newTab) {
+                    dialogTitle = newTab;
+                    newTab = null;
+                }
+                var dialog = new sic.widget.sicDialog({title:dialogTitle});
+                tabPage = dialog.mainTab;
+            }
 
             // Prepare some useful functions
             args.helpers = {};

@@ -27,6 +27,11 @@ var F = function(args){
     form3.addInput({name:"Test7", type:"text", value:"Some initial Value 3"});
     form3.addInput({name:"SetFormData", type:"button", gradient:"orange"})
         .selector.click(function(e){
-            form3.setValue({ Test5: "Lol", Test6: "Test", Test7: "Fooo!", UnknownName: "..." }); });
+            form3.setValue({ Test5: "Lol", Test6: "Test", Test7: "Fooo!", UnknownName: "This is ignored" }); });
+    form3.addInput({name:"Search in Dialog", type:"button", gradient:"blue"}).selector.click(function(e){
+        //var dialog = new sic.widget.sicDialog({title:"Test dialog"});
+        //dialog.content.selector
+        sic.loadModule({moduleName:'Pub/PubSearch', newTab:'Search', inDialog: true});
+    });
 
 };

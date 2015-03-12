@@ -50,8 +50,8 @@ class DbUtil
         return $row;
     }
 
-    public static function selectOne($table, $fields = null, $where = null) {
-        $result = self::selectRow($table, $fields, $where);
+    public static function selectOne($table, $field = null, $where = null) {
+        $result = self::selectRow($table, array($field), $where);
         if ($result && count($result)) return array_pop($result);
         return null;
     }

@@ -1,4 +1,5 @@
 var F = function(args) {
+    var moduleArgs = args;
     var tabPageBasic = args.helpers.createTabPage({name:"Basic"});
 
     var panel = new sic.widget.sicPanel({parent:tabPageBasic.content.selector, firstGroupName: "Project"});
@@ -38,6 +39,7 @@ var F = function(args) {
         parent: panelPub.firstGroup.content.selector,
         primaryKey: ['line_id', 'idx', 'proj_id', 'pub_id'],
         entityTitle: "Line %idx% - %title%",
+        hoverRows:false,
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Project/ProjectEdit_ProjectLinesDT",
             staticData: { proj_id: args.proj_id }
@@ -58,8 +60,28 @@ var F = function(args) {
             line_id: { visible: false },
             idx: { visible: false },
             title: { visible: false },
-            line: { formView: {}, tagClass:"minWidth300" },
-            publication: { formView: {}, tagClass:"minWidth300", button: { title: 'Find and Link', onClick: function(args){} } }
+            line: { formView: {}, tagClass:"minWidth300", sortable:false },
+            publication: { formView: {}, tagClass:"minWidth300", sortable:false },
+        },
+        actions: {
+            link: {
+                label: 'Search',
+                type: 'button',
+                onClick: function(args) {
+                    sic.loadModule({moduleName:'Pub/PubSearch', newTab:'Search', inDialog: true,
+                        selectCallback: function(selectArgs){
+                            //sic.dump(args.row.getValue());
+                            var line_id = args.row.getValue().line_id;
+                            var pub_id = selectArgs.row.getValue().pub_id;
+                            var proj_id = moduleArgs.proj_id;
+                            if (line_id && pub_id) {
+                                var response = sic.callMethod({moduleName:"Project/ProjectLineEdit",
+                                    methodName:"linkLine", line_id: line_id, pub_id: pub_id, proj_id: proj_id},
+                                    function(response) { linesTable.refresh(); });
+                            }
+                        }});
+                }
+            }
         }
     });
     linesTable.onDataFeed(function(data){ formProj.inputs['_pubCount'].setValue(data['rowCount']); });

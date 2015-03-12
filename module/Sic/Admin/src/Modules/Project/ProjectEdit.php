@@ -45,18 +45,6 @@ class ProjectEdit {
         $adapter = GlobalAdapterFeature::getStaticAdapter();
         $sql = new Sql($adapter);
 
-
-        /*
-        $select = $sql->select()->from('project')->columns(array("max_proj_id" => new \Zend\Db\Sql\Expression('MAX(proj_id)')));
-        $statement = $sql->prepareStatementForSqlObject($select);
-        $result = $statement->execute()->current();
-        if ($result) {
-            $data['proj_id'] = ($result) ? $result['max_proj_id'] +1 : 1;
-        }
-        */
-
-        //print_r($data); die();
-
         $data['date_created'] = new \Zend\Db\Sql\Expression('CURDATE()');
 
         $insert = $sql->insert()->into('project')->values($data);
@@ -92,6 +80,7 @@ class ProjectEdit {
         }
 
         DbUtil::deleteFrom('project_line', array('proj_id' => $proj_id));
+        DbUtil::deleteFrom('publication_project_link', array('proj_id' => $proj_id));
 
         foreach ($lines as $line) {
             $line['proj_id'] = $proj_id;
@@ -99,8 +88,7 @@ class ProjectEdit {
         }
 
         try {
-            $rowCount = DbUtil::selectOne('project_line',
-                array('cnt' => new Expression('COUNT(*)')), array('proj_id' => $proj_id));
+            $rowCount = DbUtil::selectOne('project_line', new Expression('COUNT(*)'), array('proj_id' => $proj_id));
 
         } catch (Exception $e) {
             echo DbUtil::$lastSqlSelect->getSqlString();

@@ -18,7 +18,8 @@ var F = function(args) {
             tabPage:tabPage
         },
         canInsert: false,
-        canDelete: false
+        canDelete: false,
+        selectCallback: args.selectCallback
     });
 
 
