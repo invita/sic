@@ -58,10 +58,11 @@ var F = function(args) {
         },
         fields: {
             line_id: { visible: false },
+            proj_id: { visible: false },
             idx: { visible: false },
             title: { visible: false },
-            line: { formView: {}, tagClass:"minWidth300", sortable:false },
-            publication: { formView: {}, tagClass:"minWidth300", sortable:false },
+            line: { formView: {}, tagClass:"minWidth300 valignTop", sortable:false },
+            publication: { formView: {}, tagClass:"minWidth300 valignTop", sortable:false },
         },
         actions: {
             link: {

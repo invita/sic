@@ -15,27 +15,39 @@ class ProjectEdit_ProjectLinesDT extends SicModuleAbs {
     {
         $staticData = Util::getArg($args, 'staticData', null);
         $proj_id = Util::getArg($staticData, 'proj_id', 0);
-        $select->columns(array('line_id', 'idx', 'title','author','cobiss','issn','pub_id'))
+        $select //->columns(array('line_id', 'idx', 'proj_id', 'title','author','year','cobiss','issn','pub_id'))
             ->from('project_line')
             ->where(array('proj_id' => $proj_id));
     }
 
     public function defineDataTableResponseData($args, ResultInterface $result) {
         $responseData = array();
+
+        $lineColumns = array('line_id','idx',    'title','author','year','cobiss','issn');
+        $pubColumns = array('pub_id','parent_id','title','author','year','cobiss','issn','original_id');
+
         foreach($result as $row) {
-            $line = array();
+            $resultLine = array();
 
-            $line['line_id'] = $row['line_id'];
-            $line['idx'] = $row['idx'];
-            $line['title'] = $row['title'];
+            // Copy system Line columns
+            $resultLine['line_id'] = $row['line_id'];
+            $resultLine['idx'] = $row['idx'];
+            $resultLine['proj_id'] = $row['proj_id'];
+            $resultLine['title'] = $row['title'];
 
-            $line['line'] = $row;
-            $line['publication'] = array();
+            // Copy Line columns
+            $resultLine['line'] = array();
+            foreach ($lineColumns as $lineColName)
+                $resultLine['line'][$lineColName] = $row[$lineColName];
 
+            // Select Publication columns
+            $resultLine['publication'] = array();
             if ($row['pub_id']) {
-                $line['publication'] = DbUtil::selectRow('view_publication_list', null, array('pub_id' => $row['pub_id']));
+                $resultLine['publication'] = DbUtil::selectRow('view_publication_list',
+                    $pubColumns, array('pub_id' => $row['pub_id']));
             }
-            $responseData[] = $line;
+
+            $responseData[] = $resultLine;
         }
         return $responseData;
     }

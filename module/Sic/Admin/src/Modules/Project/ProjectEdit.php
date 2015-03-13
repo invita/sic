@@ -73,6 +73,7 @@ class ProjectEdit {
                 "idx" => $idx,
                 "title" => trim((string)$line->title),
                 "author" => trim((string)$line->author),
+                "year" => intval(trim((string)$line->year)),
                 "cobiss" => trim((string)$line->cobiss),
                 "issn" => trim((string)$line->issn),
             );

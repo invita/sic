@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+	<line>
+		<title>Kodni pravopis</title>
+		<author>Matic Vrščaj</author>
+        <year>2014</year>
+		<cobiss>cob-1234</cobiss>
+		<issn>Test_Issn</issn>
+	</line>
+	<line>
+		<title>Nasveti</title>
+		<author>Gregor Marolt</author>
+        <year>2012</year>
+		<cobiss>cob-2345</cobiss>
+		<issn>Issn_789</issn>
+	</line>
+	<line>
+		<title>Publikacija 1</title>
+		<author>Marjan Majcen</author>
+        <year>1992</year>
+		<cobiss>cob-3456</cobiss>
+		<issn>Issn_99</issn>
+	</line>
+	<line>
+		<title>Publikacija 2</title>
+		<author>Bojana Kranjčan</author>
+        <year>2009</year>
+		<cobiss>cob-666</cobiss>
+		<issn>Issn_11</issn>
+	</line>
+</project>

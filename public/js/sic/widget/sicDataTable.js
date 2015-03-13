@@ -404,10 +404,12 @@ sic.widget.sicDataTable = function(args)
                     _p.parent.tabPage.destroyTab();
                 return;
             }
+
             var fieldKey = args.field.fieldKey;
             var editorModuleArgs = _p.editorModuleArgs;
             var row = args.row.getValue();
             if (_p.editorModuleArgs[fieldKey]) {
+                row = sic.mergeObjects(row, row[fieldKey]);
                 editorModuleArgs = _p.editorModuleArgs[fieldKey];
             }
             if (typeof(editorModuleArgs.parseRow) == "function") row = editorModuleArgs.parseRow(row);
@@ -429,10 +431,10 @@ sic.widget.sicDataTable = function(args)
             if (_p.dataSource && _p.dataSource.staticData)
                 editorModuleArgs.staticData = sic.mergeObjects(_p.dataSource.staticData, editorModuleArgs.staticData);
             if (_p.primaryKey)
-                for (var pkIdx in _p.primaryKey)
+                for (var pkIdx in _p.primaryKey) {
                     editorModuleArgs[_p.primaryKey[pkIdx]] = row[_p.primaryKey[pkIdx]];
+                }
 
-            //sic.dump(editorModuleArgs, 0);
             sic.loadModule(editorModuleArgs);
         });
     }

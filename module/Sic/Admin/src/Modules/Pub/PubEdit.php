@@ -58,10 +58,15 @@ class PubEdit {
 
         $proj_id = Util::getArg($args, 'proj_id', null);
         if ($proj_id) {
-            $row = DbUtil::selectRow('publication_project_link', array('id'),
-                array('pub_id' => $args['pub_id'], 'proj_id' => $proj_id));
+            $line_id = Util::getArg($args, 'line_id', null);
+            if ($line_id) {
+                DbUtil::updateTable('project_line', array('pub_id' => $args['pub_id']),
+                    array('line_id' => $line_id, 'proj_id' => $proj_id));
+            }
 
-            if (!isset($row['id']) || !$row['id']) {
+            $link_id = DbUtil::selectOne('publication_project_link', 'link_id',
+                array('pub_id' => $args['pub_id'], 'proj_id' => $proj_id));
+            if (!$link_id) {
                 DbUtil::insertInto('publication_project_link',
                     array('pub_id' => $args['pub_id'], 'proj_id' => $proj_id));
             }

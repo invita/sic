@@ -17,6 +17,7 @@ CREATE TABLE `project_line` (
   `proj_id` int(11) NOT NULL,
   `title` varchar(100) NOT NULL,
   `author` varchar(100) NOT NULL,
+  `year` int(11) NOT NULL,
   `cobiss` varchar(64) NOT NULL,
   `issn` varchar(16) NOT NULL,
   `pub_id` int(11) NOT NULL
@@ -123,6 +124,7 @@ ALTER TABLE `publication_project_link`
 MODIFY `link_id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1;
 ALTER TABLE `user`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1;
+
 
 CREATE OR REPLACE VIEW view_publication_list AS
 SELECT
