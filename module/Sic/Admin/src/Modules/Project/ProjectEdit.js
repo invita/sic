@@ -40,6 +40,7 @@ var F = function(args) {
         primaryKey: ['line_id', 'idx', 'proj_id', 'pub_id'],
         entityTitle: "Line %idx% - %title%",
         hoverRows:false,
+        filter: { enabled: false },
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Project/ProjectEdit_ProjectLinesDT",
             staticData: { proj_id: args.proj_id }
@@ -61,15 +62,28 @@ var F = function(args) {
             proj_id: { visible: false },
             idx: { visible: false },
             title: { visible: false },
-            line: { formView: {}, tagClass:"minWidth300 valignTop", sortable:false },
-            publication: { formView: {}, tagClass:"minWidth300 valignTop", sortable:false },
+            line: { formView: {}, tagClass:"minWidth300 valignTop", canSort:false },
+            publication: { formView: {}, tagClass:"minWidth300 valignTop", canSort:false },
         },
         actions: {
             link: {
                 label: 'Search',
                 type: 'button',
                 onClick: function(args) {
-                    sic.loadModule({moduleName:'Pub/PubSearch', newTab:'Search', inDialog: true,
+                    var rowValue = args.row.getValue();
+                    //sic.dump(rowValue);
+                    var projLine = rowValue.line;
+                    var pub = rowValue.publication;
+                    var filter = {};
+                    if (pub && parseInt(pub.pub_id)) {
+                        // Publication is selected, filter pub_id
+                        filter.pub_id = pub.pub_id;
+                    } else {
+                        // Publication is not selected, filter author and title
+                        filter.author = "*"+projLine.author+"*";
+                        filter.title = "*"+projLine.title+"*";
+                    }
+                    sic.loadModule({moduleName:'Pub/PubSearch', newTab:'Search', inDialog: true, filter: filter,
                         selectCallback: function(selectArgs){
                             //sic.dump(args.row.getValue());
                             var line_id = args.row.getValue().line_id;

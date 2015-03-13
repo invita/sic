@@ -2,9 +2,11 @@ var F = function(args) {
 
     var tabPage = args.helpers.createTabPage({name:"Search"});
     var searchForm = new sic.widget.sicForm({parent:tabPage.content.selector});
-    var searchBox = searchForm.addInput({name:"search"});
+    var searchBox = searchForm.addInput({name:"search", placeholder:"Simple search..."});
     searchBox.selector.addClass("inline");
     var submitButton = searchForm.addInput({value:"Search", type:"submit"});
+
+    var filterValue = sic.getArg(args, "filter", {});
 
     var dataTable = new sic.widget.sicDataTable({
         parent:tabPage.content.selector,
@@ -19,6 +21,7 @@ var F = function(args) {
         },
         canInsert: false,
         canDelete: false,
+        filter: { visible: true, value: filterValue },
         selectCallback: args.selectCallback
     });
 

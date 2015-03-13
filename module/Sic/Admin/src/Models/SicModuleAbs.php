@@ -5,6 +5,8 @@ use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
 use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Delete;
+use Zend\Db\Sql\Where;
+use Zend\Db\Sql\Predicate\Operator;
 use Zend\Db\Adapter\Driver\ResultInterface;
 use Sic\Admin\Models\Util;
 
@@ -31,7 +33,9 @@ abstract class SicModuleAbs
 
     public function defineSqlSelectFilter($args, Select $select) {
         $filter = Util::getArg($args, 'filter', array());
-        $select->where($filter);
+        $filterWhere = DbUtil::prepareSqlFilter($filter);
+        if (count($filterWhere->getPredicates()))
+            $select->where->addPredicate($filterWhere);
     }
 
     public function defineDataTableResponseData($args, ResultInterface $result) {
@@ -76,13 +80,15 @@ abstract class SicModuleAbs
         $this->defineSqlSelectLimit($args, $select);
 
         $statement = $sql->prepareStatementForSqlObject($select);
+        //echo $statement->getSql(); die();
         $sqlResult = $statement->execute();
 
         $responseData = $this->defineDataTableResponseData($args, $sqlResult);
 
         return array(
             'data' => $responseData,
-            'rowCount' => $rowCount
+            'rowCount' => $rowCount,
+            'sql' => $statement->getSql()
         );
     }
 

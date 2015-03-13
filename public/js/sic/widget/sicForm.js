@@ -30,7 +30,8 @@ sic.widget.sicForm = function(args)
             captionWidth:_p.captionWidth,
             parent:_p.selector,
             type:"text",
-            inputConstruct: sic.widget.sicInput
+            inputConstruct: sic.widget.sicInput,
+            form: _p
         };
         args = sic.mergeObjects(defArgs, args)
         if (args.isArray) {

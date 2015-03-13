@@ -42,7 +42,7 @@ sic.widget.sicInputArray = function(args)
         input.onKeyUp(function(e) { e.sicInput = _p; _p.trigger('onKeyUp', e); });
 
         input.delButton = new sic.widget.sicElement({ parent:input.selector, tagName:"div" });
-        input.delButton.selector.addClass("inputButton lastButton delButton").html("-");
+        input.delButton.selector.addClass("inputButton delButton").html("-");
         input.delButton.selector[0].inputId = inputId;
         input.delButton.selector.click(function(e){
             _p.removeInput(this.inputId);
@@ -111,10 +111,9 @@ sic.widget.sicInputArray = function(args)
         _p.removeInput(0);
     });
     */
-    this.mainInput.delButton.selector.removeClass('lastButton');
     this.mainInput.isMainInput = true;
     this.addButton = new sic.widget.sicElement({ parent:this.mainInput.selector, tagName:"div" });
-    this.addButton.selector.addClass("inputButton lastButton addButton").html("+");
+    this.addButton.selector.addClass("inputButton addButton").html("+");
     this.addButton.selector.click(function(e){
         var newInput = _p.addInput();
     });

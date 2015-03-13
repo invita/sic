@@ -28,12 +28,14 @@ sic.widget.sicInput = function(args)
     this.caption = sic.getArg(args, "caption", null);
     this.captionWidth = sic.getArg(args, "captionWidth", null);
     this.showModified = sic.getArg(args, "showModified", true);
+    this.lookup = sic.getArg(args, "lookup", null);
+    this.form = sic.getArg(args, "form", null);
 
     // Events
     this.onKeyDown = function(f) { _p.subscribe("onKeyDown", f); };
     this.onKeyPressed = function(f) { _p.subscribe("onKeyPressed", f); };
     this.onKeyUp = function(f) { _p.subscribe("onKeyUp", f); };
-
+    this.onEnterPressed = function(f) { _p.subscribe("onEnterPressed", f); };
 
     // Create elements
     this.input = new sic.widget.sicElement({ parent:this.selector, tagName:this.inputTagName });
@@ -61,6 +63,31 @@ sic.widget.sicInput = function(args)
     if (this.focus)
         this.input.selector.focus();
 
+    if (this.lookup) {
+        this.input.selector.addClass("lookupKey");
+        this.lookupInput = new sic.widget.sicElement({ parent:this.selector, tagName:this.inputTagName,
+            attr: { type: "text", readOnly: true, name: this.name+"_lookup" } });
+        this.lookupInput.selector.addClass("sicInput lookupValue");
+
+        this.editButton = new sic.widget.sicElement({ parent:this.selector, tagName:"div" });
+        this.editButton.selector.addClass("inputButton editButton");
+        this.editButton.lookupImg = new sic.widget.sicElement({ parent:this.editButton.selector,
+            tagName:"img", attr: { src: "/img/icon/edit.png" } });
+        this.editButton.displayNone();
+        this.editButton.selector.click(function(e){
+            // ... Edit Lookup
+        });
+
+        this.lookupButton = new sic.widget.sicElement({ parent:this.selector, tagName:"div" });
+        this.lookupButton.selector.addClass("inputButton lookupButton");
+        this.lookupButton.lookupImg = new sic.widget.sicElement({ parent:this.lookupButton.selector,
+            tagName:"img", attr: { src: "/img/icon/lookup.png" } });
+        this.lookupButton.selector.click(function(e){
+            // ... Do Lookup
+        });
+        this.inputs.push(this.lookupInput);
+    }
+
     this.setPlaceholder = function(newPlaceholder){
         if (!newPlaceholder) {
             _p.placeholder = "";
@@ -78,6 +105,7 @@ sic.widget.sicInput = function(args)
     this.setValue = function(value){
         _p.input.selector.val(value);
         _p.origValue = value;
+        _p._onChange();
     };
 
     this.calcModified = function(){
@@ -96,16 +124,22 @@ sic.widget.sicInput = function(args)
         return _p.type == "button" || _p.type == "submit";
     };
 
-    if (this.placeholder) this.setPlaceholder(this.placeholder);
-    this.setValue(this.value);
-
     if (this.isButton()) {
         if (this.type == "submit" && !this.gradient) this.gradient = sic.defaults.submitGrad
         if (this.type == "button" && !this.gradient) this.gradient = sic.defaults.buttonGrad;
         this.selector.css('display', 'inline-table');
     }
 
-    if (this.gradient) this.input.setGradient(this.gradient);
+    this._onChange = function() {
+        if (_p.lookup) {
+            var value = _p.getValue();
+            if (jQuery.isNumeric(value)) value = parseInt(value);
+            if (value)
+                _p.editButton.display();
+            else
+                _p.editButton.displayNone();
+        }
+    };
 
     // Internal events
     this._onKeyDown = function(e) {
@@ -114,11 +148,13 @@ sic.widget.sicInput = function(args)
     };
     this._onKeyPressed = function(e) {
         e.sicInput = _p;
+        if (e.which == 13) _p.trigger('onEnterPressed', e);
         _p.trigger('onKeyPressed', e);
     };
     this._onKeyUp = function(e) {
         e.sicInput = _p;
         if (_p.showModified) _p.calcModified();
+        _p._onChange();
         _p.trigger('onKeyUp', e);
     };
 
@@ -135,6 +171,10 @@ sic.widget.sicInput = function(args)
         if (_p.captionWidth) this.captionDiv.selector.css("width", _p.captionWidth);
         this.captionDiv.selector.html(this.caption);
     }
+
+    if (this.placeholder) this.setPlaceholder(this.placeholder);
+    this.setValue(this.value);
+    if (this.gradient) this.input.setGradient(this.gradient);
 
 };
 

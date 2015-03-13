@@ -11,6 +11,9 @@ var F = function(args){
         editorModuleArgs: {
             moduleName:"Project/ProjectEdit",
             tabPage:tabPage
+        },
+        fields: {
+            lines_count: { canSort: false }
         }
     });
 

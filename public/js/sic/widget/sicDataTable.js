@@ -17,6 +17,7 @@ sic.widget.sicDataTable = function(args)
     this.primaryKey = sic.getArg(args, "primaryKey", null);
     this.fields = sic.getArg(args, "fields", {});
     this.actions = sic.getArg(args, "actions", {});
+    this.filter = sic.getArg(args, "filter", null);
     this.entityTitle = sic.getArg(args, "entityTitle", null);
     this.dataSource = sic.getArg(args, "dataSource", null);
     this.editorModuleArgs = sic.getArg(args, "editorModuleArgs", null);
@@ -35,6 +36,8 @@ sic.widget.sicDataTable = function(args)
 
     // Events
     this.onDataFeed = function(f) { _p.subscribe("dataFeed", f); };
+    this.onDataFeedComplete = function(f) { _p.subscribe("dataFeedComplete", f); };
+    this.onFirstFeedComplete = function(f) { _p.subscribe("firstFeedComplete", f); };
 
     // Data Fields Events
     this.onRowClick = function(f) { _p.subscribe("dataRowClick", f); };
@@ -66,6 +69,9 @@ sic.widget.sicDataTable = function(args)
     this.constructed = false;
     this.currentPage = 1;
     this.currentPageCount = 1;
+    this.firstFeed = true;
+
+    this.filter = sic.mergeObjects({enabled:true, visible:false, autoApply: true}, this.filter);
 
     if (_p.dataSource) {
         _p.dataSource.dataTable = _p;
@@ -91,6 +97,7 @@ sic.widget.sicDataTable = function(args)
         if (!_p.tBody) _p.tBody = new sic.widget.sicElement({parent:_p.table.selector, tagName:"tbody"});
 
         _p.createHeaderRow();
+        if (_p.filter.enabled) _p.createFilterRow();
         _p.createRows();
         if (_p.canInsert)
             _p.createInsertButton();
@@ -114,6 +121,23 @@ sic.widget.sicDataTable = function(args)
                 _p.headerRow.addField(fieldBP.fieldKey, fieldBP.fieldLabel, fieldBP);
             }
         }
+    };
+
+    this.createFilterRow = function() {
+        if (_p.filterRow) _p.filterRow.selector.remove();
+        _p.filterRow = new sic.widget.sicDataTableRow(_p.tHead.selector, {
+            filterRow: true,
+            dataTable: _p
+        });
+
+        if (_p.bluePrint) {
+            for (var fieldKey in _p.bluePrint.fields) {
+                var fieldBP = _p.bluePrint.fields[fieldKey];
+                _p.filterRow.addField(fieldBP.fieldKey, fieldBP.fieldLabel, fieldBP);
+            }
+        }
+
+        if (_p.filter.value) _p.filterRow.setFilterValue(_p.filter.value);
     };
 
     this.createRows = function() {
@@ -169,6 +193,7 @@ sic.widget.sicDataTable = function(args)
         if (_p.dsControl) return;
         _p.dsControl = new sic.widget.sicElement({parent:_p.selector, insertAtTop:true, tagClass:"dsControl"});
 
+        // Prev page button
         _p.dsControl.prevPage = new sic.widget.sicElement({parent:_p.dsControl.selector, tagClass:"inline prevButton vmid"});
         _p.dsControl.prevPageImg = new sic.widget.sicElement({parent:_p.dsControl.prevPage.selector, tagName:"img", tagClass:"icon8 vmid"});
         _p.dsControl.prevPageImg.selector.attr("src", "/img/icon/dataTable_prev.png");
@@ -176,6 +201,7 @@ sic.widget.sicDataTable = function(args)
         _p.dsControl.prevPageSpan.selector.html("Prev");
         _p.dsControl.prevPage.selector.click(function(){ _p.switchPage(_p.currentPage-1); });
 
+        // Page inputs
         _p.dsControl.pageInput = new sic.widget.sicElement({parent:_p.dsControl.selector,
             tagName:"input", tagClass:"inline vmid dataTable_pageInput"});
         _p.dsControl.pageInput.selector.keypress(function(e){
@@ -192,12 +218,23 @@ sic.widget.sicDataTable = function(args)
         _p.dsControl.pageCount.selector.attr("readOnly", true);
         _p.dsControl.pageCount.selector.val(1);
 
+        // Next page button
         _p.dsControl.nextPage = new sic.widget.sicElement({parent:_p.dsControl.selector, tagClass:"inline nextButton vmid"});
         _p.dsControl.nextPageSpan = new sic.widget.sicElement({parent:_p.dsControl.nextPage.selector, tagName:"span", tagClass:"vmid"});
         _p.dsControl.nextPageSpan.selector.html("Next");
         _p.dsControl.nextPageImg = new sic.widget.sicElement({parent:_p.dsControl.nextPage.selector, tagName:"img", tagClass:"icon8 vmid"});
         _p.dsControl.nextPageImg.selector.attr("src", "/img/icon/dataTable_next.png");
         _p.dsControl.nextPage.selector.click(function(){ _p.switchPage(_p.currentPage+1); });
+
+        // Filter
+        if (_p.filter.enabled) {
+            _p.dsControl.filterDiv = new sic.widget.sicElement({parent:_p.dsControl.selector, tagClass:"inline filterButton vmid"});
+            _p.dsControl.filterImg = new sic.widget.sicElement({parent:_p.dsControl.filterDiv.selector, tagName:"img", tagClass:"icon16 vmid"});
+            _p.dsControl.filterImg.selector.attr("src", "/img/icon/dataTable_filter.png");
+            _p.dsControl.filterSpan = new sic.widget.sicElement({parent:_p.dsControl.filterDiv.selector, tagName:"span", tagClass:"vmid"});
+            _p.dsControl.filterSpan.selector.html("Filter");
+            _p.dsControl.filterDiv.selector.click(function(){ _p.toggleFilter(); });
+        }
     };
 
     this.switchPage = function(pageIdx) {
@@ -210,6 +247,26 @@ sic.widget.sicDataTable = function(args)
             _p.dataSource.pageStart = (_p.currentPage -1) * _p.dataSource.pageCount;
             _p.refresh();
         }
+    };
+
+    this.toggleFilter = function(bool){
+        _p.filter.visible = (bool === undefined) ? !_p.filter.visible : bool;
+
+        if (_p.filter.visible) {
+            _p.filterRow.display();
+            _p.filterRow.recalculateInputs();
+        } else {
+            _p.filterRow.displayNone();
+        }
+
+        //sic.dump(_p.getValue(), 0);
+    };
+
+    this.applyFilter = function() {
+        if (_p.filterRow)
+            _p.filter.value = _p.filterRow.getFilterValue();
+        if (_p.dataSource)
+            _p.dataSource.filter = _p.filter.value;
     };
 
     this.rowReprValue = function(row, entityTitle, primaryKey){
@@ -255,9 +312,31 @@ sic.widget.sicDataTable = function(args)
             fields: {}
         };
 
-        bluePrint.modified = !_p.bluePrint || !_p._lastTableData || _p._lastTableData.length != tableData.length;
-        bluePrint.noData = !tableData || !Object.keys(tableData).length;
+        if (!tableData || !tableData.length) {
+            if (_p._lastTableData)
+                tableData = _p._lastTableData;
+            else
+                bluePrint.noData = true;
+        }
+
+        // Is bluePrint Modified
+        bluePrint.modified = !_p.bluePrint || !_p._lastTableData;
+        if (!bluePrint.modified && tableData && tableData[0] && _p._lastTableData && _p._lastTableData[0]) {
+            for (var i in tableData[0]) {
+                if (_p._lastTableData[0][i] === undefined) {
+                    bluePrint.modified = true;
+                    break;
+                }
+            }
+            for (var i in _p._lastTableData[0]) {
+                if (tableData[0][i] === undefined) {
+                    bluePrint.modified = true;
+                    break;
+                }
+            }
+        }
         _p._lastTableData = tableData;
+
 
         for (var i in tableData) {
             var row = tableData[i];
@@ -282,6 +361,7 @@ sic.widget.sicDataTable = function(args)
             actionBP.fieldLabel = 'Actions';
             actionBP.fieldType = 'actions';
             actionBP.canSort = false;
+            actionBP.canFilter = false;
             actionBP.actions = _p.actions;
             bluePrint.fields[actionName] = actionBP;
         }
@@ -294,6 +374,7 @@ sic.widget.sicDataTable = function(args)
             fieldBP.fieldLabel = 'Delete';
             fieldBP.fieldType = 'delete';
             fieldBP.canSort = false;
+            fieldBP.canFilter = false;
             fieldBP.initValue = _p.getInitValueForType(fieldBP.fieldType);
             bluePrint.fields[fieldName] = fieldBP;
         }
@@ -324,6 +405,12 @@ sic.widget.sicDataTable = function(args)
     };
 
     this.getValue = function(){
+        var result = [];
+        for (var i in _p.rows) {
+            if (_p.rows[i].active)
+                result.push(_p.rows[i].getValue());
+        }
+        return result;
     };
 
     this.info = function(infoText) {
@@ -332,7 +419,6 @@ sic.widget.sicDataTable = function(args)
     }
 
     this.reconstruct = function(args){
-
         _p.bluePrint = _p.createBluePrintFromData(args.data);
         if (_p.bluePrint.modified || !_p.constructed) {
             _p.createTable();
@@ -365,16 +451,16 @@ sic.widget.sicDataTable = function(args)
         _p.setValue(args.data);
         _p.setPaginator(args.rowCount);
 
-        //alert('FeedData '+args);
-        /*
-        if (!args) return;
-        if (!_p.initialized) {
-            _p.initAndPopulate(args);
-        } else {
-            _p.setValue(args.data);
-            _p.setPaginator(args.rowCount);
+        _p.trigger('dataFeedComplete', args);
+
+        if (_p.firstFeed) {
+            _p.trigger('firstFeedComplete', args);
+            if (_p.filter.value && _p.filter.autoApply){
+                _p.applyFilter();
+                _p.refresh();
+            }
+            _p.firstFeed = false;
         }
-        */
     };
 
     this.initAndPopulate = function(tableData){
@@ -489,15 +575,20 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
     this._ebase();
 
     this.fields = {};
+    this.active = false;
 
     // Settings
-    this.headerRow = sic.getArg(args, "headerRow", false);
     this.dataTable = sic.getArg(args, "dataTable", null);
+
+    this.headerRow = sic.getArg(args, "headerRow", false);
+    this.filterRow = sic.getArg(args, "filterRow", false);
+    this.dataRow = !this.headerRow && !this.filterRow;
 
 
     // Implementation
     if (this.dataTable.hoverRows) this.selector.addClass("hoverable");
-    if (!this.headerRow) this.displayNone();
+    if (this.dataRow) this.displayNone();
+    if (this.filterRow && !this.dataTable.filter.visible) this.displayNone();
 
     this.addField = function(colName, colValue, args) {
         _p.fields[colName] = new sic.widget.sicDataTableField(_p.selector, sic.mergeObjects({dataTable:_p.dataTable, row:_p,
@@ -506,10 +597,12 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
 
     this.show = function(){
         _p.display();
+        _p.active = true;
     };
 
     this.hide = function(){
         _p.displayNone();
+        _p.active = false;
     };
 
     this.setValue = function(rowData){
@@ -534,8 +627,33 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
         return _p.dataTable.rowReprValue(_p.getValue());
     };
 
+    this.getFilterValue = function(){
+        var result = {};
+        if (!_p.dataTable.filterRow) return result;
+        for (var i in _p.dataTable.filterRow.fields) {
+            var filterField = _p.dataTable.filterRow.fields[i];
+            var filterFieldValue = filterField.getFilterValue();
+            if (filterFieldValue)
+                result[filterField.fieldKey] = filterFieldValue;
+        }
+        return result;
+    }
+
+    this.setFilterValue = function(filterValue){
+
+        for (var i in _p.dataTable.filterRow.fields) {
+            if (filterValue[i])
+                _p.dataTable.filterRow.fields[i].setFilterValue(filterValue[i]);
+        }
+    }
+
     this.getEventArgs = function(){
         return sic.mergeObjects(_p.dataTable.getEventArgs(), { row: _p });
+    };
+
+    this.recalculateInputs = function(){
+        if (_p.filterRow)
+            for (var i in _p.fields) _p.fields[i]._recalcFilterInputWidth();
     };
 
     // Bind Events
@@ -558,6 +676,7 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
         _p.dataTable.trigger("rowRightClick", _p.getEventArgs());
         if (_p.dataTable.preventContextMenu) { e.preventDefault(); return false; }
     });
+
 };
 
 
@@ -571,12 +690,16 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
     this.fieldKey = sic.getArg(args, "fieldKey", null);
     this.fieldValue = sic.getArg(args, "fieldValue", null);
     this.canSort = sic.getArg(args, "canSort", true);
+    this.canFilter = sic.getArg(args, "canFilter", this.canSort);
     this.row = sic.getArg(args, "row", null);
     this.dataTable = sic.getArg(args, "dataTable", this.row ? this.row.dataTable : null);
-    this.headerField = sic.getArg(args, "headerField", this.row ? this.row.headerRow : false);
     this.clearValue = sic.getArg(args, "clearValue", "");
     this.visible = sic.getArg(args, "visible", true);
     this.tagClass = sic.getArg(args, "tagClass", "");
+
+    this.headerField = sic.getArg(args, "headerField", this.row ? this.row.headerRow : false);
+    this.filterField = sic.getArg(args, "filterField", this.row ? this.row.filterRow : false);
+    this.dataField = !this.headerField && !this.filterField;
 
     this.cellDataTable = sic.getArg(args, "cellDataTable", null);
     this.formView = sic.getArg(args, "formView", null);
@@ -584,13 +707,24 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
 
     this.valueDiv = new sic.widget.sicElement({parent:this.selector, tagClass:"inline"});
 
-    if (_p.headerField) {
+    if (this.headerField) {
+        // Header field
         this.sortImg = new sic.widget.sicElement({parent:this.selector, tagName:"img", tagClass:"dataTableSortIcon icon8"});
         this.sortImg.selector.css("display", "none");
-
-        if (_p.canSort)
+        if (this.canSort)
             this.selector.addClass("sortable");
+    } else if (this.filterField) {
+        // Filter field
+        this.input = new sic.widget.sicInput({parent:this.valueDiv.selector, name:this.fieldKey,
+            caption:false, readOnly:!this.canFilter, showModified:false});
+        this.input.selector.addClass('dataTableFilterInput');
+        if (!this.canFilter) this.input.selector.addClass('disabled');
+        this.input.onEnterPressed(function(e) {
+            _p.dataTable.applyFilter();
+            _p.dataTable.refresh();
+        });
     } else {
+        // Data field
         if (this.dataTable.hoverCells) this.selector.addClass("hoverable");
     }
 
@@ -606,7 +740,7 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
 
     this.setValue = function(fieldValue){
         _p.fieldValue = fieldValue;
-        if (!_p.headerField && _p.cellDataTable) {
+        if (_p.dataField && _p.cellDataTable) {
             _p.valueDiv.selector.empty();
             _p.cellDataTableInstance = new sic.widget.sicDataTable({
                 parent: _p.valueDiv.selector,
@@ -615,7 +749,7 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
             });
             _p.cellDataTable.initAndPopulate(_p.fieldValue);
 
-        } else if (!_p.headerField && _p.formView) {
+        } else if (_p.dataField && _p.formView) {
             _p.valueDiv.selector.empty();
             _p.formViewInstance = new sic.widget.sicForm(
                 sic.mergeObjects({parent:_p.valueDiv.selector, captionWidth:"100px"}, _p.formView));
@@ -623,7 +757,7 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
                 var fVal = _p.fieldValue[fKey];
                 _p.formViewInstance.addInput({name:fKey, type:"flat", value:fVal, readOnly:true});
             }
-        } else if (!_p.headerField && _p.actions) {
+        } else if (_p.dataField && _p.actions) {
             for (var aKey in _p.actions) {
                 var actionArgs = _p.actions[aKey];
                 var actionType = sic.getArg(actionArgs, 'type', 'link');
@@ -648,6 +782,8 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
                 _p.valueDiv.actions[aKey] = action;
             }
             //_p.valueDiv.selector.html('Actions!');
+        } else if (_p.filterField) {
+            //_p.input.setValue(_p.fieldValue);
         } else {
             _p.valueDiv.selector.html(_p.fieldValue);
         }
@@ -657,27 +793,48 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
         return _p.fieldValue;
     };
 
+    this.getFilterValue = function() {
+        if (!_p.dataTable.filterRow) return null;
+        var filterField = _p.dataTable.filterRow.fields[_p.fieldKey];
+        if (filterField && filterField.input)
+            return filterField.input.getValue();
+        else
+            return null;
+    };
+
+    this.setFilterValue = function(filterValue) {
+        var filterField = _p.dataTable.filterRow.fields[_p.fieldKey];
+        filterField.input.setValue(filterValue);
+    };
+
     this.getEventArgs = function(){
         return sic.mergeObjects(_p.row.getEventArgs(), { field: _p });
+    };
+
+    this._recalcFilterInputWidth = function(){
+        if (_p.filterField) {
+            _p.input.input.selector.css("width", "");
+            _p.input.input.selector.css("width", (_p.selector.width()+8)+"px");
+        }
     };
 
     // Bind events
     this.selector.click(function(e){
         if (_p.headerField) _p.dataTable.trigger("headerFieldClick", _p.getEventArgs());
-        if (!_p.headerField) _p.dataTable.trigger("dataFieldClick", _p.getEventArgs());
+        if (_p.dataField) _p.dataTable.trigger("dataFieldClick", _p.getEventArgs());
         _p.dataTable.trigger("fieldClick", _p.getEventArgs());
         e.preventDefault();
     });
     this.selector.dblclick(function(e){
         if (_p.headerField) _p.dataTable.trigger("headerFieldDoubleClick", _p.getEventArgs());
-        if (!_p.headerField) _p.dataTable.trigger("dataFieldDoubleClick", _p.getEventArgs());
+        if (_p.dataField) _p.dataTable.trigger("dataFieldDoubleClick", _p.getEventArgs());
         _p.dataTable.trigger("fieldDoubleClick", _p.getEventArgs());
         e.preventDefault();
         return false;
     });
     this.selector.bind("contextmenu", function(e){
         if (_p.headerField) _p.dataTable.trigger("headerFieldRightClick", _p.getEventArgs());
-        if (!_p.headerField) _p.dataTable.trigger("dataFieldRightClick", _p.getEventArgs());
+        if (_p.dataField) _p.dataTable.trigger("dataFieldRightClick", _p.getEventArgs());
         _p.dataTable.trigger("fieldRightClick", _p.getEventArgs());
         if (_p.dataTable.preventContextMenu) { e.preventDefault(); return false; }
     });
@@ -687,6 +844,8 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
 
     if (!this.visible) this.displayNone();
     if (this.tagClass) this.selector.addClass(this.tagClass);
+    if (this.filterField) this.dataTable.onDataFeedComplete(_p._recalcFilterInputWidth);
+
 };
 
 
@@ -698,6 +857,7 @@ sic.widget.sicDataTableDataSource = function(args) {
 
     this.moduleName = sic.getArg(args, "moduleName", null);
     this.methodNames = sic.getArg(args, "methodNames", { select:'dataTableSelect', delete:'dataTableDelete' });
+    this.filter = sic.getArg(args, "filter", {});
     this.sortField = sic.getArg(args, "sortField", null);
     this.sortOrder = sic.getArg(args, "sortOrder", "asc");
     this.pageStart = sic.getArg(args, "pageStart", 0);
@@ -718,6 +878,7 @@ sic.widget.sicDataTableDataSource = function(args) {
             moduleName:_p.moduleName,
             methodName:methodName,
             aSync:_p.aSync,
+            filter: _p.filter,
             data:args
         };
 
