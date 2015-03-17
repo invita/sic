@@ -13,10 +13,20 @@ switch($action){
         break;
     case "paginator":
         $userAgent = $_POST["userAgent"];
-        $url = $_POST["url"];
+        $url = str_replace("&amp;", "&", $_POST["url"]);
         $csw = new Cobiss_Search_Window();
         $csw->setUserAgent($userAgent);
         $csw->loadFromUrl($url);
         echo $csw->toJSON();
+        break;
+    case "srtsel":
+    case "perpage":
+        $userAgent = $_POST["userAgent"];
+
+        $csw = new Cobiss_Search_Window();
+        $csw->setUserAgent($userAgent);
+        $csw->loadFromUrl($url);
+        echo $csw->toJSON();
+
         break;
 }

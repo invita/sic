@@ -54,7 +54,26 @@
                         a.url = page.url;
                         a.onclick = function(){
                             loading();
-                            $.post("/cobiss-request.php", {action:"paginator", userAgent:_p.data.userAgent, url:this.url}, function(data){
+                            var postData = {}, object = {};
+                            postData.action = "paginator";
+                            postData.userAgent = _p.data.userAgent;
+                            postData.url = this.url;
+
+                            for(var i=0; i<data.form.inputArray.length; i++){
+                                object = data.form.inputArray[i];
+                                for(var key in object) {
+                                    postData[key] = object[key];
+                                }
+                            }
+
+                            for(var i=0; i<data.form.selectArray.length; i++){
+                                object = data.form.selectArray[i];
+                                for(var key in object) {
+                                    postData[key] = object[key];
+                                }
+                            }
+
+                            $.post("/cobiss-request.php", postData, function(data){
                                 dt = new dataTable(JSON.parse(data));
                             });
                         }
@@ -62,6 +81,59 @@
                     } else {
                         span.innerHTML = page.value;
                     }
+                }
+            };
+            var select = function(selectName){
+                var select = document.createElement("select");
+                select.className = "select";
+                select.name = selectName;
+                select.onchange = function(){
+                    loading();
+                    var postData = {}, object = {};
+                    postData.action = selectName;
+                    postData.userAgent = _p.data.userAgent;
+                    postData.url = this.url;
+
+                    for(var i=0; i<data.form.inputArray.length; i++){
+                        object = data.form.inputArray[i];
+                        for(var key in object) {
+                            postData[key] = object[key];
+                        }
+                    }
+
+                    for(var i=0; i<data.form.selectArray.length; i++){
+                        object = data.form.selectArray[i];
+                        for(var key in object) {
+                            postData[key] = object[key];
+                        }
+                    }
+
+                    $.post("/cobiss-request.php", postData, function(data){
+                        dt = new dataTable(JSON.parse(data));
+                    });
+                }
+                document.getElementById("content").appendChild(select);
+                var selectNameValue;
+                for(var c=0; c<data.form.selectArray.length; c++){
+                    if(typeof data.form.selectArray[c][selectName] != "undefined" ){
+                        selectNameValue = data.form.selectArray[c][selectName];
+                        break;
+                    }
+                }
+                var optionsArray = data.form.selectArrayOptions[selectName];
+                var optionObject;
+                var option;
+                for(var i=0; i<optionsArray.length; i++){
+                    optionObject = optionsArray[i];
+                    option = document.createElement("option");
+                    for(var key in optionObject){
+                        option.innerHTML = key;
+                        option.value = optionObject[key];
+                        if(selectNameValue == option.value){
+                            option.selected = true;
+                        }
+                    }
+                    select.appendChild(option);
                 }
             };
             var table = function(){
@@ -116,11 +188,13 @@
                     td.innerHTML = row.year;
                     tr.appendChild(td);
                 }
-            }
+            };
 
             $("#content").html("");
 
             paginator();
+            select("srtsel");
+            select("perpage");
             table();
         }
 
@@ -135,6 +209,11 @@
             $.post("/cobiss-request.php", {action:"search", search:search}, function(data){
                 dt = new dataTable(JSON.parse(data));
             });
+        });
+
+        $('#search').bind('keypress', function(e) {
+            var code = e.keyCode || e.which;
+            if(code == 13) { $("#submit").click(); }
         });
     });
 </script>

@@ -104,8 +104,14 @@ class Cobiss_Search_Window
      * @param string $url
      * @return bool
      */
-    public function loadFromUrl($url){
-        $response = \Httpful\Request::get($url)->addHeader('User-agent:', $this->userAgent)->send();
+    public function loadFromUrl($url, $data=array()){
+        if($data){
+            $payload = "";
+
+            $response = \Httpful\Request::post($url, $payload)->addHeader('User-agent:', $this->userAgent)->send();
+        } else {
+            $response = \Httpful\Request::get($url)->addHeader('User-agent:', $this->userAgent)->send();
+        }
         $this->setLastResponse($response);
         return $this->parseResponse();
     }
@@ -406,6 +412,25 @@ class Cobiss_Form
         $array = array();
         $array["inputArray"] = array();
         $array["selectArray"] = array();
+        $array["selectArrayOptions"] = array();
+
+        $inputArray = $this->getInputArray();
+        $selectArray = $this->getSelectArray();
+
+        for($c=0; $c<count($inputArray); $c++){
+            array_push($array["inputArray"], array($inputArray[$c]->getName() => $inputArray[$c]->getValue()));
+        }
+
+        for($c=0; $c<count($selectArray); $c++){
+            array_push($array["selectArray"], array($selectArray[$c]->getName() => $selectArray[$c]->getValue()));
+            $selectName = $selectArray[$c]->getName();
+            $options = $selectArray[$c]->getOptions();
+            $array["selectArrayOptions"][$selectName] = array();
+            for($i=0; $i<count($options); $i++){
+                array_push($array["selectArrayOptions"][$selectName], array($options[$i]->getText() => $options[$i]->getValue()));
+            }
+        }
+
         return $array;
     }
 }
@@ -479,6 +504,22 @@ class Cobiss_Form_Select
      * @param Cobiss_Form_Select_Option $option
      */
     public function addOption(Cobiss_Form_Select_Option $option){ array_push($this->option, $option); }
+
+    /**
+     * @return Cobiss_Form_Select_Option[]
+     */
+    public function getOptions(){ return $this->option; }
+
+    /**
+     * @return string
+     */
+    public function getValue(){
+        $options = $this->getOptions();
+        for($c=0; $c<count($options); $c++){
+            $option = $options[$c];
+            if($option->getSelected()) return $option->getValue();
+        }
+    }
 
     /**
      * @param string $name
