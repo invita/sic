@@ -5,14 +5,17 @@ use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
 use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Delete;
+use Zend\Db\Sql\Where;
+use Zend\Db\Sql\Predicate\Operator;
 use Zend\Db\Adapter\Driver\ResultInterface;
 use Sic\Admin\Models\Util;
 
 abstract class SicModuleAbs
 {
 
-    // *** DataTable Select ***
+//<editor-fold desc="*** DataTable ***">
 
+    //<editor-fold desc="DataTable Select">
     public function defineSqlSelect($args, Select $select) {
 
     }
@@ -30,7 +33,9 @@ abstract class SicModuleAbs
 
     public function defineSqlSelectFilter($args, Select $select) {
         $filter = Util::getArg($args, 'filter', array());
-        $select->where($filter);
+        $filterWhere = DbUtil::prepareSqlFilter($filter);
+        if (count($filterWhere->getPredicates()))
+            $select->where->addPredicate($filterWhere);
     }
 
     public function defineDataTableResponseData($args, ResultInterface $result) {
@@ -42,13 +47,23 @@ abstract class SicModuleAbs
     }
 
     public function defineRowCount($args, Select $select) {
+
+        /*
         $adapter = GlobalAdapterFeature::getStaticAdapter();
         $sql = new Sql($adapter);
         $select->columns(array("count" => new \Zend\Db\Sql\Expression('COUNT(*)')));
         $statement = $sql->prepareStatementForSqlObject($select);
         $sqlResult = $statement->execute();
-        $rowCount = $sqlResult->current()['count'];
+        $row = $sqlResult->current();
+        $rowCount = Util::getArg($row, 'count', 0);
         return $rowCount;
+        */
+
+        $adapter = GlobalAdapterFeature::getStaticAdapter();
+        $sql = new Sql($adapter);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $sqlResult = $statement->execute();
+        return $sqlResult->getAffectedRows();
     }
 
     public function dataTableSelect($args) {
@@ -65,19 +80,21 @@ abstract class SicModuleAbs
         $this->defineSqlSelectLimit($args, $select);
 
         $statement = $sql->prepareStatementForSqlObject($select);
+        //echo $statement->getSql(); die();
         $sqlResult = $statement->execute();
 
         $responseData = $this->defineDataTableResponseData($args, $sqlResult);
 
         return array(
             'data' => $responseData,
-            'rowCount' => $rowCount
+            'rowCount' => $rowCount,
+            'sql' => $statement->getSql()
         );
     }
 
+    //</editor-fold>
 
-    // *** DataTable Delete ***
-
+    //<editor-fold desc="DataTable Delete">
     public function defineSqlDelete($args, Delete $delete) {
 
     }
@@ -91,15 +108,20 @@ abstract class SicModuleAbs
             $adapter = GlobalAdapterFeature::getStaticAdapter();
             $sql = new Sql($adapter);
             $delete = $sql->delete();
-            if ($this->defineSqlDelete($args, $delete) !== false) {
+            $deleteArray = $this->defineSqlDelete($args, $delete);
+            if ($deleteArray !== false) {
+                if (!is_array($deleteArray)) {
+                    $deleteArray = array($delete);
+                }
+
                 $conn = $adapter->getDriver()->getConnection();
-
                 $conn->beginTransaction();
-                $statement = $sql->prepareStatementForSqlObject($delete);
-                $sqlResult = $statement->execute();
+                foreach ($deleteArray as $deleteSql) {
+                    $statement = $sql->prepareStatementForSqlObject($deleteSql);
+                    $sqlResult = $statement->execute();
+                    $rowsAffected = $rowsAffected + $sqlResult->getAffectedRows();
+                }
                 $conn->commit();
-
-                $rowsAffected = $sqlResult->getAffectedRows();
             }
         }
 
@@ -107,5 +129,12 @@ abstract class SicModuleAbs
         $result['rowsAffected'] = $rowsAffected;
         return $result;
     }
+    //</editor-fold>
+
+//</editor-fold>
+
+//<editor-fold desc="*** Form ***">
+
+//</editor-fold>
 
 }

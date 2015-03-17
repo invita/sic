@@ -30,14 +30,22 @@ sic.capitalize = function(strVal) {
 };
 
 sic.captionize = function(strVal) {
-    if (!strVal || typeof(strVal) != "string") return "";
-    var result = "";
+    if (!strVal || typeof(strVal) != 'string') return '';
+    var result = '';
+    var lastChar = '';
+    var nextUpper = true;
     for(var i = 0; i < strVal.length; i++) {
         var char = strVal[i];
 
-        if (char >= 'A' && char <= 'Z') char = " "+char;
-        if (i == 0) char = char.toUpperCase();
+        if (nextUpper) {
+            char = char.toUpperCase();
+            nextUpper = false;
+        }
 
+        if (char == '_') { char = ' '; nextUpper = true; }
+        if (char >= 'A' && char <= 'Z' && lastChar != ' ') char = ' '+char;
+
+        lastChar = char;
         result = result + char;
     }
     return result;
@@ -48,11 +56,18 @@ sic.mergePlaceholders = function(str, valueMapObj) {
     if (typeof(valueMapObj) == "object") {
         for (var key in valueMapObj) {
             var searchRegEx = new RegExp('%'+key+'%', 'ig');
-            var replaceVal = null;
+            var replaceVal = undefined;
             if (typeof(valueMapObj[key]) == "string" || typeof(valueMapObj[key]) == "number") replaceVal = valueMapObj[key];
-            else if (typeof(valueMapObj[key]) == "object") replaceVal = valueMapObj[Object.keys(valueMapObj)[0]];
-            if (replaceVal)
-                str = str.replace(searchRegEx, valueMapObj[key]);
+            else if (valueMapObj[key] && typeof(valueMapObj[key]) == "object" && Object.keys(valueMapObj).length) {
+                replaceVal = "";
+                for (var k in valueMapObj[key]){
+                    if (replaceVal) replaceVal += ', ';
+                    replaceVal += valueMapObj[key][k];
+                }
+            }
+            if (replaceVal !== undefined) {
+                str = str.replace(searchRegEx, replaceVal);
+            }
         }
     }
     while (str.indexOf('%') != -1) str = str.replace('%', '[').replace('%', '=?]');

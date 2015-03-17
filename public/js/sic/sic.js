@@ -7,7 +7,9 @@ sic.defaults = {
     buttonGrad: "blue",
     submitGrad: "orange",
     tabActiveGrad: "blue",
-    tabInactiveGrad: "gold"
+    tabInactiveGrad: "gold",
+
+    dataTableRowsPerPage: 10
 }
 
 sic.loadModule = function(loadArgs) {
@@ -17,11 +19,22 @@ sic.loadModule = function(loadArgs) {
     var postData = sic.getArg(loadArgs, "postData", {}); // Post data
     var tabPage = sic.getArg(loadArgs, "tabPage", null); // sicTabPage object
     var newTab = sic.getArg(loadArgs, "newTab", null); // new TabPage Name string
+    var inDialog = sic.getArg(loadArgs, "inDialog", false); // Open module in new sicDialog
 
     $.post("/loadModule", {args: {moduleName:moduleName, postData:postData}}, function(data) {
         var dataObj = JSON.parse(data);
         if (dataObj) {
             var args = sic.mergeObjects(loadArgs, dataObj.args);
+
+            if (inDialog) {
+                var dialogTitle = "Dialog";
+                if (newTab) {
+                    dialogTitle = newTab;
+                    newTab = null;
+                }
+                var dialog = new sic.widget.sicDialog({title:dialogTitle});
+                tabPage = dialog.mainTab;
+            }
 
             // Prepare some useful functions
             args.helpers = {};
@@ -58,31 +71,37 @@ sic.callMethod = function(args, f) {
 
     var moduleName = sic.getArg(args, "moduleName", null); // Module Name
     var methodName = sic.getArg(args, "methodName", null); // Method Name
+    var aSync = sic.getArg(args, "aSync", false); // Asynchronous call
+
+    var successF = function(result) {
+        sic.loading.hide();
+        if (result) {
+            // Alert
+            if (typeof(result['alert']) != "undefined")
+                alert(result['alert']);
+
+            // Message
+            if (typeof(f) == "function")
+                f(result);
+        }
+    };
+
+    var errorF = function(xhr, status, statusText) {
+        sic.loading.hide();
+        alert('['+sic.capitalize(status)+']\n\nmoduleName: '+moduleName+'\nmethodName: '+methodName+'\n\n'+statusText);
+    };
 
     var ajaxResult = $.ajax({
         type: 'POST',
         url: '/callMethod',
         data: {args:args},
-        success: function(e){},
+        success: successF,
+        error: errorF,
         dataType: "json",
-        async:false
+        async:aSync
     });
 
-    var result = ajaxResult.responseJSON;
-    if (result) {
-        sic.loading.hide();
-
-        // Alert
-        if (typeof(result['alert']) != "undefined")
-            alert(result['alert']);
-
-        // Message
-        if (typeof(f) == "function")
-            f(result);
-
-    }
-
-    return result;
+    return ajaxResult.responseJSON;
 };
 
 sic.loading = {

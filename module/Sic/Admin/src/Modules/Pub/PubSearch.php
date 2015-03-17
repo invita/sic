@@ -1,19 +1,30 @@
 <?php
 namespace Sic\Admin\Modules\Pub;
 
-use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
-use Zend\Db\Sql\Sql;
-use Zend\Authentication\Result;
+use Zend\Db\Sql\Select;
+use Zend\Db\Sql\Where;
+use Sic\Admin\Models\Util;
+use Sic\Admin\Models\DbUtil;
+use Sic\Admin\Models\SicModuleAbs;
+use Zend\Db\Sql\Literal;
+use Zend\Db\Sql\Expression;
 
-class PubSearch {
-    function search($args) {
-        $data = $args['data'];
-        $search = $data['search'];
-        return array(
-            array("id" => 1, "title" => $search, "text" => "text...", "image" => "test.png"),
-            array("id" => 2, "title" => "Title2", "text" => $search, "image" => "test.png"),
-            array("id" => 3, "title" => "Title3", "text" => "text3...", "image" => $search),
-            array("id" => 4, "title" => $search, "text" => "text4...", "image" => "test2.png"),
+class PubSearch extends SicModuleAbs {
+
+    public function defineSqlSelect($args, Select $select)
+    {
+        $staticData = Util::getArg($args, 'staticData', array());
+        $search = Util::getArg($staticData, 'search', null);
+
+        $select->from('view_publication_list');
+
+        $where = new Where();
+        $where->literal(
+            "(view_publication_list.title LIKE '%".$search."%' OR ".
+            "view_publication_list.author LIKE '%".$search."%' OR ".
+            "view_publication_list.year LIKE '%".$search."%')"
         );
+        $select->where($where);
+
     }
 }

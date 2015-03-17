@@ -35,6 +35,7 @@ sic.widget.sicTabPage = function(args)
     this.canCloseFirstTab = sic.getArg(args, "canCloseFirstTab", false);
     this.contentText = sic.getArg(args, "contentText", "");
     this.fadeTime = sic.getArg(args, "fadeTime", sic.defaults.fadeTime);
+    this.hideHeader = sic.getArg(args, "hideHeader", false);
 
     this.activeGrad = sic.getArg(args, "activeGrad", sic.defaults.tabActiveGrad);
     this.inactiveGrad = sic.getArg(args, "inactiveGrad", sic.defaults.tabInactiveGrad);
@@ -43,6 +44,7 @@ sic.widget.sicTabPage = function(args)
     // Events
     this.onClose = function(f) { _p.subscribe("onClose", f); };
     this.onClosed = function(f) { _p.subscribe("onClosed", f); };
+    this.onChildClosed = function(f) { _p.subscribe("onChildClosed", f); };
 
     // Implementation
 
@@ -50,13 +52,14 @@ sic.widget.sicTabPage = function(args)
         _p.header = new sic.widget.sicTabPageHeader({parent:parent, insertAtTop:true});
         _p.header.selector.addClass("sicTabHeader");
         _p.header.selector.sicTabPageHeader = _p.header;
+        if (_p.hideHeader) _p.header.displayNone();
     };
 
     this._createTabButton = function(sicTabHeader){
         var isFirstTab = sicTabHeader.children().length == 0;
         _p.tabButton = new sic.widget.sicElement({parent:sicTabHeader});
         _p.tabButton.selector.addClass("sicTabButton");
-        _p.tabButton.setGradient(_p.inactiveGrad);
+        _p.tabButton.setGradient(_p.inactiveGrad, true, true);
 
         _p.tabButton.captionSpan = new sic.widget.sicElement({parent:_p.tabButton.selector, tagName:'span'});
         _p.tabButton.captionSpan.selector.addClass("sicTabButton_caption");
@@ -86,6 +89,7 @@ sic.widget.sicTabPage = function(args)
         _p.content.selector.addClass("sicTabContent");
         _p.content.selector.css("display", "none");
         _p.content.selector.html(_p.contentText);
+        _p.content.selector.tabPage = _p;
 
         if (_p.autoActive) _p.selectTab();
     };
@@ -95,11 +99,11 @@ sic.widget.sicTabPage = function(args)
         for (var i in _p.header.pages) {
             var page = _p.header.pages[i];
             page.tabButton.selector.removeClass("active");
-            page.tabButton.setGradient(_p.inactiveGrad);
+            page.tabButton.setGradient(_p.inactiveGrad, true, true);
             page.content.selector.css("display", "none");
         }
         _p.tabButton.selector.addClass("active");
-        _p.tabButton.setGradient(_p.activeGrad);
+        _p.tabButton.setGradient(_p.activeGrad, true, true);
         _p.content.selector.fadeIn(_p.fadeTime);
     };
 
@@ -123,7 +127,8 @@ sic.widget.sicTabPage = function(args)
         if (pageToSelectAfterClose)
             pageToSelectAfterClose.selectTab();
 
-        _p.trigger("onClosed", {});
+        _p.trigger("onClosed", {tabPage:_p});
+        if (_p.parentTab) _p.parentTab.trigger('onChildClosed', {tabPage:_p})
     };
 
     this.setCaption = function(newCaption) {

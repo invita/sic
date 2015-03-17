@@ -9,6 +9,7 @@ use Zend\Authentication\AuthenticationService;
 
 use Sic\Admin\Models\Authentication\Adapter;
 use Sic\Admin\Models\Authentication\ReCaptcha;
+use Sic\Admin\Models\Util;
 
 class IndexController extends AbstractActionController
 {
@@ -117,6 +118,27 @@ class IndexController extends AbstractActionController
             $obj = new $className();
             $result = $obj->$methodName($args);
         }
+
+        echo json_encode($result);
+
+        exit;
+    }
+
+    // Upload File
+    public function uploadFileAction()
+    {
+        //print_r($_POST); print_r($_FILES); die();
+
+        $uploadPath = Util::getUploadPath();
+        $fileNamePrefix = Util::getArg($_POST, 'fileNamePrefix', '');
+
+        $respData = array();
+        foreach($_FILES as $file) {
+            $success = move_uploaded_file($file['tmp_name'], $uploadPath . $fileNamePrefix . basename($file['name']));
+            $respData[$file['name']] = $success;
+        }
+
+        $result = array('data' => $respData);
 
         echo json_encode($result);
 
