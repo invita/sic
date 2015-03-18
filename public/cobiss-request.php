@@ -29,4 +29,16 @@ switch($action){
         echo $csw->toJSON();
 
         break;
+    case "url";
+        //$userAgent = $_POST["userAgent"];
+        $url = $_POST["url"];
+        $url = str_replace("||", "=", $url);
+        $url = str_replace("|", "&", $url);
+
+        $csw = new Cobiss_Detail_Window();
+        //$csw->setUserAgent($userAgent);
+        $csw->loadFromUrl($url);
+
+        die();
+        break;
 }

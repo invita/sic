@@ -346,6 +346,108 @@ class Cobiss_Search_Window
     }
 }
 
+class Cobiss_Detail_Window{
+
+    /**
+     * @var string
+     */
+    private $userAgent;
+
+    /**
+     * @return string
+     */
+    public function getUserAgent(){ return $this->userAgent; }
+
+    /**
+     * @param string $userAgent
+     */
+    public function setUserAgent($userAgent) { $this->userAgent = $userAgent; }
+
+    /**
+     * @var \Httpful\Request
+     */
+    private $lastResponse;
+
+    /**
+     * @return \Httpful\Response
+     */
+    public function getLastResponse(){ return $this->lastResponse; }
+
+    /**
+     * @param \Httpful\Response $response
+     */
+    public function setLastResponse(Httpful\Response $response){ $this->lastResponse = $response; }
+
+    public function __construct(){
+        $this->userAgent = $this->getRandomUserAgent();
+    }
+
+    /**
+     * @param string $url
+     * @return bool
+     */
+    public function loadFromUrl($url){
+        $response = \Httpful\Request::get($url)->addHeader('User-agent:', $this->userAgent)->send();
+        $this->setLastResponse($response);
+        return $this->parseResponse();
+    }
+
+    /**
+     * @return string
+     */
+    private function getRandomUserAgent(){
+        $userAgents = array(
+            'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:26.0) Gecko/20100101 Firefox/26.0',
+            'Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1667.0 Safari/537.36',
+            'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.107 Safari/537.36',
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/537.36 (KHTML, like Gecko)',
+            'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:26.0) Gecko/20100101 Firefox/26.0',
+            'Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; Trident/6.0)',
+            'Mozilla/5.0 (Windows; U; MSIE 9.0; Windows NT 9.0; en-US)',
+            'Mozilla/5.0 (iPad; U; CPU OS 3_2_1 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Mobile/7B405'
+        );
+        return $userAgents[mt_rand(0, count($userAgents)-1)];
+    }
+
+    /**
+     * @var Cobiss_Detail_Data
+     */
+    private $data;
+
+    /**
+     * @param Cobiss_Detail_Data $data
+     */
+    public function setData(Cobiss_Detail_Data $data){ $this->data = $data; }
+
+    public function getData(){return $this->data;}
+
+    /**
+     * @return bool
+     */
+    private function parseResponse(){
+
+        //var_dump($this->lastResponse->body);
+
+        $dom = str_get_dom($this->lastResponse->body);
+        $tableNode = $dom("table#nolist-full tbody", 0);
+        if(!$tableNode) return false;
+
+        $detailData = new Cobiss_Detail_Data();
+
+        foreach($tbodyNode("tr") as $trNode){
+
+        }
+
+        /*
+        $this->parseForm($formNode);
+        $this->parsePaginator($formNode);
+        $this->parseDataTable($formNode);
+        */
+        return true;
+
+    }
+}
+
 class Cobiss_Form
 {
     /**
@@ -809,4 +911,32 @@ class Cobiss_Data
 {
     private $data = array();
     public function setDataRow($key, $value){ $this->data[$key] = $value; }
+}
+
+class Cobiss_Detail_Data {
+
+    private $authors = array();
+    private $title;
+    private $year;
+    private $cobissId;
+
+    public function addAuthor($author){ array_push($this->authors, $author); }
+    public function setTitle($title){ $this->title = $title; }
+    public function setYear($year){ $this->year = $year; }
+    public function setCobissId($cobissId){ $this->cobissId = $cobissId; }
+
+    public function getAuthors(){ return $this->authors; }
+    public function getTitle(){ return $this->title; }
+    public function getYear(){ return $this->year; }
+    public function getCobissId(){ return $this->cobissId; }
+
+    public function toArray(){
+        $array = array();
+        $array["authors"] = $this->getAuthors();
+        $array["title"] = $this->getTitle();
+        $array["year"] = $this->getYear();
+        $array["cobissId"] = $this->getCobissId();
+        return $array;
+    }
+
 }

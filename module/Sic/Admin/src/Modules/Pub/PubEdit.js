@@ -3,7 +3,12 @@ var F = function(args) {
 
     if (!args.proj_id) args.proj_id = sic.getArg(args.staticData, 'proj_id', null);
 
-    //sic.dump(args, 0);
+//    sic.dump(args, 0);
+
+    var cobissData = sic.getArg(args, 'cobissData', null);
+    var author = sic.getArg(cobissData, 'author', null);
+    var title = sic.getArg(cobissData, 'title', null);
+    var year = sic.getArg(cobissData, 'year', null);
 
     var panel = new sic.widget.sicPanel({parent:tabPage.content.selector,
         firstGroupName:"Update Publication"});
@@ -15,9 +20,9 @@ var F = function(args) {
     formUserData.addInput({name:"parent_id", type:"text", placeholder:"Parent...", lookup:{
         editorModuleArgs: { moduleName:"Pub/PubEdit", tabPage:tabPage, map: { parent_id: "pub_id" } } }});
     //formUserData.addInput({name:"parentName", type:"text", placeholder:"ParentName..."});
-    formUserData.addInput({name:"author", type:"text", placeholder:"Author...", isArray:true});
-    formUserData.addInput({name:"title", type:"text", placeholder:"Title...", isArray:true});
-    formUserData.addInput({name:"year", type:"text", placeholder:"Year..."});
+    formUserData.addInput({name:"author", type:"text", placeholder:"Author...", isArray:true, value:[author]});
+    formUserData.addInput({name:"title", type:"text", placeholder:"Title...", isArray:true, value:[title]});
+    formUserData.addInput({name:"year", type:"text", placeholder:"Year...", value:year});
     formUserData.addInput({name:"cobiss", type:"text", placeholder:"Cobiss..."});
     formUserData.addInput({name:"issn", type:"text", placeholder:"Issn..."});
     formUserData.addInput({name:"original_id", type:"text", placeholder:"OriginalId...", lookup:{} });
