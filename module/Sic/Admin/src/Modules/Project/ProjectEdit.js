@@ -23,8 +23,10 @@ var F = function(args) {
         var fileUploader = new sic.object.sicFileUploader({ fileNamePrefix: 'project'+args.proj_id+'_' });
         fileUploader.onUploadComplete(function(data){
             var upArgs = {moduleName:"Project/ProjectEdit", methodName:"loadXml", proj_id: args.proj_id, fileName:fileUploader.getFileName()};
-            sic.callMethod(upArgs, function(args) {
-                linesTable.refresh(); tabPagePub.selectTab();
+            sic.callMethod(upArgs, function(respArgs) {
+                if (respArgs.status) {
+                    linesTable.refresh(); tabPagePub.selectTab();
+                }
             });
         });
     });

@@ -7,6 +7,10 @@ use Sic\Admin\Models\Util;
 use Sic\Admin\Models\DbUtil;
 
 class PubEdit {
+
+    public static $authorMaxLen = 60;
+    public static $titleMaxLen = 60;
+
     public function pubSelect($args) {
 
         $pub_id = Util::getArg($args, 'pub_id', null);
@@ -75,7 +79,6 @@ class PubEdit {
         return $this->pubSelect($args);
     }
 
-
     private function updateArrayFields($args) {
 
         $pub_id = Util::getArg($args, 'pub_id', null);
@@ -91,6 +94,57 @@ class PubEdit {
         for ($idx = 0; $idx < count($title); $idx++)
             DbUtil::insertInto('publication_title', array('pub_id' => $pub_id, 'idx' => $idx, 'title' => $title[$idx]));
 
+        DbUtil::updateTable('publication', array('parent_id' => 0), array("parent_id" => $pub_id));
+        $children = Util::getArg($data, 'child_id', array());
+        for ($idx = 0; $idx < count($children); $idx++)
+            DbUtil::updateTable('publication', array('parent_id' => $pub_id), array("pub_id" => $children[$idx]));
     }
 
+    public function pubHierarchy($args) {
+
+        // Get Parents
+        $pub_id = Util::getArg($args, 'pub_id', null);
+        $pubStack = array();
+        $cnt = 0;
+
+        while ($pub_id) {
+            $pub = DbUtil::selectRow('publication', null, array('pub_id' => $pub_id));
+            $pub['author'] = self::getAuthorShort($pub_id);
+            $pub['title'] = self::getTitleShort($pub_id);
+            $pubStack[] = $pub;
+
+            if ($pub_id == $pub['parent_id'])
+                $pub_id = 0;
+            else
+                $pub_id = $pub['parent_id'];
+
+            $cnt++;
+            if ($cnt > 10) break;
+        }
+        $pubStack = array_reverse($pubStack);
+
+        // Get Children
+        $pub_id = Util::getArg($args, 'pub_id', null);
+
+        $pubs = DbUtil::selectFrom('publication', null, array('parent_id' => $pub_id));
+        foreach ($pubs as $pub) {
+            $pub['author'] = self::getAuthorShort($pub['pub_id']);
+            $pub['title'] = self::getTitleShort($pub['pub_id']);
+            $pubStack[] = $pub;
+        }
+
+        return $pubStack;
+    }
+
+    public static function getAuthorShort($pub_id) {
+        $author = join(", ", DbUtil::selectFrom('publication_author', 'author', array('pub_id' => $pub_id)));
+        if (strlen($author) > self::$authorMaxLen) $author = substr($author, 0, self::$authorMaxLen)."...";
+        return $author;
+    }
+
+    public static function getTitleShort($pub_id) {
+        $title = join(", ", DbUtil::selectFrom('publication_title', 'title', array('pub_id' => $pub_id)));
+        if (strlen($title) > self::$titleMaxLen) $title = substr($title, 0, self::$titleMaxLen)."...";
+        return $title;
+    }
 }

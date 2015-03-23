@@ -9,7 +9,7 @@ var F = function(args) {
     formLineData.addInput({name:"title", type:"text", placeholder:"Title..."});
     formLineData.addInput({name:"cobiss", type:"text", placeholder:"Cobiss..."});
     formLineData.addInput({name:"issn", type:"text", placeholder:"Issn..."});
-    formLineData.addInput({name:"pub_id", type:"text", placeholder:"Publication Id..."});
+    formLineData.addInput({name:"pub_id", type:"text", placeholder:"Publication Id...", value:sic.getArg(args.staticData, "pub_id", 0)});
     formLineData.addInput({name:"save", type:"submit", value:"Save", caption:" "}).selector.click(function(e){
         var response = sic.callMethod({moduleName:"Project/ProjectLineEdit", methodName:"projLineUpdate",
             line_id: args.line_id, proj_id: args.staticData.proj_id, data:formLineData.getValue()});

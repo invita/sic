@@ -80,7 +80,6 @@ sic.widget.sicDataTable = function(args)
 
     // Table
     this.createTable = function() {
-
         if (!_p.infoDiv){
             _p.infoDiv = new sic.widget.sicElement({parent:_p.selector, tagClass:"infoDiv"});
             _p.infoDiv.selector.css("display", "none");
@@ -320,7 +319,7 @@ sic.widget.sicDataTable = function(args)
         }
 
         // Is bluePrint Modified
-        bluePrint.modified = !_p.bluePrint || !_p._lastTableData;
+        bluePrint.modified = !_p.bluePrint || !_p._lastTableData || !_p._lastTableData.length;
         if (!bluePrint.modified && tableData && tableData[0] && _p._lastTableData && _p._lastTableData[0]) {
             for (var i in tableData[0]) {
                 if (_p._lastTableData[0][i] === undefined) {
@@ -753,9 +752,13 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
             _p.valueDiv.selector.empty();
             _p.formViewInstance = new sic.widget.sicForm(
                 sic.mergeObjects({parent:_p.valueDiv.selector, captionWidth:"100px"}, _p.formView));
+            _p.formViewInstance.selector.addClass("dataTableFormView");
             for (var fKey in _p.fieldValue) {
                 var fVal = _p.fieldValue[fKey];
-                _p.formViewInstance.addInput({name:fKey, type:"flat", value:fVal, readOnly:true});
+                if (typeof(fKey) == "string" && fKey.substr(0,3) == "---")
+                    _p.formViewInstance.addHr();
+                else
+                    _p.formViewInstance.addInput({name:fKey, type:"flat", value:fVal, readOnly:true});
             }
         } else if (_p.dataField && _p.actions) {
             for (var aKey in _p.actions) {

@@ -23,8 +23,8 @@ class ProjectEdit_ProjectLinesDT extends SicModuleAbs {
     public function defineDataTableResponseData($args, ResultInterface $result) {
         $responseData = array();
 
-        $lineColumns = array('line_id','idx',    'title','author','year','cobiss','issn');
-        $pubColumns = array('pub_id','parent_id','title','author','year','cobiss','issn','original_id');
+        $lineColumns = array('line_id','idx',     'title','author','year','cobiss','issn');
+        $pubColumns = array('pub_id','parent_id', 'title','author','year','cobiss','issn','original_id');
 
         foreach($result as $row) {
             $resultLine = array();
@@ -37,14 +37,23 @@ class ProjectEdit_ProjectLinesDT extends SicModuleAbs {
 
             // Copy Line columns
             $resultLine['line'] = array();
-            foreach ($lineColumns as $lineColName)
+            foreach ($lineColumns as $lineColName) {
                 $resultLine['line'][$lineColName] = $row[$lineColName];
+
+                // Add hr after idx
+                if ($lineColName == 'idx') $resultLine['line']['---'] = "";
+            }
 
             // Select Publication columns
             $resultLine['publication'] = array();
             if ($row['pub_id']) {
-                $resultLine['publication'] = DbUtil::selectRow('view_publication_list',
-                    $pubColumns, array('pub_id' => $row['pub_id']));
+                $pubVals = DbUtil::selectRow('view_publication_list', $pubColumns, array('pub_id' => $row['pub_id']));
+                foreach ($pubVals as $pubKey => $pubVal) {
+                    $resultLine['publication'][$pubKey] = $pubVal;
+
+                    // Add hr after parent_id
+                    if ($pubKey == 'parent_id') $resultLine['publication']['---'] = "";
+                }
             }
 
             $responseData[] = $resultLine;
