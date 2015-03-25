@@ -3,7 +3,7 @@ sic.lookup = {
 
     },
     publication: {
-        resolve: { moduleName:"Lookup/Publication", methodName:"resolve", empty: "None" }
+        resolve: { moduleName:"Lookup/Publication", methodName:"resolve", emptyValue: "None" }
     },
     project: {
 

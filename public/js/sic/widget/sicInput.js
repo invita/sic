@@ -69,7 +69,7 @@ sic.widget.sicInput = function(args)
 
     if (this.lookup) {
         var placeHolder = "";
-        if (_p.lookup.resolve && _p.lookup.resolve.empty) placeHolder = _p.lookup.resolve.empty;
+        if (_p.lookup.resolve && _p.lookup.resolve.emptyValue) placeHolder = _p.lookup.resolve.emptyValue;
         this.input.selector.addClass("lookupKey");
         this.lookupInput = new sic.widget.sicElement({ parent:this.selector, tagName:this.inputTagName,
             attr: { type: "text", readOnly: true, tabindex: "-1", name: this.name+"_lookup", placeholder: placeHolder } });
