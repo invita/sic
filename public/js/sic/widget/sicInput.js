@@ -23,6 +23,7 @@ sic.widget.sicInput = function(args)
     this.value = sic.getArg(args, "value", "");
     this.placeholder = sic.getArg(args, "placeholder", "");
     this.readOnly = sic.getArg(args, "readOnly", false);
+    this.disabled = sic.getArg(args, "disabled", false);
     this.focus = sic.getArg(args, "focus", false);
     this.gradient = sic.getArg(args, "gradient", null);
     this.caption = sic.getArg(args, "caption", null);
@@ -60,13 +61,18 @@ sic.widget.sicInput = function(args)
     if (this.readOnly)
         this.input.selector.attr("readonly", true);
 
+    if (this.disabled)
+        this.input.selector.attr("disabled", true);
+
     if (this.focus)
         this.input.selector.focus();
 
     if (this.lookup) {
+        var placeHolder = "";
+        if (_p.lookup.resolve && _p.lookup.resolve.emptyValue) placeHolder = _p.lookup.resolve.emptyValue;
         this.input.selector.addClass("lookupKey");
         this.lookupInput = new sic.widget.sicElement({ parent:this.selector, tagName:this.inputTagName,
-            attr: { type: "text", readOnly: true, name: this.name+"_lookup" } });
+            attr: { type: "text", readOnly: true, tabindex: "-1", name: this.name+"_lookup", placeholder: placeHolder } });
         this.lookupInput.selector.addClass("sicInput lookupValue");
 
         this.editButton = new sic.widget.sicElement({ parent:this.selector, tagName:"div" });
@@ -85,6 +91,31 @@ sic.widget.sicInput = function(args)
         this.lookupButton.selector.click(function(e){
             // ... Do Lookup
         });
+
+
+        this.lookupResolve = function(){
+            var resolveArgs = sic.mergeObjects({ aSync: true }, _p.lookup.resolve);
+            resolveArgs[_p.name] = _p.getValue();
+            if (_p.form) {
+                var formData = _p.form.getValue();
+                if (_p.lookup.fieldMap){
+                    for (var origKey in _p.lookup.fieldMap)
+                        var renamedKey = _p.lookup.fieldMap[origKey]
+                        resolveArgs[renamedKey] = formData[origKey];
+                }
+                resolveArgs.formData = formData;
+            }
+
+            sic.callMethod(resolveArgs, function(resp){
+                _p.lookupInput.selector.val(resp.resolveValue);
+            });
+        };
+
+        this.input.selector.blur(function(e){
+            // ... Resolve
+            _p.lookupResolve();
+        });
+
         this.inputs.push(this.lookupInput);
     }
 
@@ -106,6 +137,8 @@ sic.widget.sicInput = function(args)
         _p.input.selector.val(value);
         _p.origValue = value;
         _p._onChange();
+        if (_p.lookup)
+            _p.lookupResolve();
     };
 
     this.calcModified = function(){

@@ -153,7 +153,19 @@ SELECT
 
 FROM publication;
 
+-- 2015-03-22
 
+
+DROP TABLE IF EXISTS `quote`;
+CREATE TABLE `quote` (
+  `quote_id` int(11) PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `pub_id` int(11) NOT NULL,
+  `pub_page` int(11) NOT NULL,
+  `quoted_pub_id` int(11) NOT NULL,
+  `quoted_pub_page` int(11) NOT NULL,
+  `date_quoted` date NOT NULL,
+  `date_created` date NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
 

@@ -60,8 +60,8 @@ class ProjectEdit {
         $proj_id = Util::getArg($args, 'proj_id', 0);
         $fileName = Util::getArg($args, 'fileName', null);
 
-        if (!$proj_id) {echo json_encode(array('alert' => 'No proj_id!')); return; }
-        if (!$fileName) {echo json_encode(array('alert' => 'No fileName!')); return; }
+        if (!$proj_id) {return array('status' => false, 'alert' => 'Save the project first!'); }
+        if (!$fileName) {return array('status' => false, 'alert' => 'No fileName selected!'); }
 
         $contents = file_get_contents(Util::getUploadPath().$fileName);
         $xml = new \SimpleXMLElement($contents);

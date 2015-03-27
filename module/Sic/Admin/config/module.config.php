@@ -65,7 +65,9 @@ return array(
         'config' => array(
             'class' => 'Zend\Session\Config\SessionConfig',
             'options' => array(
-                'name' => 'myapp',
+                'name' => 'sic2',
+                'gc_maxlifetime' => 3600 *48,
+                'cookie_lifetime' => 3600 *48
             ),
         ),
         'storage' => 'Zend\Session\Storage\SessionArrayStorage',

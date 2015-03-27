@@ -46,7 +46,7 @@ class ProjectLineEdit {
         $data = Util::getArg($args, "data", array());
         $proj_id = Util::getArg($args, "proj_id", 0);
         $line_id = Util::getArg($args, "line_id", null);
-        $pub_id = Util::getArg($data, "pub_id", null);
+        $pub_id = Util::getArg($data, "pub_id", 0);
 
         $lastIdx = DbUtil::selectOne("project_line", new Literal("MAX(idx)"), array("proj_id" => $proj_id));
 
