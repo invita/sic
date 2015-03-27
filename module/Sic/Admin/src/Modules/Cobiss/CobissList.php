@@ -16,22 +16,32 @@ class CobissList extends SicModuleAbs {
 
     public function dataTableSelect($args) {
 
+        //print_r($args);
+        //die();
+
         $staticData = Util::getArg($args, 'staticData', array());
-        $cobissSearch = Util::getArg($staticData, 'cobiss_search', null);
+        $search = Util::getArg($staticData, 'srch', null);
 
 
-        if($cobissSearch){
+        if($search){
             $csw = new \Cobiss_Search_Window();
-            $csw->search($cobissSearch);
+            $csw->search($search);
             $json = $csw->toArray();
 
             $rows = $json["dataTable"]["rows"];
             for($c=0; $c<count($rows); $c++){
                 $row = $rows[$c];
-                $data[] = array("number" => $row["number"], "author" => $row["author"], "title" => $row["title"], "language" => $row["language"], "year" => $row["year"]);
+                $data[] = array(
+                    "number" => $row["number"],
+                    "author" => $row["author"],
+                    "title" => $row["title"],
+                    //"language" => $row["language"],
+                    //"year" => $row["year"]
+                );
             }
         } else {
-            $data = array(array("number" => 0, "author" => 0, "title" => 0, "language" => 0, "year" => 0));
+            //$data = array(array("number" => "", "author" =>"", "title" =>"", "language" => "", "year" => ""));
+            $data = array(array("number" => "", "author" =>"", "title" =>""));
         }
 
 
@@ -57,7 +67,7 @@ class CobissList extends SicModuleAbs {
 
         return array(
             'data' => $data,
-            'rowCount' => 10
+            'rowCount' => isset($json) ? count($json["paginator"]["pages"]) : 1
         );
     }
 
