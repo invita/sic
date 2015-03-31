@@ -31,7 +31,7 @@ var F = function(args) {
     formUserData.addInput({name:"issn", type:"text", placeholder:"Issn..."});
     formUserData.addInput({name:"original_id", type:"text", placeholder:"OriginalId...",
         lookup:sic.mergeObjects(sic.lookup.publication, { fieldMap: { original_id: "pub_id" } }) });
-    formUserData.addInput({name:"child_id", type:"text", placeholder:"ChildId...", isArray:true, lookup:{} });
+    formUserData.addInput({name:"child_id", type:"text", placeholder:"ChildId...", isArray:true/*, lookup:{}*/ });
     formUserData.addInput({name:"save", type:"submit", value:"Save", caption:" "}).selector.click(function(e){
         var response = sic.callMethod({moduleName:"Pub/PubEdit", methodName:"pubUpdate",
             pub_id: args.pub_id, proj_id: args.proj_id, line_id: args.line_id, data:formUserData.getValue()});
