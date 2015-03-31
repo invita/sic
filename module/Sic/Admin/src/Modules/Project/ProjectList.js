@@ -5,6 +5,7 @@ var F = function(args){
         parent:tabPage.content.selector,
         primaryKey: ['proj_id'],
         entityTitle: "Project %proj_id% - %title%",
+        canInsert: !args.inDialog,
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Project/ProjectList"
         }),
@@ -14,7 +15,8 @@ var F = function(args){
         },
         fields: {
             lines_count: { canSort: false }
-        }
+        },
+        selectCallback: args.selectCallback
     });
 
 };

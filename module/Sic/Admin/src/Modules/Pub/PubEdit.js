@@ -100,6 +100,26 @@ var F = function(args) {
             quoted_title: { canSort:false }
         }
     });
+    quotesDataTable.onFirstFeedComplete(function() {
+        var importFromProj = new sic.widget.sicElement({parent:quotesDataTable.dsControl.selector});
+        importFromProj.selector.addClass("inline filterButton vmid");
+        var importFromProjImg = new sic.widget.sicElement({parent:importFromProj.selector, tagName:"img", tagClass:"icon12 vmid"});
+        importFromProjImg.selector.attr("src", "/img/insert.png");
+        var importFromProjSpan = new sic.widget.sicElement({parent:importFromProj.selector, tagName:"span", tagClass:"vmid"});
+        importFromProjSpan.selector.html("Import from project");
+        importFromProj.selector.click(function(e){
+            sic.loadModule({moduleName:'Project/ProjectList', newTab:'Project', inDialog: true,
+                selectCallback: function(selectArgs){
+                    var pub_id = args.pub_id;
+                    var proj_id = selectArgs.row.getValue().proj_id;
+                    if (pub_id && proj_id) {
+                        sic.callMethod({moduleName:"Pub/PubEdit",
+                                methodName:"importQuotesFromProject", pub_id: pub_id, proj_id: proj_id},
+                            function(response) { quotesDataTable.refresh(); });
+                    }
+                }});
+        });
+    });
 
     if (args.pub_id){
         var response = sic.callMethod({moduleName:"Pub/PubEdit", methodName:"pubSelect", pub_id: args.pub_id});
