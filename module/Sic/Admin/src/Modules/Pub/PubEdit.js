@@ -31,7 +31,7 @@ var F = function(args) {
     formUserData.addInput({name:"issn", type:"text", placeholder:"Issn..."});
     formUserData.addInput({name:"original_id", type:"text", placeholder:"OriginalId...",
         lookup:sic.mergeObjects(sic.lookup.publication, { fieldMap: { original_id: "pub_id" } }) });
-    formUserData.addInput({name:"child_id", type:"text", placeholder:"ChildId...", isArray:true, lookup:{} });
+    formUserData.addInput({name:"child_id", type:"text", placeholder:"ChildId...", isArray:true/*, lookup:{}*/ });
     formUserData.addInput({name:"save", type:"submit", value:"Save", caption:" "}).selector.click(function(e){
         var response = sic.callMethod({moduleName:"Pub/PubEdit", methodName:"pubUpdate",
             pub_id: args.pub_id, proj_id: args.proj_id, line_id: args.line_id, data:formUserData.getValue()});
@@ -99,6 +99,26 @@ var F = function(args) {
             quoted_author: { canSort:false },
             quoted_title: { canSort:false }
         }
+    });
+    quotesDataTable.onFirstFeedComplete(function() {
+        var importFromProj = new sic.widget.sicElement({parent:quotesDataTable.dsControl.selector});
+        importFromProj.selector.addClass("inline filterButton vmid");
+        var importFromProjImg = new sic.widget.sicElement({parent:importFromProj.selector, tagName:"img", tagClass:"icon12 vmid"});
+        importFromProjImg.selector.attr("src", "/img/insert.png");
+        var importFromProjSpan = new sic.widget.sicElement({parent:importFromProj.selector, tagName:"span", tagClass:"vmid"});
+        importFromProjSpan.selector.html("Import from project");
+        importFromProj.selector.click(function(e){
+            sic.loadModule({moduleName:'Project/ProjectList', newTab:'Project', inDialog: true,
+                selectCallback: function(selectArgs){
+                    var pub_id = args.pub_id;
+                    var proj_id = selectArgs.row.getValue().proj_id;
+                    if (pub_id && proj_id) {
+                        sic.callMethod({moduleName:"Pub/PubEdit",
+                                methodName:"importQuotesFromProject", pub_id: pub_id, proj_id: proj_id},
+                            function(response) { quotesDataTable.refresh(); });
+                    }
+                }});
+        });
     });
 
     if (args.pub_id){

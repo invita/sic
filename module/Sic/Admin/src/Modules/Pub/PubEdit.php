@@ -11,6 +11,18 @@ class PubEdit {
     public static $authorMaxLen = 60;
     public static $titleMaxLen = 60;
 
+    public static function getAuthorShort($pub_id) {
+        $author = join(", ", DbUtil::selectFrom('publication_author', 'author', array('pub_id' => $pub_id)));
+        if (strlen($author) > self::$authorMaxLen) $author = substr($author, 0, self::$authorMaxLen)."...";
+        return $author;
+    }
+
+    public static function getTitleShort($pub_id) {
+        $title = join(", ", DbUtil::selectFrom('publication_title', 'title', array('pub_id' => $pub_id)));
+        if (strlen($title) > self::$titleMaxLen) $title = substr($title, 0, self::$titleMaxLen)."...";
+        return $title;
+    }
+
     public function pubSelect($args) {
 
         $pub_id = Util::getArg($args, 'pub_id', null);
@@ -136,15 +148,24 @@ class PubEdit {
         return $pubStack;
     }
 
-    public static function getAuthorShort($pub_id) {
-        $author = join(", ", DbUtil::selectFrom('publication_author', 'author', array('pub_id' => $pub_id)));
-        if (strlen($author) > self::$authorMaxLen) $author = substr($author, 0, self::$authorMaxLen)."...";
-        return $author;
+    public function importQuotesFromProject($args) {
+        $pub_id = Util::getArg($args, 'pub_id', null);
+        $proj_id = Util::getArg($args, 'proj_id', null);
+
+        $projLines = DbUtil::selectFrom("project_line", null, array("proj_id" => $proj_id));
+
+        foreach ($projLines as $projLine) {
+            $quoted_pub_id = $projLine["pub_id"];
+
+            DbUtil::insertInto("quote", array(
+                "pub_id" => $pub_id,
+                "pub_page" => 0,
+                "quoted_pub_id" => $quoted_pub_id,
+                "quoted_pub_page" => 0
+            ));
+        }
+
+        return array("status" => true);
     }
 
-    public static function getTitleShort($pub_id) {
-        $title = join(", ", DbUtil::selectFrom('publication_title', 'title', array('pub_id' => $pub_id)));
-        if (strlen($title) > self::$titleMaxLen) $title = substr($title, 0, self::$titleMaxLen)."...";
-        return $title;
-    }
 }
