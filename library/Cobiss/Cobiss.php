@@ -434,9 +434,16 @@ class Cobiss_Detail_Window{
 
         $detailData = new Cobiss_Detail_Data();
 
-        foreach($tbodyNode("tr") as $trNode){
-
+        foreach($tableNode("tr") as $trNode){
+            $thNode = $trNode("th", 0);
+            if($thNode && $thNode->getInnerText() == "COBISS.SI-ID"){
+                $tdNode = $trNode("td", 0);
+                $detailData->setCobissId($tdNode->getInnerText());
+                break;
+            }
         }
+
+        $this->setData($detailData);
 
         /*
         $this->parseForm($formNode);
@@ -445,6 +452,15 @@ class Cobiss_Detail_Window{
         */
         return true;
 
+    }
+
+    /**
+     * @return array
+     */
+    public function toArray(){
+        $array = array();
+        $array["data"] = $this->getData()->toArray();
+        return $array;
     }
 }
 

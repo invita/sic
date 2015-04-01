@@ -9,6 +9,7 @@ var F = function(args) {
     var author = sic.getArg(cobissData, 'author', null);
     var title = sic.getArg(cobissData, 'title', null);
     var year = sic.getArg(cobissData, 'year', null);
+    var cobissId = sic.getArg(cobissData, 'cobissId', null);
 
     var panel = new sic.widget.sicPanel({parent:tabPageBasic.content.selector,
         firstGroupName:"Update Publication"});
@@ -27,7 +28,7 @@ var F = function(args) {
     formUserData.addInput({name:"author", type:"text", placeholder:"Author...", isArray:true, value:[author]});
     formUserData.addInput({name:"title", type:"text", placeholder:"Title...", isArray:true, value:[title]});
     formUserData.addInput({name:"year", type:"text", placeholder:"Year...", value:year});
-    formUserData.addInput({name:"cobiss", type:"text", placeholder:"Cobiss..."});
+    formUserData.addInput({name:"cobiss", type:"text", placeholder:"Cobiss...", value:cobissId});
     formUserData.addInput({name:"issn", type:"text", placeholder:"Issn..."});
     formUserData.addInput({name:"original_id", type:"text", placeholder:"OriginalId...",
         lookup:sic.mergeObjects(sic.lookup.publication, { fieldMap: { original_id: "pub_id" } }) });

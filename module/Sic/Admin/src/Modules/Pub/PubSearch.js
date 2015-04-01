@@ -5,6 +5,13 @@ var F = function(args) {
     var searchBox = searchForm.addInput({name:"search", placeholder:"Simple search..."});
     searchBox.selector.addClass("inline");
     var submitButton = searchForm.addInput({value:"Search", type:"submit"});
+    /*
+    var cobissButton = searchForm.addInput({value:"Cobiss", type:"button"});
+    cobissButton.selector.click(function(){
+        var data = searchForm.getValue();
+        sic.loadModule({moduleName:"Cobiss/CobissList", newTab:"Cobiss List", cobissSearch: data.search});
+    });
+    */
 
     var filterValue = sic.getArg(args, "filter", {});
 

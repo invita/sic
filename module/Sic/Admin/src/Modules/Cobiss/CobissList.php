@@ -81,35 +81,25 @@ class CobissList extends SicModuleAbs {
             'userAgent' => $json["userAgent"],
             'paginator' => $json["paginator"],
             'url' => $url,
+            'allArray' => $json
         );
     }
 
-    /*
-    public function defineSqlSelect($args, Select $select)
-    {
-        $select->from('view_publication_list');
-        $staticData = Util::getArg($args, 'staticData', array());
-        $proj_id = Util::getArg($staticData, 'proj_id', null);
+    public function getCobissDetail($args){
 
-        // Filter on project Id
-        if ($proj_id) {
-            $select->join('publication_project_link', 'publication.pub_id = publication_project_link.pub_id',
-                array('filter_proj_id' => 'proj_id'))->where(array('filter_proj_id' => $proj_id));
-        }
+        $cobissRow = Util::getArg($args, 'cobissRow', null);
+        $userAgent = Util::getArg($cobissRow, 'userAgent', null);
+        $url = Util::getArg($cobissRow, 'url', null);
+        $url = str_replace("&amp;", "&", $url);
+       // die($url);
+
+        $cdw = new \Cobiss_Detail_Window();
+        $cdw->setUserAgent($userAgent);
+        $cdw->loadFromUrl($url);
+        $array = $cdw->toArray();
+
+
+        return $array;
     }
-
-    public function defineSqlDelete($args, Delete $delete)
-    {
-        $data = Util::getArg($args, 'data', null);
-        $pub_id = Util::getArg($data, 'pub_id', 0);
-        $staticData = Util::getArg($args, 'staticData', array());
-        $proj_id = Util::getArg($staticData, 'proj_id', null);
-
-        $delete->from('publication_project_link')->where(array("pub_id" => $pub_id));
-        $delete->from('publication_author')->where(array("pub_id" => $pub_id));
-        $delete->from('publication_title')->where(array("pub_id" => $pub_id));
-        $delete->from('publication')->where(array("pub_id" => $pub_id));
-    }
-    */
 
 }

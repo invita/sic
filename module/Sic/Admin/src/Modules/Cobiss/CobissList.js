@@ -1,5 +1,6 @@
 var F = function(args) {
     var tabPage = args.helpers.createTabPage({name:"List"});
+    //var cobissSearch = args.cobissSearch;
     var cobissIframeAttr = {
         //src:"http://www.cobiss.si/",
         //src:"http://www.cobiss.si/scripts/cobiss",
@@ -12,7 +13,7 @@ var F = function(args) {
         method:"post",
         action:"http://www.cobiss.si/scripts/cobiss"
     };
-    var cobissDataTable, cobissIframe, cobissUrl, cobissForm, table, tr, td, dataTable, cobissIframeForm;
+    var cobissDataTable, cobissIframe, cobissUrl, cobissForm, table, tr, td, dataTable, cobissAllArray;
 
     table = new sic.widget.sicElement({parent:tabPage.content.selector, tagName:"table"});
     tr = new sic.widget.sicElement({parent:table.selector, tagName:"tr"});
@@ -29,8 +30,9 @@ var F = function(args) {
     cobissForm.selector.attr("target", cobissIframe.selector.attr("id"));
 
     var form = new sic.widget.sicForm({parent:cobissForm.selector, captionWidth:"100px"});
-    form.addInput({name:"srch", type:"text", placeholder:"Search", readOnly:false}).selector.addClass("inline");
-    form.addInput({name:"command", type:"submit", value:"SEARCH"});
+    var srch = form.addInput({name:"srch", type:"text", placeholder:"Search", readOnly:false});
+    srch.selector.addClass("inline");
+    var submit = form.addInput({name:"command", type:"submit", value:"SEARCH"});
     form.addInput({name:"command", type:"button", value:"Cobiss"}).selector.click(function(){
         cobissIframe.selector.attr("src", args.url);
     });
@@ -56,22 +58,24 @@ var F = function(args) {
                     label: 'Create Pub',
                     type: 'button',
                     onClick: function(args) {
-                        //sic.dump(args.row.getValue(), 0);
-                        //alert('Create Pub');
                         var data = args.row.getValue();
-                        //var url = data.url;
-                        sic.loadModule({moduleName:"Pub/PubEdit", newTab:"Cobiss Pub", cobissData: data});
-                    }
-                },
-                cobiss: {
-                    label: 'Cobiss',
-                    type: 'button',
-                    onClick: function(args) {
-                        //sic.dump(args.row.getValue(), 0);
-                        //alert('Create Pub');
-                        var data = args.row.getValue();
-                        //var url = data.url;
-                        sic.loadModule({moduleName:"Pub/PubEdit", newTab:"Cobiss Pub", cobissData: data});
+                        var number = data.number;
+                        var dtData = cobissAllArray.dataTable.rows;
+                        var cobissRow = {
+                            userAgent : dataTable.dataSource.staticData.userAgent
+                        };
+                        for(var c=0;c<dtData.length; c++){
+                            if(dtData[c].number == number){
+                                cobissRow = sic.mergeObjects(cobissRow, dtData[c]);
+                                sic.callMethod({moduleName:"Cobiss/CobissList", methodName:"getCobissDetail", cobissRow : cobissRow}, function(d){
+                                    if(d.data){
+                                        data.cobissId = d.data.cobissId;
+                                        sic.loadModule({moduleName:"Pub/PubEdit", newTab:"Cobiss Pub", cobissData: data});
+                                    }
+                                });
+                                break;
+                            }
+                        }
                     }
                 }
             }
@@ -80,47 +84,22 @@ var F = function(args) {
             dataTable.dataSource.staticData.paginator = args.paginator;
             dataTable.dataSource.staticData.userAgent = args.userAgent;
             cobissUrl = args.url;
+            cobissAllArray = args.allArray;
             if(cobissUrl) cobissIframe.selector.attr("src", args.url);
         });
     });
     form.selector.append('<input type="hidden" name="base" value="99999" />');
 
-
-
     /*
-    var cobissIframe = $("#cobissIframe iframe");
-    cobissIframe.attr("src", "http://www.cobiss.si/");
-    cobissIframe.attr("width", "1200px");
-    cobissIframe.attr("height", "1200px");
-    cobissIframe.attr("frameborder", "0");
-    cobissIframe.attr("scrolling", "no");
+    $(function(){
+        if(cobissSearch){
+            //alert(sic.debug(srch));
+            srch.setValue(cobissSearch);
+            //form.submit();
+            cobissForm.selector.get(0).submit();
 
-    $("#cobissDataTable").html("<form target='cobissIframe' id='cobissForm' method='post'></form>");
-
-    var formUserData = new sic.widget.sicForm({parent:$("#cobissForm"), captionWidth:"100px"});
-    formUserData.addInput({name:"cobiss_search", type:"text", placeholder:"Search", readOnly:false}).selector.addClass("inline");
-    formUserData.addInput({name:"save", type:"submit", value:"Search"}).selector.click(function(e){
-
+        }
     });
-    formUserData.onSubmit(function(sicForm){
-        $("#cobissForm").submit();
-        dataTable.dataSource.staticData = formUserData.getValue();
-        dataTable.refresh();
-    });
-
-    var createPub = function(url){
-
-
-
-
-        $.post("/cobiss-request.php", "action=url&url="+url.replace(/&amp;/g, "|").replace(/=/g, "||"), function(data){
-            alert(data);
-        });
-
-
-        //var sic.loadModule({moduleName:"Pub/PubEdit", newTab:"Cobiss Pub", cobissData:});
-    }
-
-
     */
+
 };
