@@ -16,87 +16,90 @@ class CobissList extends SicModuleAbs {
 
     public function dataTableSelect($args) {
 
-        //print_r($args);
-        //die();
-
+        $pageStart = Util::getArg($args, 'pageStart', 0);
+        $pageCount = Util::getArg($args, 'pageCount', 0);
         $staticData = Util::getArg($args, 'staticData', array());
         $search = Util::getArg($staticData, 'srch', null);
+        $paginator = Util::getArg($staticData, 'paginator', array());
+        $userAgent = Util::getArg($staticData, 'userAgent', null);
+        $url = null;
 
+        if($paginator && $userAgent){
 
-        if($search){
+            $url = $paginator["pages"][($pageStart/$pageCount)]["url"];
+            $url = str_replace("&amp;", "&", $url);
+            //die($url);
+
+            $csw = new \Cobiss_Search_Window();
+            $csw->setUserAgent($userAgent);
+            $csw->loadFromUrl($url);
+
+            //echo $csw->getLastResponse()->body;
+            //die();
+
+            $json = $csw->toArray();
+        } else {
             $csw = new \Cobiss_Search_Window();
             $csw->search($search);
             $json = $csw->toArray();
 
-            $rows = $json["dataTable"]["rows"];
-            for($c=0; $c<count($rows); $c++){
-                $row = $rows[$c];
-                $data[] = array(
-                    "number" => $row["number"],
-                    "author" => $row["author"],
-                    "title" => $row["title"],
-                    //"language" => $row["language"],
-                    //"year" => $row["year"]
-                );
+            /*
+            $id = 0;
+            $inputArray = $json["form"]["inputArray"];
+            for($c=0; $c<count($inputArray); $c++){
+                if(isset($inputArray[$c]["ID"])){
+                    $id = $inputArray[$c]["ID"];
+                    break;
+                }
             }
-        } else {
-            //$data = array(array("number" => "", "author" =>"", "title" =>"", "language" => "", "year" => ""));
-            $data = array(array("number" => "", "author" =>"", "title" =>""));
+            $url = "http://cobiss4.izum.si/scripts/cobiss?ukaz=DIRE&amp;id=".$id."&amp;dfr=1&amp;ppg=10&amp;sid=1";
+            $url = str_replace("&amp;", "&", $url);
+            */
+
+            //echo $url;
+            //print_r($json);
+
+            //$url = $json["paginator"]["pages"][0]["url"];
+            //die($url);
         }
 
-
-
-        /*
-        $adapter = GlobalAdapterFeature::getStaticAdapter();
-        $sql = new Sql($adapter);
-        $select = $sql->select();
-
-        $this->defineSqlSelect($args, $select);
-        $this->defineSqlSelectFilter($args, $select);
-
-        $rowCount = $this->defineRowCount($args, clone($select));
-
-        $this->defineSqlSelectLimit($args, $select);
-
-        $statement = $sql->prepareStatementForSqlObject($select);
-        //echo $statement->getSql(); die();
-        $sqlResult = $statement->execute();
-
-        $responseData = $this->defineDataTableResponseData($args, $sqlResult);
-        */
+        $rows = $json["dataTable"]["rows"];
+        for($c=0; $c<count($rows); $c++){
+            $row = $rows[$c];
+            $data[] = array(
+                "number" => $row["number"],
+                "author" => $row["author"],
+                "title" => $row["title"],
+                //"language" => $row["language"],
+                //"year" => $row["year"]
+            );
+        }
 
         return array(
             'data' => $data,
-            'rowCount' => isset($json) ? count($json["paginator"]["pages"]) : 1
+            'rowCount' => count($json["paginator"]["pages"])*$args["pageCount"],
+            'userAgent' => $json["userAgent"],
+            'paginator' => $json["paginator"],
+            'url' => $url,
+            'allArray' => $json
         );
     }
 
-    /*
-    public function defineSqlSelect($args, Select $select)
-    {
-        $select->from('view_publication_list');
-        $staticData = Util::getArg($args, 'staticData', array());
-        $proj_id = Util::getArg($staticData, 'proj_id', null);
+    public function getCobissDetail($args){
 
-        // Filter on project Id
-        if ($proj_id) {
-            $select->join('publication_project_link', 'publication.pub_id = publication_project_link.pub_id',
-                array('filter_proj_id' => 'proj_id'))->where(array('filter_proj_id' => $proj_id));
-        }
+        $cobissRow = Util::getArg($args, 'cobissRow', null);
+        $userAgent = Util::getArg($cobissRow, 'userAgent', null);
+        $url = Util::getArg($cobissRow, 'url', null);
+        $url = str_replace("&amp;", "&", $url);
+       // die($url);
+
+        $cdw = new \Cobiss_Detail_Window();
+        $cdw->setUserAgent($userAgent);
+        $cdw->loadFromUrl($url);
+        $array = $cdw->toArray();
+
+
+        return $array;
     }
-
-    public function defineSqlDelete($args, Delete $delete)
-    {
-        $data = Util::getArg($args, 'data', null);
-        $pub_id = Util::getArg($data, 'pub_id', 0);
-        $staticData = Util::getArg($args, 'staticData', array());
-        $proj_id = Util::getArg($staticData, 'proj_id', null);
-
-        $delete->from('publication_project_link')->where(array("pub_id" => $pub_id));
-        $delete->from('publication_author')->where(array("pub_id" => $pub_id));
-        $delete->from('publication_title')->where(array("pub_id" => $pub_id));
-        $delete->from('publication')->where(array("pub_id" => $pub_id));
-    }
-    */
 
 }
