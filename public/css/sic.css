@@ -147,6 +147,8 @@ div.hierarchyDiv { margin:2px 2px 2px 10px; color:#333333; cursor:pointer; }
 div.hierarchyDiv:hover { color:#87BCEA; }
 div.hierarchyDiv.current { font-weight:bold; }
 
+div.outputDiv { margin:2px 10px; padding:3px 5px; border:#CCCCCC solid 1px;
+        font-family:'Courier New', Courier, monospace; }
 
 img.icon8  { width:8px; }
 img.icon12 { width:12px; }
