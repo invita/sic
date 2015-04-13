@@ -1,0 +1,731 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Združeni podatki iz začasnih pretvorb:
+     - ../viri_citatov-revije/revije-zacasno-sici.xml
+     - ../publikacije/revije-sici.xml
+-->
+<SICI>
+   <entities>
+      <entity>
+         <id>1</id>
+         <title>Acta Histriae</title>
+         <pubPlace>Koper; Milje</pubPlace>
+         <publisher>Zgodovinsko društvo za Južno Primorsko</publisher>
+         <creator creatorType="author">Tester</creator>
+         <idno idnoType="cobiss">34491648</idno>
+         <idno idnoType="issn">1318-0185</idno>
+         <date>2010</date>
+         <series>1</series>
+         <children>
+            <child>2</child>
+            <child>13</child>
+            <child>14</child>
+            <child>15</child>
+            <child>16</child>
+            <child>17</child>
+            <child>18</child>
+            <child>19</child>
+            <child>20</child>
+            <child>21</child>
+            <child>22</child>
+            <child>23</child>
+            <child>24</child>
+            <child>25</child>
+            <child>26</child>
+            <child>27</child>
+            <child>28</child>
+            <child>29</child>
+            <child>30</child>
+            <child>1886</child>
+            <child>1887</child>
+            <child>1888</child>
+            <child>1889</child>
+            <child>1890</child>
+            <child>1891</child>
+            <child>1892</child>
+            <child>1893</child>
+            <child>1894</child>
+            <child>1895</child>
+            <child>1896</child>
+            <child>1897</child>
+            <child>1898</child>
+            <child>1899</child>
+            <child>1900</child>
+            <child>1901</child>
+         </children>
+      </entity>
+      <entity>
+         <id>2</id>
+         <title>Annales</title>
+         <title>anali za istrske in mediteranske študije</title>
+         <addTitle>Series historia et sociologia</addTitle>
+         <pubPlace>Koper</pubPlace>
+         <publisher>Zgodovinsko društvo za južno Primorsko : Znanstveno raziskovalno središče Republike Slovenije</publisher>
+         <idno idnoType="cobiss">71952128</idno>
+         <idno idnoType="issn">1408-5348</idno>
+         <series>0</series>
+         <parent>1</parent>
+         <children>
+         </children>
+      </entity>
+      <entity>
+         <id>3</id>
+         <title>Arhivi</title>
+         <title>glasilo Arhivskega društva in arhivov Slovenije</title>
+         <pubPlace>Ljubljana</pubPlace>
+         <publisher>Arhivsko društvo Slovenije</publisher>
+         <idno idnoType="cobiss">8338690</idno>
+         <idno idnoType="issn">0351-2835</idno>
+         <series>1</series>
+         <children>
+            <child>44</child>
+            <child>45</child>
+            <child>46</child>
+            <child>47</child>
+            <child>48</child>
+            <child>49</child>
+            <child>50</child>
+            <child>51</child>
+            <child>52</child>
+            <child>53</child>
+            <child>54</child>
+            <child>1925</child>
+            <child>1926</child>
+            <child>1927</child>
+            <child>1928</child>
+            <child>1929</child>
+            <child>1930</child>
+            <child>1931</child>
+            <child>1932</child>
+            <child>1933</child>
+            <child>1934</child>
+            <child>1935</child>
+            <child>1936</child>
+            <child>1937</child>
+            <child>1938</child>
+            <child>1939</child>
+            <child>1940</child>
+            <child>1941</child>
+            <child>1942</child>
+            <child>1943</child>
+            <child>1944</child>
+            <child>1945</child>
+            <child>1946</child>
+            <child>1947</child>
+            <child>1948</child>
+            <child>1949</child>
+            <child>1950</child>
+            <child>1951</child>
+            <child>1952</child>
+            <child>1953</child>
+            <child>1954</child>
+            <child>1955</child>
+            <child>1956</child>
+            <child>1957</child>
+            <child>1958</child>
+         </children>
+      </entity>
+      <entity>
+         <id>4</id>
+         <title>Kronika</title>
+         <title>časopis za slovensko krajevno zgodovino</title>
+         <pubPlace>Ljubljana</pubPlace>
+         <publisher>Zveza zgodovinskih društev Slovenije</publisher>
+         <idno idnoType="cobiss">8221696</idno>
+         <idno idnoType="issn">0023-4923</idno>
+         <series>1</series>
+         <children>
+            <child>55</child>
+            <child>56</child>
+            <child>57</child>
+            <child>58</child>
+            <child>59</child>
+            <child>60</child>
+            <child>61</child>
+            <child>62</child>
+            <child>63</child>
+            <child>64</child>
+            <child>65</child>
+            <child>66</child>
+            <child>67</child>
+            <child>68</child>
+            <child>69</child>
+            <child>70</child>
+            <child>71</child>
+            <child>72</child>
+            <child>73</child>
+            <child>74</child>
+            <child>75</child>
+            <child>76</child>
+            <child>77</child>
+            <child>78</child>
+            <child>79</child>
+            <child>2043</child>
+            <child>2044</child>
+            <child>2045</child>
+            <child>2046</child>
+            <child>2047</child>
+            <child>2048</child>
+            <child>2049</child>
+            <child>2050</child>
+            <child>2051</child>
+            <child>2052</child>
+            <child>2053</child>
+            <child>2054</child>
+            <child>2055</child>
+            <child>2056</child>
+            <child>2057</child>
+            <child>2058</child>
+            <child>2059</child>
+            <child>2060</child>
+            <child>2061</child>
+            <child>2062</child>
+            <child>2063</child>
+            <child>2064</child>
+            <child>2065</child>
+            <child>2066</child>
+            <child>2067</child>
+            <child>2068</child>
+            <child>2069</child>
+            <child>2070</child>
+            <child>2071</child>
+            <child>2072</child>
+            <child>2073</child>
+            <child>2074</child>
+            <child>2075</child>
+            <child>2076</child>
+            <child>2077</child>
+            <child>2078</child>
+            <child>2079</child>
+            <child>2080</child>
+            <child>2081</child>
+            <child>2082</child>
+            <child>2083</child>
+            <child>2084</child>
+            <child>2085</child>
+            <child>2086</child>
+            <child>2087</child>
+            <child>2088</child>
+            <child>2089</child>
+            <child>2090</child>
+            <child>2091</child>
+            <child>2092</child>
+            <child>2093</child>
+            <child>2094</child>
+            <child>2095</child>
+            <child>2096</child>
+            <child>2097</child>
+            <child>2098</child>
+            <child>2099</child>
+            <child>2100</child>
+            <child>2101</child>
+            <child>2102</child>
+            <child>2103</child>
+            <child>2104</child>
+            <child>2105</child>
+            <child>2106</child>
+            <child>2107</child>
+            <child>2108</child>
+            <child>2109</child>
+            <child>2110</child>
+            <child>2111</child>
+            <child>2112</child>
+            <child>2113</child>
+            <child>2114</child>
+            <child>2115</child>
+            <child>2116</child>
+            <child>2117</child>
+            <child>2118</child>
+            <child>2119</child>
+            <child>2120</child>
+            <child>2121</child>
+            <child>2122</child>
+            <child>2123</child>
+            <child>2124</child>
+            <child>2125</child>
+            <child>2126</child>
+            <child>2127</child>
+            <child>2128</child>
+            <child>2129</child>
+            <child>2130</child>
+            <child>2131</child>
+            <child>2132</child>
+            <child>2133</child>
+            <child>2134</child>
+         </children>
+      </entity>
+      <entity>
+         <id>5</id>
+         <title>Prispevki za novejšo zgodovino</title>
+         <pubPlace>Ljubljana</pubPlace>
+         <publisher>Inštitut za novejšo zgodovino</publisher>
+         <idno idnoType="cobiss">7530754</idno>
+         <idno idnoType="issn">0353-0329</idno>
+         <series>1</series>
+         <children>
+            <child>80</child>
+            <child>81</child>
+            <child>82</child>
+            <child>83</child>
+            <child>84</child>
+            <child>85</child>
+            <child>86</child>
+            <child>87</child>
+            <child>88</child>
+            <child>89</child>
+            <child>90</child>
+            <child>91</child>
+            <child>92</child>
+            <child>93</child>
+            <child>94</child>
+            <child>95</child>
+            <child>96</child>
+            <child>97</child>
+            <child>98</child>
+            <child>99</child>
+            <child>100</child>
+            <child>101</child>
+            <child>102</child>
+            <child>103</child>
+            <child>104</child>
+            <child>105</child>
+            <child>106</child>
+            <child>2135</child>
+            <child>2136</child>
+            <child>2137</child>
+            <child>2138</child>
+            <child>2139</child>
+            <child>2140</child>
+            <child>2141</child>
+            <child>2142</child>
+            <child>2143</child>
+            <child>2144</child>
+            <child>2145</child>
+            <child>2146</child>
+            <child>2147</child>
+            <child>2148</child>
+            <child>2149</child>
+            <child>2150</child>
+            <child>2151</child>
+            <child>2152</child>
+            <child>2153</child>
+            <child>2154</child>
+            <child>2155</child>
+            <child>2156</child>
+            <child>2157</child>
+            <child>2158</child>
+            <child>2159</child>
+            <child>2160</child>
+            <child>2161</child>
+            <child>2162</child>
+            <child>2163</child>
+            <child>2164</child>
+            <child>2165</child>
+            <child>2166</child>
+         </children>
+      </entity>
+      <entity>
+         <id>6</id>
+         <title>Razprave in gradivo</title>
+         <title>revija za narodnostna vprašanja</title>
+         <addTitle>Treatises and documents : journal of ethnic studies</addTitle>
+         <pubPlace>Ljubljana</pubPlace>
+         <publisher>Inštitut za narodnostna vprašanja</publisher>
+         <idno idnoType="cobiss">23045378</idno>
+         <idno idnoType="issn">0354-0286</idno>
+         <series>1</series>
+         <children>
+            <child>107</child>
+            <child>108</child>
+            <child>109</child>
+            <child>110</child>
+            <child>111</child>
+            <child>112</child>
+            <child>113</child>
+            <child>114</child>
+            <child>115</child>
+            <child>116</child>
+            <child>117</child>
+            <child>118</child>
+            <child>119</child>
+            <child>120</child>
+            <child>121</child>
+            <child>122</child>
+            <child>123</child>
+            <child>124</child>
+            <child>125</child>
+            <child>126</child>
+            <child>127</child>
+            <child>2167</child>
+            <child>2168</child>
+            <child>2169</child>
+            <child>2170</child>
+            <child>2171</child>
+            <child>2172</child>
+            <child>2173</child>
+            <child>2174</child>
+            <child>2175</child>
+            <child>2176</child>
+            <child>2177</child>
+            <child>2178</child>
+            <child>2179</child>
+            <child>2180</child>
+            <child>2181</child>
+            <child>2182</child>
+            <child>2183</child>
+            <child>2184</child>
+            <child>2185</child>
+            <child>2186</child>
+            <child>2187</child>
+            <child>2188</child>
+            <child>2189</child>
+            <child>2190</child>
+            <child>2191</child>
+            <child>2192</child>
+            <child>2193</child>
+            <child>2194</child>
+            <child>2195</child>
+         </children>
+      </entity>
+      <entity>
+         <id>7</id>
+         <title>Studia Historica Slovenica</title>
+         <title>časopis za humanistične in družboslovne študije</title>
+         <addTitle>Studia Historica Slovenica : humanities and social studies review</addTitle>
+         <pubPlace>Maribor</pubPlace>
+         <publisher>Zgodovinsko društvo dr. Franca Kovačiča</publisher>
+         <idno idnoType="cobiss">115987200</idno>
+         <idno idnoType="issn">1580-8122</idno>
+         <series>1</series>
+         <children>
+            <child>128</child>
+            <child>129</child>
+            <child>130</child>
+            <child>131</child>
+            <child>132</child>
+            <child>133</child>
+            <child>134</child>
+            <child>135</child>
+            <child>136</child>
+            <child>137</child>
+            <child>138</child>
+            <child>139</child>
+            <child>140</child>
+            <child>2196</child>
+            <child>2197</child>
+            <child>2198</child>
+            <child>2199</child>
+            <child>2200</child>
+            <child>2201</child>
+            <child>2202</child>
+            <child>2203</child>
+            <child>2204</child>
+            <child>2205</child>
+         </children>
+      </entity>
+      <entity>
+         <id>8</id>
+         <title>Zgodovina v šoli</title>
+         <pubPlace>Ljubljana</pubPlace>
+         <publisher>Zavod Republike Slovenije za šolstvo in šport</publisher>
+         <idno idnoType="cobiss">29170944</idno>
+         <idno idnoType="issn">1318-1416</idno>
+         <series>1</series>
+         <children>
+            <child>141</child>
+            <child>142</child>
+            <child>143</child>
+            <child>144</child>
+            <child>145</child>
+            <child>146</child>
+            <child>2206</child>
+            <child>2207</child>
+            <child>2208</child>
+            <child>2209</child>
+            <child>2210</child>
+            <child>2211</child>
+            <child>2212</child>
+            <child>2213</child>
+            <child>2214</child>
+            <child>2215</child>
+            <child>2216</child>
+            <child>2217</child>
+            <child>2218</child>
+            <child>2219</child>
+            <child>2220</child>
+            <child>2221</child>
+            <child>2222</child>
+            <child>2223</child>
+            <child>2224</child>
+         </children>
+      </entity>
+      <entity>
+         <id>9</id>
+         <title>Zgodovina za vse</title>
+         <title>vse za zgodovino</title>
+         <pubPlace>Celje</pubPlace>
+         <publisher>Zgodovinsko društvo Celje : Zgodovinsko društvo</publisher>
+         <idno idnoType="cobiss">37697536</idno>
+         <idno idnoType="issn">1318-2498</idno>
+         <series>1</series>
+         <children>
+            <child>147</child>
+            <child>148</child>
+            <child>149</child>
+            <child>150</child>
+            <child>151</child>
+            <child>152</child>
+            <child>153</child>
+            <child>154</child>
+            <child>155</child>
+            <child>156</child>
+            <child>157</child>
+            <child>158</child>
+            <child>159</child>
+            <child>160</child>
+            <child>161</child>
+            <child>162</child>
+            <child>163</child>
+            <child>164</child>
+            <child>165</child>
+            <child>166</child>
+            <child>167</child>
+            <child>2225</child>
+            <child>2226</child>
+            <child>2227</child>
+            <child>2228</child>
+            <child>2229</child>
+            <child>2230</child>
+            <child>2231</child>
+            <child>2232</child>
+            <child>2233</child>
+            <child>2234</child>
+            <child>2235</child>
+            <child>2236</child>
+            <child>2237</child>
+            <child>2238</child>
+            <child>2239</child>
+            <child>2240</child>
+            <child>2241</child>
+            <child>2242</child>
+            <child>2243</child>
+         </children>
+      </entity>
+      <entity>
+         <id>10</id>
+         <title>Zgodovinski časopis</title>
+         <title>glasilo Zveze zgodovinskih društev Slovenije</title>
+         <addTitle>Historical review</addTitle>
+         <pubPlace>Ljubljana</pubPlace>
+         <publisher>Zveza zgodovinskih društev Slovenije</publisher>
+         <idno idnoType="cobiss">4293634</idno>
+         <idno idnoType="issn">0350-5774</idno>
+         <series>1</series>
+         <children>
+            <child>168</child>
+            <child>169</child>
+            <child>170</child>
+            <child>171</child>
+            <child>172</child>
+            <child>173</child>
+            <child>174</child>
+            <child>175</child>
+            <child>176</child>
+            <child>177</child>
+            <child>178</child>
+            <child>179</child>
+            <child>180</child>
+            <child>181</child>
+            <child>182</child>
+            <child>183</child>
+            <child>184</child>
+            <child>185</child>
+            <child>186</child>
+            <child>187</child>
+            <child>2244</child>
+            <child>2245</child>
+            <child>2246</child>
+            <child>2247</child>
+            <child>2248</child>
+            <child>2249</child>
+            <child>2250</child>
+            <child>2251</child>
+            <child>2252</child>
+            <child>2253</child>
+            <child>2254</child>
+            <child>2255</child>
+            <child>2256</child>
+            <child>2257</child>
+            <child>2258</child>
+            <child>2259</child>
+            <child>2260</child>
+            <child>2261</child>
+            <child>2262</child>
+            <child>2263</child>
+            <child>2264</child>
+            <child>2265</child>
+            <child>2266</child>
+            <child>2267</child>
+            <child>2268</child>
+            <child>2269</child>
+            <child>2270</child>
+            <child>2271</child>
+            <child>2272</child>
+            <child>2273</child>
+            <child>2274</child>
+            <child>2275</child>
+            <child>2276</child>
+            <child>2277</child>
+            <child>2278</child>
+            <child>2279</child>
+            <child>2280</child>
+            <child>2281</child>
+            <child>2282</child>
+            <child>2283</child>
+            <child>2284</child>
+            <child>2285</child>
+            <child>2286</child>
+            <child>2287</child>
+            <child>2288</child>
+            <child>2289</child>
+            <child>2290</child>
+            <child>2291</child>
+            <child>2292</child>
+            <child>2293</child>
+            <child>2294</child>
+            <child>2295</child>
+            <child>2296</child>
+            <child>2297</child>
+            <child>2298</child>
+            <child>2299</child>
+            <child>2300</child>
+            <child>2301</child>
+            <child>2302</child>
+            <child>2303</child>
+            <child>2304</child>
+            <child>2305</child>
+            <child>2306</child>
+            <child>2307</child>
+            <child>2308</child>
+            <child>2309</child>
+            <child>2310</child>
+            <child>2311</child>
+            <child>2312</child>
+            <child>2313</child>
+            <child>2314</child>
+            <child>2315</child>
+            <child>2316</child>
+            <child>2317</child>
+            <child>2318</child>
+            <child>2319</child>
+            <child>2320</child>
+            <child>2321</child>
+            <child>2322</child>
+            <child>2323</child>
+            <child>2324</child>
+            <child>2325</child>
+            <child>2326</child>
+            <child>2327</child>
+            <child>2328</child>
+            <child>2329</child>
+            <child>2330</child>
+            <child>2331</child>
+            <child>2332</child>
+            <child>2333</child>
+            <child>2334</child>
+            <child>2335</child>
+            <child>2336</child>
+            <child>2337</child>
+            <child>2338</child>
+            <child>2339</child>
+            <child>2340</child>
+            <child>2341</child>
+            <child>2342</child>
+            <child>2343</child>
+            <child>2344</child>
+            <child>2345</child>
+            <child>2346</child>
+            <child>2347</child>
+            <child>2348</child>
+            <child>2349</child>
+            <child>2350</child>
+            <child>2351</child>
+            <child>2352</child>
+            <child>2353</child>
+            <child>2354</child>
+            <child>2355</child>
+            <child>2356</child>
+            <child>2357</child>
+            <child>2358</child>
+            <child>2359</child>
+            <child>2360</child>
+            <child>2361</child>
+            <child>2362</child>
+            <child>2363</child>
+            <child>2364</child>
+            <child>2365</child>
+            <child>2366</child>
+            <child>2367</child>
+            <child>2368</child>
+            <child>2369</child>
+            <child>2370</child>
+         </children>
+      </entity>
+   </entities>
+   <sameAs>
+      <wrapper>
+         <id>1</id>
+         <entityID status="regular">2371</entityID>
+         <entityID status="alternative">2372</entityID>
+      </wrapper>
+      <wrapper>
+         <id>2</id>
+         <entityID status="regular">2378</entityID>
+         <entityID status="alternative">2379</entityID>
+      </wrapper>
+      <wrapper>
+         <id>3</id>
+         <entityID status="regular">2384</entityID>
+         <entityID status="alternative">2385</entityID>
+      </wrapper>
+      <wrapper>
+         <id>4</id>
+         <entityID status="regular">2387</entityID>
+         <entityID status="alternative">2388</entityID>
+         <entityID status="alternative">2389</entityID>
+         <entityID status="alternative">2390</entityID>
+         <entityID status="alternative">2391</entityID>
+      </wrapper>
+      <wrapper>
+         <id>5</id>
+         <entityID status="regular">2403</entityID>
+         <entityID status="alternative">2404</entityID>
+      </wrapper>
+      <wrapper>
+         <id>6</id>
+         <entityID status="regular">2407</entityID>
+         <entityID status="alternative">2408</entityID>
+      </wrapper>
+      <wrapper>
+         <id>7</id>
+         <entityID status="regular">2417</entityID>
+         <entityID status="alternative">2418</entityID>
+      </wrapper>
+      <wrapper>
+         <id>8</id>
+         <entityID status="regular">2421</entityID>
+         <entityID status="alternative">2422</entityID>
+      </wrapper>
+      <wrapper>
+         <id>9</id>
+         <entityID status="regular">2424</entityID>
+         <entityID status="alternative">2425</entityID>
+         <entityID status="alternative">2426</entityID>
+         <entityID status="alternative">2427</entityID>
+      </wrapper>
+      <wrapper>
+         <id>10</id>
+         <entityID status="regular">2433</entityID>
+         <entityID status="alternative">2434</entityID>
+      </wrapper>
+   </sameAs>
+</SICI>

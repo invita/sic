@@ -29,6 +29,8 @@ class PubEdit {
         $row = DbUtil::selectRow('publication', null, array('pub_id' => $pub_id));
         $row['author'] = DbUtil::selectFrom('publication_author', 'author', array('pub_id' => $pub_id));
         $row['title'] = DbUtil::selectFrom('publication_title', 'title', array('pub_id' => $pub_id));
+        $row['publisher'] = DbUtil::selectFrom('publication_publisher', 'publisher', array('pub_id' => $pub_id));
+        $row['place'] = DbUtil::selectFrom('publication_place', 'place', array('pub_id' => $pub_id));
         $row['child_id'] = DbUtil::selectFrom('publication', 'pub_id', array('parent_id' => $pub_id));
         return array("data" => $row);
     }
@@ -105,6 +107,16 @@ class PubEdit {
         DbUtil::deleteFrom('publication_title', array('pub_id' => $pub_id));
         for ($idx = 0; $idx < count($title); $idx++)
             DbUtil::insertInto('publication_title', array('pub_id' => $pub_id, 'idx' => $idx, 'title' => $title[$idx]));
+
+        $publisher = Util::getArg($data, 'publisher', array());
+        DbUtil::deleteFrom('publication_publisher', array('pub_id' => $pub_id));
+        for ($idx = 0; $idx < count($publisher); $idx++)
+            DbUtil::insertInto('publication_publisher', array('pub_id' => $pub_id, 'idx' => $idx, 'publisher' => $publisher[$idx]));
+
+        $place = Util::getArg($data, 'place', array());
+        DbUtil::deleteFrom('publication_place', array('pub_id' => $pub_id));
+        for ($idx = 0; $idx < count($place); $idx++)
+            DbUtil::insertInto('publication_place', array('pub_id' => $pub_id, 'idx' => $idx, 'place' => $place[$idx]));
 
         DbUtil::updateTable('publication', array('parent_id' => 0), array("parent_id" => $pub_id));
         $children = Util::getArg($data, 'child_id', array());

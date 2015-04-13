@@ -8,6 +8,9 @@ var F = function(args) {
     var cobissData = sic.getArg(args, 'cobissData', null);
     var author = sic.getArg(cobissData, 'author', null);
     var title = sic.getArg(cobissData, 'title', null);
+    var publisher = sic.getArg(cobissData, 'publisher', null);
+    var place = sic.getArg(cobissData, 'place', null);
+    var title = sic.getArg(cobissData, 'title', null);
     var year = sic.getArg(cobissData, 'year', null);
     var cobissId = sic.getArg(cobissData, 'cobissId', null);
 
@@ -27,6 +30,8 @@ var F = function(args) {
     //formUserData.addInput({name:"parentName", type:"text", placeholder:"ParentName..."});
     formUserData.addInput({name:"author", type:"text", placeholder:"Author...", isArray:true, value:[author]});
     formUserData.addInput({name:"title", type:"text", placeholder:"Title...", isArray:true, value:[title]});
+    formUserData.addInput({name:"publisher", type:"text", placeholder:"Publisher...", isArray:true, value:[publisher]});
+    formUserData.addInput({name:"place", type:"text", placeholder:"Place...", isArray:true, value:[place]});
     formUserData.addInput({name:"year", type:"text", placeholder:"Year...", value:year});
     formUserData.addInput({name:"cobiss", type:"text", placeholder:"Cobiss...", value:cobissId});
     formUserData.addInput({name:"issn", type:"text", placeholder:"Issn..."});

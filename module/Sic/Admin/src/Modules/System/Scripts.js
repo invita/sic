@@ -1,6 +1,6 @@
 var F = function(args){
 
-    var tabPage = args.helpers.createTabPage({name:"Scripts"});
+    var tabPage = args.helpers.createTabPage({name:"Import Entities"});
 
     var panel = new sic.widget.sicPanel({parent:tabPage.content.selector,
         firstGroupName:"Import Entities"});
@@ -19,6 +19,6 @@ var F = function(args){
         });
     });
 
-    var outputDiv = new sic.widget.sicElement({parent:tabPage.content.selector});
-    outputDiv.selector.addClass("outputDiv");
+    var outputDiv = new sic.widget.sicElement({parent:tabPage.content.selector, tagName:"pre"});
+    outputDiv.selector.addClass("outputElement");
 };

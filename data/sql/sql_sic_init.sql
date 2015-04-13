@@ -169,6 +169,22 @@ CREATE TABLE `quote` (
 
 
 
+CREATE TABLE `publication_publisher` (
+  `pub_id` int(11) NOT NULL,
+  `idx` int(11) NOT NULL,
+  `publisher` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `publication_publisher` ADD PRIMARY KEY (`pub_id`,`idx`);
+
+CREATE TABLE `publication_place` (
+  `pub_id` int(11) NOT NULL,
+  `idx` int(11) NOT NULL,
+  `place` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `publication_place` ADD PRIMARY KEY (`pub_id`,`idx`);
+
 
 
 

@@ -75,6 +75,13 @@ sic.widget.sicInputArray = function(args)
         }
     };
 
+    this.clear = function() {
+        for (var i in Object.keys(_p.inputs)) {
+            var inputId = _p.inputs[i];
+            _p.removeInput(inputId);
+        }
+    };
+
     this.getValue = function(){
         var result = [];
         for (var i in _p.inputs) result.push(_p.inputs[i].getValue());
@@ -83,7 +90,11 @@ sic.widget.sicInputArray = function(args)
 
     this.setValue = function(value){
         var oldLength = _p.inputCount();
-        while (value && _p.inputCount() < value.length) {
+        if (!value || !value.length) {
+            _p.clear();
+            return;
+        }
+        while (value && value.length && _p.inputCount() < value.length) {
             _p.addInput();
             if (_p.inputCount() == oldLength) break;
         }
