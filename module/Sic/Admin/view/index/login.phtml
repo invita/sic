@@ -1,11 +1,15 @@
 <div id="container"></div>
 <script type="text/javascript">
     $(function(){
-        var statusDiv = new sic.widget.sicElement({parent:$("#container"), tagClass:"statusDiv"});
-        statusDiv.selector.html("Login");
+        //var statusDiv = new sic.widget.sicElement({parent:$("#container"), tagClass:"statusDiv"});
+        //statusDiv.selector.html("Login");
 
         var panel = new sic.widget.sicPanel({parent:$("#container")});
-        var form = new sic.widget.sicForm({parent:panel.firstGroup.content.selector});
+        var panelGroup = panel.addGroup("Login");
+        panelGroup.header.selector.addClass("statusDiv");
+
+        var statusDiv = panelGroup.header;
+        var form = new sic.widget.sicForm({parent:panelGroup.content.selector});
         form.addInput({name:"username", type:"text", placeholder:"Username...", caption:"", focus: true});
         form.addInput({name:"password", type:"password", placeholder:"Password...", caption:""});
         form.addInput({name:"login", type:"submit", value:"Login", gradient:"blue"});

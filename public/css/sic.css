@@ -16,7 +16,7 @@ div.nav1 { margin-left:10px; }
 table.logoTable { border:none; margin-bottom:0px; }
 div.mainTitle { display:inline-table; font-size:24px; margin-left:10px; margin-top:20px; vertical-align:top; color:#553490; }
 
-div.statusDiv { font-weight:bold; margin: 4px 12px 0px 12px; color:#6699CC; }
+div.statusDiv { font-weight:bold; margin: 4px 12px 0px 0px; color:#6699CC; }
 div.errorDiv { color:#996666; }
 
 span.loginName { color:#553490; font-weight:bold; }
