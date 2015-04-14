@@ -485,8 +485,11 @@ sic.widget.sicDataTable = function(args)
         _p.onFieldDoubleClick(function (args) {
             if (typeof(_p.selectCallback) == "function") {
                 _p.selectCallback(args);
-                if (_p.parent.tabPage)
+                if (_p.parent.tabPage && _p.parent.tabPage.parentTab)
+                    _p.parent.tabPage.parentTab.destroyTab();
+                else if (_p.parent.tabPage)
                     _p.parent.tabPage.destroyTab();
+
                 return;
             }
 

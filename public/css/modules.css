@@ -16,3 +16,5 @@
     display: none;
 }
 
+div.pubSearch_leftContainer { width:380px; display: inline-table; }
+div.pubSearch_rightContainer { display: inline-table; }

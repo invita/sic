@@ -85,10 +85,10 @@ var F = function(args) {
                         filter.author = "*"+projLine.author+"*";
                         filter.title = "*"+projLine.title+"*";
                     }
-                    sic.loadModule({moduleName:'Pub/PubSearch', newTab:'Search', inDialog: true, filter: filter,
-                        selectCallback: function(selectArgs){
-                            //sic.dump(args.row.getValue());
-                            var line_id = args.row.getValue().line_id;
+                    var line_id = args.row.getValue().line_id;
+
+                    sic.loadModule({moduleName:'Pub/PubSearch', tabPage:tabPageBasic,  newTab:'Search for Line '+line_id,
+                        filter: filter, selectCallback: function(selectArgs){
                             var pub_id = selectArgs.row.getValue().pub_id;
                             var proj_id = moduleArgs.proj_id;
                             if (line_id && pub_id) {

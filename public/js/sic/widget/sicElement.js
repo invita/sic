@@ -205,6 +205,14 @@ sic.widget.sicElement = function(args)
     return this;
 };
 
+sic.widget.sicLineBreak = function(args)
+{
+    var _p = this;
+    this._cons = sic.widget.sicElement;
+    args = sic.mergeObjects(args, { tagName:"span", tagClass:"lineBreak" });
+    this._cons(args);
+}
+
 // Id Generator
 sic.widget._lastId = 0;
 sic.widget._nextId = function(){

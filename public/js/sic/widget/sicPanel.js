@@ -19,7 +19,8 @@ sic.widget.sicPanel = function(args)
         return group;
     };
 
-    this.addGroup(this.firstGroupName);
+    if (this.firstGroupName)
+        this.addGroup(this.firstGroupName);
 };
 
 sic.widget.sicPanelGroup = function(args){

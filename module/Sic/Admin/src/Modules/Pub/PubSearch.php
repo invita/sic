@@ -14,16 +14,30 @@ class PubSearch extends SicModuleAbs {
     public function defineSqlSelect($args, Select $select)
     {
         $staticData = Util::getArg($args, 'staticData', array());
-        $search = Util::getArg($staticData, 'search', null);
 
-        $select->from('view_publication_list');
+        $searchType = Util::getArg($staticData, 'searchType', null);
 
         $where = new Where();
-        $where->literal(
-            "(view_publication_list.title LIKE '%".$search."%' OR ".
-            "view_publication_list.author LIKE '%".$search."%' OR ".
-            "view_publication_list.year LIKE '%".$search."%')"
-        );
+
+        switch ($searchType) {
+            case "quickSearch":
+                $quickSearch = Util::getArg($staticData, 'quickSearch', null);
+                $where->literal(
+                    "(view_publication_list.author LIKE '%".$quickSearch."%' OR ".
+                    "view_publication_list.title LIKE '%".$quickSearch."%' OR ".
+                    "view_publication_list.year LIKE '%".$quickSearch."%')"
+                );
+                break;
+
+            case "pubSearch": default:
+                $fields = Util::getArg($staticData, 'fields', array());
+                $fieldsWhere = DbUtil::prepareSqlFilter($fields);
+                if (count($fieldsWhere->getPredicates()))
+                    $where->addPredicate($fieldsWhere);
+                break;
+        }
+
+        $select->from('view_publication_list');
         $select->where($where);
 
     }
