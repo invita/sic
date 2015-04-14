@@ -126,6 +126,10 @@ ALTER TABLE `user`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1;
 
 
+-- 2015-03-22
+
+
+
 CREATE OR REPLACE VIEW view_publication_list AS
 SELECT
     publication.pub_id AS pub_id,
@@ -146,14 +150,22 @@ SELECT
 			ORDER BY publication_title.idx
     ) AS title,
     (
+      SELECT GROUP_CONCAT(publication_publisher.publisher SEPARATOR ', ')
+			FROM publication_publisher WHERE publication_publisher.pub_id = publication.pub_id
+			ORDER BY publication_publisher.idx
+    ) AS publisher,
+    (
+      SELECT GROUP_CONCAT(publication_place.place SEPARATOR ', ')
+			FROM publication_place WHERE publication_place.pub_id = publication.pub_id
+			ORDER BY publication_place.idx
+    ) AS place,
+    (
       SELECT GROUP_CONCAT(publication_project_link.proj_id SEPARATOR ', ')
 			FROM publication_project_link WHERE publication_project_link.pub_id = publication.pub_id
 			ORDER BY publication_project_link.link_id
     ) AS proj_id
 
 FROM publication;
-
--- 2015-03-22
 
 
 DROP TABLE IF EXISTS `quote`;

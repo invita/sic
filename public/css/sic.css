@@ -143,6 +143,9 @@ div.sicDialog > div.dialogContainer > div.dialogHeader > div.closeDiv { display:
 div.sicDialog > div.dialogContainer > div.dialogHeader > div.closeDiv:hover { opacity:1; }
 div.sicDialog > div.dialogContainer > div.dialogContent { z-index:1003; padding:5px; text-align:left; }
 
+tr.sicHtmlTable_tr { }
+td.sicHtmlTable_td { vertical-align:top; }
+
 div.hierarchyDiv { margin:2px 2px 2px 10px; color:#333333; cursor:pointer; }
 div.hierarchyDiv:hover { color:#87BCEA; }
 div.hierarchyDiv.current { font-weight:bold; }

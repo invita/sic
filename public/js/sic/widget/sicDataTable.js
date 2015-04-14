@@ -23,6 +23,7 @@ sic.widget.sicDataTable = function(args)
     this.editorModuleArgs = sic.getArg(args, "editorModuleArgs", null);
     this.hoverRows = sic.getArg(args, "hoverRows", true);
     this.hoverCells = sic.getArg(args, "hoverCells", !this.hoverRows);
+    this.tabPage = sic.getArg(args, "tabPage", null);
     this.selectCallback = sic.getArg(args, "selectCallback", null);
 
     this.rowsPerPage = sic.getArg(args, "rowsPerPage", sic.defaults.dataTableRowsPerPage); // Ignored if dataSource is given
@@ -485,10 +486,15 @@ sic.widget.sicDataTable = function(args)
         _p.onFieldDoubleClick(function (args) {
             if (typeof(_p.selectCallback) == "function") {
                 _p.selectCallback(args);
-                if (_p.parent.tabPage && _p.parent.tabPage.parentTab)
+                if (_p.tabPage) {
+                    _p.tabPage.destroyTab();
+                }
+                else if (_p.parent.tabPage && _p.parent.tabPage.parentTab) {
                     _p.parent.tabPage.parentTab.destroyTab();
-                else if (_p.parent.tabPage)
+                }
+                else if (_p.parent.tabPage) {
                     _p.parent.tabPage.destroyTab();
+                }
 
                 return;
             }

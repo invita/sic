@@ -94,6 +94,9 @@ sic.widget.sicInputArray = function(args)
             _p.clear();
             return;
         }
+        if (typeof(value) == "string") {
+            value = [value];
+        }
         while (value && value.length && _p.inputCount() < value.length) {
             _p.addInput();
             if (_p.inputCount() == oldLength) break;

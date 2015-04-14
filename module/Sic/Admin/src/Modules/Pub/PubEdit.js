@@ -132,5 +132,7 @@ var F = function(args) {
         if (response && response.data) formUserData.setValue(response.data);
 
         refreshHierarchy();
+    } else if (args.initValue) {
+        formUserData.setValue(args.initValue);
     }
 };

@@ -1,7 +1,15 @@
 var F = function(args) {
 
+
     var tabPage = args.helpers.createTabPage({name:"Search"});
-    var searchContainer = new sic.widget.sicElement({parent:tabPage.content.selector, tagClass:"pubSearch_leftContainer"});
+
+    var pubSearchTable = new sic.widget.sicHtmlTable({parent:tabPage.content.selector});
+    var searchContainer = new sic.widget.sicElement({parent:pubSearchTable.getCell(0, 0).selector, tagClass:"pubSearch_leftContainer"});
+    var pubResultsContainer = new sic.widget.sicElement({parent:pubSearchTable.getCell(0, 1).selector, tagClass:"pubSearch_rightContainer"});
+    var cobissResultsContainer = new sic.widget.sicElement({parent:pubSearchTable.getCell(0, 1).selector, tagClass:"pubSearch_rightContainer"});
+
+
+    // Search Panel (left)
     var searchPanel = new sic.widget.sicPanel({parent:searchContainer.selector});
 
 
@@ -13,8 +21,7 @@ var F = function(args) {
     var quickSearchSubmitButton = quickSearchForm.addInput({value:"Quick Search", type:"submit"});
 
 
-
-    // Publication Search
+    // *** Publication Search ***
     var searchFields = {
         pub_id: {},
         author: { /*isArray:true*/ },
@@ -33,14 +40,49 @@ var F = function(args) {
         var inputArgs = sic.mergeObjects({name:fieldName, placeholder:fieldCaption+"...", caption:fieldCaption}, searchFields[fieldName]);
         pubSearchForm.addInput(inputArgs);
     }
-    var pubSearchSubmitButton = pubSearchForm.addInput({value:"Search Local", type:"submit", caption:" "});
-
-    // Cobiss Search
-    var cobissSearchButton = pubSearchForm.addInput({value:"Search Cobiss", type:"button"});
-    cobissSearchButton.selector.click(function(e){
-        var data = quickSearchForm.getValue();
-        sic.loadModule({moduleName:"Cobiss/CobissList", newTab:"Cobiss List", cobissSearch: data.search});
+    var pubSearchSubmitButton = pubSearchForm.addInput({value:"Search Local", type:"submit", caption:"Local Database"});
+    var pubCreateButton = pubSearchForm.addInput({value:"Create Pub", type:"button"});
+    pubCreateButton.selector.click(function(e) {
+        var searchData = pubSearchForm.getValue();
+        sic.loadModule({moduleName:"Pub/PubEdit", newTab:"New Publication", initValue:searchData,
+            entityTitle:"Pub %pub_id% - %title%"});
     });
+
+
+    pubSearchForm.addHr();
+
+
+
+    // *** Cobiss Search ***
+
+    var cobissSearchButton = pubSearchForm.addInput({value:"Search Cobiss", type:"button", caption:"Cobiss Database"});
+    cobissSearchButton.selector.click(function(e){
+
+        //var data = quickSearchForm.getValue();
+        //sic.loadModule({moduleName:"Cobiss/CobissList", newTab:"Cobiss List", cobissSearch: data.search});
+
+        var searchData = pubSearchForm.getValue();
+
+        // Search Cobiss Logic here...
+
+        cobissiFrame.selector.attr("src", "http://www.w3schools.com");
+
+
+        showResults("cobiss");
+    });
+
+    var cobissScrapeButton = pubSearchForm.addInput({value:"Scrape", type:"button"});
+    cobissScrapeButton.selector.click(function(e){
+
+        // Cobiss Scrape Logic here...
+
+        var scrapedData = { author: "foo", title: "bar" };
+        pubSearchForm.setValue(scrapedData);
+
+    });
+
+
+
 
     var filterValue = sic.getArg(args, "filter", {});
     if (Object.keys(filterValue).length) {
@@ -49,18 +91,8 @@ var F = function(args) {
     }
 
 
-    /*
-    var cobissButton = quickSearchForm.addInput({value:"Cobiss", type:"button"});
-    cobissButton.selector.click(function(){
-        var data = quickSearchForm.getValue();
-        sic.loadModule({moduleName:"Cobiss/CobissList", newTab:"Cobiss List", cobissSearch: data.search});
-    });
-    */
-
-    var resultsContainer = new sic.widget.sicElement({parent:tabPage.content.selector, tagClass:"pubSearch_rightContainer"});
-
     var dataTable = new sic.widget.sicDataTable({
-        parent:resultsContainer.selector,
+        parent:pubResultsContainer.selector,
         primaryKey: ['pub_id'],
         entityTitle: "Pub %pub_id% - %title%",
         dataSource: new sic.widget.sicDataTableDataSource({
@@ -73,21 +105,41 @@ var F = function(args) {
         },
         canInsert: false,
         canDelete: false,
+        tabPage: tabPage.parentTab,
         selectCallback: args.selectCallback
     });
+
+
+    cobissResultsContainer.displayNone();
+    var cobissiFrame = new sic.widget.sicElement({parent:cobissResultsContainer.selector, tagName:"iframe",
+        attr: { width:1200, height:1200, frameborder:0, scrolling:"no" } });
 
 
     quickSearchForm.onSubmit(function(sicForm){
         dataTable.dataSource.staticData = quickSearchForm.getValue();
         dataTable.dataSource.staticData.searchType = "quickSearch";
         dataTable.refresh();
+        showResults("pub");
     });
 
     pubSearchForm.onSubmit(function(sicForm){
         dataTable.dataSource.staticData = { searchType: "pubSearch", fields: pubSearchForm.getValue() };
         dataTable.refresh();
+        showResults("pub");
     });
 
+    var showResults = function(pageName) {
+        switch (pageName) {
+            case "cobiss":
+                pubResultsContainer.displayNone();
+                cobissResultsContainer.fadeIn();
+                break;
+            case "pub":
+                cobissResultsContainer.displayNone();
+                pubResultsContainer.fadeIn();
+                break;
+        }
+    }
 
 
 
