@@ -23,4 +23,17 @@ class Util
     public static function get($key) {
         return isset(self::$dict[$key]) ? self::$dict[$key] : null;
     }
+
+    public static function getXmlFieldValue($entity, $fieldName, $asArray = false, $xPathFilter = "") {
+        $nodes = $entity->xpath($fieldName.$xPathFilter);
+        $result = array();
+        foreach ($nodes as $idx => $node)
+        {
+            $result[] = trim((string)$node);
+        }
+
+        if (!$asArray) $result = join(", ", $result);
+
+        return $result;
+    }
 }

@@ -6,6 +6,7 @@ var F = function(args){
         primaryKey: ['proj_id'],
         entityTitle: "Project %proj_id% - %title%",
         canInsert: !args.inDialog,
+        canDelete: !args.inDialog,
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Project/ProjectList"
         }),

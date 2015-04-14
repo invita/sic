@@ -74,6 +74,13 @@ sic.mergePlaceholders = function(str, valueMapObj) {
     return str;
 };
 
+sic.removeStarsFromObject = function(obj) {
+    for (var key in obj) {
+        obj[key] = obj[key].replace(/\*/g, "");
+    }
+    return obj;
+};
+
 sic.dump = function(obj, depth, nl, spaceChar) {
     alert(sic.debug(obj, depth, nl, spaceChar));
 };

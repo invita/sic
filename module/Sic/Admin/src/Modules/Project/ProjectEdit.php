@@ -1,12 +1,12 @@
 <?php
 namespace Sic\Admin\Modules\Project;
 
-use Sic\Admin\Models\DbUtil;
 use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
 use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Literal;
 use Zend\Db\Sql\Expression;
 use Sic\Admin\Models\Util;
+use Sic\Admin\Models\DbUtil;
 
 class ProjectEdit {
     public function projSelect($args) {
@@ -68,14 +68,14 @@ class ProjectEdit {
 
         $lines = array();
         $idx = 1;
-        foreach($xml->line as $line){
+        foreach($xml->entity as $entity){
             $lines[] = array(
                 "idx" => $idx,
-                "title" => trim((string)$line->title),
-                "author" => trim((string)$line->author),
-                "year" => intval(trim((string)$line->year)),
-                "cobiss" => trim((string)$line->cobiss),
-                "issn" => trim((string)$line->issn),
+                "title" => Util::getXmlFieldValue($entity, "title", false),
+                "author" => Util::getXmlFieldValue($entity, "creator", false, "[@creatorType='author']"),
+                "year" => Util::getXmlFieldValue($entity, "date", false),
+                "cobiss" => Util::getXmlFieldValue($entity, "idno", false, "[@idnoType='cobiss']"),
+                "issn" => Util::getXmlFieldValue($entity, "idno", false, "[@idnoType='issn']"),
             );
             $idx++;
         }

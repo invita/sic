@@ -66,30 +66,30 @@ class Scripts
 
                 $pubData = array(
                     "pub_id" => $pubId,
-                    "parent_id" => $this->getXmlFieldValue($entity, "parent", false),
-                    "year" => $this->getXmlFieldValue($entity, "date", false),
-                    "cobiss" => $this->getXmlFieldValue($entity, "idno", false, "[@idnoType='cobiss']"),
-                    "issn" => $this->getXmlFieldValue($entity, "idno", false, "[@idnoType='issn']"),
+                    "parent_id" => Util::getXmlFieldValue($entity, "parent", false),
+                    "year" => Util::getXmlFieldValue($entity, "date", false),
+                    "cobiss" => Util::getXmlFieldValue($entity, "idno", false, "[@idnoType='cobiss']"),
+                    "issn" => Util::getXmlFieldValue($entity, "idno", false, "[@idnoType='issn']"),
                 );
                 DbUtil::insertInto("publication", $pubData);
 
 
-                $title = $this->getXmlFieldValue($entity, "title", true);
+                $title = Util::getXmlFieldValue($entity, "title", true);
                 foreach ($title as $idx => $val)
                     DbUtil::insertInto("publication_title", array("pub_id" => $pubId, "idx" => $idx+1, "title" => $val));
 
 
-                $author = $this->getXmlFieldValue($entity, "creator", true, "[@creatorType='author']");
+                $author = Util::getXmlFieldValue($entity, "creator", true, "[@creatorType='author']");
                 foreach ($author as $idx => $val)
                     DbUtil::insertInto("publication_author", array("pub_id" => $pubId, "idx" => $idx+1, "author" => $val));
 
 
-                $place = $this->getXmlFieldValue($entity, "pubPlace", true);
+                $place = Util::getXmlFieldValue($entity, "pubPlace", true);
                 foreach ($place as $idx => $val)
                     DbUtil::insertInto("publication_place", array("pub_id" => $pubId, "idx" => $idx+1, "place" => $val));
 
 
-                $publisher = $this->getXmlFieldValue($entity, "publisher", true);
+                $publisher = Util::getXmlFieldValue($entity, "publisher", true);
                 foreach ($publisher as $idx => $val)
                     DbUtil::insertInto("publication_publisher", array("pub_id" => $pubId, "idx" => $idx+1, "publisher" => $val));
 
@@ -100,9 +100,9 @@ class Scripts
 
             // Misc
             /*
-            $page = $this->getXmlFieldValue($entity, "page", false);
-            $addTitle = $this->getXmlFieldValue($entity, "addTitle", false);
-            $addIdno = $this->getXmlFieldValue($entity, "addIdno", false);
+            $page = Util::getXmlFieldValue($entity, "page", false);
+            $addTitle = Util::getXmlFieldValue($entity, "addTitle", false);
+            $addIdno = Util::getXmlFieldValue($entity, "addIdno", false);
             */
 
             $entityCount++;
@@ -117,16 +117,5 @@ class Scripts
         return $result;
     }
 
-    private function getXmlFieldValue($entity, $fieldName, $asArray = false, $xPathFilter = "") {
-        $nodes = $entity->xpath($fieldName.$xPathFilter);
-        $result = array();
-        foreach ($nodes as $idx => $node)
-        {
-            $result[] = trim((string)$node);
-        }
 
-        if (!$asArray) $result = join(", ", $result);
-
-        return $result;
-    }
 }

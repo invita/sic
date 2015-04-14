@@ -43,7 +43,7 @@ var F = function(args) {
     var pubSearchSubmitButton = pubSearchForm.addInput({value:"Search Local", type:"submit", caption:"Local Database"});
     var pubCreateButton = pubSearchForm.addInput({value:"Create Pub", type:"button"});
     pubCreateButton.selector.click(function(e) {
-        var searchData = pubSearchForm.getValue();
+        var searchData = sic.removeStarsFromObject(pubSearchForm.getValue());
         sic.loadModule({moduleName:"Pub/PubEdit", newTab:"New Publication", initValue:searchData,
             entityTitle:"Pub %pub_id% - %title%"});
     });

@@ -37,6 +37,8 @@ class PubSearch extends SicModuleAbs {
                 break;
         }
 
+        $select->columns(array(
+            "pub_id", "parent_id", "year", "cobiss", "issn", "author", "title", "publisher", "place", "proj_id"));
         $select->from('view_publication_list');
         $select->where($where);
 
