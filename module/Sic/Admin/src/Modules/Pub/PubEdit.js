@@ -17,7 +17,7 @@ var F = function(args) {
     var panel = new sic.widget.sicPanel({parent:tabPageBasic.content.selector,
         firstGroupName:"Update Publication"});
 
-    var formUserData = new sic.widget.sicForm({parent:panel.firstGroup.content.selector, captionWidth:"100px"});
+    var formUserData = new sic.widget.sicForm({parent:panel.firstGroup.content.selector, captionWidth:"140px"});
     formUserData.addInput({name:"pub_id", type:"text", placeholder:"Id...", readOnly:true});
 
     // TODO: Lookup...
@@ -29,7 +29,7 @@ var F = function(args) {
     });
     //formUserData.addInput({name:"parentName", type:"text", placeholder:"ParentName..."});
     formUserData.addInput({name:"creator", type:"text", placeholder:"Creator...", isArray:true, value:[creator],
-            withCode:sic.codes.pub_creator});
+            withCode:sic.codes.pubCreator});
     formUserData.addInput({name:"title", type:"text", placeholder:"Title...", isArray:true, value:[title]});
     formUserData.addInput({name:"publisher", type:"text", placeholder:"Publisher...", isArray:true, value:[publisher]});
     formUserData.addInput({name:"place", type:"text", placeholder:"Place...", isArray:true, value:[place]});
