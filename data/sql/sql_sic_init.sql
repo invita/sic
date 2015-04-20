@@ -233,6 +233,8 @@ ALTER TABLE `publication_creator` ADD `code_id` INT NOT NULL DEFAULT '1' ;
 
 ALTER TABLE `project_line` CHANGE `author` `creator` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
 
+ALTER TABLE `publication` CHANGE `is_temp` `is_series` INT(1) NOT NULL;
+
 
 CREATE OR REPLACE VIEW view_publication_list AS
 SELECT
@@ -242,7 +244,7 @@ SELECT
     publication.cobiss AS cobiss,
     publication.issn AS issn,
     publication.original_id AS original_id,
-    publication.is_temp AS is_temp,
+    publication.is_series AS is_series,
     (
       SELECT GROUP_CONCAT(publication_creator.creator SEPARATOR ', ')
 			FROM publication_creator WHERE publication_creator.pub_id = publication.pub_id

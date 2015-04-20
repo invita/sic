@@ -24,6 +24,11 @@ class Util
         return isset(self::$dict[$key]) ? self::$dict[$key] : null;
     }
 
+    public static function shortenText($text, $length) {
+        if (strlen($text) > $length) $text = substr($text, 0, $length)."...";
+        return $text;
+    }
+
     public static function getXmlFieldValue($entity, $fieldName, $asArray = false, $xPathFilter = "") {
         $nodes = $entity->xpath($fieldName.$xPathFilter);
         $result = array();

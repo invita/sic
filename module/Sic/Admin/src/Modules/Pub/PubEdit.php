@@ -10,16 +10,17 @@ class PubEdit {
 
     public static $creatorMaxLen = 60;
     public static $titleMaxLen = 60;
+    public static $publisherMaxLen = 60;
 
     public static function getCreatorShort($pub_id) {
         $creator = join(", ", DbUtil::selectFrom('publication_creator', 'creator', array('pub_id' => $pub_id, "code_id" => 1)));
-        if (strlen($creator) > self::$creatorMaxLen) $creator = substr($creator, 0, self::$creatorMaxLen)."...";
+        $creator = Util::shortenText($creator, self::$creatorMaxLen);
         return $creator;
     }
 
     public static function getTitleShort($pub_id) {
         $title = join(", ", DbUtil::selectFrom('publication_title', 'title', array('pub_id' => $pub_id)));
-        if (strlen($title) > self::$titleMaxLen) $title = substr($title, 0, self::$titleMaxLen)."...";
+        $title = Util::shortenText($title, self::$titleMaxLen);
         return $title;
     }
 

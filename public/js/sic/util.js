@@ -74,9 +74,17 @@ sic.mergePlaceholders = function(str, valueMapObj) {
     return str;
 };
 
-sic.removeStarsFromObject = function(obj) {
+sic.removeStarsFromObject = function(obj, recursive) {
     for (var key in obj) {
-        obj[key] = obj[key].replace(/\*/g, "");
+        if (typeof(obj[key]) == "string")
+            obj[key] = obj[key].replace(/\*/g, "");
+        if (typeof(obj[key]) == "object" && !Array.isArray(obj[key]) && typeof(obj[key].value) == "string")
+            obj[key].value = obj[key].value.replace(/\*/g, "");
+
+        // Recursive
+        if (recursive && typeof(obj[key]) == "object" && Array.isArray(obj[key])) {
+            obj[key] = sic.removeStarsFromObject(obj[key]);
+        }
     }
     return obj;
 };

@@ -3,7 +3,7 @@ sic.widget.sicHtmlTable = function(args)
     // Init
     var _p = this;
     this._cons = sic.widget.sicElement;
-    this._cons({ parent:args.parent, tagName:"table" });
+    this._cons(sic.mergeObjects(args, {tagName:"table"}));
 
     this.lastTr = null;
     this.lastTd = null;

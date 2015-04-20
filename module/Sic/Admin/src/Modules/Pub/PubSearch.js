@@ -3,7 +3,7 @@ var F = function(args) {
 
     var tabPage = args.helpers.createTabPage({name:"Search"});
 
-    var pubSearchTable = new sic.widget.sicHtmlTable({parent:tabPage.content.selector});
+    var pubSearchTable = new sic.widget.sicHtmlTable({parent:tabPage.content.selector, tagClass:"borderCollapseSeparate"});
     var searchContainer = new sic.widget.sicElement({parent:pubSearchTable.getCell(0, 0).selector, tagClass:"pubSearch_leftContainer"});
     var pubResultsContainer = new sic.widget.sicElement({parent:pubSearchTable.getCell(0, 1).selector, tagClass:"pubSearch_rightContainer"});
     var cobissResultsContainer = new sic.widget.sicElement({parent:pubSearchTable.getCell(0, 1).selector, tagClass:"pubSearch_rightContainer"});
@@ -24,7 +24,7 @@ var F = function(args) {
     // *** Publication Search ***
     var searchFields = {
         pub_id: {},
-        creator: { isArray:true },
+        creator: { isArray:true, withCode:sic.codes.pubCreator },
         title: { isArray:true },
         publisher: {},
         place: {},
@@ -43,7 +43,7 @@ var F = function(args) {
     var pubSearchSubmitButton = pubSearchForm.addInput({value:"Search Local", type:"submit", caption:"Local Database"});
     var pubCreateButton = pubSearchForm.addInput({value:"Create Pub", type:"button"});
     pubCreateButton.selector.click(function(e) {
-        var searchData = sic.removeStarsFromObject(pubSearchForm.getValue());
+        var searchData = sic.removeStarsFromObject(pubSearchForm.getValue(), true);
         delete searchData.pub_id;
         sic.loadModule({moduleName:"Pub/PubEdit", newTab:"New Publication", initValue:searchData,
             entityTitle:"Pub %pub_id% - %title%"});
@@ -107,7 +107,11 @@ var F = function(args) {
         canInsert: false,
         canDelete: false,
         tabPage: tabPage.parentTab,
-        selectCallback: args.selectCallback
+        selectCallback: args.selectCallback,
+        fields: {
+            title: { tagClass:"sicDataTable_shortText" },
+            publisher: { tagClass:"sicDataTable_shortText" }
+        }
     });
 
 
