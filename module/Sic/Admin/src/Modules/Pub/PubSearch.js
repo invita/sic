@@ -24,8 +24,8 @@ var F = function(args) {
     // *** Publication Search ***
     var searchFields = {
         pub_id: {},
-        creator: { /*isArray:true*/ },
-        title: {},
+        creator: { isArray:true },
+        title: { isArray:true },
         publisher: {},
         place: {},
         year: {},
@@ -34,7 +34,7 @@ var F = function(args) {
     }
 
     var pubSearchGroup = searchPanel.addGroup("Publication Search");
-    var pubSearchForm = new sic.widget.sicForm({parent:pubSearchGroup.content.selector, captionWidth:"100px"});
+    var pubSearchForm = new sic.widget.sicForm({parent:pubSearchGroup.content.selector, captionWidth:"140px"});
     for (var fieldName in searchFields) {
         var fieldCaption = sic.captionize(fieldName);
         var inputArgs = sic.mergeObjects({name:fieldName, placeholder:fieldCaption+"...", caption:fieldCaption}, searchFields[fieldName]);

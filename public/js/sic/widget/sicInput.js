@@ -22,6 +22,7 @@ sic.widget.sicInput = function(args)
     this.name = sic.getArg(args, "name", null);
     this.value = sic.getArg(args, "value", "");
     this.placeholder = sic.getArg(args, "placeholder", "");
+    this.withCode = sic.getArg(args, "withCode", null);
     this.readOnly = sic.getArg(args, "readOnly", false);
     this.disabled = sic.getArg(args, "disabled", false);
     this.focus = sic.getArg(args, "focus", false);
@@ -130,7 +131,10 @@ sic.widget.sicInput = function(args)
     };
 
     this.getValue = function(){
-        return _p.input.selector.val();
+        if (_p.withCode)
+            return { codeId: _p.getCodeId(), value: _p.input.selector.val() };
+        else
+            return _p.input.selector.val();
     };
 
     this.setValue = function(value){
@@ -139,6 +143,13 @@ sic.widget.sicInput = function(args)
         _p._onChange();
         if (_p.lookup)
             _p.lookupResolve();
+    };
+
+    this.getCodeId = function(){
+        if (!_p.withCode) return 0;
+    };
+
+    this.setCodeId = function(codeId){
     };
 
     this.calcModified = function(){
@@ -198,12 +209,23 @@ sic.widget.sicInput = function(args)
     if (!this.isButton() && this.caption === null)
         this.caption = sic.captionize(this.name);
 
-    if (typeof(this.caption) == "string" && this.caption) {
-        this.captionDiv = new sic.widget.sicElement({ parent:this.selector, insertAtTop:true, tagName:"div" });
-        this.captionDiv.selector.addClass("sicInputCaption");
-        if (_p.captionWidth) this.captionDiv.selector.css("width", _p.captionWidth);
+
+    this.captionDiv = new sic.widget.sicElement({ parent:this.selector, insertAtTop:true, tagName:"div" });
+    this.captionDiv.selector.addClass("sicInputCaption");
+    if (_p.captionWidth) this.captionDiv.selector.css("width", _p.captionWidth);
+    if (this.caption && !this.withCode)
         this.captionDiv.selector.html(this.caption);
+
+    if (this.withCode) {
+        this.codeSelect = new sic.widget.sicElement({parent:this.captionDiv.selector, tagName:"select", tagClass:"codeSelect"});
+        for (var idx in this.withCode) {
+            var optionLabel = this.caption+" - "+sic.captionize(this.withCode[idx]);
+            this.codeSelect.selector.append('<option value="'+idx+'">'+optionLabel+'</option>');
+        }
     }
+
+    if (typeof(this.caption) != "string" || !this.caption)
+        this.captionDiv.displayNone();
 
     if (this.placeholder) this.setPlaceholder(this.placeholder);
     this.setValue(this.value);

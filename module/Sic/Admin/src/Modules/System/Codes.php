@@ -9,7 +9,7 @@ class Codes
     public function getCodes($args)
     {
         $result = array(
-            "pupCreator" => DbUtil::selectFrom("codes_pub_creator"),
+            "pubCreator" => DbUtil::selectFrom("codes_pub_creator"),
             "pubIdno" => DbUtil::selectFrom("codes_pub_idno"),
             "pubSource" => DbUtil::selectFrom("codes_pub_source"),
         );
