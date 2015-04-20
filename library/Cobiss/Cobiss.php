@@ -395,7 +395,7 @@ class Cobiss_Detail_Window{
     /**
      * @return string
      */
-    private function getRandomUserAgent(){
+    public function getRandomUserAgent(){
         $userAgents = array(
             'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:26.0) Gecko/20100101 Firefox/26.0',
             'Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1667.0 Safari/537.36',

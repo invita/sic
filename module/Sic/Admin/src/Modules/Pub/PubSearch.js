@@ -54,31 +54,23 @@ var F = function(args) {
 
 
     // *** Cobiss Search ***
-
-    var cobissSearchButton = pubSearchForm.addInput({value:"Search Cobiss", type:"button", caption:"Cobiss Database"});
-    cobissSearchButton.selector.click(function(e){
-
-        //var data = quickSearchForm.getValue();
-        //sic.loadModule({moduleName:"Cobiss/CobissList", newTab:"Cobiss List", cobissSearch: data.search});
-
-        var searchData = pubSearchForm.getValue();
-
-        // Search Cobiss Logic here...
-
-        cobissiFrame.selector.attr("src", "http://www.w3schools.com");
-
-
-        showResults("cobiss");
-    });
+    pubSearchForm.addInput({name:"url", caption:"Cobiss url"});
 
     var cobissScrapeButton = pubSearchForm.addInput({value:"Scrape", type:"button"});
     cobissScrapeButton.selector.click(function(e){
+        var searchData = pubSearchForm.getValue();
+        var url = searchData.url;
 
-        // Cobiss Scrape Logic here...
+        jQuery.ajax({url:"/cobiss.php", method:"POST", data:{url:url}, success:function(data){
 
+        }});
+
+
+
+        /*
         var scrapedData = { author: "foo", title: "bar" };
         pubSearchForm.setValue(scrapedData);
-
+        */
     });
 
 
@@ -140,7 +132,4 @@ var F = function(args) {
                 break;
         }
     }
-
-
-
 };
