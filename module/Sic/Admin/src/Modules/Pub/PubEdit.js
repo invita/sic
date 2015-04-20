@@ -6,7 +6,7 @@ var F = function(args) {
     //sic.dump(args, 0);
 
     var cobissData = sic.getArg(args, 'cobissData', null);
-    var author = sic.getArg(cobissData, 'author', null);
+    var creator = sic.getArg(cobissData, 'creator', null);
     var title = sic.getArg(cobissData, 'title', null);
     var publisher = sic.getArg(cobissData, 'publisher', null);
     var place = sic.getArg(cobissData, 'place', null);
@@ -28,7 +28,7 @@ var F = function(args) {
         //}
     });
     //formUserData.addInput({name:"parentName", type:"text", placeholder:"ParentName..."});
-    formUserData.addInput({name:"author", type:"text", placeholder:"Author...", isArray:true, value:[author]});
+    formUserData.addInput({name:"creator", type:"text", placeholder:"Creator...", isArray:true, value:[creator]});
     formUserData.addInput({name:"title", type:"text", placeholder:"Title...", isArray:true, value:[title]});
     formUserData.addInput({name:"publisher", type:"text", placeholder:"Publisher...", isArray:true, value:[publisher]});
     formUserData.addInput({name:"place", type:"text", placeholder:"Place...", isArray:true, value:[place]});
@@ -69,7 +69,7 @@ var F = function(args) {
                 var div = new sic.widget.sicElement({parent:hierarchyDiv.selector});
                 div.selector.addClass("hierarchyDiv");
                 div.selector.css("padding-left", paddingLeft+"px");
-                div.selector.html("["+data[i].pub_id+"] "+data[i].author+": "+data[i].title);
+                div.selector.html("["+data[i].pub_id+"] "+data[i].creator+": "+data[i].title);
 
                 if (!children) paddingLeft += 10;
                 if (data[i].pub_id == args.pub_id) {
@@ -102,7 +102,7 @@ var F = function(args) {
             tabPage:tabPageQuotes
         },
         fields: {
-            quoted_author: { canSort:false },
+            quoted_creator: { canSort:false },
             quoted_title: { canSort:false }
         }
     });

@@ -12,7 +12,8 @@ var F = function(args){
         }),
         editorModuleArgs: {
             moduleName:"Project/ProjectEdit",
-            tabPage:tabPage
+            tabPage:sic.data.mainTab,
+            onModuleLoad: function(args){ tabPage.parentTab.destroyTab(); }
         },
         fields: {
             lines_count: { canSort: false }

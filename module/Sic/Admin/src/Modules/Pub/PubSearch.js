@@ -24,7 +24,7 @@ var F = function(args) {
     // *** Publication Search ***
     var searchFields = {
         pub_id: {},
-        author: { /*isArray:true*/ },
+        creator: { /*isArray:true*/ },
         title: {},
         publisher: {},
         place: {},
@@ -44,6 +44,7 @@ var F = function(args) {
     var pubCreateButton = pubSearchForm.addInput({value:"Create Pub", type:"button"});
     pubCreateButton.selector.click(function(e) {
         var searchData = sic.removeStarsFromObject(pubSearchForm.getValue());
+        delete searchData.pub_id;
         sic.loadModule({moduleName:"Pub/PubEdit", newTab:"New Publication", initValue:searchData,
             entityTitle:"Pub %pub_id% - %title%"});
     });
@@ -76,7 +77,7 @@ var F = function(args) {
 
         // Cobiss Scrape Logic here...
 
-        var scrapedData = { author: "foo", title: "bar" };
+        var scrapedData = { creator: "foo", title: "bar" };
         pubSearchForm.setValue(scrapedData);
 
     });

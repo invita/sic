@@ -10,6 +10,7 @@
 
     <script src="/js/sic/sic.js"></script>
     <script src="/js/sic/util.js"></script>
+    <script src="/js/sic/codes.js"></script>
     <script src="/js/sic/lookup.js"></script>
     <script src="/js/sic/object/sicEventBase.js"></script>
     <script src="/js/sic/object/sicMessageTunnel.js"></script>
@@ -57,7 +58,10 @@
 </div>
 
 <?php if($this->hasIdentity){ ?>
-<div id="navigation" class="">
+    <div id="initLoader" class="initLoader">
+        Loading codes...
+    </div>
+    <div id="navigation" class="navigation" style="display:none;">
     <div>
         <ul>
             <li class="mainMenuList">
@@ -87,6 +91,15 @@
         </ul>
     </div>
 </div>
+<script>
+    $(document).ready(function(){
+        sic.messageTunnel = new sic.object.sicMessageTunnel();
+        sic.codes.load(function(){
+            $('#initLoader').css("display", "none");
+            $('#navigation').fadeIn(sic.defaults.fadeTime);
+        });
+    });
+</script>
 <?php } ?>
 
 <div id="content" class="">

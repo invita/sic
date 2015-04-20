@@ -28,7 +28,7 @@ class ProjectLineEdit {
 
         $projLineData = array(
             "title" => Util::getArg($data, "title", ""),
-            "author" => Util::getArg($data, "author", ""),
+            "creator" => Util::getArg($data, "creator", ""),
             "cobiss" => Util::getArg($data, "cobiss", ""),
             "issn" => Util::getArg($data, "issn", ""),
             "pub_id" => Util::getArg($data, "pub_id", 0)
@@ -56,7 +56,7 @@ class ProjectLineEdit {
             "idx" => $newIdx,
             "proj_id" => $proj_id,
             "title" => Util::getArg($data, "title", ""),
-            "author" => Util::getArg($data, "author", ""),
+            "creator" => Util::getArg($data, "creator", ""),
             "cobiss" => Util::getArg($data, "cobiss", ""),
             "issn" => Util::getArg($data, "issn", ""),
             "pub_id" => Util::getArg($data, "pub_id", 0)

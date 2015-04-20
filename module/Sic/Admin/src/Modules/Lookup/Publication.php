@@ -14,20 +14,20 @@ class Publication extends SicLookupAbs {
 
         $pub_id = Util::getArg($args, 'pub_id', 0);
 
-        $authors = DbUtil::selectFrom('publication_author', 'author', array("pub_id" => $pub_id));
+        $creators = DbUtil::selectFrom('publication_creator', 'creator', array("pub_id" => $pub_id, "code_id" => 1));
         $titles = DbUtil::selectFrom('publication_title', 'title', array("pub_id" => $pub_id));
 
-        $authorStr = "";
-        if (count($authors)) $authorStr = $authors[0];
+        $creatorStr = "";
+        if (count($creators)) $creatorStr = $creators[0];
 
         $titleStr = "";
         if (count($titles)) $titleStr = $titles[0];
 
-        if ($authorStr && $titleStr)
-            $resolveValue = $authorStr.": ".$titleStr;
-        else if ($authorStr && !$titleStr)
-            $resolveValue = 'Author: '.$authorStr;
-        else if (!$authorStr && $titleStr)
+        if ($creatorStr && $titleStr)
+            $resolveValue = $creatorStr.": ".$titleStr;
+        else if ($creatorStr && !$titleStr)
+            $resolveValue = 'Creator: '.$creatorStr;
+        else if (!$creatorStr && $titleStr)
             $resolveValue = 'Title: '.$titleStr;
         else
             $resolveValue = '';

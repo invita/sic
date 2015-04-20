@@ -72,7 +72,7 @@ class ProjectEdit {
             $lines[] = array(
                 "idx" => $idx,
                 "title" => Util::getXmlFieldValue($entity, "title", false),
-                "author" => Util::getXmlFieldValue($entity, "creator", false, "[@creatorType='author']"),
+                "creator" => Util::getXmlFieldValue($entity, "creator", false, "[@creatorType='author']"),
                 "year" => Util::getXmlFieldValue($entity, "date", false),
                 "cobiss" => Util::getXmlFieldValue($entity, "idno", false, "[@idnoType='cobiss']"),
                 "issn" => Util::getXmlFieldValue($entity, "idno", false, "[@idnoType='issn']"),

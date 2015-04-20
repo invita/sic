@@ -5,7 +5,7 @@ var F = function(args) {
 
     var formLineData = new sic.widget.sicForm({parent:panel.firstGroup.content.selector, captionWidth:"100px"});
     formLineData.addInput({name:"line_id", type:"text", placeholder:"Line Id...", readOnly:true});
-    formLineData.addInput({name:"author", type:"text", placeholder:"Author..."});
+    formLineData.addInput({name:"creator", type:"text", placeholder:"Creator..."});
     formLineData.addInput({name:"title", type:"text", placeholder:"Title..."});
     formLineData.addInput({name:"cobiss", type:"text", placeholder:"Cobiss..."});
     formLineData.addInput({name:"issn", type:"text", placeholder:"Issn..."});

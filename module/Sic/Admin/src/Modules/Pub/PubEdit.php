@@ -8,13 +8,13 @@ use Sic\Admin\Models\DbUtil;
 
 class PubEdit {
 
-    public static $authorMaxLen = 60;
+    public static $creatorMaxLen = 60;
     public static $titleMaxLen = 60;
 
-    public static function getAuthorShort($pub_id) {
-        $author = join(", ", DbUtil::selectFrom('publication_author', 'author', array('pub_id' => $pub_id)));
-        if (strlen($author) > self::$authorMaxLen) $author = substr($author, 0, self::$authorMaxLen)."...";
-        return $author;
+    public static function getCreatorShort($pub_id) {
+        $creator = join(", ", DbUtil::selectFrom('publication_creator', 'creator', array('pub_id' => $pub_id, "code_id" => 1)));
+        if (strlen($creator) > self::$creatorMaxLen) $creator = substr($creator, 0, self::$creatorMaxLen)."...";
+        return $creator;
     }
 
     public static function getTitleShort($pub_id) {
@@ -27,7 +27,7 @@ class PubEdit {
 
         $pub_id = Util::getArg($args, 'pub_id', null);
         $row = DbUtil::selectRow('publication', null, array('pub_id' => $pub_id));
-        $row['author'] = DbUtil::selectFrom('publication_author', 'author', array('pub_id' => $pub_id));
+        $row['creator'] = DbUtil::selectFrom('publication_creator', 'creator', array('pub_id' => $pub_id));
         $row['title'] = DbUtil::selectFrom('publication_title', 'title', array('pub_id' => $pub_id));
         $row['publisher'] = DbUtil::selectFrom('publication_publisher', 'publisher', array('pub_id' => $pub_id));
         $row['place'] = DbUtil::selectFrom('publication_place', 'place', array('pub_id' => $pub_id));
@@ -98,10 +98,10 @@ class PubEdit {
         $pub_id = Util::getArg($args, 'pub_id', null);
         $data = Util::getArg($args, 'data', array());
 
-        $author = Util::getArg($data, 'author', array());
-        DbUtil::deleteFrom('publication_author', array('pub_id' => $pub_id));
-        for ($idx = 0; $idx < count($author); $idx++)
-            DbUtil::insertInto('publication_author', array('pub_id' => $pub_id, 'idx' => $idx, 'author' => $author[$idx]));
+        $creator = Util::getArg($data, 'creator', array());
+        DbUtil::deleteFrom('publication_creator', array('pub_id' => $pub_id));
+        for ($idx = 0; $idx < count($creator); $idx++)
+            DbUtil::insertInto('publication_creator', array('pub_id' => $pub_id, 'idx' => $idx, 'creator' => $creator[$idx]));
 
         $title = Util::getArg($data, 'title', array());
         DbUtil::deleteFrom('publication_title', array('pub_id' => $pub_id));
@@ -133,7 +133,7 @@ class PubEdit {
 
         while ($pub_id) {
             $pub = DbUtil::selectRow('publication', null, array('pub_id' => $pub_id));
-            $pub['author'] = self::getAuthorShort($pub_id);
+            $pub['creator'] = self::getCreatorShort($pub_id);
             $pub['title'] = self::getTitleShort($pub_id);
             $pubStack[] = $pub;
 
@@ -152,7 +152,7 @@ class PubEdit {
 
         $pubs = DbUtil::selectFrom('publication', null, array('parent_id' => $pub_id));
         foreach ($pubs as $pub) {
-            $pub['author'] = self::getAuthorShort($pub['pub_id']);
+            $pub['creator'] = self::getCreatorShort($pub['pub_id']);
             $pub['title'] = self::getTitleShort($pub['pub_id']);
             $pubStack[] = $pub;
         }

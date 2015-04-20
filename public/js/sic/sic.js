@@ -20,6 +20,9 @@ sic.loadModule = function(loadArgs) {
     var tabPage = sic.getArg(loadArgs, "tabPage", null); // sicTabPage object
     var newTab = sic.getArg(loadArgs, "newTab", null); // new TabPage Name string
     var inDialog = sic.getArg(loadArgs, "inDialog", false); // Open module in new sicDialog
+    var onModuleLoad = sic.getArg(loadArgs, "onModuleLoad", function(args){}); // OnModuleLoad callback
+
+    onModuleLoad(loadArgs);
 
     $.post("/loadModule", {args: {moduleName:moduleName, postData:postData}}, function(data) {
         var dataObj = JSON.parse(data);
@@ -115,20 +118,15 @@ sic.loading = {
     }
 };
 
-$(document).ready(function(){
-
-    sic.messageTunnel = new sic.object.sicMessageTunnel();
-
+$(document).ready(function() {
     sic.data.contentElement = $('div#pageHolder');
     sic.data.mainTab = new sic.widget.sicTabPage({
         name: "Sic",
         parent: sic.data.contentElement,
         canClose: false
     });
-
     var primaryPage = $('#primaryPage');
     if (primaryPage)
         sic.data.mainTab.content.selector.append(primaryPage);
-
 });
 

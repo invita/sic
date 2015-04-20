@@ -23,7 +23,7 @@ class PubSearch extends SicModuleAbs {
             case "quickSearch":
                 $quickSearch = Util::getArg($staticData, 'quickSearch', null);
                 $where->literal(
-                    "(view_publication_list.author LIKE '%".$quickSearch."%' OR ".
+                    "(view_publication_list.creator LIKE '%".$quickSearch."%' OR ".
                     "view_publication_list.title LIKE '%".$quickSearch."%' OR ".
                     "view_publication_list.year LIKE '%".$quickSearch."%')"
                 );
@@ -38,7 +38,7 @@ class PubSearch extends SicModuleAbs {
         }
 
         $select->columns(array(
-            "pub_id", "parent_id", "year", "cobiss", "issn", "author", "title", "publisher", "place", "proj_id"));
+            "pub_id", "parent_id", "year", "cobiss", "issn", "creator", "title", "publisher", "place", "proj_id"));
         $select->from('view_publication_list');
         $select->where($where);
 

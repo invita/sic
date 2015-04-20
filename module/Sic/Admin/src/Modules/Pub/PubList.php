@@ -32,7 +32,7 @@ class PubList extends SicModuleAbs {
         $proj_id = Util::getArg($staticData, 'proj_id', null);
 
         $delete->from('publication_project_link')->where(array("pub_id" => $pub_id));
-        $delete->from('publication_author')->where(array("pub_id" => $pub_id));
+        $delete->from('publication_creator')->where(array("pub_id" => $pub_id));
         $delete->from('publication_title')->where(array("pub_id" => $pub_id));
         $delete->from('publication')->where(array("pub_id" => $pub_id));
     }
