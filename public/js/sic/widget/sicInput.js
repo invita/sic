@@ -160,7 +160,13 @@ sic.widget.sicInput = function(args)
     };
 
     this.calcModified = function(){
-        var modified = _p.getValue() != _p.origValue;
+        var modified;
+
+        if (_p.withCode)
+            modified = _p.getValue().value != _p.origValue;
+        else
+            modified = _p.getValue() != _p.origValue;
+
         if (_p.modified == modified) return;
 
         _p.modified = modified;

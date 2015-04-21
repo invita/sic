@@ -33,14 +33,18 @@ class PubSearch extends SicModuleAbs {
             case "pubSearch": default:
                 $fields = Util::getArg($staticData, 'fields', array());
 
-                $arrayFields = array("title", "creator");
 
+                // ----- TODO: Temporary Solution
+                $arrayFields = array("title", "creator", "idno");
                 foreach ($arrayFields as $arrayField) {
                     if (is_array($fields[$arrayField]))
                         $fields[$arrayField] = $fields[$arrayField][0];
                     if (is_array($fields[$arrayField]))
                         $fields[$arrayField] = $fields[$arrayField]["value"];
                 }
+                $fields["cobiss"] = $fields["idno"];
+                $fields["idno"] = "";
+                // -----
 
                 $fieldsWhere = DbUtil::prepareSqlFilter($fields);
                 if (count($fieldsWhere->getPredicates()))

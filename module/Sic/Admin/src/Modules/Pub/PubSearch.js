@@ -26,20 +26,30 @@ var F = function(args) {
         pub_id: {},
         creator: { isArray:true, withCode:sic.codes.pubCreator },
         title: { isArray:true },
+        year: {},
+        idno: { isArray:true, withCode:sic.codes.pubIdno },
+        _group1: { caption: "Additional Fields (Click)", canMinimize: true, initHide: true },
+        //cobiss: {},
+        //issn: {},
         publisher: {},
         place: {},
-        year: {},
-        cobiss: {},
-        issn: {},
+        _group2: { },
     }
 
     var pubSearchGroup = searchPanel.addGroup("Publication Search");
     var pubSearchForm = new sic.widget.sicForm({parent:pubSearchGroup.content.selector, captionWidth:"140px"});
     for (var fieldName in searchFields) {
+        if (fieldName[0] == "_") {
+            pubSearchForm.addCaption(searchFields[fieldName]);
+            continue;
+        }
         var fieldCaption = sic.captionize(fieldName);
         var inputArgs = sic.mergeObjects({name:fieldName, placeholder:fieldCaption+"...", caption:fieldCaption}, searchFields[fieldName]);
         pubSearchForm.addInput(inputArgs);
     }
+
+    pubSearchForm.addHr();
+
     var pubSearchSubmitButton = pubSearchForm.addInput({value:"Search Local", type:"submit", caption:"Local Database"});
     var pubCreateButton = pubSearchForm.addInput({value:"Create Pub", type:"button"});
     pubCreateButton.selector.click(function(e) {
@@ -129,6 +139,7 @@ var F = function(args) {
 
     pubSearchForm.onSubmit(function(sicForm){
         dataTable.dataSource.staticData = { searchType: "pubSearch", fields: pubSearchForm.getValue() };
+        pubSearchForm.allInputs.resetModified();
         dataTable.refresh();
         showResults("pub");
     });

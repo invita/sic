@@ -12,6 +12,8 @@ sic.widget.sicForm = function(args)
 
     this.inputs = {};
     this._submitInput = null;
+    this.lastCaptionHeader = null;
+    this.lastCaptionContent = null;
 
     // Settings
     this.enterSubmits = sic.getArg(args, "enterSubmits", true);
@@ -25,17 +27,18 @@ sic.widget.sicForm = function(args)
     // Implementation
     this.addInput = function(args){
         var input;
+        var parent = _p.lastCaptionContent ? _p.lastCaptionContent.selector :  _p.selector;
         var defArgs = {
             showModified: _p.showModified,
             captionWidth:_p.captionWidth,
-            parent:_p.selector,
+            parent:parent,
             type:"text",
             inputConstruct: sic.widget.sicInput,
             form: _p
         };
-        args = sic.mergeObjects(defArgs, args)
+        args = sic.mergeObjects(defArgs, args);
         if (args.isArray) {
-            input = new sic.widget.sicInputArray({ parent:_p.selector, name:args.name, inputArgs:args });
+            input = new sic.widget.sicInputArray({ parent:parent, name:args.name, inputArgs:args });
         } else {
             input = new args.inputConstruct(args);
         }
@@ -49,7 +52,31 @@ sic.widget.sicForm = function(args)
     };
 
     this.addHr = function(){
-        var hr = new sic.widget.sicElement({ parent:_p.selector, tagName:"hr" });
+        var parent = _p.lastCaptionContent ? _p.lastCaptionContent.selector :  _p.selector;
+        var hr = new sic.widget.sicElement({ parent:parent, tagName:"hr" });
+    };
+
+    this.addCaption = function(args){
+        var caption = sic.getArg(args, "caption", "");
+        var canMinimize = sic.getArg(args, "canMinimize", false);
+        var initHide = sic.getArg(args, "initHide", false);
+
+        _p.lastCaptionHeader = new sic.widget.sicElement({ parent:_p.selector, tagClass:"header" });
+        if (caption)
+            _p.lastCaptionHeader.selector.html(caption);
+        else
+            _p.lastCaptionHeader.displayNone();
+        _p.lastCaptionContent = new sic.widget.sicElement({ parent:_p.selector, tagClass:"content" });
+
+        if (canMinimize) {
+            _p.lastCaptionHeader.selector.css("cursor", "pointer")
+            _p.lastCaptionHeader.selector[0].content = _p.lastCaptionContent;
+            _p.lastCaptionHeader.selector.click(function(){
+                this.content.expandToggle();
+            });
+            if (initHide) _p.lastCaptionContent.expandToggle();
+        }
+
     };
 
     // Get Form data

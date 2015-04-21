@@ -80,6 +80,9 @@ div.dataTableFormView.sicForm { margin-bottom:10px; }
 div.dataTableFormView.sicForm > div.sicInputDiv { height:20px; }
 div.dataTableFormView.sicForm > hr { margin:4px 0px 2px 0px; }
 
+div.sicForm > div.header { font-weight:bold; /*border:silver solid 1px;*/ padding:5px; margin:12px 0px 6px 0px; }
+div.sicForm > div.content {}
+
 input.sicInput[type=button], input.sicInput[type=submit] { color:white; padding:3px 10px; margin-right:3px; }
 input.sicInput[type=button].gradGold, input.sicInput[type=submit].gradGold { color:black; }
 
