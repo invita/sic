@@ -62,10 +62,15 @@ var F = function(args) {
         var searchData = pubSearchForm.getValue();
         var url = searchData.url;
 
-        jQuery.ajax({url:"/cobiss.php", method:"POST", data:{url:url}, success:function(data){
-
+        jQuery.ajax({url:"/cobiss.php", method:"POST", data:{url:url}, dataType:"json", success:function(data){
+            data = data.data;
+            pubSearchForm.setValue({
+                creator : data.authors,
+                title : data.titles,
+                cobiss : data.cobissId,
+                publisher : data.publisher
+            });
         }});
-
 
         showResults("cobiss");
     });

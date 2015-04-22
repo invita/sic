@@ -425,33 +425,33 @@ class Cobiss_Detail_Window{
      * @return bool
      */
     private function parseResponse(){
-
-        //var_dump($this->lastResponse->body);
-
         $dom = str_get_dom($this->lastResponse->body);
         $tableNode = $dom("table#nolist-full tbody", 0);
         if(!$tableNode) return false;
-
         $detailData = new Cobiss_Detail_Data();
-
         foreach($tableNode("tr") as $trNode){
             $thNode = $trNode("th", 0);
-            if($thNode && $thNode->getInnerText() == "COBISS.SI-ID"){
+            if($thNode && $thNode->getInnerText() == "Avtor"){
+                foreach($trNode("td a") as $aNode){
+                    $detailData->addAuthor($aNode->getInnerText());
+                }
+            } else if($thNode && $thNode->getInnerText() == "Naslov"){
+                $tdNode = $trNode("td", 0);
+                $titles = $tdNode->getInnerText();
+                $array = explode("/", $titles);
+                for($a=0; $a<count($array); $a++){
+                    $detailData->addTitle($array[$a]);
+                }
+            } else if($thNode && $thNode->getInnerText() == "Založništvo in izdelava"){
+                $tdNode = $trNode("td", 0);
+                $detailData->setPublisher($tdNode->getInnerText());
+            } else if($thNode && $thNode->getInnerText() == "COBISS.SI-ID"){
                 $tdNode = $trNode("td", 0);
                 $detailData->setCobissId($tdNode->getInnerText());
-                break;
             }
         }
-
         $this->setData($detailData);
-
-        /*
-        $this->parseForm($formNode);
-        $this->parsePaginator($formNode);
-        $this->parseDataTable($formNode);
-        */
         return true;
-
     }
 
     /**
@@ -932,26 +932,30 @@ class Cobiss_Data
 class Cobiss_Detail_Data {
 
     private $authors = array();
-    private $title;
+    private $titles = array();
     private $year;
     private $cobissId;
+    private $publisher;
 
     public function addAuthor($author){ array_push($this->authors, $author); }
-    public function setTitle($title){ $this->title = $title; }
+    public function addTitle($title){ array_push($this->titles, $title); }
     public function setYear($year){ $this->year = $year; }
     public function setCobissId($cobissId){ $this->cobissId = $cobissId; }
+    public function setPublisher($publisher){ $this->publisher = $publisher; }
 
     public function getAuthors(){ return $this->authors; }
-    public function getTitle(){ return $this->title; }
+    public function getTitles(){ return $this->titles; }
     public function getYear(){ return $this->year; }
     public function getCobissId(){ return $this->cobissId; }
+    public function getPublisher(){ return $this->publisher; }
 
     public function toArray(){
         $array = array();
         $array["authors"] = $this->getAuthors();
-        $array["title"] = $this->getTitle();
+        $array["titles"] = $this->getTitles();
         $array["year"] = $this->getYear();
         $array["cobissId"] = $this->getCobissId();
+        $array["publisher"] = $this->getPublisher();
         return $array;
     }
 

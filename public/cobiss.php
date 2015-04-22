@@ -8,4 +8,4 @@ $csw->setUserAgent($csw->getRandomUserAgent());
 $csw->loadFromUrl($url);
 $array = $csw->toArray();
 
-print_r($array);
+echo json_encode($array);
