@@ -59,7 +59,7 @@ class Scripts
 
                 DbUtil::deleteFrom('publication', array('pub_id' => $pubId));
                 DbUtil::deleteFrom('publication_title', array('pub_id' => $pubId));
-                DbUtil::deleteFrom('publication_author', array('pub_id' => $pubId));
+                DbUtil::deleteFrom('publication_creator', array('pub_id' => $pubId));
                 DbUtil::deleteFrom('publication_place', array('pub_id' => $pubId));
                 DbUtil::deleteFrom('publication_publisher', array('pub_id' => $pubId));
 
@@ -79,9 +79,9 @@ class Scripts
                     DbUtil::insertInto("publication_title", array("pub_id" => $pubId, "idx" => $idx+1, "title" => $val));
 
 
-                $author = Util::getXmlFieldValue($entity, "creator", true, "[@creatorType='author']");
-                foreach ($author as $idx => $val)
-                    DbUtil::insertInto("publication_author", array("pub_id" => $pubId, "idx" => $idx+1, "author" => $val));
+                $creator = Util::getXmlFieldValue($entity, "creator", true, "[@creatorType='author']");
+                foreach ($creator as $idx => $val)
+                    DbUtil::insertInto("publication_creator", array("pub_id" => $pubId, "idx" => $idx+1, "creator" => $val));
 
 
                 $place = Util::getXmlFieldValue($entity, "pubPlace", true);

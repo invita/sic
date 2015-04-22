@@ -24,8 +24,8 @@ var F = function(args) {
     // *** Publication Search ***
     var searchFields = {
         pub_id: {},
-        author: { /*isArray:true*/ },
-        title: {},
+        creator: { isArray:true },
+        title: { isArray:true },
         publisher: {},
         place: {},
         year: {},
@@ -34,7 +34,7 @@ var F = function(args) {
     }
 
     var pubSearchGroup = searchPanel.addGroup("Publication Search");
-    var pubSearchForm = new sic.widget.sicForm({parent:pubSearchGroup.content.selector, captionWidth:"100px"});
+    var pubSearchForm = new sic.widget.sicForm({parent:pubSearchGroup.content.selector, captionWidth:"140px"});
     for (var fieldName in searchFields) {
         var fieldCaption = sic.captionize(fieldName);
         var inputArgs = sic.mergeObjects({name:fieldName, placeholder:fieldCaption+"...", caption:fieldCaption}, searchFields[fieldName]);
@@ -44,6 +44,7 @@ var F = function(args) {
     var pubCreateButton = pubSearchForm.addInput({value:"Create Pub", type:"button"});
     pubCreateButton.selector.click(function(e) {
         var searchData = sic.removeStarsFromObject(pubSearchForm.getValue());
+        delete searchData.pub_id;
         sic.loadModule({moduleName:"Pub/PubEdit", newTab:"New Publication", initValue:searchData,
             entityTitle:"Pub %pub_id% - %title%"});
     });
@@ -66,14 +67,10 @@ var F = function(args) {
         }});
 
 
-
-        /*
-        var scrapedData = { author: "foo", title: "bar" };
-        pubSearchForm.setValue(scrapedData);
-        */
+        showResults("cobiss");
     });
 
-
+      
 
 
     var filterValue = sic.getArg(args, "filter", {});
@@ -132,4 +129,7 @@ var F = function(args) {
                 break;
         }
     }
+
+
+
 };

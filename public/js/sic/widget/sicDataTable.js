@@ -522,6 +522,7 @@ sic.widget.sicDataTable = function(args)
             editorModuleArgs.onClosed = function (args) {
                 _p.refresh();
             };
+
             if (_p.dataSource && _p.dataSource.staticData)
                 editorModuleArgs.staticData = sic.mergeObjects(_p.dataSource.staticData, editorModuleArgs.staticData);
             if (_p.primaryKey)

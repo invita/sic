@@ -15,7 +15,7 @@ class ProjectEdit_ProjectLinesDT extends SicModuleAbs {
     {
         $staticData = Util::getArg($args, 'staticData', null);
         $proj_id = Util::getArg($staticData, 'proj_id', 0);
-        $select //->columns(array('line_id', 'idx', 'proj_id', 'title','author','year','cobiss','issn','pub_id'))
+        $select //->columns(array('line_id', 'idx', 'proj_id', 'title','creator','year','cobiss','issn','pub_id'))
             ->from('project_line')
             ->where(array('proj_id' => $proj_id));
     }
@@ -23,8 +23,8 @@ class ProjectEdit_ProjectLinesDT extends SicModuleAbs {
     public function defineDataTableResponseData($args, ResultInterface $result) {
         $responseData = array();
 
-        $lineColumns = array('line_id','idx',     'title','author','year','cobiss','issn');
-        $pubColumns = array('pub_id','parent_id', 'title','author','year','cobiss','issn','original_id');
+        $lineColumns = array('line_id','idx',     'title','creator','year','cobiss','issn');
+        $pubColumns = array('pub_id','parent_id', 'title','creator','year','cobiss','issn','original_id');
 
         foreach($result as $row) {
             $resultLine = array();

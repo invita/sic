@@ -25,9 +25,7 @@ class PubQuoteList extends SicModuleAbs {
     public function defineDataTableResponseData($args, ResultInterface $result) {
         $responseData = array();
         foreach($result as $row) {
-            //$row['pub_author'] = PubEdit::getAuthorShort($row['pub_id']);
-            //$row['pub_title'] = PubEdit::getTitleShort($row['pub_id']);
-            $row['quoted_author'] = PubEdit::getAuthorShort($row['quoted_pub_id']);
+            $row['quoted_creator'] = PubEdit::getCreatorShort($row['quoted_pub_id']);
             $row['quoted_title'] = PubEdit::getTitleShort($row['quoted_pub_id']);
             $responseData[] = $row;
         }

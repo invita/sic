@@ -16,6 +16,7 @@ sic.widget.sicInputArray = function(args)
     this.caption = sic.getArg(args, "caption", null);
     this.inputArgs = sic.getArg(args, "inputArgs", {});
     this.autoFocus = sic.getArg(args, "autoFocus", true);
+    this.withCode = sic.getArg(args, "withCode", null);
     this.inputConstruct = sic.getArg(args, "inputConstruct", sic.widget.sicInput);
 
     // Events
@@ -33,7 +34,7 @@ sic.widget.sicInputArray = function(args)
 
     this.addInput = function(){
         var inputId = sic.widget._nextInputId();
-        var caption = _p.inputCount() > 0 ? " " : _p.caption;
+        var caption = _p.inputCount() > 0 && _p.withCode ? " " : _p.caption;
         var input = new _p.inputConstruct(sic.mergeObjects(_p.inputArgs, { parent:_p.selector,
             name:_p.name+"_"+inputId, caption:caption }));
         input.inputId = inputId;

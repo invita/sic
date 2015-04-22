@@ -81,8 +81,8 @@ var F = function(args) {
                         // Publication is selected, filter pub_id
                         filter.pub_id = pub.pub_id;
                     } else {
-                        // Publication is not selected, filter author and title
-                        filter.author = "*"+projLine.author+"*";
+                        // Publication is not selected, filter creator and title
+                        filter.creator = "*"+projLine.creator+"*";
                         filter.title = "*"+projLine.title+"*";
                     }
                     var line_id = args.row.getValue().line_id;

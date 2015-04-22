@@ -140,10 +140,10 @@ SELECT
     publication.original_id AS original_id,
     publication.is_temp AS is_temp,
     (
-      SELECT GROUP_CONCAT(publication_author.author SEPARATOR ', ')
-			FROM publication_author WHERE publication_author.pub_id = publication.pub_id
-			ORDER BY publication_author.idx
-    ) AS author,
+      SELECT GROUP_CONCAT(publication_creator.creator SEPARATOR ', ')
+			FROM publication_creator WHERE publication_creator.pub_id = publication.pub_id
+			ORDER BY publication_creator.idx
+    ) AS creator,
     (
       SELECT GROUP_CONCAT(publication_title.title SEPARATOR ', ')
 			FROM publication_title WHERE publication_title.pub_id = publication.pub_id
@@ -198,7 +198,75 @@ CREATE TABLE `publication_place` (
 ALTER TABLE `publication_place` ADD PRIMARY KEY (`pub_id`,`idx`);
 
 
+-- 2015-04-20
 
 
+CREATE TABLE `codes_pub_creator` (
+  `code_id` int(11) NOT NULL,
+  `value` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `codes_pub_creator` ADD PRIMARY KEY (`code_id`);
+INSERT INTO `codes_pub_creator` (`code_id`, `value`) VALUES ('1', 'author'), ('2', 'editor'), ('3', 'organization');
 
 
+CREATE TABLE `codes_pub_idno` (
+  `code_id` int(11) NOT NULL,
+  `value` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `codes_pub_idno` ADD PRIMARY KEY (`code_id`);
+INSERT INTO `codes_pub_idno` (`code_id`, `value`) VALUES ('1', 'cobiss'), ('2', 'isbn'), ('3', 'issn'),
+      ('4', 'doi'), ('5', 'sistory');
+
+
+CREATE TABLE `codes_pub_source` (
+  `code_id` int(11) NOT NULL,
+  `value` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `codes_pub_source` ADD PRIMARY KEY (`code_id`);
+INSERT INTO `codes_pub_source` (`code_id`, `value`) VALUES ('1', 'string'), ('2', 'url'), ('3', 'parent');
+
+
+RENAME TABLE `sic`.`publication_author` TO `sic`.`publication_creator`;
+ALTER TABLE `publication_creator` CHANGE `author` `creator` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+ALTER TABLE `publication_creator` ADD `code_id` INT NOT NULL DEFAULT '1' ;
+
+
+ALTER TABLE `project_line` CHANGE `author` `creator` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+
+
+CREATE OR REPLACE VIEW view_publication_list AS
+SELECT
+    publication.pub_id AS pub_id,
+    publication.parent_id AS parent_id,
+    publication.year AS year,
+    publication.cobiss AS cobiss,
+    publication.issn AS issn,
+    publication.original_id AS original_id,
+    publication.is_temp AS is_temp,
+    (
+      SELECT GROUP_CONCAT(publication_creator.creator SEPARATOR ', ')
+			FROM publication_creator WHERE publication_creator.pub_id = publication.pub_id
+			ORDER BY publication_creator.idx
+    ) AS creator,
+    (
+      SELECT GROUP_CONCAT(publication_title.title SEPARATOR ', ')
+			FROM publication_title WHERE publication_title.pub_id = publication.pub_id
+			ORDER BY publication_title.idx
+    ) AS title,
+    (
+      SELECT GROUP_CONCAT(publication_publisher.publisher SEPARATOR ', ')
+			FROM publication_publisher WHERE publication_publisher.pub_id = publication.pub_id
+			ORDER BY publication_publisher.idx
+    ) AS publisher,
+    (
+      SELECT GROUP_CONCAT(publication_place.place SEPARATOR ', ')
+			FROM publication_place WHERE publication_place.pub_id = publication.pub_id
+			ORDER BY publication_place.idx
+    ) AS place,
+    (
+      SELECT GROUP_CONCAT(publication_project_link.proj_id SEPARATOR ', ')
+			FROM publication_project_link WHERE publication_project_link.pub_id = publication.pub_id
+			ORDER BY publication_project_link.link_id
+    ) AS proj_id
+
+FROM publication;
