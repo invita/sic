@@ -43,6 +43,7 @@ class ProjectEdit_ProjectLinesDT extends SicModuleAbs {
                 // Add hr after idx
                 if ($lineColName == 'idx') $resultLine['line']['---'] = "";
             }
+            unset($resultLine['line']["line_id"]);
 
             // Select Publication columns
             $resultLine['publication'] = array();
@@ -51,8 +52,8 @@ class ProjectEdit_ProjectLinesDT extends SicModuleAbs {
                 foreach ($pubVals as $pubKey => $pubVal) {
                     $resultLine['publication'][$pubKey] = $pubVal;
 
-                    // Add hr after parent_id
-                    if ($pubKey == 'parent_id') $resultLine['publication']['---'] = "";
+                    // Add hr after pub_id
+                    if ($pubKey == 'pub_id') $resultLine['publication']['---'] = "";
                 }
             }
 

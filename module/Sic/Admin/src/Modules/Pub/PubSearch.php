@@ -6,6 +6,7 @@ use Zend\Db\Sql\Where;
 use Sic\Admin\Models\Util;
 use Sic\Admin\Models\DbUtil;
 use Sic\Admin\Models\SicModuleAbs;
+use Zend\Db\Adapter\Driver\ResultInterface;
 use Zend\Db\Sql\Literal;
 use Zend\Db\Sql\Expression;
 
@@ -31,8 +32,20 @@ class PubSearch extends SicModuleAbs {
 
             case "pubSearch": default:
                 $fields = Util::getArg($staticData, 'fields', array());
-                $fields["title"] = $fields["title"][0];
-                $fields["creator"] = $fields["creator"][0];
+
+
+                // ----- TODO: Temporary Solution
+                $arrayFields = array("title", "creator", "idno");
+                foreach ($arrayFields as $arrayField) {
+                    if (is_array($fields[$arrayField]))
+                        $fields[$arrayField] = $fields[$arrayField][0];
+                    if (is_array($fields[$arrayField]))
+                        $fields[$arrayField] = $fields[$arrayField]["value"];
+                }
+                $fields["cobiss"] = $fields["idno"];
+                $fields["idno"] = "";
+                // -----
+
                 $fieldsWhere = DbUtil::prepareSqlFilter($fields);
                 if (count($fieldsWhere->getPredicates()))
                     $where->addPredicate($fieldsWhere);
@@ -40,9 +53,21 @@ class PubSearch extends SicModuleAbs {
         }
 
         $select->columns(array(
-            "pub_id", "parent_id", "year", "cobiss", "issn", "creator", "title", "publisher", "place", "proj_id"));
+            "pub_id", "parent_id", "year", "cobiss", "issn", "creator", "title", "publisher", "place"));
         $select->from('view_publication_list');
         $select->where($where);
-
     }
+
+    public function defineDataTableResponseData($args, ResultInterface $result) {
+        $responseData = array();
+        foreach($result as $row) {
+            $row['creator'] = Util::shortenText($row['creator'], PubEdit::$creatorMaxLen);
+            $row['title'] = Util::shortenText($row['title'], PubEdit::$titleMaxLen);
+
+            $row['publisher'] = Util::shortenText($row['publisher'], PubEdit::$publisherMaxLen);
+            $responseData[] = $row;
+        }
+        return $responseData;
+    }
+
 }

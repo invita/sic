@@ -3,7 +3,7 @@ var F = function(args) {
 
     var tabPage = args.helpers.createTabPage({name:"Search"});
 
-    var pubSearchTable = new sic.widget.sicHtmlTable({parent:tabPage.content.selector});
+    var pubSearchTable = new sic.widget.sicHtmlTable({parent:tabPage.content.selector, tagClass:"borderCollapseSeparate"});
     var searchContainer = new sic.widget.sicElement({parent:pubSearchTable.getCell(0, 0).selector, tagClass:"pubSearch_leftContainer"});
     var pubResultsContainer = new sic.widget.sicElement({parent:pubSearchTable.getCell(0, 1).selector, tagClass:"pubSearch_rightContainer"});
     var cobissResultsContainer = new sic.widget.sicElement({parent:pubSearchTable.getCell(0, 1).selector, tagClass:"pubSearch_rightContainer"});
@@ -24,26 +24,36 @@ var F = function(args) {
     // *** Publication Search ***
     var searchFields = {
         pub_id: {},
-        creator: { isArray:true },
+        creator: { isArray:true, withCode:sic.codes.pubCreator },
         title: { isArray:true },
+        year: {},
+        idno: { isArray:true, withCode:sic.codes.pubIdno },
+        _group1: { caption: "Additional Fields (Click)", canMinimize: true, initHide: true },
+        //cobiss: {},
+        //issn: {},
         publisher: {},
         place: {},
-        year: {},
-        cobiss: {},
-        issn: {},
+        _group2: { },
     }
 
     var pubSearchGroup = searchPanel.addGroup("Publication Search");
     var pubSearchForm = new sic.widget.sicForm({parent:pubSearchGroup.content.selector, captionWidth:"140px"});
     for (var fieldName in searchFields) {
+        if (fieldName[0] == "_") {
+            pubSearchForm.addCaption(searchFields[fieldName]);
+            continue;
+        }
         var fieldCaption = sic.captionize(fieldName);
         var inputArgs = sic.mergeObjects({name:fieldName, placeholder:fieldCaption+"...", caption:fieldCaption}, searchFields[fieldName]);
         pubSearchForm.addInput(inputArgs);
     }
+
+    pubSearchForm.addHr();
+
     var pubSearchSubmitButton = pubSearchForm.addInput({value:"Search Local", type:"submit", caption:"Local Database"});
     var pubCreateButton = pubSearchForm.addInput({value:"Create Pub", type:"button"});
     pubCreateButton.selector.click(function(e) {
-        var searchData = sic.removeStarsFromObject(pubSearchForm.getValue());
+        var searchData = sic.removeStarsFromObject(pubSearchForm.getValue(), true);
         delete searchData.pub_id;
         sic.loadModule({moduleName:"Pub/PubEdit", newTab:"New Publication", initValue:searchData,
             entityTitle:"Pub %pub_id% - %title%"});
@@ -100,7 +110,11 @@ var F = function(args) {
         canInsert: false,
         canDelete: false,
         tabPage: tabPage.parentTab,
-        selectCallback: args.selectCallback
+        selectCallback: args.selectCallback,
+        fields: {
+            title: { tagClass:"sicDataTable_shortText" },
+            publisher: { tagClass:"sicDataTable_shortText" }
+        }
     });
 
 
@@ -118,6 +132,7 @@ var F = function(args) {
 
     pubSearchForm.onSubmit(function(sicForm){
         dataTable.dataSource.staticData = { searchType: "pubSearch", fields: pubSearchForm.getValue() };
+        pubSearchForm.allInputs.resetModified();
         dataTable.refresh();
         showResults("pub");
     });

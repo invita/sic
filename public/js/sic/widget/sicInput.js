@@ -138,6 +138,10 @@ sic.widget.sicInput = function(args)
     };
 
     this.setValue = function(value){
+        if (_p.withCode && value.codeId) {
+            _p.setCodeId(value.codeId);
+            value = value.value;
+        }
         _p.input.selector.val(value);
         _p.origValue = value;
         _p._onChange();
@@ -146,14 +150,23 @@ sic.widget.sicInput = function(args)
     };
 
     this.getCodeId = function(){
-        if (!_p.withCode) return 0;
+        if (!_p.withCode || !_p.codeSelect) return 0;
+        return _p.codeSelect.selector.val();
     };
 
     this.setCodeId = function(codeId){
+        if (!_p.withCode || !_p.codeSelect) return;
+        _p.codeSelect.selector.val(codeId);
     };
 
     this.calcModified = function(){
-        var modified = _p.getValue() != _p.origValue;
+        var modified;
+
+        if (_p.withCode)
+            modified = _p.getValue().value != _p.origValue;
+        else
+            modified = _p.getValue() != _p.origValue;
+
         if (_p.modified == modified) return;
 
         _p.modified = modified;

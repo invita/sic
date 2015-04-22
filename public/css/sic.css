@@ -80,6 +80,9 @@ div.dataTableFormView.sicForm { margin-bottom:10px; }
 div.dataTableFormView.sicForm > div.sicInputDiv { height:20px; }
 div.dataTableFormView.sicForm > hr { margin:4px 0px 2px 0px; }
 
+div.sicForm > div.header { font-weight:bold; /*border:silver solid 1px;*/ padding:5px; margin:12px 0px 6px 0px; }
+div.sicForm > div.content {}
+
 input.sicInput[type=button], input.sicInput[type=submit] { color:white; padding:3px 10px; margin-right:3px; }
 input.sicInput[type=button].gradGold, input.sicInput[type=submit].gradGold { color:black; }
 
@@ -102,6 +105,7 @@ div.sicDataTable > table.sicDataTable_table thead > tr > td.sortable:hover { cur
 div.sicDataTable > table.sicDataTable_table tbody > tr { cursor:pointer; height:28px; }
 div.sicDataTable > table.sicDataTable_table tbody > tr.hoverable:hover { background:#DDEEFF; }
 div.sicDataTable > table.sicDataTable_table tbody > tr > td.hoverable:hover { cursor:pointer; background:#DDEEFF; }
+div.sicDataTable > table.sicDataTable_table tbody > tr > td.sicDataTable_shortText > div { max-width:180px; color:gray; font-size:11px; }
 div.sicDataTable > div.insertButton { margin-bottom:5px; cursor:pointer; }
 div.sicDataTable > div.insertButton > span { color:#6699CC; font-weight:bold; margin-left:4px; vertical-align:middle; }
 div.sicDataTable > div.insertButton > img { vertical-align:middle; }
@@ -165,6 +169,8 @@ img.icon8  { width:8px; }
 img.icon12 { width:12px; }
 img.icon16 { width:16px; }
 img.icon24 { width:24px; }
+
+table.borderCollapseSeparate { border-collapse: separate; }
 
 .minWidth300 { min-width:300px; }
 .valignTop { vertical-align:top; }
