@@ -12,6 +12,26 @@ var F = function(args) {
     // Search Panel (left)
     var searchPanel = new sic.widget.sicPanel({parent:searchContainer.selector});
 
+    var cobissFormFunc = function(){
+        var form, input;
+        form = $(document.createElement("form"));
+        form.attr({method:"POST", action:"http://www.cobiss.si/scripts/cobiss", target:"_blank"});
+        input = $(document.createElement("input"));
+        input.attr({type:"hidden", name:"base", value:"99999"});
+        form.append(input);
+        input = $(document.createElement("input"));
+        input.attr({type:"hidden", name:"command", value:"SEARCH"});
+        form.append(input);
+        input = $(document.createElement("input"));
+        input.attr({type:"hidden", name:"srch", value:""});
+        form.append(input);
+        return form;
+    };
+
+    var cobissForm = cobissFormFunc();
+
+    searchContainer.selector.append(cobissForm);
+
 
     // Quick Search
     var quickSearchGroup = searchPanel.addGroup("Quick Search");
@@ -19,7 +39,13 @@ var F = function(args) {
     var quickSearchBox = quickSearchForm.addInput({name:"quickSearch", placeholder:"Quick search...", caption:false});
     quickSearchBox.selector.addClass("inline");
     var quickSearchSubmitButton = quickSearchForm.addInput({value:"Quick Search", type:"submit"});
-
+    var cobissSearch = quickSearchForm.addInput({value:"Cobiss Search", type:"button"});
+    cobissSearch.selector.click(function(){
+        var data = quickSearchForm.getValue();
+        var srch = cobissForm.find("input[name=srch]");
+        srch.val(data.quickSearch);
+        cobissForm.submit();
+    });
 
     // *** Publication Search ***
     var searchFields = {
