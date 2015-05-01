@@ -29,6 +29,8 @@ class PubEdit {
         $pub_id = Util::getArg($args, 'pub_id', null);
         $row = DbUtil::selectRow('publication', null, array('pub_id' => $pub_id));
         $row['creator'] = DbUtil::selectFrom('publication_creator', array('value' => 'creator', 'codeId' => 'code_id'), array('pub_id' => $pub_id));
+        $row['idno'] = DbUtil::selectFrom('publication_idno', array('value' => 'idno', 'codeId' => 'code_id'), array('pub_id' => $pub_id));
+        $row['year'] = DbUtil::selectFrom('publication_year', 'year', array('pub_id' => $pub_id));
         $row['title'] = DbUtil::selectFrom('publication_title', 'title', array('pub_id' => $pub_id));
         $row['publisher'] = DbUtil::selectFrom('publication_publisher', 'publisher', array('pub_id' => $pub_id));
         $row['place'] = DbUtil::selectFrom('publication_place', 'place', array('pub_id' => $pub_id));
@@ -45,9 +47,6 @@ class PubEdit {
 
         $pubData = array(
             "parent_id" => Util::getArg($data, 'parent_id', 0),
-            "year" => Util::getArg($data, 'year', 0),
-            "cobiss" => Util::getArg($data, 'cobiss', ''),
-            "issn" => Util::getArg($data, 'issn', ''),
             "original_id" => Util::getArg($data, 'original_id', 0)
         );
         DbUtil::updateTable('publication', $pubData, array('pub_id' => $pub_id));
@@ -64,9 +63,6 @@ class PubEdit {
 
         $pubData = array(
             "parent_id" => Util::getArg($data, 'parent_id', 0),
-            "year" => Util::getArg($data, 'year', 0),
-            "cobiss" => Util::getArg($data, 'cobiss', ''),
-            "issn" => Util::getArg($data, 'issn', ''),
             "original_id" => Util::getArg($data, 'original_id', 0)
         );
         DbUtil::insertInto('publication', $pubData);
@@ -104,6 +100,17 @@ class PubEdit {
         for ($idx = 0; $idx < count($creator); $idx++)
             DbUtil::insertInto('publication_creator', array('pub_id' => $pub_id, 'idx' => $idx,
                 'creator' => $creator[$idx]["value"], 'code_id' => $creator[$idx]["codeId"]));
+
+        $idno = Util::getArg($data, 'idno', array());
+        DbUtil::deleteFrom('publication_idno', array('pub_id' => $pub_id));
+        for ($idx = 0; $idx < count($idno); $idx++)
+            DbUtil::insertInto('publication_idno', array('pub_id' => $pub_id, 'idx' => $idx,
+                'idno' => $idno[$idx]["value"], 'code_id' => $idno[$idx]["codeId"]));
+
+        $year = Util::getArg($data, 'year', array());
+        DbUtil::deleteFrom('publication_year', array('pub_id' => $pub_id));
+        for ($idx = 0; $idx < count($year); $idx++)
+            DbUtil::insertInto('publication_year', array('pub_id' => $pub_id, 'idx' => $idx, 'year' => $year[$idx]));
 
         $title = Util::getArg($data, 'title', array());
         DbUtil::deleteFrom('publication_title', array('pub_id' => $pub_id));

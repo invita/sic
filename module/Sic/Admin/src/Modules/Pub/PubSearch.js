@@ -52,7 +52,7 @@ var F = function(args) {
         pub_id: {},
         creator: { isArray:true, withCode:sic.codes.pubCreator },
         title: { isArray:true },
-        year: {},
+        year: { isArray:true },
         idno: { isArray:true, withCode:sic.codes.pubIdno },
         _group1: { caption: "Additional Fields (Click)", canMinimize: true, initHide: true },
         //cobiss: {},
@@ -91,11 +91,14 @@ var F = function(args) {
 
 
     // *** Cobiss Search ***
-    pubSearchForm.addInput({name:"url", caption:"Cobiss url"});
+    var cobbisGroup = searchPanel.addGroup("Cobbis");
+    var cobbisForm = new sic.widget.sicForm({parent:cobbisGroup.content.selector, captionWidth:"140px"});
+    cobbisForm.addInput({name:"url", caption:"Cobiss url"});
 
-    var cobissScrapeButton = pubSearchForm.addInput({value:"Scrape", type:"button"});
+    var cobissScrapeButton = cobbisForm.addInput({value:"Scrape", type:"submit", caption: " "});
     cobissScrapeButton.selector.click(function(e){
-        var searchData = pubSearchForm.getValue();
+        sic.loading.show();
+        var searchData = cobbisForm.getValue();
         var url = searchData.url;
 
         jQuery.ajax({url:"/cobiss.php", method:"POST", data:{url:url}, dataType:"json", success:function(data){
@@ -106,9 +109,10 @@ var F = function(args) {
                 cobiss : data.cobissId,
                 publisher : data.publisher
             });
+            sic.loading.hide();
         }});
 
-        showResults("cobiss");
+        //showResults("cobiss");
     });
 
       
@@ -153,14 +157,14 @@ var F = function(args) {
         dataTable.dataSource.staticData = quickSearchForm.getValue();
         dataTable.dataSource.staticData.searchType = "quickSearch";
         dataTable.refresh();
-        showResults("pub");
+        //showResults("pub");
     });
 
     pubSearchForm.onSubmit(function(sicForm){
         dataTable.dataSource.staticData = { searchType: "pubSearch", fields: pubSearchForm.getValue() };
         pubSearchForm.allInputs.resetModified();
         dataTable.refresh();
-        showResults("pub");
+        //showResults("pub");
     });
 
     var showResults = function(pageName) {

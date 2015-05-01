@@ -24,7 +24,7 @@ class ProjectEdit_ProjectLinesDT extends SicModuleAbs {
         $responseData = array();
 
         $lineColumns = array('line_id','idx',     'title','creator','year','cobiss','issn');
-        $pubColumns = array('pub_id','parent_id', 'title','creator','year','cobiss','issn','original_id');
+        $pubColumns = array('pub_id','parent_id', 'title','creator','year','idno_cobiss','idno_issn','original_id');
 
         foreach($result as $row) {
             $resultLine = array();

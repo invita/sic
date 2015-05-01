@@ -45,6 +45,18 @@ class Scripts
             );
         }
 
+        $creatorTypes = array();
+        $codes = DbUtil::selectFrom('codes_pub_creator');
+        foreach ($codes as $code) $creatorTypes[$code["value"]] = $code["code_id"];
+
+        $idnoTypes = array();
+        $codes = DbUtil::selectFrom('codes_pub_idno');
+        foreach ($codes as $code) $idnoTypes[$code["value"]] = $code["code_id"];
+
+        $sourceTypes = array();
+        $codes = DbUtil::selectFrom('codes_pub_source');
+        foreach ($codes as $code) $sourceTypes[$code["value"]] = $code["code_id"];
+
 
         $entityCount = 0;
         $testEntity = null;
@@ -60,6 +72,7 @@ class Scripts
                 DbUtil::deleteFrom('publication', array('pub_id' => $pubId));
                 DbUtil::deleteFrom('publication_title', array('pub_id' => $pubId));
                 DbUtil::deleteFrom('publication_creator', array('pub_id' => $pubId));
+                DbUtil::deleteFrom('publication_idno', array('pub_id' => $pubId));
                 DbUtil::deleteFrom('publication_place', array('pub_id' => $pubId));
                 DbUtil::deleteFrom('publication_publisher', array('pub_id' => $pubId));
 
@@ -67,9 +80,9 @@ class Scripts
                 $pubData = array(
                     "pub_id" => $pubId,
                     "parent_id" => Util::getXmlFieldValue($entity, "parent", false),
-                    "year" => Util::getXmlFieldValue($entity, "date", false),
-                    "cobiss" => Util::getXmlFieldValue($entity, "idno", false, "[@idnoType='cobiss']"),
-                    "issn" => Util::getXmlFieldValue($entity, "idno", false, "[@idnoType='issn']"),
+                    //"year" => Util::getXmlFieldValue($entity, "date", false),
+                    //"cobiss" => Util::getXmlFieldValue($entity, "idno", false, "[@idnoType='cobiss']"),
+                    //"issn" => Util::getXmlFieldValue($entity, "idno", false, "[@idnoType='issn']"),
                 );
                 DbUtil::insertInto("publication", $pubData);
 
@@ -79,9 +92,28 @@ class Scripts
                     DbUtil::insertInto("publication_title", array("pub_id" => $pubId, "idx" => $idx+1, "title" => $val));
 
 
-                $creator = Util::getXmlFieldValue($entity, "creator", true, "[@creatorType='author']");
-                foreach ($creator as $idx => $val)
-                    DbUtil::insertInto("publication_creator", array("pub_id" => $pubId, "idx" => $idx+1, "creator" => $val));
+                $idx = 1;
+                foreach ($creatorTypes as $value => $codeId) {
+                    $creator = Util::getXmlFieldValue($entity, "creator", true, "[@creatorType='".$value."']");
+                    foreach ($creator as $idx_ => $val){
+                        DbUtil::insertInto("publication_creator", array("pub_id" => $pubId, "idx" => $idx, "creator" => $val, "code_id" => $codeId));
+                        $idx++;
+                    }
+                }
+
+                $idx = 1;
+                foreach ($idnoTypes as $value => $codeId) {
+                    $idno = Util::getXmlFieldValue($entity, "idno", true, "[@idnoType='".$value."']");
+                    foreach ($idno as $idx_ => $val) {
+                        DbUtil::insertInto("publication_idno", array("pub_id" => $pubId, "idx" => $idx, "idno" => $val, "code_id" => $codeId));
+                        $idx++;
+                    }
+                }
+
+
+                $year = Util::getXmlFieldValue($entity, "date", true);
+                foreach ($year as $idx => $val)
+                    DbUtil::insertInto("publication_year", array("pub_id" => $pubId, "idx" => $idx+1, "year" => $val));
 
 
                 $place = Util::getXmlFieldValue($entity, "pubPlace", true);

@@ -35,15 +35,13 @@ class PubSearch extends SicModuleAbs {
 
 
                 // ----- TODO: Temporary Solution
-                $arrayFields = array("title", "creator", "idno");
+                $arrayFields = array("creator", "idno", "year", "title");
                 foreach ($arrayFields as $arrayField) {
                     if (is_array($fields[$arrayField]))
                         $fields[$arrayField] = $fields[$arrayField][0];
                     if (is_array($fields[$arrayField]))
                         $fields[$arrayField] = $fields[$arrayField]["value"];
                 }
-                $fields["cobiss"] = $fields["idno"];
-                $fields["idno"] = "";
                 // -----
 
                 $fieldsWhere = DbUtil::prepareSqlFilter($fields);
@@ -53,7 +51,7 @@ class PubSearch extends SicModuleAbs {
         }
 
         $select->columns(array(
-            "pub_id", "parent_id", "year", "cobiss", "issn", "creator", "title", "publisher", "place"));
+            "pub_id", "parent_id", "year", "idno_cobiss", "idno_issn", "creator", "title", "publisher", "place"));
         $select->from('view_publication_list');
         $select->where($where);
     }

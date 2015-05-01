@@ -236,24 +236,75 @@ ALTER TABLE `project_line` CHANGE `author` `creator` VARCHAR(100) CHARACTER SET 
 ALTER TABLE `publication` CHANGE `is_temp` `is_series` INT(1) NOT NULL;
 
 
+-- 2015-05-01
+
+
+CREATE TABLE `publication_idno` (
+  `pub_id` int(11) NOT NULL,
+  `idx` int(11) NOT NULL,
+  `idno` varchar(100) NOT NULL,
+  `code_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `publication_idno` ADD PRIMARY KEY (`pub_id`,`idx`);
+
+ALTER TABLE `publication`
+DROP `cobiss`,
+DROP `issn`,
+DROP `year`;
+
+
+CREATE TABLE `publication_year` (
+  `pub_id` int(11) NOT NULL,
+  `idx` int(11) NOT NULL,
+  `year` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `publication_year` ADD PRIMARY KEY (`pub_id`,`idx`);
+
+
+
 CREATE OR REPLACE VIEW view_publication_list AS
 SELECT
     publication.pub_id AS pub_id,
     publication.parent_id AS parent_id,
-    publication.year AS year,
-    publication.cobiss AS cobiss,
-    publication.issn AS issn,
     publication.original_id AS original_id,
     publication.is_series AS is_series,
     (
       SELECT GROUP_CONCAT(publication_creator.creator SEPARATOR ', ')
-			FROM publication_creator WHERE publication_creator.pub_id = publication.pub_id
-			ORDER BY publication_creator.idx
+      FROM publication_creator WHERE publication_creator.pub_id = publication.pub_id
+      ORDER BY publication_creator.idx
     ) AS creator,
     (
+      SELECT GROUP_CONCAT(publication_idno.idno SEPARATOR ', ')
+      FROM publication_idno WHERE publication_idno.pub_id = publication.pub_id
+      ORDER BY publication_idno.idx
+    ) AS idno,
+    (
+      SELECT GROUP_CONCAT(publication_idno.idno SEPARATOR ', ')
+      FROM publication_idno INNER JOIN codes_pub_idno ON codes_pub_idno.code_id = publication_idno.code_id
+      WHERE publication_idno.pub_id = publication.pub_id AND codes_pub_idno.value = 'cobiss'
+      ORDER BY publication_idno.idx
+    ) AS idno_cobiss,
+    (
+      SELECT GROUP_CONCAT(publication_idno.idno SEPARATOR ', ')
+      FROM publication_idno INNER JOIN codes_pub_idno ON codes_pub_idno.code_id = publication_idno.code_id
+      WHERE publication_idno.pub_id = publication.pub_id AND codes_pub_idno.value = 'issn'
+      ORDER BY publication_idno.idx
+    ) AS idno_issn,
+    (
+      SELECT GROUP_CONCAT(publication_idno.idno SEPARATOR ', ')
+      FROM publication_idno INNER JOIN codes_pub_idno ON codes_pub_idno.code_id = publication_idno.code_id
+      WHERE publication_idno.pub_id = publication.pub_id AND codes_pub_idno.value = 'sistory'
+      ORDER BY publication_idno.idx
+    ) AS idno_sistory,
+    (
+      SELECT GROUP_CONCAT(publication_year.year SEPARATOR ', ')
+      FROM publication_year WHERE publication_year.pub_id = publication.pub_id
+      ORDER BY publication_year.idx
+    ) AS year,
+    (
       SELECT GROUP_CONCAT(publication_title.title SEPARATOR ', ')
-			FROM publication_title WHERE publication_title.pub_id = publication.pub_id
-			ORDER BY publication_title.idx
+      FROM publication_title WHERE publication_title.pub_id = publication.pub_id
+      ORDER BY publication_title.idx
     ) AS title,
     (
       SELECT GROUP_CONCAT(publication_publisher.publisher SEPARATOR ', ')
@@ -272,3 +323,4 @@ SELECT
     ) AS proj_id
 
 FROM publication;
+

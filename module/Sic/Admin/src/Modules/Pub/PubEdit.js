@@ -7,10 +7,10 @@ var F = function(args) {
 
     var cobissData = sic.getArg(args, 'cobissData', null);
     var creator = sic.getArg(cobissData, 'creator', null);
+    var idno = sic.getArg(cobissData, 'idno', null);
     var title = sic.getArg(cobissData, 'title', null);
     var publisher = sic.getArg(cobissData, 'publisher', null);
     var place = sic.getArg(cobissData, 'place', null);
-    var title = sic.getArg(cobissData, 'title', null);
     var year = sic.getArg(cobissData, 'year', null);
     var cobissId = sic.getArg(cobissData, 'cobissId', null);
 
@@ -33,9 +33,13 @@ var F = function(args) {
     formUserData.addInput({name:"title", type:"text", placeholder:"Title...", isArray:true, value:[title]});
     formUserData.addInput({name:"publisher", type:"text", placeholder:"Publisher...", isArray:true, value:[publisher]});
     formUserData.addInput({name:"place", type:"text", placeholder:"Place...", isArray:true, value:[place]});
-    formUserData.addInput({name:"year", type:"text", placeholder:"Year...", value:year});
-    formUserData.addInput({name:"cobiss", type:"text", placeholder:"Cobiss...", value:cobissId});
-    formUserData.addInput({name:"issn", type:"text", placeholder:"Issn..."});
+    formUserData.addInput({name:"year", type:"text", placeholder:"Year...", isArray:true, value:[year]});
+
+    formUserData.addInput({name:"idno", type:"text", placeholder:"Idno...", isArray:true, value:[idno],
+        withCode:sic.codes.pubIdno});
+    //formUserData.addInput({name:"cobiss", type:"text", placeholder:"Cobiss...", value:cobissId});
+    //formUserData.addInput({name:"issn", type:"text", placeholder:"Issn..."});
+
     formUserData.addInput({name:"original_id", type:"text", placeholder:"OriginalId...",
         lookup:sic.mergeObjects(sic.lookup.publication, { fieldMap: { original_id: "pub_id" } }) });
     formUserData.addInput({name:"child_id", type:"text", placeholder:"ChildId...", isArray:true/*, lookup:{}*/ });
@@ -55,7 +59,7 @@ var F = function(args) {
     formUserData.addInput({name:"cancel", type:"button", value:"Cancel"}).selector.click(function(e){ });
     formUserData.addInput({name:"clear", type:"button", value:"Clear"}).selector.click(function(e){ });
 
-    var hierarchyGroup = panel.addGroup("Publication Hierarchy");
+    var hierarchyGroup = panel.addGroup("Entity Hierarchy");
     var hierarchyDiv = new sic.widget.sicElement({parent:hierarchyGroup.content.selector});
 
     var refreshHierarchy = function() {
