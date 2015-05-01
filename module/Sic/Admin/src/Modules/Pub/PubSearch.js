@@ -49,16 +49,16 @@ var F = function(args) {
 
     // *** Publication Search ***
     var searchFields = {
-        pub_id: {},
-        creator: { isArray:true, withCode:sic.codes.pubCreator },
-        title: { isArray:true },
-        year: { isArray:true },
-        idno: { isArray:true, withCode:sic.codes.pubIdno },
+        pub_id: { caption:"id" },
+        creator: { caption:"creator", isArray:true, withCode:sic.codes.pubCreator },
+        title: { caption:"title", isArray:true },
+        year: { caption:"year", isArray:true },
+        idno: { caption:"idno", isArray:true, withCode:sic.codes.pubIdno },
         _group1: { caption: "Additional Fields (Click)", canMinimize: true, initHide: true },
         //cobiss: {},
         //issn: {},
-        publisher: {},
-        place: {},
+        publisher: { caption:"publisher" },
+        place: { caption:"place" },
         _group2: { },
     }
 
@@ -139,7 +139,7 @@ var F = function(args) {
         },
         canInsert: false,
         canDelete: false,
-        tabPage: tabPage.parentTab,
+        tabPage: tabPage.parentTab ? tabPage.parentTab : tabPage,
         selectCallback: args.selectCallback,
         fields: {
             title: { tagClass:"sicDataTable_shortText" },

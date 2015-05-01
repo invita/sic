@@ -38,7 +38,7 @@ sic.widget.sicForm = function(args)
         };
         args = sic.mergeObjects(defArgs, args);
         if (args.isArray) {
-            input = new sic.widget.sicInputArray({ parent:parent, name:args.name, inputArgs:args });
+            input = new sic.widget.sicInputArray({ parent:parent, name:args.name, caption:args.caption, inputArgs:args });
         } else {
             input = new args.inputConstruct(args);
         }

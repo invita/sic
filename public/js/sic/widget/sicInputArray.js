@@ -36,7 +36,7 @@ sic.widget.sicInputArray = function(args)
         var inputId = sic.widget._nextInputId();
         var caption = _p.inputCount() > 0 && _p.withCode ? " " : _p.caption;
         var input = new _p.inputConstruct(sic.mergeObjects(_p.inputArgs, { parent:_p.selector,
-            name:_p.name+"_"+inputId, caption:caption }));
+            name:_p.name+"_"+inputId, caption:caption, inputArray: _p }));
         input.inputId = inputId;
         input.onKeyDown(function(e) { e.sicInput = _p; _p.trigger('onKeyDown', e); });
         input.onKeyPressed(function(e) { e.sicInput = _p; _p.trigger('onKeyPressed', e); });

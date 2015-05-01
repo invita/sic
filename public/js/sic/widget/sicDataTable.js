@@ -189,6 +189,7 @@ sic.widget.sicDataTable = function(args)
         });
     };
 
+    // Paginator
     this.createDSControlDiv = function() {
         if (_p.dsControl) return;
         _p.dsControl = new sic.widget.sicElement({parent:_p.selector, insertAtTop:true, tagClass:"dsControl"});

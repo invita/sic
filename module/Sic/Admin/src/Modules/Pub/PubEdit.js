@@ -18,46 +18,42 @@ var F = function(args) {
         firstGroupName:"Update Publication"});
 
     var formUserData = new sic.widget.sicForm({parent:panel.firstGroup.content.selector, captionWidth:"140px"});
-    formUserData.addInput({name:"pub_id", type:"text", placeholder:"Id...", readOnly:true});
+    formUserData.addInput({name:"pub_id", type:"text", caption:"id", placeholder:"Id...", readOnly:true});
 
     // TODO: Lookup...
-    formUserData.addInput({name:"parent_id", type:"text", placeholder:"Parent...",
-        lookup:sic.mergeObjects(sic.lookup.publication, { fieldMap: { parent_id: "pub_id" } })
-        //lookup:{
-        //    editorModuleArgs: { moduleName:"Pub/PubEdit", tabPage:tabPageBasic, map: { parent_id: "pub_id" } }
-        //}
-    });
-    //formUserData.addInput({name:"parentName", type:"text", placeholder:"ParentName..."});
-    formUserData.addInput({name:"creator", type:"text", placeholder:"Creator...", isArray:true, value:[creator],
-            withCode:sic.codes.pubCreator});
-    formUserData.addInput({name:"title", type:"text", placeholder:"Title...", isArray:true, value:[title]});
-    formUserData.addInput({name:"publisher", type:"text", placeholder:"Publisher...", isArray:true, value:[publisher]});
-    formUserData.addInput({name:"place", type:"text", placeholder:"Place...", isArray:true, value:[place]});
-    formUserData.addInput({name:"year", type:"text", placeholder:"Year...", isArray:true, value:[year]});
+    formUserData.addInput({name:"parent_id", type:"text", caption:"parent", placeholder:"Parent...",
+        lookup:sic.mergeObjects(sic.lookup.publication, { fieldMap: { parent_id: "pub_id" }, tabPage:tabPageBasic }) });
+    formUserData.addInput({name:"creator", type:"text", caption:"creator", placeholder:"Creator...", isArray:true, value:[creator],
+        withCode:sic.codes.pubCreator});
+    formUserData.addInput({name:"title", type:"text", caption:"title", placeholder:"Title...", isArray:true, value:[title]});
+    formUserData.addInput({name:"publisher", type:"text", caption:"publisher", placeholder:"Publisher...", isArray:true, value:[publisher]});
+    formUserData.addInput({name:"place", type:"text", caption:"place", placeholder:"Place...", isArray:true, value:[place]});
+    formUserData.addInput({name:"year", type:"text", caption:"date", placeholder:"Year...", isArray:true, value:[year]});
 
-    formUserData.addInput({name:"idno", type:"text", placeholder:"Idno...", isArray:true, value:[idno],
+    formUserData.addInput({name:"idno", type:"text", caption:"idno", placeholder:"Idno...", isArray:true, value:[idno],
         withCode:sic.codes.pubIdno});
-    //formUserData.addInput({name:"cobiss", type:"text", placeholder:"Cobiss...", value:cobissId});
-    //formUserData.addInput({name:"issn", type:"text", placeholder:"Issn..."});
 
-    formUserData.addInput({name:"original_id", type:"text", placeholder:"OriginalId...",
-        lookup:sic.mergeObjects(sic.lookup.publication, { fieldMap: { original_id: "pub_id" } }) });
-    formUserData.addInput({name:"child_id", type:"text", placeholder:"ChildId...", isArray:true/*, lookup:{}*/ });
+    formUserData.addInput({name:"original_id", type:"text", caption:"original", placeholder:"OriginalId...",
+        lookup:sic.mergeObjects(sic.lookup.publication, { fieldMap: { original_id: "pub_id" }, tabPage:tabPageBasic }) });
+    formUserData.addInput({name:"child_id", type:"text", caption:"child", placeholder:"ChildId...", isArray:true,
+        lookup:sic.mergeObjects(sic.lookup.publication, { fieldMap: { child_id: "pub_id" }, tabPage:tabPageBasic }) });
     formUserData.addInput({name:"save", type:"submit", value:"Save", caption:" "}).selector.click(function(e){
         var response = sic.callMethod({moduleName:"Pub/PubEdit", methodName:"pubUpdate",
             pub_id: args.pub_id, proj_id: args.proj_id, line_id: args.line_id, data:formUserData.getValue()});
         if (response && response.data) {
-            formUserData.setValue(response.data);
-            args.pub_id = response.data.pub_id;
-            quotesDataTable.dataSource.staticData.pub_id = args.pub_id;
-
-            tabPageBasic.parentTab.setCaption(sic.mergePlaceholders(args.entityTitle, response.data));
-
-            refreshHierarchy();
+            if (confirm("Saved. Close?")) {
+                tabPageBasic.parentTab.destroyTab();
+            } else {
+                formUserData.setValue(response.data);
+                args.pub_id = response.data.pub_id;
+                quotesDataTable.dataSource.staticData.pub_id = args.pub_id;
+                tabPageBasic.parentTab.setCaption(sic.mergePlaceholders(args.entityTitle, response.data));
+                refreshHierarchy();
+            }
         }
     });
-    formUserData.addInput({name:"cancel", type:"button", value:"Cancel"}).selector.click(function(e){ });
-    formUserData.addInput({name:"clear", type:"button", value:"Clear"}).selector.click(function(e){ });
+    //formUserData.addInput({name:"cancel", type:"button", value:"Cancel"}).selector.click(function(e){ });
+    //formUserData.addInput({name:"clear", type:"button", value:"Clear"}).selector.click(function(e){ });
 
     var hierarchyGroup = panel.addGroup("Entity Hierarchy");
     var hierarchyDiv = new sic.widget.sicElement({parent:hierarchyGroup.content.selector});
@@ -93,7 +89,7 @@ var F = function(args) {
     };
 
 
-    var tabPageQuotes = tabPageBasic.createTabPage({name:"Quotes", autoActive:false, canClose: false });
+    var tabPageQuotes = tabPageBasic.createTabPage({name:"Citations", autoActive:false, canClose: false });
     var quotesDataTable = new sic.widget.sicDataTable({
         parent:tabPageQuotes.content.selector,
         primaryKey: ['quote_id'],
@@ -135,7 +131,7 @@ var F = function(args) {
     if (args.pub_id){
         var response = sic.callMethod({moduleName:"Pub/PubEdit", methodName:"pubSelect", pub_id: args.pub_id});
         if (response && response.data) formUserData.setValue(response.data);
-
+        tabPageBasic.parentTab.setCaption(sic.mergePlaceholders(args.entityTitle, response.data));
         refreshHierarchy();
     } else if (args.initValue) {
         formUserData.setValue(args.initValue);

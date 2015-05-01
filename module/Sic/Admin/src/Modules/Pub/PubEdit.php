@@ -46,9 +46,10 @@ class PubEdit {
         $data = Util::getArg($args, 'data', array());
 
         $pubData = array(
-            "parent_id" => Util::getArg($data, 'parent_id', 0),
-            "original_id" => Util::getArg($data, 'original_id', 0)
+            "parent_id" => intval(Util::getArg($data, 'parent_id', 0)),
+            "original_id" => intval(Util::getArg($data, 'original_id', 0))
         );
+
         DbUtil::updateTable('publication', $pubData, array('pub_id' => $pub_id));
 
         $this->updateArrayFields($args);

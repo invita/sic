@@ -32,6 +32,7 @@ sic.widget.sicInput = function(args)
     this.showModified = sic.getArg(args, "showModified", true);
     this.lookup = sic.getArg(args, "lookup", null);
     this.form = sic.getArg(args, "form", null);
+    this.inputArray = sic.getArg(args, "inputArray", null);
 
     // Events
     this.onKeyDown = function(f) { _p.subscribe("onKeyDown", f); };
@@ -81,8 +82,83 @@ sic.widget.sicInput = function(args)
         this.editButton.lookupImg = new sic.widget.sicElement({ parent:this.editButton.selector,
             tagName:"img", attr: { src: "/img/icon/edit.png" } });
         this.editButton.displayNone();
+
+
+        // ... Lookup Resolve
+        this.lookupResolve = function(){
+            var resolveArgs = sic.mergeObjects({ aSync: true }, _p.lookup.resolve);
+            var name = _p.inputArray ? _p.inputArray.name : _p.name;
+
+            var targetFieldName = name;
+            if (_p.lookup.fieldMap && _p.lookup.fieldMap[name]) targetFieldName = _p.lookup.fieldMap[name];
+            resolveArgs[targetFieldName] = _p.getValue();
+
+            /*
+            resolveArgs[_p.name] = _p.getValue();
+            if (_p.form) {
+                var formData = _p.form.getValue();
+                if (_p.lookup.fieldMap){
+                    for (var origKey in _p.lookup.fieldMap) {
+                        var renamedKey = _p.lookup.fieldMap[origKey]
+                        if (_p.inputArray && renamedKey == _p.inputArray.name)
+                            renamedKey = _p.name;
+                        resolveArgs[renamedKey] = formData[origKey];
+                    }
+                }
+                resolveArgs.formData = formData;
+            }
+
+            */
+            sic.callMethod(resolveArgs, function(resp){
+                _p.lookupInput.selector.val(resp.resolveValue);
+            });
+        };
+
+
+        // ... Do Lookup
+        this.lookupLookup = function() {
+            var lookupArgs = sic.mergeObjects(_p.lookup.lookup);
+            lookupArgs[_p.name] = _p.getValue();
+            if (_p.form) {
+                var formData = _p.form.getValue();
+                if (_p.lookup.fieldMap){
+                    for (var origKey in _p.lookup.fieldMap) {
+                        var renamedKey = _p.lookup.fieldMap[origKey]
+                        if (_p.inputArray && renamedKey == _p.inputArray.name)
+                            renamedKey = _p.name;
+                        lookupArgs[renamedKey] = formData[origKey];
+                    }
+                }
+                lookupArgs.formData = formData;
+            }
+
+            lookupArgs.selectCallback = function(cbArgs) {
+                var targetFieldName = _p.name;
+                var name = _p.inputArray ? _p.inputArray.name : _p.name;
+                if (_p.lookup.fieldMap && _p.lookup.fieldMap[name]) targetFieldName = _p.lookup.fieldMap[name];
+                var row = cbArgs.row.getValue();
+                _p.setValue(row[targetFieldName]);
+            };
+
+            sic.loadModule(lookupArgs);
+        };
+
+
+        // ... Lookup Edit
+        this.lookupEdit = function() {
+            var targetFieldName = _p.name;
+            var name = _p.inputArray ? _p.inputArray.name : _p.name;
+            if (_p.lookup.fieldMap && _p.lookup.fieldMap[name]) targetFieldName = _p.lookup.fieldMap[name];
+            var editArgs = sic.mergeObjects(_p.lookup.edit);
+            editArgs[targetFieldName] = _p.getValue();
+
+            sic.loadModule(editArgs);
+        };
+
+
+
         this.editButton.selector.click(function(e){
-            // ... Edit Lookup
+            _p.lookupEdit();
         });
 
         this.lookupButton = new sic.widget.sicElement({ parent:this.selector, tagName:"div" });
@@ -90,30 +166,10 @@ sic.widget.sicInput = function(args)
         this.lookupButton.lookupImg = new sic.widget.sicElement({ parent:this.lookupButton.selector,
             tagName:"img", attr: { src: "/img/icon/lookup.png" } });
         this.lookupButton.selector.click(function(e){
-            // ... Do Lookup
+            _p.lookupLookup();
         });
 
-
-        this.lookupResolve = function(){
-            var resolveArgs = sic.mergeObjects({ aSync: true }, _p.lookup.resolve);
-            resolveArgs[_p.name] = _p.getValue();
-            if (_p.form) {
-                var formData = _p.form.getValue();
-                if (_p.lookup.fieldMap){
-                    for (var origKey in _p.lookup.fieldMap)
-                        var renamedKey = _p.lookup.fieldMap[origKey]
-                        resolveArgs[renamedKey] = formData[origKey];
-                }
-                resolveArgs.formData = formData;
-            }
-
-            sic.callMethod(resolveArgs, function(resp){
-                _p.lookupInput.selector.val(resp.resolveValue);
-            });
-        };
-
         this.input.selector.blur(function(e){
-            // ... Resolve
             _p.lookupResolve();
         });
 
@@ -232,7 +288,7 @@ sic.widget.sicInput = function(args)
     if (this.withCode) {
         this.codeSelect = new sic.widget.sicElement({parent:this.captionDiv.selector, tagName:"select", tagClass:"codeSelect"});
         for (var idx in this.withCode) {
-            var optionLabel = this.caption+" - "+sic.captionize(this.withCode[idx]);
+            var optionLabel = this.caption+" - "+this.withCode[idx];
             this.codeSelect.selector.append('<option value="'+idx+'">'+optionLabel+'</option>');
         }
     }
