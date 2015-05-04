@@ -3,6 +3,8 @@ var sic = { object:{}, widget:{}, data:{}, defaults:{} };
 sic.defaults = {
     fadeTime: 600,
     loadingFadeTime: 200,
+    hintFadeTime: 600,
+    hintTriggerDelay: 500,
 
     buttonGrad: "blue",
     submitGrad: "orange",
@@ -107,6 +109,7 @@ sic.callMethod = function(args, f) {
     return ajaxResult.responseJSON;
 };
 
+// Loading Animation
 sic.loading = {
     show: function(){
         //$('img#loadingGif').stop().css("display", "");
@@ -117,6 +120,14 @@ sic.loading = {
         $('img#loadingGif').stop().fadeOut(sic.defaults.loadingFadeTime);
     }
 };
+
+// Mouse Movement
+sic.mouse = { x: 0, y: 0 };
+$(document).mousemove(function(e) {
+    sic.mouse.x = e.pageX;
+    sic.mouse.y = e.pageY;
+});
+
 
 $(document).ready(function() {
     sic.data.contentElement = $('div#pageHolder');

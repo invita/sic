@@ -5,35 +5,51 @@ var F = function(args) {
 
     //sic.dump(args, 0);
 
-    var cobissData = sic.getArg(args, 'cobissData', null);
-    var creator = sic.getArg(cobissData, 'creator', null);
     var idno = sic.getArg(cobissData, 'idno', null);
+    var addidno = sic.getArg(cobissData, 'addidno', null);
     var title = sic.getArg(cobissData, 'title', null);
-    var publisher = sic.getArg(cobissData, 'publisher', null);
+    var addtitle = sic.getArg(cobissData, 'addtitle', null);
+    var creator = sic.getArg(cobissData, 'creator', null);
     var place = sic.getArg(cobissData, 'place', null);
+    var publisher = sic.getArg(cobissData, 'publisher', null);
     var year = sic.getArg(cobissData, 'year', null);
+    var volume = sic.getArg(cobissData, 'volume', null);
+    var issue = sic.getArg(cobissData, 'issue', null);
+    var page = sic.getArg(cobissData, 'page', null);
+    var edition = sic.getArg(cobissData, 'edition', null);
+    var source = sic.getArg(cobissData, 'source', null);
+    var strng = sic.getArg(cobissData, 'strng', null);
+    var note = sic.getArg(cobissData, 'note', null);
+
+    var cobissData = sic.getArg(args, 'cobissData', null);
     var cobissId = sic.getArg(cobissData, 'cobissId', null);
 
     var panel = new sic.widget.sicPanel({parent:tabPageBasic.content.selector,
         firstGroupName:"Update Publication"});
 
     var formUserData = new sic.widget.sicForm({parent:panel.firstGroup.content.selector, captionWidth:"140px"});
-    formUserData.addInput({name:"pub_id", type:"text", caption:"id", placeholder:"Id...", readOnly:true});
-
-    // TODO: Lookup...
-    formUserData.addInput({name:"parent_id", type:"text", caption:"parent", placeholder:"Parent...",
-        lookup:sic.mergeObjects(sic.lookup.publication, { fieldMap: { parent_id: "pub_id" }, tabPage:tabPageBasic }) });
-    formUserData.addInput({name:"creator", type:"text", caption:"creator", placeholder:"Creator...", isArray:true, value:[creator],
-        withCode:sic.codes.pubCreator});
-    formUserData.addInput({name:"title", type:"text", caption:"title", placeholder:"Title...", isArray:true, value:[title]});
-    formUserData.addInput({name:"publisher", type:"text", caption:"publisher", placeholder:"Publisher...", isArray:true, value:[publisher]});
-    formUserData.addInput({name:"place", type:"text", caption:"place", placeholder:"Place...", isArray:true, value:[place]});
-    formUserData.addInput({name:"year", type:"text", caption:"date", placeholder:"Year...", isArray:true, value:[year]});
-
-    formUserData.addInput({name:"idno", type:"text", caption:"idno", placeholder:"Idno...", isArray:true, value:[idno],
+    formUserData.addInput({name:"pub_id", type:"text", caption:"id", placeholder:"id...", readOnly:true});
+    formUserData.addInput({name:"idno", type:"text", caption:"idno", placeholder:"idno...", isArray:true, value:[idno],
         withCode:sic.codes.pubIdno});
+    formUserData.addInput({name:"addidno", type:"text", caption:"addIdno", placeholder:"addIdno...", isArray:true, value:[addidno]});
+    formUserData.addInput({name:"title", type:"text", caption:"title", placeholder:"title...", isArray:true, value:[title]});
+    formUserData.addInput({name:"addtitle", type:"text", caption:"addTitle", placeholder:"addTitle...", isArray:true, value:[addtitle]});
+    formUserData.addInput({name:"creator", type:"text", caption:"creator", placeholder:"creator...", isArray:true, value:[creator],
+        withCode:sic.codes.pubCreator});
+    formUserData.addInput({name:"place", type:"text", caption:"pubPlace", placeholder:"pubPlace...", isArray:true, value:[place]});
+    formUserData.addInput({name:"publisher", type:"text", caption:"publisher", placeholder:"publisher...", isArray:true, value:[publisher]});
+    formUserData.addInput({name:"year", type:"text", caption:"date", placeholder:"date...", isArray:true, value:[year]});
+    formUserData.addInput({name:"volume", type:"text", caption:"volume", placeholder:"volume...", isArray:true, value:[volume]});
+    formUserData.addInput({name:"issue", type:"text", caption:"issue", placeholder:"issue...", isArray:true, value:[issue]});
+    formUserData.addInput({name:"page", type:"text", caption:"page", placeholder:"page...", isArray:true, value:[page]});
+    formUserData.addInput({name:"edition", type:"text", caption:"edition", placeholder:"edition...", isArray:true, value:[edition]});
+    formUserData.addInput({name:"source", type:"text", caption:"source", placeholder:"source...", isArray:true, value:[source]});
+    formUserData.addInput({name:"strng", type:"text", caption:"string", placeholder:"string...", isArray:true, value:[strng]});
+    formUserData.addInput({name:"note", type:"text", caption:"note", placeholder:"note...", isArray:true, value:[note]});
 
-    formUserData.addInput({name:"original_id", type:"text", caption:"original", placeholder:"OriginalId...",
+    formUserData.addInput({name:"parent_id", type:"text", caption:"parent", placeholder:"parentId...",
+        lookup:sic.mergeObjects(sic.lookup.publication, { fieldMap: { parent_id: "pub_id" }, tabPage:tabPageBasic }) });
+    formUserData.addInput({name:"original_id", type:"text", caption:"regular", placeholder:"regularId...",
         lookup:sic.mergeObjects(sic.lookup.publication, { fieldMap: { original_id: "pub_id" }, tabPage:tabPageBasic }) });
     formUserData.addInput({name:"child_id", type:"text", caption:"child", placeholder:"ChildId...", isArray:true,
         lookup:sic.mergeObjects(sic.lookup.publication, { fieldMap: { child_id: "pub_id" }, tabPage:tabPageBasic }) });
@@ -41,7 +57,7 @@ var F = function(args) {
         var response = sic.callMethod({moduleName:"Pub/PubEdit", methodName:"pubUpdate",
             pub_id: args.pub_id, proj_id: args.proj_id, line_id: args.line_id, data:formUserData.getValue()});
         if (response && response.data) {
-            if (confirm("Saved. Close?")) {
+            if (confirm("Saved! Do you want to close this tab?")) {
                 tabPageBasic.parentTab.destroyTab();
             } else {
                 formUserData.setValue(response.data);

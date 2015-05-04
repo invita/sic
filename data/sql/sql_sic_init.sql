@@ -262,6 +262,75 @@ ALTER TABLE `publication_year` ADD PRIMARY KEY (`pub_id`,`idx`);
 
 
 
+CREATE TABLE `publication_addtitle` (
+  `pub_id` int(11) NOT NULL,
+  `idx` int(11) NOT NULL,
+  `addtitle` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `publication_addtitle` ADD PRIMARY KEY (`pub_id`,`idx`);
+
+CREATE TABLE `publication_addidno` (
+  `pub_id` int(11) NOT NULL,
+  `idx` int(11) NOT NULL,
+  `addidno` varchar(127) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `publication_addidno` ADD PRIMARY KEY (`pub_id`,`idx`);
+
+CREATE TABLE `publication_volume` (
+  `pub_id` int(11) NOT NULL,
+  `idx` int(11) NOT NULL,
+  `volume` varchar(16) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `publication_volume` ADD PRIMARY KEY (`pub_id`,`idx`);
+
+CREATE TABLE `publication_issue` (
+  `pub_id` int(11) NOT NULL,
+  `idx` int(11) NOT NULL,
+  `issue` varchar(16) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `publication_issue` ADD PRIMARY KEY (`pub_id`,`idx`);
+
+CREATE TABLE `publication_page` (
+  `pub_id` int(11) NOT NULL,
+  `idx` int(11) NOT NULL,
+  `page` varchar(16) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `publication_page` ADD PRIMARY KEY (`pub_id`,`idx`);
+
+CREATE TABLE `publication_edition` (
+  `pub_id` int(11) NOT NULL,
+  `idx` int(11) NOT NULL,
+  `edition` varchar(127) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `publication_edition` ADD PRIMARY KEY (`pub_id`,`idx`);
+
+CREATE TABLE `publication_source` (
+  `pub_id` int(11) NOT NULL,
+  `idx` int(11) NOT NULL,
+  `source` varchar(255) NOT NULL,
+  `code_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `publication_source` ADD PRIMARY KEY (`pub_id`,`idx`);
+
+CREATE TABLE `publication_strng` (
+  `pub_id` int(11) NOT NULL,
+  `idx` int(11) NOT NULL,
+  `strng` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `publication_strng` ADD PRIMARY KEY (`pub_id`,`idx`);
+
+CREATE TABLE `publication_note` (
+  `pub_id` int(11) NOT NULL,
+  `idx` int(11) NOT NULL,
+  `note` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `publication_note` ADD PRIMARY KEY (`pub_id`,`idx`);
+
+
+ALTER TABLE `quote` CHANGE `pub_page` `on_page` INT(11) NOT NULL, CHANGE `quoted_pub_page` `cited_page` INT(11) NOT NULL;
+
+
+
 CREATE OR REPLACE VIEW view_publication_list AS
 SELECT
     publication.pub_id AS pub_id,
@@ -269,55 +338,118 @@ SELECT
     publication.original_id AS original_id,
     publication.is_series AS is_series,
     (
-      SELECT GROUP_CONCAT(publication_creator.creator SEPARATOR ', ')
+      SELECT GROUP_CONCAT(publication_creator.creator SEPARATOR '||')
       FROM publication_creator WHERE publication_creator.pub_id = publication.pub_id
       ORDER BY publication_creator.idx
     ) AS creator,
     (
-      SELECT GROUP_CONCAT(publication_idno.idno SEPARATOR ', ')
+      SELECT GROUP_CONCAT(publication_creator.creator SEPARATOR '||')
+      FROM publication_creator INNER JOIN codes_pub_creator ON codes_pub_creator.code_id = publication_creator.code_id
+      WHERE publication_creator.pub_id = publication.pub_id AND codes_pub_creator.value = 'author'
+      ORDER BY publication_creator.idx
+    ) AS creator_author,
+    (
+      SELECT GROUP_CONCAT(publication_creator.creator SEPARATOR '||')
+      FROM publication_creator INNER JOIN codes_pub_creator ON codes_pub_creator.code_id = publication_creator.code_id
+      WHERE publication_creator.pub_id = publication.pub_id AND codes_pub_creator.value = 'editor'
+      ORDER BY publication_creator.idx
+    ) AS creator_editor,
+    (
+      SELECT GROUP_CONCAT(publication_creator.creator SEPARATOR '||')
+      FROM publication_creator INNER JOIN codes_pub_creator ON codes_pub_creator.code_id = publication_creator.code_id
+      WHERE publication_creator.pub_id = publication.pub_id AND codes_pub_creator.value = 'organization'
+      ORDER BY publication_creator.idx
+    ) AS creator_organization,
+    (
+      SELECT GROUP_CONCAT(publication_idno.idno SEPARATOR '||')
       FROM publication_idno WHERE publication_idno.pub_id = publication.pub_id
       ORDER BY publication_idno.idx
     ) AS idno,
     (
-      SELECT GROUP_CONCAT(publication_idno.idno SEPARATOR ', ')
+      SELECT GROUP_CONCAT(publication_idno.idno SEPARATOR '||')
       FROM publication_idno INNER JOIN codes_pub_idno ON codes_pub_idno.code_id = publication_idno.code_id
       WHERE publication_idno.pub_id = publication.pub_id AND codes_pub_idno.value = 'cobiss'
       ORDER BY publication_idno.idx
     ) AS idno_cobiss,
     (
-      SELECT GROUP_CONCAT(publication_idno.idno SEPARATOR ', ')
+      SELECT GROUP_CONCAT(publication_idno.idno SEPARATOR '||')
       FROM publication_idno INNER JOIN codes_pub_idno ON codes_pub_idno.code_id = publication_idno.code_id
       WHERE publication_idno.pub_id = publication.pub_id AND codes_pub_idno.value = 'issn'
       ORDER BY publication_idno.idx
     ) AS idno_issn,
     (
-      SELECT GROUP_CONCAT(publication_idno.idno SEPARATOR ', ')
+      SELECT GROUP_CONCAT(publication_idno.idno SEPARATOR '||')
       FROM publication_idno INNER JOIN codes_pub_idno ON codes_pub_idno.code_id = publication_idno.code_id
       WHERE publication_idno.pub_id = publication.pub_id AND codes_pub_idno.value = 'sistory'
       ORDER BY publication_idno.idx
     ) AS idno_sistory,
     (
-      SELECT GROUP_CONCAT(publication_year.year SEPARATOR ', ')
+      SELECT GROUP_CONCAT(publication_year.year SEPARATOR '||')
       FROM publication_year WHERE publication_year.pub_id = publication.pub_id
       ORDER BY publication_year.idx
     ) AS year,
     (
-      SELECT GROUP_CONCAT(publication_title.title SEPARATOR ', ')
+      SELECT GROUP_CONCAT(publication_title.title SEPARATOR '||')
       FROM publication_title WHERE publication_title.pub_id = publication.pub_id
       ORDER BY publication_title.idx
     ) AS title,
     (
-      SELECT GROUP_CONCAT(publication_publisher.publisher SEPARATOR ', ')
+      SELECT GROUP_CONCAT(publication_publisher.publisher SEPARATOR '||')
 			FROM publication_publisher WHERE publication_publisher.pub_id = publication.pub_id
 			ORDER BY publication_publisher.idx
     ) AS publisher,
     (
-      SELECT GROUP_CONCAT(publication_place.place SEPARATOR ', ')
-			FROM publication_place WHERE publication_place.pub_id = publication.pub_id
-			ORDER BY publication_place.idx
+      SELECT GROUP_CONCAT(publication_place.place SEPARATOR '||')
+      FROM publication_place WHERE publication_place.pub_id = publication.pub_id
+      ORDER BY publication_place.idx
     ) AS place,
     (
-      SELECT GROUP_CONCAT(publication_project_link.proj_id SEPARATOR ', ')
+      SELECT GROUP_CONCAT(publication_addidno.addidno SEPARATOR '||')
+      FROM publication_addidno WHERE publication_addidno.pub_id = publication.pub_id
+      ORDER BY publication_addidno.idx
+    ) AS addidno,
+    (
+      SELECT GROUP_CONCAT(publication_addtitle.addtitle SEPARATOR '||')
+      FROM publication_addtitle WHERE publication_addtitle.pub_id = publication.pub_id
+      ORDER BY publication_addtitle.idx
+    ) AS addtitle,
+    (
+      SELECT GROUP_CONCAT(publication_volume.volume SEPARATOR '||')
+      FROM publication_volume WHERE publication_volume.pub_id = publication.pub_id
+      ORDER BY publication_volume.idx
+    ) AS volume,
+    (
+      SELECT GROUP_CONCAT(publication_issue.issue SEPARATOR '||')
+      FROM publication_issue WHERE publication_issue.pub_id = publication.pub_id
+      ORDER BY publication_issue.idx
+    ) AS issue,
+    (
+      SELECT GROUP_CONCAT(publication_page.page SEPARATOR '||')
+      FROM publication_page WHERE publication_page.pub_id = publication.pub_id
+      ORDER BY publication_page.idx
+    ) AS page,
+    (
+      SELECT GROUP_CONCAT(publication_edition.edition SEPARATOR '||')
+      FROM publication_edition WHERE publication_edition.pub_id = publication.pub_id
+      ORDER BY publication_edition.idx
+    ) AS edition,
+    (
+      SELECT GROUP_CONCAT(publication_source.source SEPARATOR '||')
+      FROM publication_source WHERE publication_source.pub_id = publication.pub_id
+      ORDER BY publication_source.idx
+    ) AS source,
+    (
+      SELECT GROUP_CONCAT(publication_strng.strng SEPARATOR '||')
+      FROM publication_strng WHERE publication_strng.pub_id = publication.pub_id
+      ORDER BY publication_strng.idx
+    ) AS strng,
+    (
+      SELECT GROUP_CONCAT(publication_note.note SEPARATOR '||')
+      FROM publication_note WHERE publication_note.pub_id = publication.pub_id
+      ORDER BY publication_note.idx
+    ) AS note,
+    (
+      SELECT GROUP_CONCAT(publication_project_link.proj_id SEPARATOR '||')
 			FROM publication_project_link WHERE publication_project_link.pub_id = publication.pub_id
 			ORDER BY publication_project_link.link_id
     ) AS proj_id

@@ -105,7 +105,7 @@ div.sicDataTable > table.sicDataTable_table thead > tr > td.sortable:hover { cur
 div.sicDataTable > table.sicDataTable_table tbody > tr { cursor:pointer; height:28px; }
 div.sicDataTable > table.sicDataTable_table tbody > tr.hoverable:hover { background:#DDEEFF; }
 div.sicDataTable > table.sicDataTable_table tbody > tr > td.hoverable:hover { cursor:pointer; background:#DDEEFF; }
-div.sicDataTable > table.sicDataTable_table tbody > tr > td.sicDataTable_shortText > div { max-width:180px; color:gray; font-size:11px; }
+div.sicDataTable > table.sicDataTable_table tbody > tr > td.sicDataTable_shortText > div { color:gray; font-size:11px; }
 div.sicDataTable > div.insertButton { margin-bottom:5px; cursor:pointer; }
 div.sicDataTable > div.insertButton > span { color:#6699CC; font-weight:bold; margin-left:4px; vertical-align:middle; }
 div.sicDataTable > div.insertButton > img { vertical-align:middle; }
@@ -149,13 +149,14 @@ div.sicDialog > div.dialogContainer > div.dialogHeader > div.closeDiv { display:
 div.sicDialog > div.dialogContainer > div.dialogHeader > div.closeDiv:hover { opacity:1; }
 div.sicDialog > div.dialogContainer > div.dialogContent { z-index:1003; padding:5px; text-align:left; }
 
+div.sicHint { position:absolute; border:#DDDDDD solid 1px; border-radius:5px; padding:8px; background: black;
+    opacity:0.8; color:white; }
+span.hintTitle { color:white; font-weight:bold; font-size:14px; line-height:20px; }
+span.hintPropKey { color:silver; font-size:12px; }
+span.hintPropVal { color:white; font-size:12px; line-height:16px; }
+
 tr.sicHtmlTable_tr { }
 td.sicHtmlTable_td { vertical-align:top; }
-
-div.hierarchyDiv { margin:2px 2px 2px 10px; color:#333333; cursor:pointer; }
-div.hierarchyDiv:hover { color:#87BCEA; }
-div.hierarchyDiv.current { font-weight:bold; }
-
 
 div.initLoader { height:35px; vertical-align:middle; font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
     font-weight: bold; color:gray; padding:6px 5px; }

@@ -35,7 +35,8 @@ class PubSearch extends SicModuleAbs {
 
 
                 // ----- TODO: Temporary Solution
-                $arrayFields = array("creator", "idno", "year", "title");
+                $arrayFields = array("idno", "title", "creator", "year", "addidno", "addtitle", "place", "publisher",
+                    "volume", "issue", "page", "edition", "source", "strng", "note");
                 foreach ($arrayFields as $arrayField) {
                     if (is_array($fields[$arrayField]))
                         $fields[$arrayField] = $fields[$arrayField][0];
@@ -50,8 +51,8 @@ class PubSearch extends SicModuleAbs {
                 break;
         }
 
-        $select->columns(array(
-            "pub_id", "parent_id", "year", "idno_cobiss", "idno_issn", "creator", "title", "publisher", "place"));
+        //$select->columns(array(
+        //    "pub_id", "parent_id", "creator", "title", "year"));
         $select->from('view_publication_list');
         $select->where($where);
     }
@@ -59,11 +60,27 @@ class PubSearch extends SicModuleAbs {
     public function defineDataTableResponseData($args, ResultInterface $result) {
         $responseData = array();
         foreach($result as $row) {
-            $row['creator'] = Util::shortenText($row['creator'], PubEdit::$creatorMaxLen);
-            $row['title'] = Util::shortenText($row['title'], PubEdit::$titleMaxLen);
+            $newRow = array(
+                'pub_id' => $row['pub_id'],
+                'parent_id' => $row['parent_id'],
+                'creator' => Util::shortenText($row['creator'], PubEdit::$creatorMaxLen),
+                'title' => Util::shortenText($row['title'], PubEdit::$titleMaxLen),
+                'year' => $row['year'],
+                'is_series' => $row['parent_id'] == 0,
 
-            $row['publisher'] = Util::shortenText($row['publisher'], PubEdit::$publisherMaxLen);
-            $responseData[] = $row;
+                '_row' => $row
+            );
+
+            $newRow['_parentRow'] = array();
+            if ($row['parent_id'])
+                $newRow['_parentRow'] = DbUtil::selectRow("view_publication_list", null, array("pub_id" => $row['parent_id']));
+
+            //$row['creator'] = Util::shortenText($row['creator'], PubEdit::$creatorMaxLen);
+            //$row['title'] = Util::shortenText($row['title'], PubEdit::$titleMaxLen);
+            //$row['publisher'] = Util::shortenText($row['publisher'], PubEdit::$publisherMaxLen);
+            //$row['is_series'] = $row['parent_id'] == 0;
+
+            $responseData[] = $newRow;
         }
         return $responseData;
     }

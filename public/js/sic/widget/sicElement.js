@@ -80,19 +80,17 @@ sic.widget.sicElement = function(args)
 
 
 
-    // hint
-
-    /*
+    // Hint
     this.hintInited = false;
     this.setHint = function(text) {
         if (!_p.hintInited){
-            this.showHint = function(){ Cap.Screen.showHint(_p.hint); }
+            this.showHint = function(){ sic.showHint(_p.hint); }
             this.selector.mouseenter(function(e){
-                _p.hintTimeout = setTimeout(_p.showHint, Cap.Default.hintTriggerDelay);
+                _p.hintTimeout = setTimeout(_p.showHint, sic.defaults.hintTriggerDelay);
             });
             this.selector.mousemove(function(e){
                 if (_p.hintTimeout) clearTimeout(_p.hintTimeout);
-                _p.hintTimeout = setTimeout(_p.showHint, Cap.Default.hintTriggerDelay);
+                _p.hintTimeout = setTimeout(_p.showHint, sic.defaults.hintTriggerDelay);
             });
             this.selector.mouseleave(function(e){
                 if (_p.hintTimeout) clearTimeout(_p.hintTimeout);
@@ -103,10 +101,6 @@ sic.widget.sicElement = function(args)
     }
     if (this.hint) this.setHint(this.hint);
 
-    this.setDebug = function(title, object) {
-        _p.selector.click(function(){ Cap.Screen.showDebug(title, object); });
-    };
-     */
 
     this.setGradient = function(newGrad, hoverP, activeP) {
         this.gradient = newGrad;

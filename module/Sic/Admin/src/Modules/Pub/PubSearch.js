@@ -49,17 +49,28 @@ var F = function(args) {
 
     // *** Publication Search ***
     var searchFields = {
+
         pub_id: { caption:"id" },
-        creator: { caption:"creator", isArray:true, withCode:sic.codes.pubCreator },
-        title: { caption:"title", isArray:true },
-        year: { caption:"year", isArray:true },
         idno: { caption:"idno", isArray:true, withCode:sic.codes.pubIdno },
-        _group1: { caption: "Additional Fields (Click)", canMinimize: true, initHide: true },
-        //cobiss: {},
-        //issn: {},
-        publisher: { caption:"publisher" },
-        place: { caption:"place" },
-        _group2: { },
+        title: { caption:"title", isArray:true },
+        creator: { caption:"creator", isArray:true, withCode:sic.codes.pubCreator },
+        year: { caption:"date", isArray:true },
+
+        _group1: { caption: "Additional Fields (Click)", canMinimize: true, initHide: true }, // Group
+
+        addidno: { caption:"addIdno", isArray:true },
+        addtitle: { caption:"addTitle", isArray:true },
+        place: { caption:"place", isArray:true },
+        publisher: { caption:"publisher", isArray:true },
+        volume: { caption:"volume", isArray:true },
+        issue: { caption:"issue", isArray:true },
+        page: { caption:"page", isArray:true },
+        edition: { caption:"edition", isArray:true },
+        source: { caption:"source", isArray:true },
+        strng: { caption:"string", isArray:true },
+        note: { caption:"note", isArray:true },
+
+        _group2: { }, // Separator Group, make buttons (local db search) their own group
     }
 
     var pubSearchGroup = searchPanel.addGroup("Publication Search");
@@ -124,6 +135,93 @@ var F = function(args) {
         pubSearchForm.submit();
     }
 
+    var pubCellHint = function(row) {
+
+        var result = "";
+
+        var stringifyField = function(value, separator, args) {
+            if (!args) args = {};
+            value = sic.splitPipes(value);
+            var line = "";
+            if (!Array.isArray(value)) value = [value];
+
+            for (var i in value) {
+                if (line) line += separator;
+                if (args.prefix) line += args.prefix;
+                line += "<span class=\"hintPropVal\">"+value[i]+"</span>";
+                if (args.postfix) line += args.postfix;
+            }
+            return line;
+        }
+
+        var defaultAmp = "<span class=\"hintPropKey\"> &amp; </span>";
+        var colonAmp = "<span class=\"hintPropKey\"> &colon; </span>";
+        var commaAmp = "<span class=\"hintPropKey\">&comma; </span>";
+
+        if (row.creator_author) {
+            if (result) result += defaultAmp;
+            result += stringifyField(row.creator_author, defaultAmp);
+        }
+
+        if (row.creator_editor) {
+            if (result) result += defaultAmp;
+            result += stringifyField(row.creator_editor, defaultAmp, {postfix:"<span class=\"hintPropKey\"> (ed.)</span>"});
+        }
+
+        if (row.creator_organization) {
+            if (result) result += defaultAmp;
+            result += stringifyField(row.creator_organization, defaultAmp, {postfix:"<span class=\"hintPropKey\"> (org.)</span>"});
+        }
+
+        if (result) result += "<span class=\"hintPropKey\">. </span>";
+
+        if (row.title || row.addtitle) result += "<span class=\"hintPropKey\">&quot;</span>";
+        if (row.title) {
+            result += stringifyField(row.title, colonAmp);
+        }
+        if (row.addtitle) {
+            result += "<span class=\"hintPropKey\"> [</span>" +
+                stringifyField(row.addtitle, colonAmp) + "<span class=\"hintPropKey\">]</span>";
+        }
+        if (row.title || row.addtitle) result += "<span class=\"hintPropKey\">&quot;. </span>";
+
+        if (row.edition) {
+            result += stringifyField(row.edition, commaAmp, {prefix:"<span class=\"hintPropKey\">(ed.) </span>"});
+        }
+
+        if (row.volume) {
+            if (row.edition) result += commaAmp;
+            result += stringifyField(row.volume, commaAmp, {prefix:"<span class=\"hintPropKey\">(vol.) </span>"});
+        }
+
+        if (row.issue) {
+            if (row.edition || row.volume) result += commaAmp;
+            result += stringifyField(row.issue, commaAmp, {prefix:"<span class=\"hintPropKey\">(no.) </span>"});
+        }
+
+        if (result) result += "<span class=\"hintPropKey\">.|, </span>";
+
+        if (row.place) {
+            result += stringifyField(row.place, commaAmp);
+        }
+        if (row.publisher) {
+            if (row.place) result += colonAmp;
+            result += stringifyField(row.publisher, commaAmp);
+        }
+        if (result) result += "<span class=\"hintPropKey\">.|, </span>";
+
+        if (row.year) {
+            result += stringifyField(row.year, commaAmp);
+        }
+
+        if (row.page) {
+            if (row.year) result += commaAmp;
+            result += stringifyField(row.page, commaAmp, {prefix:"<span class=\"hintPropKey\">pp. </span>"});
+            if (result) result += "<span class=\"hintPropKey\">.</span>";
+        }
+
+        return result;
+    };
 
     var dataTable = new sic.widget.sicDataTable({
         parent:pubResultsContainer.selector,
@@ -131,7 +229,8 @@ var F = function(args) {
         entityTitle: "Pub %pub_id% - %title%",
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Pub/PubSearch",
-            staticData: { searchType: "pubSearch", fields: pubSearchForm.getValue() }
+            staticData: { searchType: "pubSearch", fields: pubSearchForm.getValue() },
+            pageCount: 30
         }),
         editorModuleArgs: {
             moduleName:"Pub/PubEdit",
@@ -142,8 +241,11 @@ var F = function(args) {
         tabPage: tabPage.parentTab ? tabPage.parentTab : tabPage,
         selectCallback: args.selectCallback,
         fields: {
+            pub_id: { hintF: function(args) { return pubCellHint(args.row.lastRowData._row) } },
+            parent_id: { hintF: function(args) { return pubCellHint(args.row.lastRowData._parentRow) } },
+            creator: { tagClass:"sicDataTable_shortText" },
             title: { tagClass:"sicDataTable_shortText" },
-            publisher: { tagClass:"sicDataTable_shortText" }
+            _row: { visible: false }
         }
     });
 

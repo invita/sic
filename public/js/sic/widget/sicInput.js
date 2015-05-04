@@ -4,7 +4,7 @@ sic.widget.sicInput = function(args)
     var _p = this;
 
     this._cons = sic.widget.sicElement;
-    this._cons({ parent:args.parent });
+    this._cons({ parent:args.parent, hint:args.hint });
     this.selector.addClass("sicInputDiv");
 
     this._eventb = sic.object.sicEventBase;

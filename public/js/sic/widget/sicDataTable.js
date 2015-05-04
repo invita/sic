@@ -618,6 +618,7 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
     this.setValue = function(rowData){
 
         _p.show();
+        _p.lastRowData = rowData;
 
         for (var fieldName in rowData) {
             if (_p.fields[fieldName]) _p.fields[fieldName].setValue(rowData[fieldName]);
@@ -706,6 +707,8 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
     this.clearValue = sic.getArg(args, "clearValue", "");
     this.visible = sic.getArg(args, "visible", true);
     this.tagClass = sic.getArg(args, "tagClass", "");
+    this.hint = sic.getArg(args, "hint", null);
+    this.hintF = sic.getArg(args, "hintF", null);
 
     this.headerField = sic.getArg(args, "headerField", this.row ? this.row.headerRow : false);
     this.filterField = sic.getArg(args, "filterField", this.row ? this.row.filterRow : false);
@@ -714,6 +717,7 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
     this.cellDataTable = sic.getArg(args, "cellDataTable", null);
     this.formView = sic.getArg(args, "formView", null);
     this.actions = sic.getArg(args, "actions", null);
+    this.autoSplitPipes = sic.getArg(args, "autoSplitPipes", ", ");
 
     this.valueDiv = new sic.widget.sicElement({parent:this.selector, tagClass:"inline"});
 
@@ -750,6 +754,7 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
 
     this.setValue = function(fieldValue){
         _p.fieldValue = fieldValue;
+
         if (_p.dataField && _p.cellDataTable) {
             _p.valueDiv.selector.empty();
             _p.cellDataTableInstance = new sic.widget.sicDataTable({
@@ -797,9 +802,13 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
             }
             //_p.valueDiv.selector.html('Actions!');
         } else if (_p.filterField) {
-            //_p.input.setValue(_p.fieldValue);
+            //_p.input.setValue(_p.processedValue);
         } else {
-            _p.valueDiv.selector.html(_p.fieldValue);
+            // Replace pipes
+            if (_p.autoSplitPipes)
+                _p.valueDiv.selector.html(sic.replacePipes(_p.fieldValue, _p.autoSplitPipes, 0));
+            else
+                _p.valueDiv.selector.html(_p.fieldValue);
         }
     };
 
@@ -856,6 +865,11 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
     // Set initial value
     this.setValue(this.fieldValue);
 
+    if (this.hint) this.setHint(this.hint);
+    if (this.hintF) {
+        this.setHint("");
+        this.showHint = function(){ sic.showHint(_p.hintF(_p.getEventArgs())); }
+    }
     if (!this.visible) this.displayNone();
     if (this.tagClass) this.selector.addClass(this.tagClass);
     if (this.filterField) this.dataTable.onDataFeedComplete(_p._recalcFilterInputWidth);

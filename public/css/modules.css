@@ -1,3 +1,5 @@
+
+/* Cobiss */
 .sicTabContent.cobiss select,
 .sicTabContent.cobiss input
 {
@@ -16,5 +18,15 @@
     display: none;
 }
 
+
+/* Search */
 div.pubSearch_leftContainer { width:440px; display: inline-table; }
 div.pubSearch_rightContainer { display: inline-table; }
+
+
+/* Pub */
+div.hierarchyDiv { margin:2px 2px 2px 10px; color:#333333; cursor:pointer; }
+div.hierarchyDiv:hover { color:#87BCEA; }
+div.hierarchyDiv.current { font-weight:bold; }
+
+

@@ -38,4 +38,12 @@ var F = function(args){
         sic.loadModule({moduleName:'Pub/PubSearch', newTab:'Search', inDialog: true});
     });
 
+    var group4 = panel.addGroup("Group4");
+    var hintButton = new sic.widget.sicInput({ parent:group4.content.selector, type:"button", name:"hint", hint:"Test" });
+    hintButton.selector.click(function(e){
+        var hint = new sic.widget.sicHint({text:"Hello Hint!"});
+        hint.moveToCursor();
+        hint.show();
+    });
+
 };

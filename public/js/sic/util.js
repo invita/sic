@@ -89,6 +89,33 @@ sic.removeStarsFromObject = function(obj, recursive) {
     return obj;
 };
 
+sic.replacePipes = function(value, newSeparator, depth) {
+    if (!value) return value;
+    if (typeof(newSeparator) == "undefined") newSeparator = ", ";
+    if (typeof(depth) == "undefined") depth = 3;
+
+    // If object given, duplicate, don't touch original
+    if (typeof(value) == "object") value = sic.mergeObjects(value);
+
+    return sic._replacePipes(value, newSeparator, depth);
+};
+
+sic._replacePipes = function(value, newSeparator, depth) {
+    if (depth > 0 && typeof(value) == "object")
+        for (var k in value)
+            value[k] = sic._replacePipes(value[k], newSeparator, depth -1);
+
+    if (typeof(value) == "string")
+        value = value.replace(/\|\|/g, newSeparator);
+
+    return value;
+};
+
+sic.splitPipes = function(value) {
+    if (typeof(value) != "string") return value;
+    return value.split("||");
+};
+
 sic.dump = function(obj, depth, nl, spaceChar) {
     alert(sic.debug(obj, depth, nl, spaceChar));
 };

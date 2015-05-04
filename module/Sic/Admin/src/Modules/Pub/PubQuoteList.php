@@ -18,7 +18,7 @@ class PubQuoteList extends SicModuleAbs {
         $staticData = Util::getArg($args, 'staticData', null);
         $pub_id = Util::getArg($staticData, 'pub_id', 0);
         $select->from('quote')
-            ->columns(array("quote_id", "pub_id", "pub_page", "quoted_pub_id", "quoted_pub_page"))
+            ->columns(array("quote_id", "pub_id", "on_page", "quoted_pub_id", "cited_page"))
             ->where(array('pub_id' => $pub_id));
     }
 
