@@ -245,7 +245,8 @@ var F = function(args) {
             parent_id: { hintF: function(args) { return pubCellHint(args.row.lastRowData._parentRow) } },
             creator: { tagClass:"sicDataTable_shortText" },
             title: { tagClass:"sicDataTable_shortText" },
-            _row: { visible: false }
+            _row: { visible: false },
+            _parentRow: { visible: false }
         }
     });
 
