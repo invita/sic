@@ -917,7 +917,7 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
     this.setValue(this.fieldValue);
 
     if (this.hint) this.setHint(this.hint);
-    if (this.hintF) {
+    if (this.hintF && _p.dataField) {
         this.setHint("");
         this.showHint = function(){ sic.showHint(_p.hintF(_p.getEventArgs())); }
     }
