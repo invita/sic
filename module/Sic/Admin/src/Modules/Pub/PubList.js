@@ -7,11 +7,22 @@ var F = function(args) {
         primaryKey: ['pub_id'],
         entityTitle: "Entity %pub_id% - %title%",
         dataSource: new sic.widget.sicDataTableDataSource({
-            moduleName:"Pub/PubList"
+            moduleName:"Pub/PubList",
+            pageCount: 20
         }),
         editorModuleArgs: {
             moduleName:"Pub/PubEdit",
             tabPage:tabPage
+        },
+        fields: {
+            pub_id: { hintF: function(args) { return sic.hint.publication(args.row.lastRowData._row) } },
+            parent_id: { hintF: function(args) { return sic.hint.publication(args.row.lastRowData._parentRow) } },
+            creator: { tagClass:"sicDataTable_shortText",
+                hintF: function(args) { return sic.replacePipes(args.row.lastRowData._row.creator, "<br/>") } },
+            title: { tagClass:"sicDataTable_shortText",
+                hintF: function(args) { return sic.replacePipes(args.row.lastRowData._row.title, "<br/>") } },
+            _row: { visible: false },
+            _parentRow: { visible: false }
         }
     });
 

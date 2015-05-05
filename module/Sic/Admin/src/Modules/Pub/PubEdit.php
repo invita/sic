@@ -9,7 +9,7 @@ use Sic\Admin\Models\DbUtil;
 class PubEdit {
 
     public static $creatorMaxLen = 60;
-    public static $titleMaxLen = 120;
+    public static $titleMaxLen = 80;
     public static $publisherMaxLen = 60;
 
     public static function getCreatorShort($pub_id) {

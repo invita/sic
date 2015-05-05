@@ -8,6 +8,7 @@ use Zend\Db\Sql\Expression;
 use Sic\Admin\Models\SicModuleAbs;
 use Sic\Admin\Models\Util;
 use Sic\Admin\Models\DbUtil;
+use Zend\Db\Adapter\Driver\ResultInterface;
 
 class PubList extends SicModuleAbs {
 
@@ -24,6 +25,34 @@ class PubList extends SicModuleAbs {
         }
     }
 
+    public function defineDataTableResponseData($args, ResultInterface $result) {
+        $responseData = array();
+        foreach($result as $row) {
+            $newRow = array(
+                'pub_id' => $row['pub_id'],
+                'parent_id' => $row['parent_id'],
+                'creator' => Util::shortenText($row['creator'], PubEdit::$creatorMaxLen),
+                'title' => Util::shortenText($row['title'], PubEdit::$titleMaxLen),
+                'year' => $row['year'],
+                'is_series' => $row['parent_id'] == 0,
+
+                '_row' => $row
+            );
+
+            $newRow['_parentRow'] = array();
+            if ($row['parent_id'])
+                $newRow['_parentRow'] = DbUtil::selectRow("view_publication_list", null, array("pub_id" => $row['parent_id']));
+
+            //$row['creator'] = Util::shortenText($row['creator'], PubEdit::$creatorMaxLen);
+            //$row['title'] = Util::shortenText($row['title'], PubEdit::$titleMaxLen);
+            //$row['publisher'] = Util::shortenText($row['publisher'], PubEdit::$publisherMaxLen);
+            //$row['is_series'] = $row['parent_id'] == 0;
+
+            $responseData[] = $newRow;
+        }
+        return $responseData;
+    }
+
     public function defineSqlDelete($args, Delete $delete)
     {
         $data = Util::getArg($args, 'data', null);
@@ -31,9 +60,28 @@ class PubList extends SicModuleAbs {
         $staticData = Util::getArg($args, 'staticData', array());
         $proj_id = Util::getArg($staticData, 'proj_id', null);
 
-        $delete->from('publication_project_link')->where(array("pub_id" => $pub_id));
-        $delete->from('publication_creator')->where(array("pub_id" => $pub_id));
-        $delete->from('publication_title')->where(array("pub_id" => $pub_id));
+        $joinedTables = array(
+            'publication_addidno',
+            'publication_addtitle',
+            'publication_creator',
+            'publication_edition',
+            'publication_idno',
+            'publication_issue',
+            'publication_note',
+            'publication_page',
+            'publication_place',
+            'publication_project_link',
+            'publication_publisher',
+            'publication_source',
+            'publication_strng',
+            'publication_title',
+            'publication_volume',
+            'publication_year'
+        );
+
+        foreach ($joinedTables as $i => $tableName)
+            $delete->from($tableName)->where(array("pub_id" => $pub_id));
+
         $delete->from('publication')->where(array("pub_id" => $pub_id));
     }
 
