@@ -5,6 +5,7 @@ use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
 use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Delete;
+use Zend\Db\Sql\Update;
 use Zend\Db\Sql\Where;
 use Zend\Db\Sql\Predicate\Operator;
 use Zend\Db\Adapter\Driver\ResultInterface;
@@ -123,6 +124,35 @@ abstract class SicModuleAbs
                 }
                 $conn->commit();
             }
+        }
+
+        $result = $this->dataTableSelect($args);
+        $result['rowsAffected'] = $rowsAffected;
+        return $result;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="DataTable UpdateRow">
+    public function defineSqlUpdateRow($args, Update $update) {
+
+    }
+
+    public function dataTableUpdateRow($args) {
+
+        $data = Util::getArg($args, 'data', null);
+        $rowsAffected = 0;
+
+        if ($data) {
+            $adapter = GlobalAdapterFeature::getStaticAdapter();
+            $sql = new Sql($adapter);
+            $update = $sql->update();
+            $this->defineSqlUpdateRow($args, $update);
+            $conn = $adapter->getDriver()->getConnection();
+            $conn->beginTransaction();
+            $statement = $sql->prepareStatementForSqlObject($update);
+            $sqlResult = $statement->execute();
+            $rowsAffected = $sqlResult->getAffectedRows();
+            $conn->commit();
         }
 
         $result = $this->dataTableSelect($args);

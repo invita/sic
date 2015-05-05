@@ -124,10 +124,17 @@ div.sicDataTable > div.dsControl > input.dataTable_pageInput { width:35px; text-
 div.sicDataTable > div.dsControl > input.dataTable_pageCount { width:35px; text-align:center; color:#444; border:none; }
 
 
+/* dataTableFilterInput */
 div.dataTableFilterInput { padding:0px; }
 div.dataTableFilterInput > input.sicInput { display:block; margin:auto; padding:0px; min-width:20px;
-    width:20px; height:20px; margin:0px -5px 0px -3px; }
+    width:20px; height:20px; margin:0px -5px 0px -3px; padding:0px 1px; }
 div.dataTableFilterInput.disabled > input.sicInput { background:#DDDDDD; opacity:0.25; }
+
+/* dataTableValueInput */
+div.dataTableValueInput { padding:0px; }
+div.dataTableValueInput > input.sicInput { display:block; margin:auto; padding:0px; min-width:20px;
+    width:20px; height:20px; margin:0px -5px 0px -3px; padding:0px 1px; }
+div.dataTableValueInput.disabled > input.sicInput { background:#DDDDDD; opacity:0.5; }
 
 div.sicDataTable > div.infoDiv { color:#222; background:#F5F5F5; display:inline-table; padding:5px; font-size:12px; border:#DDD solid 1px; font-weight:bold; }
 

@@ -110,6 +110,7 @@ var F = function(args) {
         parent:tabPageQuotes.content.selector,
         primaryKey: ['quote_id'],
         entityTitle: "Quote %quote_id%",
+        editable: true,
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Pub/PubQuoteList",
             staticData: { pub_id: args.pub_id }
@@ -119,8 +120,11 @@ var F = function(args) {
             tabPage:tabPageQuotes
         },
         fields: {
-            quoted_creator: { canSort:false },
-            quoted_title: { canSort:false }
+            quote_id: { caption:"Id", editable: false },
+            pub_id: { visible:false },
+            quoted_pub_id: { caption:"Cited Entity" },
+            quoted_creator: { canSort:false, editable:false, caption:"Creator" },
+            quoted_title: { canSort:false, editable:false, caption:"Title" }
         }
     });
     quotesDataTable.onFirstFeedComplete(function() {
@@ -143,6 +147,7 @@ var F = function(args) {
                 }});
         });
     });
+    tabPageQuotes.onActive(function(){ quotesDataTable.recalculateInputs(); });
 
     if (args.pub_id){
         var response = sic.callMethod({moduleName:"Pub/PubEdit", methodName:"pubSelect", pub_id: args.pub_id});

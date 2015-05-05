@@ -3,6 +3,7 @@ namespace Sic\Admin\Modules\Pub;
 
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Delete;
+use Zend\Db\Sql\Update;
 use Zend\Db\Sql\Literal;
 use Zend\Db\Sql\Expression;
 use Zend\Db\Adapter\Driver\ResultInterface;
@@ -37,6 +38,22 @@ class PubQuoteList extends SicModuleAbs {
         $data = Util::getArg($args, 'data', null);
         $quote_id = Util::getArg($data, 'quote_id', 0);
         $delete->from('quote')->where(array("quote_id" => $quote_id));
+    }
+
+    public function defineSqlUpdateRow($args, Update $update)
+    {
+        $data = Util::getArg($args, 'data', null);
+        $orig = Util::getArg($data, 'orig', null);
+        $row = Util::getArg($data, 'row', null);
+        $quote_id = Util::getArg($orig, 'quote_id', 0);
+        if ($quote_id) {
+            $updateFields = array(
+                "on_page" => Util::getArg($row, 'on_page', null),
+                "quoted_pub_id" => Util::getArg($row, 'quoted_pub_id', null),
+                "cited_page" => Util::getArg($row, 'cited_page', null)
+            );
+            $update->table('quote')->set($updateFields)->where(array("quote_id" => $quote_id));
+        }
     }
 
 }

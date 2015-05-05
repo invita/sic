@@ -24,6 +24,7 @@ sic.widget.sicDataTable = function(args)
     this.hoverRows = sic.getArg(args, "hoverRows", true);
     this.hoverCells = sic.getArg(args, "hoverCells", !this.hoverRows);
     this.tabPage = sic.getArg(args, "tabPage", null);
+    this.editable = sic.getArg(args, "editable", false);
     this.selectCallback = sic.getArg(args, "selectCallback", null);
 
     this.rowsPerPage = sic.getArg(args, "rowsPerPage", sic.defaults.dataTableRowsPerPage); // Ignored if dataSource is given
@@ -263,6 +264,11 @@ sic.widget.sicDataTable = function(args)
         //sic.dump(_p.getValue(), 0);
     };
 
+    this.recalculateInputs = function(){
+        for (var i = 0; i < _p.rows.length; i++)
+            _p.rows[i].recalculateInputs();
+    };
+
     this.applyFilter = function() {
         if (_p.filterRow)
             _p.filter.value = _p.filterRow.getFilterValue();
@@ -345,7 +351,7 @@ sic.widget.sicDataTable = function(args)
                 if (!bluePrint.fields[fieldName]) {
                     var fieldBP = sic.mergeObjects({}, _p.fields[fieldName]);
                     fieldBP.fieldKey = fieldName;
-                    fieldBP.fieldLabel = sic.captionize(fieldName);
+                    fieldBP.fieldLabel = fieldBP.caption ? fieldBP.caption : sic.captionize(fieldName);
                     fieldBP.fieldType = _p.getValueType(row[fieldName]);
                     fieldBP.initValue = _p.getInitValueForType(fieldBP.fieldType);
                     bluePrint.fields[fieldName] = fieldBP;
@@ -363,6 +369,7 @@ sic.widget.sicDataTable = function(args)
             actionBP.fieldType = 'actions';
             actionBP.canSort = false;
             actionBP.canFilter = false;
+            actionBP.editable = false;
             actionBP.actions = _p.actions;
             bluePrint.fields[actionName] = actionBP;
         }
@@ -376,6 +383,7 @@ sic.widget.sicDataTable = function(args)
             fieldBP.fieldType = 'delete';
             fieldBP.canSort = false;
             fieldBP.canFilter = false;
+            fieldBP.editable = false;
             fieldBP.initValue = _p.getInitValueForType(fieldBP.fieldType);
             bluePrint.fields[fieldName] = fieldBP;
         }
@@ -629,9 +637,14 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
         var result = {};
         for (var i in _p.fields) {
             if (_p.fields[i].fieldKey[0] == '_') continue;
-            result[_p.fields[i].fieldKey] = _p.fields[i].fieldValue;
+            result[_p.fields[i].fieldKey] = _p.fields[i].getValue();
         }
         return result;
+    };
+
+    this.updateRow = function() {
+        if (!_p.dataTable.dataSource) return;
+        _p.dataTable.dataSource.updateRow({orig:_p.lastRowData, row:_p.getValue()});
     };
 
     this.reprValue = function(){
@@ -664,7 +677,12 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
 
     this.recalculateInputs = function(){
         if (_p.filterRow)
-            for (var i in _p.fields) _p.fields[i]._recalcFilterInputWidth();
+            for (var i in _p.fields) _p.fields[i]._recalcInputWidth();
+
+        for (var i in _p.fields) {
+            if (_p.fields[i].editable && _p.fields[i].dataField)
+                _p.fields[i]._recalcInputWidth();
+        }
     };
 
     // Bind Events
@@ -707,8 +725,11 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
     this.clearValue = sic.getArg(args, "clearValue", "");
     this.visible = sic.getArg(args, "visible", true);
     this.tagClass = sic.getArg(args, "tagClass", "");
+    this.caption = sic.getArg(args, "caption", "");
     this.hint = sic.getArg(args, "hint", null);
     this.hintF = sic.getArg(args, "hintF", null);
+    this.width = sic.getArg(args, "width", null);
+    this.editable = sic.getArg(args, "editable", this.dataTable.editable);
 
     this.headerField = sic.getArg(args, "headerField", this.row ? this.row.headerRow : false);
     this.filterField = sic.getArg(args, "filterField", this.row ? this.row.filterRow : false);
@@ -720,6 +741,8 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
     this.autoSplitPipes = sic.getArg(args, "autoSplitPipes", ", ");
 
     this.valueDiv = new sic.widget.sicElement({parent:this.selector, tagClass:"inline"});
+
+    this.hasInput = false;
 
     if (this.headerField) {
         // Header field
@@ -737,9 +760,24 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
             _p.dataTable.applyFilter();
             _p.dataTable.refresh();
         });
+        this.hasInput = true;
     } else {
         // Data field
-        if (this.dataTable.hoverCells) this.selector.addClass("hoverable");
+        if (this.editable) {
+            this.input = new sic.widget.sicInput({parent:this.valueDiv.selector, name:this.fieldKey,
+                caption:false, showModified:true});
+            this.input.selector.addClass('dataTableValueInput');
+            //if (!this.canEdit) this.input.selector.addClass('disabled');
+            this.input.onEnterPressed(function(e) {
+                //_p.dataTable.applyFilter();
+                //_p.dataTable.refresh();
+                //sic.dump(_p.row.getValue());
+                _p.row.updateRow();
+            });
+            this.hasInput = true;
+        } else {
+            if (this.dataTable.hoverCells) this.selector.addClass("hoverable");
+        }
     }
 
     this.setSort = function(sortOrder){
@@ -802,17 +840,28 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
             }
             //_p.valueDiv.selector.html('Actions!');
         } else if (_p.filterField) {
-            //_p.input.setValue(_p.processedValue);
+
+        } else if (_p.headerField) {
+            _p.valueDiv.selector.html(_p.fieldValue);
         } else {
             // Replace pipes
-            if (_p.autoSplitPipes)
-                _p.valueDiv.selector.html(sic.replacePipes(_p.fieldValue, _p.autoSplitPipes, 0));
-            else
-                _p.valueDiv.selector.html(_p.fieldValue);
+            var fVal = _p.fieldValue;
+            if (_p.autoSplitPipes) fVal = sic.replacePipes(fVal, _p.autoSplitPipes, 0);
+
+            if (_p.editable && _p.dataField) {
+                _p.input.setValue(fVal);
+                _p.input.calcModified();
+                //_p.valueDiv.selector.html(fVal);
+            } else {
+                _p.valueDiv.selector.html(fVal);
+            }
         }
     };
 
     this.getValue = function(){
+        if (_p.hasInput)
+            return _p.input.getValue();
+
         return _p.fieldValue;
     };
 
@@ -834,10 +883,12 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
         return sic.mergeObjects(_p.row.getEventArgs(), { field: _p });
     };
 
-    this._recalcFilterInputWidth = function(){
-        if (_p.filterField) {
+    this._recalcInputWidth = function(){
+        if (_p.hasInput) {
             _p.input.input.selector.css("width", "");
-            _p.input.input.selector.css("width", (_p.selector.width()+8)+"px");
+            var newWidth = _p.selector.width()+7;
+            if (_p.width && newWidth < _p.width) newWidth = _p.width;
+            _p.input.input.selector.css("width", newWidth+"px");
         }
     };
 
@@ -872,8 +923,7 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
     }
     if (!this.visible) this.displayNone();
     if (this.tagClass) this.selector.addClass(this.tagClass);
-    if (this.filterField) this.dataTable.onDataFeedComplete(_p._recalcFilterInputWidth);
-
+    if (this.filterField || (this.editable && this.dataField)) this.dataTable.onDataFeedComplete(_p._recalcInputWidth);
 };
 
 
@@ -884,7 +934,8 @@ sic.widget.sicDataTableDataSource = function(args) {
     this._cons();
 
     this.moduleName = sic.getArg(args, "moduleName", null);
-    this.methodNames = sic.getArg(args, "methodNames", { select:'dataTableSelect', delete:'dataTableDelete' });
+    this.methodNames = sic.getArg(args, "methodNames", { select:'dataTableSelect', delete:'dataTableDelete',
+        updateRow:'dataTableUpdateRow' });
     this.filter = sic.getArg(args, "filter", {});
     this.sortField = sic.getArg(args, "sortField", null);
     this.sortOrder = sic.getArg(args, "sortOrder", "asc");
@@ -923,5 +974,9 @@ sic.widget.sicDataTableDataSource = function(args) {
 
     this.delete = function(args) {
         return sic.callMethod(_p.getMethodCallData(_p.methodNames.delete, args), _p.callbacks.feedData);
+    }
+
+    this.updateRow = function(args) {
+        return sic.callMethod(_p.getMethodCallData(_p.methodNames.updateRow, args), _p.callbacks.feedData);
     }
 }

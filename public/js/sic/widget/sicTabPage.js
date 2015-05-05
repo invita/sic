@@ -45,6 +45,7 @@ sic.widget.sicTabPage = function(args)
     this.onClose = function(f) { _p.subscribe("onClose", f); };
     this.onClosed = function(f) { _p.subscribe("onClosed", f); };
     this.onChildClosed = function(f) { _p.subscribe("onChildClosed", f); };
+    this.onActive = function(f) { _p.subscribe("onActive", f); };
 
     // Implementation
 
@@ -105,6 +106,7 @@ sic.widget.sicTabPage = function(args)
         _p.tabButton.selector.addClass("active");
         _p.tabButton.setGradient(_p.activeGrad, true, true);
         _p.content.selector.fadeIn(_p.fadeTime);
+        _p.trigger("onActive", {tabPage:_p});
     };
 
     this.destroyTab = function(){
