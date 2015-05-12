@@ -156,36 +156,6 @@ sic.widget.sicElement = function(args)
         _p.selector.css("position", "absolute").css("top", top).css("left", left);
     };
 
-    /*
-    if (this.draggable){
-        $(this.selector[0]).bind('mousedown', function(e){
-            _p._mouseDown = true;
-            _p._lastMousePos = Cap.Mouse.getPosition();
-            e.preventDefault();
-        });
-
-        $(document).bind('mousemove', function(e){
-            if (_p._mouseDown){
-                var curMousePos = Cap.Mouse.getPosition();
-                var dx = curMousePos.x - _p._lastMousePos.x;
-                var dy = curMousePos.y - _p._lastMousePos.y;
-                var target = typeof(_p.draggable) == "object" ? _p.draggable : _p.selector;
-                var left = parseInt(target.css("left"));
-                var top = parseInt(target.css("top"));
-                target.css("left", (left +dx) +"px");
-                target.css("top", (top +dy) +"px");
-                _p._lastMousePos = curMousePos;
-                e.preventDefault();
-            }
-        });
-
-        $(document).bind('mouseup', function(e){
-            _p._mouseDown = false;
-            e.preventDefault();
-        });
-    }
-    */
-
     this.addHtml = function(html){
         _p.selector.html(_p.selector.html()+html);
     };

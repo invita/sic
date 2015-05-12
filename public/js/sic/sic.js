@@ -139,5 +139,6 @@ $(document).ready(function() {
     var primaryPage = $('#primaryPage');
     if (primaryPage)
         sic.data.mainTab.content.selector.append(primaryPage);
+
 });
 

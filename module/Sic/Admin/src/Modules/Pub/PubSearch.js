@@ -66,7 +66,7 @@ var F = function(args) {
         issue: { caption:"issue", isArray:true },
         page: { caption:"page", isArray:true },
         edition: { caption:"edition", isArray:true },
-        source: { caption:"source", isArray:true },
+        source: { caption:"source", isArray:true, withCode:sic.codes.pubSource },
         strng: { caption:"string", isArray:true },
         note: { caption:"note", isArray:true },
 
@@ -74,13 +74,16 @@ var F = function(args) {
     }
 
     var pubSearchGroup = searchPanel.addGroup("Publication Search");
-    var pubSearchForm = new sic.widget.sicForm({parent:pubSearchGroup.content.selector, captionWidth:"140px"});
+    //var pubCopyParams
+
+    var pubSearchForm = new sic.widget.sicForm({parent:pubSearchGroup.content.selector, captionWidth:"140px",
+        showCopyPaste:true});
     for (var fieldName in searchFields) {
         if (fieldName[0] == "_") {
             pubSearchForm.addCaption(searchFields[fieldName]);
             continue;
         }
-        var fieldCaption = sic.captionize(fieldName);
+        var fieldCaption = sic.captionize(searchFields[fieldName].caption ? searchFields[fieldName].caption : fieldName);
         var inputArgs = sic.mergeObjects({name:fieldName, placeholder:fieldCaption+"...", caption:fieldCaption}, searchFields[fieldName]);
         pubSearchForm.addInput(inputArgs);
     }
@@ -159,8 +162,7 @@ var F = function(args) {
                 hintF: function(args) { return sic.replacePipes(args.row.lastRowData._row.creator, "<br/>") } },
             title: { tagClass:"sicDataTable_shortText",
                 hintF: function(args) { return sic.replacePipes(args.row.lastRowData._row.title, "<br/>") } },
-            year: { tagClass:"sicDataTable_shortText" },
-            is_series: { type: "checkbox" },
+            year: { tagClass:"sicDataTable_shortText", caption: "Date" },
             _row: { visible: false },
             _parentRow: { visible: false }
         }

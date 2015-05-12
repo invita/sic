@@ -206,7 +206,10 @@ CREATE TABLE `codes_pub_creator` (
   `value` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ALTER TABLE `codes_pub_creator` ADD PRIMARY KEY (`code_id`);
-INSERT INTO `codes_pub_creator` (`code_id`, `value`) VALUES ('1', 'author'), ('2', 'editor'), ('3', 'organization');
+TRUNCATE TABLE `codes_pub_creator`;
+INSERT INTO `codes_pub_creator` (`code_id`, `value`) VALUES
+    ('1', 'author'), ('2', 'addAuthor'), ('3', 'editor'), ('4', 'addEditor'),
+    ('5', 'organization'), ('6', 'translator');
 
 
 CREATE TABLE `codes_pub_idno` (
@@ -223,7 +226,10 @@ CREATE TABLE `codes_pub_source` (
   `value` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 ALTER TABLE `codes_pub_source` ADD PRIMARY KEY (`code_id`);
-INSERT INTO `codes_pub_source` (`code_id`, `value`) VALUES ('1', 'string'), ('2', 'url'), ('3', 'parent');
+TRUNCATE TABLE `codes_pub_source`;
+INSERT INTO `codes_pub_source` (`code_id`, `value`) VALUES
+    ('1', 'title'), ('2', 'editor'), ('3', 'creator'),
+    ('4', 'series'), ('5', 'collection'), ('6', 'string');
 
 
 RENAME TABLE `sic`.`publication_author` TO `sic`.`publication_creator`;
@@ -330,6 +336,7 @@ ALTER TABLE `publication_note` ADD PRIMARY KEY (`pub_id`,`idx`);
 ALTER TABLE `quote` CHANGE `pub_page` `on_page` INT(11) NOT NULL, CHANGE `quoted_pub_page` `cited_page` INT(11) NOT NULL;
 
 
+-- Before this view will work, import stored.sql into your mysql
 
 CREATE OR REPLACE VIEW view_publication_list AS
 SELECT
@@ -337,6 +344,7 @@ SELECT
     publication.parent_id AS parent_id,
     publication.original_id AS original_id,
     publication.is_series AS is_series,
+    pubGetSeries(publication.pub_id) AS series_id,
     (
       SELECT GROUP_CONCAT(publication_creator.creator SEPARATOR '||')
       FROM publication_creator WHERE publication_creator.pub_id = publication.pub_id

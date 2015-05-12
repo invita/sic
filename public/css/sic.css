@@ -82,6 +82,10 @@ div.dataTableFormView.sicForm > hr { margin:4px 0px 2px 0px; }
 
 div.sicForm > div.header { font-weight:bold; /*border:silver solid 1px;*/ padding:5px; margin:12px 0px 6px 0px; }
 div.sicForm > div.content {}
+div.sicForm > div.actionBar { text-align: right; }
+div.sicForm > div.actionBar > img.actionButton { width:16px; margin:0px 2px; cursor:pointer; }
+div.sicForm > div.actionBar > img.copyButton { }
+div.sicForm > div.actionBar > img.pasteButton { }
 
 input.sicInput[type=button], input.sicInput[type=submit] { color:white; padding:3px 10px; margin-right:3px; }
 input.sicInput[type=button].gradGold, input.sicInput[type=submit].gradGold { color:black; }

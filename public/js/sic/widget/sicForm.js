@@ -19,12 +19,31 @@ sic.widget.sicForm = function(args)
     this.enterSubmits = sic.getArg(args, "enterSubmits", true);
     this.showModified = sic.getArg(args, "showModified", true);
     this.captionWidth = sic.getArg(args, "captionWidth", null);
+    this.showCopyPaste = sic.getArg(args, "showCopyPaste", false);
     this.skipTypes = ["submit", "button"];
 
     // Events
     this.onSubmit = function(f) { _p.subscribe("onSubmit", f); };
 
     // Implementation
+
+    if (this.showCopyPaste) {
+        this.actionDiv = new sic.widget.sicElement({parent:this.selector, tagClass:"actionBar"});
+
+        this.copyButton = new sic.widget.sicElement({parent:this.actionDiv.selector, tagClass:"actionButton pasteButton",
+            tagName:"img", hint:"Copy to clipboard", attr: { src: "/img/icon/copy.png" }});
+        setTimeout(function(){
+            sic.attachCopyToClipboard(
+                _p.copyButton.selector,
+                function(){ return JSON.stringify(_p.getValue());},
+                function(){ alert("ok"); });
+        }, 100);
+
+        //this.pasteButton = new sic.widget.sicElement({parent:this.actionDiv.selector, tagClass:"actionButton copyButton",
+        //    tagName:"img", hint:"Paste", attr: { src: "/img/icon/paste.png" }});
+        //this.pasteButton.selector.click(function(){ _p.pasteFromClipboard(); });
+    }
+
     this.addInput = function(args){
         var input;
         var parent = _p.lastCaptionContent ? _p.lastCaptionContent.selector :  _p.selector;
@@ -43,6 +62,7 @@ sic.widget.sicForm = function(args)
         } else {
             input = new args.inputConstruct(args);
         }
+        input.onPaste(_p._onPaste);
         input.onKeyPressed(_p._onKeyPressed);
         if (args.type == "submit") {
             _p._submitInput = input;
@@ -105,7 +125,6 @@ sic.widget.sicForm = function(args)
         if (_p._submitInput) _p._submitInput.selector.click();
     };
 
-
     this.allInputs = {
         resetModified: function(){
             for (var i in _p.inputs) {
@@ -122,5 +141,22 @@ sic.widget.sicForm = function(args)
     };
     this._onKeyPressed = function(e) {
         if (e.which == 13 && _p.enterSubmits) _p.submit();
+    };
+    this._onPaste = function(e) {
+        setTimeout(function(){
+            var strValue = e.sicInput.getValue();
+            if (typeof(strValue) == "object") {
+                if (typeof(strValue[0]) == "string")
+                    strValue = strValue[0];
+                if (typeof(strValue[0]) == "object" && typeof(strValue[0].value) == "string")
+                    strValue = strValue[0].value;
+            }
+            try {
+                var value = JSON.parse(strValue);
+                _p.setValue(value);
+            } catch (err) {
+
+            }
+        }, 30);
     };
 };

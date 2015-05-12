@@ -116,6 +116,18 @@ sic.splitPipes = function(value) {
     return value.split("||");
 };
 
+sic.attachCopyToClipboard = function(sel, text, afterCopyF) {
+
+    if (!afterCopyF) afterCopyF = function() {};
+
+    sel.zclip({
+        path: 'lib/jquery/ZeroClipboard.swf?noCache'+Math.random(),
+        copy: text,
+        afterCopy: afterCopyF
+    });
+
+};
+
 sic.dump = function(obj, depth, nl, spaceChar) {
     alert(sic.debug(obj, depth, nl, spaceChar));
 };

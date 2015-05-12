@@ -43,12 +43,14 @@ var F = function(args) {
     formUserData.addInput({name:"issue", type:"text", caption:"issue", placeholder:"issue...", isArray:true, value:[issue]});
     formUserData.addInput({name:"page", type:"text", caption:"page", placeholder:"page...", isArray:true, value:[page]});
     formUserData.addInput({name:"edition", type:"text", caption:"edition", placeholder:"edition...", isArray:true, value:[edition]});
-    formUserData.addInput({name:"source", type:"text", caption:"source", placeholder:"source...", isArray:true, value:[source]});
+    formUserData.addInput({name:"source", type:"text", caption:"source", placeholder:"source...", isArray:true, value:[source],
+        withCode:sic.codes.pubSource});
     formUserData.addInput({name:"strng", type:"text", caption:"string", placeholder:"string...", isArray:true, value:[strng]});
     formUserData.addInput({name:"note", type:"text", caption:"note", placeholder:"note...", isArray:true, value:[note]});
 
     formUserData.addInput({name:"parent_id", type:"text", caption:"parent", placeholder:"parentId...",
         lookup:sic.mergeObjects(sic.lookup.publication, { fieldMap: { parent_id: "pub_id" }, tabPage:tabPageBasic }) });
+    formUserData.addInput({name:"is_series", type:"text", caption:"is series", placeholder:"isSeries..."});
     formUserData.addInput({name:"original_id", type:"text", caption:"regular", placeholder:"regularId...",
         lookup:sic.mergeObjects(sic.lookup.publication, { fieldMap: { original_id: "pub_id" }, tabPage:tabPageBasic }) });
     formUserData.addInput({name:"child_id", type:"text", caption:"child", placeholder:"ChildId...", isArray:true,

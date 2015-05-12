@@ -40,6 +40,8 @@ sic.widget.sicInput = function(args)
     this.onKeyUp = function(f) { _p.subscribe("onKeyUp", f); };
     this.onEnterPressed = function(f) { _p.subscribe("onEnterPressed", f); };
 
+    this.onPaste = function(f) { _p.subscribe("onPaste", f); };
+
     // Create elements
     this.input = new sic.widget.sicElement({ parent:this.selector, tagName:this.inputTagName });
     this.input.selector.addClass("sicInput");
@@ -271,9 +273,15 @@ sic.widget.sicInput = function(args)
         _p.trigger('onKeyUp', e);
     };
 
+    this._onPaste = function(e) {
+        e.sicInput = _p;
+        _p.trigger('onPaste', e);
+    };
+
     this.input.selector.keydown(_p._onKeyDown);
     this.input.selector.keypress(_p._onKeyPressed);
     this.input.selector.keyup(_p._onKeyUp);
+    this.input.selector.on("paste", _p._onPaste);
 
     if (!this.isButton() && this.caption === null)
         this.caption = sic.captionize(this.name);

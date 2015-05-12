@@ -172,7 +172,8 @@ class PubEdit {
         $source = Util::getArg($data, 'source', array());
         DbUtil::deleteFrom('publication_source', array('pub_id' => $pub_id));
         for ($idx = 0; $idx < count($source); $idx++)
-            DbUtil::insertInto('publication_source', array('pub_id' => $pub_id, 'idx' => $idx, 'source' => $source[$idx]));
+            DbUtil::insertInto('publication_source', array('pub_id' => $pub_id, 'idx' => $idx,
+                'source' => $source[$idx]["value"], 'code_id' => $source[$idx]["codeId"]));
 
         $strng = Util::getArg($data, 'strng', array());
         DbUtil::deleteFrom('publication_strng', array('pub_id' => $pub_id));

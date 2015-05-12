@@ -23,6 +23,7 @@ sic.widget.sicInputArray = function(args)
     this.onKeyDown = function(f) { _p.subscribe("onKeyDown", f); };
     this.onKeyPressed = function(f) { _p.subscribe("onKeyPressed", f); };
     this.onKeyUp = function(f) { _p.subscribe("onKeyUp", f); };
+    this.onPaste = function(f) { _p.subscribe("onPaste", f); };
 
     // Implementation
     if (!this.name) this.name = sic.widget._nextInputId();
@@ -41,6 +42,7 @@ sic.widget.sicInputArray = function(args)
         input.onKeyDown(function(e) { e.sicInput = _p; _p.trigger('onKeyDown', e); });
         input.onKeyPressed(function(e) { e.sicInput = _p; _p.trigger('onKeyPressed', e); });
         input.onKeyUp(function(e) { e.sicInput = _p; _p.trigger('onKeyUp', e); });
+        input.onPaste(function(e) { e.sicInput = _p; _p.trigger('onPaste', e); });
 
         input.delButton = new sic.widget.sicElement({ parent:input.selector, tagName:"div" });
         input.delButton.selector.addClass("inputButton delButton").html("-");
