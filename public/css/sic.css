@@ -160,11 +160,11 @@ div.sicDialog > div.dialogContainer > div.dialogHeader > div.closeDiv { display:
 div.sicDialog > div.dialogContainer > div.dialogHeader > div.closeDiv:hover { opacity:1; }
 div.sicDialog > div.dialogContainer > div.dialogContent { z-index:1003; padding:5px; text-align:left; }
 
-div.sicHint { position:absolute; border:#DDDDDD solid 1px; border-radius:5px; padding:8px; background: black;
-    opacity:0.8; color:white; }
+div.sicHint { position:absolute; border:#DDDDDD solid 1px; border-radius:5px; padding:8px; background: #EEEEAA;
+    opacity:0.95; color:black; }
 span.hintTitle { color:white; font-weight:bold; font-size:14px; line-height:20px; }
-span.hintPropKey { color:silver; font-size:12px; }
-span.hintPropVal { color:white; font-size:12px; line-height:16px; }
+span.hintPropKey { color:gray; font-size:12px; }
+span.hintPropVal { color:black; font-size:12px; line-height:16px; }
 
 tr.sicHtmlTable_tr { }
 td.sicHtmlTable_td { vertical-align:top; }

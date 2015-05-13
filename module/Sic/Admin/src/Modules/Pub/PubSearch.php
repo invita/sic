@@ -63,10 +63,10 @@ class PubSearch extends SicModuleAbs {
             $newRow = array(
                 'pub_id' => $row['pub_id'],
                 'parent_id' => $row['parent_id'],
+                'series_id' => $row['series_id'],
                 'creator' => Util::shortenText($row['creator'], PubEdit::$creatorMaxLen),
                 'title' => Util::shortenText($row['title'], PubEdit::$titleMaxLen),
                 'year' => $row['year'],
-                'series_id' => $row['series_id'],
                 //'is_series' => $row['is_series'],
 
                 '_row' => $row

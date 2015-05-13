@@ -31,15 +31,18 @@ class PubList extends SicModuleAbs {
             $newRow = array(
                 'pub_id' => $row['pub_id'],
                 'parent_id' => $row['parent_id'],
+                'series_id' => $row['series_id'],
                 'creator' => Util::shortenText($row['creator'], PubEdit::$creatorMaxLen),
                 'title' => Util::shortenText($row['title'], PubEdit::$titleMaxLen),
                 'year' => $row['year'],
-                'is_series' => $row['parent_id'] == 0,
 
                 '_row' => $row
             );
 
             $newRow['_parentRow'] = array();
+            if ($row['parent_id'])
+                $newRow['_parentRow'] = DbUtil::selectRow("view_publication_list", null, array("pub_id" => $row['parent_id']));
+            $newRow['_seriesRow'] = array();
             if ($row['parent_id'])
                 $newRow['_parentRow'] = DbUtil::selectRow("view_publication_list", null, array("pub_id" => $row['parent_id']));
 
