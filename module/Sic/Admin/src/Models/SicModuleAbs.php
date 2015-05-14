@@ -88,8 +88,8 @@ abstract class SicModuleAbs
 
         return array(
             'data' => $responseData,
-            'rowCount' => $rowCount,
-            'sql' => $statement->getSql()
+            'rowCount' => $rowCount
+            //'sql' => $statement->getSql()
         );
     }
 

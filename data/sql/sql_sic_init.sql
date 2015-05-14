@@ -336,10 +336,42 @@ ALTER TABLE `publication_note` ADD PRIMARY KEY (`pub_id`,`idx`);
 ALTER TABLE `quote` CHANGE `pub_page` `on_page` INT(11) NOT NULL, CHANGE `quoted_pub_page` `cited_page` INT(11) NOT NULL;
 
 
+-- 2015-05-14
+
+
+CREATE TABLE `codes_pub_online` (
+  `code_id` int(11) NOT NULL,
+  `value` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `codes_pub_online` ADD PRIMARY KEY (`code_id`);
+TRUNCATE TABLE `codes_pub_online`;
+INSERT INTO `codes_pub_online` (`code_id`, `value`) VALUES
+    ('1', 'url'), ('2', 'when'), ('3', 'title');
+
+CREATE TABLE `codes_pub_sameas` (
+  `code_id` int(11) NOT NULL,
+  `value` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `codes_pub_sameas` ADD PRIMARY KEY (`code_id`);
+TRUNCATE TABLE `codes_pub_sameas`;
+INSERT INTO `codes_pub_sameas` (`code_id`, `value`) VALUES
+    ('1', 'regular'), ('2', 'alternative');
+
+CREATE TABLE `publication_online` (
+  `pub_id` int(11) NOT NULL,
+  `idx` int(11) NOT NULL,
+  `online` varchar(255) NOT NULL,
+  `code_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `publication_online` ADD PRIMARY KEY (`pub_id`,`idx`);
+
+
+
+
 -- Before this view will work, import stored.sql into your mysql
 
 CREATE OR REPLACE VIEW view_publication_list AS
-SELECT
+  SELECT
     publication.pub_id AS pub_id,
     publication.parent_id AS parent_id,
     publication.original_id AS original_id,
@@ -403,8 +435,8 @@ SELECT
     ) AS title,
     (
       SELECT GROUP_CONCAT(publication_publisher.publisher SEPARATOR '||')
-			FROM publication_publisher WHERE publication_publisher.pub_id = publication.pub_id
-			ORDER BY publication_publisher.idx
+      FROM publication_publisher WHERE publication_publisher.pub_id = publication.pub_id
+      ORDER BY publication_publisher.idx
     ) AS publisher,
     (
       SELECT GROUP_CONCAT(publication_place.place SEPARATOR '||')
@@ -447,6 +479,11 @@ SELECT
       ORDER BY publication_source.idx
     ) AS source,
     (
+      SELECT GROUP_CONCAT(publication_online.online SEPARATOR '||')
+      FROM publication_online WHERE publication_online.pub_id = publication.pub_id
+      ORDER BY publication_online.idx
+    ) AS online,
+    (
       SELECT GROUP_CONCAT(publication_strng.strng SEPARATOR '||')
       FROM publication_strng WHERE publication_strng.pub_id = publication.pub_id
       ORDER BY publication_strng.idx
@@ -458,9 +495,10 @@ SELECT
     ) AS note,
     (
       SELECT GROUP_CONCAT(publication_project_link.proj_id SEPARATOR '||')
-			FROM publication_project_link WHERE publication_project_link.pub_id = publication.pub_id
-			ORDER BY publication_project_link.link_id
+      FROM publication_project_link WHERE publication_project_link.pub_id = publication.pub_id
+      ORDER BY publication_project_link.link_id
     ) AS proj_id
 
-FROM publication;
+  FROM publication;
+
 

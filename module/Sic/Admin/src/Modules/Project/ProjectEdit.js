@@ -34,8 +34,9 @@ var F = function(args) {
 
 
     var hasLines = args.proj_id && args.row && parseInt(args.row['lines_count']) ? true : false;
-    var tabPagePub = tabPageBasic.createTabPage({name:"Publications", canClose:false, autoActive: hasLines });
-    var panelPub = new sic.widget.sicPanel({parent:tabPagePub.content.selector, firstGroupName: "Project Lines List"});
+    var tabPagePub = tabPageBasic.createTabPage({name:"List", canClose:false, autoActive: hasLines });
+    var panelPub = new sic.widget.sicPanel({parent:tabPagePub.content.selector});
+    panelPub.addGroup();
 
     var linesTable = new sic.widget.sicDataTable({
         parent: panelPub.firstGroup.content.selector,

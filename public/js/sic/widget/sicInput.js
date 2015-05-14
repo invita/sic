@@ -90,30 +90,19 @@ sic.widget.sicInput = function(args)
         this.lookupResolve = function(){
             var resolveArgs = sic.mergeObjects({ aSync: true }, _p.lookup.resolve);
             var name = _p.inputArray ? _p.inputArray.name : _p.name;
+            var value = _p.getValue();
 
-            var targetFieldName = name;
-            if (_p.lookup.fieldMap && _p.lookup.fieldMap[name]) targetFieldName = _p.lookup.fieldMap[name];
-            resolveArgs[targetFieldName] = _p.getValue();
+            if (value && parseInt(value)) {
+                var targetFieldName = name;
+                if (_p.lookup.fieldMap && _p.lookup.fieldMap[name]) targetFieldName = _p.lookup.fieldMap[name];
+                resolveArgs[targetFieldName] = value;
 
-            /*
-            resolveArgs[_p.name] = _p.getValue();
-            if (_p.form) {
-                var formData = _p.form.getValue();
-                if (_p.lookup.fieldMap){
-                    for (var origKey in _p.lookup.fieldMap) {
-                        var renamedKey = _p.lookup.fieldMap[origKey]
-                        if (_p.inputArray && renamedKey == _p.inputArray.name)
-                            renamedKey = _p.name;
-                        resolveArgs[renamedKey] = formData[origKey];
-                    }
-                }
-                resolveArgs.formData = formData;
+                sic.callMethod(resolveArgs, function(resp){
+                    _p.lookupInput.selector.val(resp.resolveValue);
+                });
+            } else {
+                _p.lookupInput.selector.val('');
             }
-
-            */
-            sic.callMethod(resolveArgs, function(resp){
-                _p.lookupInput.selector.val(resp.resolveValue);
-            });
         };
 
 

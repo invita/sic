@@ -36,6 +36,7 @@ sic.widget.sicTabPage = function(args)
     this.contentText = sic.getArg(args, "contentText", "");
     this.fadeTime = sic.getArg(args, "fadeTime", sic.defaults.fadeTime);
     this.hideHeader = sic.getArg(args, "hideHeader", false);
+    this.cropCaptionLength = sic.getArg(args, "cropCaptionLength", 30);
 
     this.activeGrad = sic.getArg(args, "activeGrad", sic.defaults.tabActiveGrad);
     this.inactiveGrad = sic.getArg(args, "inactiveGrad", sic.defaults.tabInactiveGrad);
@@ -135,6 +136,10 @@ sic.widget.sicTabPage = function(args)
 
     this.setCaption = function(newCaption) {
         newCaption = newCaption.trim();
+
+        if (_p.cropCaptionLength && newCaption.length > _p.cropCaptionLength)
+            newCaption = newCaption.substring(0, _p.cropCaptionLength)+"...";
+
         _p.caption = newCaption;
         _p.tabButton.captionSpan.selector.html(newCaption);
     };

@@ -18,6 +18,7 @@ var F = function(args) {
     var page = sic.getArg(cobissData, 'page', null);
     var edition = sic.getArg(cobissData, 'edition', null);
     var source = sic.getArg(cobissData, 'source', null);
+    var online = sic.getArg(cobissData, 'online', null);
     var strng = sic.getArg(cobissData, 'strng', null);
     var note = sic.getArg(cobissData, 'note', null);
 
@@ -28,32 +29,34 @@ var F = function(args) {
         firstGroupName:"Update Publication"});
 
     var formUserData = new sic.widget.sicForm({parent:panel.firstGroup.content.selector, captionWidth:"140px"});
-    formUserData.addInput({name:"pub_id", type:"text", caption:"id", placeholder:"id...", readOnly:true});
-    formUserData.addInput({name:"idno", type:"text", caption:"idno", placeholder:"idno...", isArray:true, value:[idno],
+    formUserData.addInput({name:"pub_id", type:"text", caption:"id", placeholder:"Entity Identifier", readOnly:true});
+    formUserData.addInput({name:"idno", type:"text", caption:"idno", placeholder:"Identifier", isArray:true, value:[idno],
         withCode:sic.codes.pubIdno});
-    formUserData.addInput({name:"addidno", type:"text", caption:"addIdno", placeholder:"addIdno...", isArray:true, value:[addidno]});
-    formUserData.addInput({name:"title", type:"text", caption:"title", placeholder:"title...", isArray:true, value:[title]});
-    formUserData.addInput({name:"addtitle", type:"text", caption:"addTitle", placeholder:"addTitle...", isArray:true, value:[addtitle]});
-    formUserData.addInput({name:"creator", type:"text", caption:"creator", placeholder:"creator...", isArray:true, value:[creator],
+    formUserData.addInput({name:"addidno", type:"text", caption:"addIdno", placeholder:"Additional Identifier", isArray:true, value:[addidno]});
+    formUserData.addInput({name:"title", type:"text", caption:"title", placeholder:"Title", isArray:true, value:[title]});
+    formUserData.addInput({name:"addtitle", type:"text", caption:"addTitle", placeholder:"Additional Title", isArray:true, value:[addtitle]});
+    formUserData.addInput({name:"creator", type:"text", caption:"creator", placeholder:"Creator", isArray:true, value:[creator],
         withCode:sic.codes.pubCreator});
-    formUserData.addInput({name:"place", type:"text", caption:"pubPlace", placeholder:"pubPlace...", isArray:true, value:[place]});
-    formUserData.addInput({name:"publisher", type:"text", caption:"publisher", placeholder:"publisher...", isArray:true, value:[publisher]});
-    formUserData.addInput({name:"year", type:"text", caption:"date", placeholder:"date...", isArray:true, value:[year]});
-    formUserData.addInput({name:"volume", type:"text", caption:"volume", placeholder:"volume...", isArray:true, value:[volume]});
-    formUserData.addInput({name:"issue", type:"text", caption:"issue", placeholder:"issue...", isArray:true, value:[issue]});
-    formUserData.addInput({name:"page", type:"text", caption:"page", placeholder:"page...", isArray:true, value:[page]});
-    formUserData.addInput({name:"edition", type:"text", caption:"edition", placeholder:"edition...", isArray:true, value:[edition]});
-    formUserData.addInput({name:"source", type:"text", caption:"source", placeholder:"source...", isArray:true, value:[source],
+    formUserData.addInput({name:"place", type:"text", caption:"pubPlace", placeholder:"Publication Place", isArray:true, value:[place]});
+    formUserData.addInput({name:"publisher", type:"text", caption:"publisher", placeholder:"Publisher", isArray:true, value:[publisher]});
+    formUserData.addInput({name:"year", type:"text", caption:"date", placeholder:"Date", isArray:true, value:[year]});
+    formUserData.addInput({name:"volume", type:"text", caption:"volume", placeholder:"Volume", isArray:true, value:[volume]});
+    formUserData.addInput({name:"issue", type:"text", caption:"issue", placeholder:"Issue", isArray:true, value:[issue]});
+    formUserData.addInput({name:"page", type:"text", caption:"page", placeholder:"Page", isArray:true, value:[page]});
+    formUserData.addInput({name:"edition", type:"text", caption:"edition", placeholder:"Edition", isArray:true, value:[edition]});
+    formUserData.addInput({name:"source", type:"text", caption:"source", placeholder:"Source", isArray:true, value:[source],
         withCode:sic.codes.pubSource});
-    formUserData.addInput({name:"strng", type:"text", caption:"string", placeholder:"string...", isArray:true, value:[strng]});
-    formUserData.addInput({name:"note", type:"text", caption:"note", placeholder:"note...", isArray:true, value:[note]});
+    formUserData.addInput({name:"online", type:"text", caption:"online", placeholder:"Online", isArray:true, value:[online],
+        withCode:sic.codes.pubOnline});
+    formUserData.addInput({name:"strng", type:"text", caption:"string", placeholder:"String", isArray:true, value:[strng]});
+    formUserData.addInput({name:"note", type:"text", caption:"note", placeholder:"Note", isArray:true, value:[note]});
 
-    formUserData.addInput({name:"parent_id", type:"text", caption:"parent", placeholder:"parentId...",
+    formUserData.addInput({name:"parent_id", type:"text", caption:"parent", placeholder:"Parent Identifier",
         lookup:sic.mergeObjects(sic.lookup.publication, { fieldMap: { parent_id: "pub_id" }, tabPage:tabPageBasic }) });
-    formUserData.addInput({name:"is_series", type:"text", caption:"is series", placeholder:"isSeries..."});
-    formUserData.addInput({name:"original_id", type:"text", caption:"regular", placeholder:"regularId...",
+    formUserData.addInput({name:"is_series", type:"text", caption:"is series", placeholder:"Is Series"});
+    formUserData.addInput({name:"original_id", type:"text", caption:"regular", placeholder:"Regular Identifier",
         lookup:sic.mergeObjects(sic.lookup.publication, { fieldMap: { original_id: "pub_id" }, tabPage:tabPageBasic }) });
-    formUserData.addInput({name:"child_id", type:"text", caption:"child", placeholder:"ChildId...", isArray:true,
+    formUserData.addInput({name:"child_id", type:"text", caption:"child", placeholder:"Child Identifier", isArray:true,
         lookup:sic.mergeObjects(sic.lookup.publication, { fieldMap: { child_id: "pub_id" }, tabPage:tabPageBasic }) });
     formUserData.addInput({name:"save", type:"submit", value:"Save", caption:" "}).selector.click(function(e){
         var response = sic.callMethod({moduleName:"Pub/PubEdit", methodName:"pubUpdate",

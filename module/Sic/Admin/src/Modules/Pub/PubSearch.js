@@ -50,25 +50,26 @@ var F = function(args) {
     // *** Publication Search ***
     var searchFields = {
 
-        pub_id: { caption:"id" },
-        idno: { caption:"idno", isArray:true, withCode:sic.codes.pubIdno },
-        title: { caption:"title", isArray:true },
-        creator: { caption:"creator", isArray:true, withCode:sic.codes.pubCreator },
-        year: { caption:"date", isArray:true },
+        pub_id: { caption:"id", placeholder:"Entity Identifier" },
+        idno: { caption:"idno", placeholder:"Identifier", isArray:true, withCode:sic.codes.pubIdno },
+        title: { caption:"title", placeholder:"Title", isArray:true },
+        creator: { caption:"creator", placeholder:"Creator", isArray:true, withCode:sic.codes.pubCreator },
+        year: { caption:"date", placeholder:"Date", isArray:true },
 
         _group1: { caption: "Additional Fields (Click)", canMinimize: true, initHide: true }, // Group
 
-        addidno: { caption:"addIdno", isArray:true },
-        addtitle: { caption:"addTitle", isArray:true },
-        place: { caption:"place", isArray:true },
-        publisher: { caption:"publisher", isArray:true },
-        volume: { caption:"volume", isArray:true },
-        issue: { caption:"issue", isArray:true },
-        page: { caption:"page", isArray:true },
-        edition: { caption:"edition", isArray:true },
-        source: { caption:"source", isArray:true, withCode:sic.codes.pubSource },
-        strng: { caption:"string", isArray:true },
-        note: { caption:"note", isArray:true },
+        addidno: { caption:"addIdno", placeholder:"Additional Identifier", isArray:true },
+        addtitle: { caption:"addTitle", placeholder:"Additional Title", isArray:true },
+        place: { caption:"place", placeholder:"Place", isArray:true },
+        publisher: { caption:"publisher", placeholder:"Publisher", isArray:true },
+        volume: { caption:"volume", placeholder:"Volume", isArray:true },
+        issue: { caption:"issue", placeholder:"Issue", isArray:true },
+        page: { caption:"page", placeholder:"Page", isArray:true },
+        edition: { caption:"edition", placeholder:"Edition", isArray:true },
+        source: { caption:"source", placeholder:"Source", isArray:true, withCode:sic.codes.pubSource },
+        online: { caption:"online", placeholder:"Online", isArray:true, withCode:sic.codes.pubOnline },
+        strng: { caption:"string", placeholder:"String", isArray:true },
+        note: { caption:"note", placeholder:"Note", isArray:true },
 
         _group2: { }, // Separator Group, make buttons (local db search) their own group
     }

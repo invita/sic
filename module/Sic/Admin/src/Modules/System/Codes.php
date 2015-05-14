@@ -12,6 +12,7 @@ class Codes
             "pubCreator" => DbUtil::selectFrom("codes_pub_creator"),
             "pubIdno" => DbUtil::selectFrom("codes_pub_idno"),
             "pubSource" => DbUtil::selectFrom("codes_pub_source"),
+            "pubOnline" => DbUtil::selectFrom("codes_pub_online"),
         );
         return $result;
     }

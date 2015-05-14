@@ -36,7 +36,7 @@ class PubSearch extends SicModuleAbs {
 
                 // ----- TODO: Temporary Solution
                 $arrayFields = array("idno", "title", "creator", "year", "addidno", "addtitle", "place", "publisher",
-                    "volume", "issue", "page", "edition", "source", "strng", "note");
+                    "volume", "issue", "page", "edition", "source", "online", "strng", "note");
                 foreach ($arrayFields as $arrayField) {
                     if (is_array($fields[$arrayField]))
                         $fields[$arrayField] = $fields[$arrayField][0];

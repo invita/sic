@@ -40,7 +40,8 @@ class PubEdit {
         $row['issue'] = DbUtil::selectFrom('publication_issue', 'issue', array('pub_id' => $pub_id));
         $row['page'] = DbUtil::selectFrom('publication_page', 'page', array('pub_id' => $pub_id));
         $row['edition'] = DbUtil::selectFrom('publication_edition', 'edition', array('pub_id' => $pub_id));
-        $row['source'] = DbUtil::selectFrom('publication_source', 'source', array('pub_id' => $pub_id));
+        $row['source'] = DbUtil::selectFrom('publication_source', array('value' => 'source', 'codeId' => 'code_id'), array('pub_id' => $pub_id));
+        $row['online'] = DbUtil::selectFrom('publication_online', array('value' => 'online', 'codeId' => 'code_id'), array('pub_id' => $pub_id));
         $row['strng'] = DbUtil::selectFrom('publication_strng', 'strng', array('pub_id' => $pub_id));
         $row['note'] = DbUtil::selectFrom('publication_note', 'note', array('pub_id' => $pub_id));
         $row['child_id'] = DbUtil::selectFrom('publication', 'pub_id', array('parent_id' => $pub_id));
@@ -174,6 +175,12 @@ class PubEdit {
         for ($idx = 0; $idx < count($source); $idx++)
             DbUtil::insertInto('publication_source', array('pub_id' => $pub_id, 'idx' => $idx,
                 'source' => $source[$idx]["value"], 'code_id' => $source[$idx]["codeId"]));
+
+        $online = Util::getArg($data, 'online', array());
+        DbUtil::deleteFrom('publication_online', array('pub_id' => $pub_id));
+        for ($idx = 0; $idx < count($online); $idx++)
+            DbUtil::insertInto('publication_online', array('pub_id' => $pub_id, 'idx' => $idx,
+                'online' => $online[$idx]["value"], 'code_id' => $online[$idx]["codeId"]));
 
         $strng = Util::getArg($data, 'strng', array());
         DbUtil::deleteFrom('publication_strng', array('pub_id' => $pub_id));
