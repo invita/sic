@@ -78,6 +78,7 @@ var F = function(args) {
                     var projLine = rowValue.line;
                     var pub = rowValue.publication;
                     var filter = {};
+                    /*
                     if (pub && parseInt(pub.pub_id)) {
                         // Publication is selected, filter pub_id
                         filter.pub_id = pub.pub_id;
@@ -86,6 +87,9 @@ var F = function(args) {
                         filter.creator = "*"+projLine.creator+"*";
                         filter.title = "*"+projLine.title+"*";
                     }
+                    */
+                    if (projLine.creator) filter.creator = "*"+projLine.creator+"*";
+                    if (projLine.title) filter.title = "*"+projLine.title+"*";
                     var line_id = args.row.getValue().line_id;
 
                     sic.loadModule({moduleName:'Pub/PubSearch', tabPage:tabPageBasic,  newTab:'Search for Line '+line_id,

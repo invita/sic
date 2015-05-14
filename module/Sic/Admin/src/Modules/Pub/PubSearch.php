@@ -66,6 +66,8 @@ class PubSearch extends SicModuleAbs {
                 'series_id' => $row['series_id'],
                 'creator' => Util::shortenText($row['creator'], PubEdit::$creatorMaxLen),
                 'title' => Util::shortenText($row['title'], PubEdit::$titleMaxLen),
+                '_creator_long' => $row['creator'],
+                '_title_long' => $row['title'],
                 'year' => $row['year'],
                 //'is_series' => $row['is_series'],
 

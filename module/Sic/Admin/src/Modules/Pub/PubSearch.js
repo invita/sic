@@ -157,13 +157,15 @@ var F = function(args) {
         tabPage: tabPage.parentTab ? tabPage.parentTab : tabPage,
         selectCallback: args.selectCallback,
         fields: {
-            pub_id: { hintF: function(args) { return sic.hint.publication(args.row.lastRowData._row) } },
-            parent_id: { hintF: function(args) { return sic.hint.publication(args.row.lastRowData._parentRow) } },
+            pub_id: { hintF: function(args) { return sic.hint.publication(args.row.lastRowData.pub_id) } },
+            parent_id: { hintF: function(args) { return sic.hint.publication(args.row.lastRowData.parent_id) } },
             creator: { tagClass:"sicDataTable_shortText",
-                hintF: function(args) { return sic.replacePipes(args.row.lastRowData._row.creator, "<br/>") } },
+                hintF: function(args) { return sic.replacePipes(args.row.lastRowData._creator_long, "<br/>") } },
             title: { tagClass:"sicDataTable_shortText",
-                hintF: function(args) { return sic.replacePipes(args.row.lastRowData._row.title, "<br/>") } },
+                hintF: function(args) { return sic.replacePipes(args.row.lastRowData._title_long, "<br/>") } },
             year: { tagClass:"sicDataTable_shortText", caption: "Date" },
+            _creator_long: { visible: false },
+            _title_long: { visible: false },
             _row: { visible: false },
             _parentRow: { visible: false }
         }

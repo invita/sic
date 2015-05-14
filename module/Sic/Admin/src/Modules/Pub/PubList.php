@@ -36,6 +36,9 @@ class PubList extends SicModuleAbs {
                 'title' => Util::shortenText($row['title'], PubEdit::$titleMaxLen),
                 'year' => $row['year'],
 
+                '_creator_long' => $row['creator'],
+                '_title_long' => $row['title'],
+
                 '_row' => $row
             );
 
@@ -76,6 +79,7 @@ class PubList extends SicModuleAbs {
             'publication_project_link',
             'publication_publisher',
             'publication_source',
+            'publication_online',
             'publication_strng',
             'publication_title',
             'publication_volume',
