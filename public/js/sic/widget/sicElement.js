@@ -165,6 +165,7 @@ sic.widget.sicElement = function(args)
         _p.selector.html(_p.selector.html()+html);
     };
 
+    this.isDisplay = function(){ return _p.selector.css("display") != "none"; };
     this.displayNone = function(){ _p.selector.css("display", "none"); return _p; };
     this.display = function(){ _p.selector.css("display", ""); return _p; };
     this.fadeIn = function(){ _p.selector.fadeIn(this.fadeTime); return _p; };

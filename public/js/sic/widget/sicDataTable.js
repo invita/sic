@@ -28,6 +28,9 @@ sic.widget.sicDataTable = function(args)
     this.selectCallback = sic.getArg(args, "selectCallback", null);
     this.customInsert = sic.getArg(args, "customInsert", null);
     this.subDataTable = sic.getArg(args, "subDataTable", null);
+    this.canExpand = sic.getArg(args, "canExpand", this.subDataTable ? true : false);
+    this.showPaginator = sic.getArg(args, "showPaginator", true);
+    this.initRefresh = sic.getArg(args, "initRefresh", true);
 
     this.rowsPerPage = sic.getArg(args, "rowsPerPage", sic.defaults.dataTableRowsPerPage); // Ignored if dataSource is given
 
@@ -169,12 +172,11 @@ sic.widget.sicDataTable = function(args)
                 }
             }
 
-            _p.rows.push(row);
-
-
             if (_p.subDataTable) {
                 row.createSubRow();
             }
+
+            _p.rows.push(row);
         }
     };
 
@@ -187,7 +189,7 @@ sic.widget.sicDataTable = function(args)
         _p.insertButton.span = new sic.widget.sicElement({parent:_p.insertButton.selector, tagName:"span"});
         _p.insertButton.span.selector.html("Insert");
         if (typeof(_p.customInsert) == "function") {
-            _p.insertButton.selector.click(_p.customInsert);
+            _p.insertButton.selector.click(function(e) { _p.customInsert(_p) });
         } else {
             _p.insertButton.selector.click(function(e){
                 var row = _p.createEmptyRow();
@@ -205,6 +207,9 @@ sic.widget.sicDataTable = function(args)
     this.createDSControlDiv = function() {
         if (_p.dsControl) return;
         _p.dsControl = new sic.widget.sicElement({parent:_p.selector, insertAtTop:true, tagClass:"dsControl"});
+
+        if (!_p.showPaginator)
+            _p.dsControl.displayNone();
 
         // Prev page button
         _p.dsControl.prevPage = new sic.widget.sicElement({parent:_p.dsControl.selector, tagClass:"inline prevButton vmid"});
@@ -321,6 +326,7 @@ sic.widget.sicDataTable = function(args)
         switch (valType) {
             case 'int': return 0;
             case 'delete': return '<img src="/img/delete.png" class="icon16" />';
+            case 'expand': return '<img src="/img/expand.png" class="icon12" />';
             default: return '';
         }
     };
@@ -355,6 +361,19 @@ sic.widget.sicDataTable = function(args)
         }
         _p._lastTableData = tableData;
 
+        // Expand subDataTable
+        if (_p.subDataTable) {
+            var exapndName = '_expand';
+            var expandBP = sic.mergeObjects({}, _p.fields[exapndName]);
+            expandBP.fieldKey = exapndName;
+            expandBP.fieldLabel = 'Expand';
+            expandBP.fieldType = 'expand';
+            expandBP.canSort = false;
+            expandBP.canFilter = false;
+            expandBP.editable = false;
+            expandBP.initValue = _p.getInitValueForType(expandBP.fieldType);
+            bluePrint.fields[exapndName] = expandBP;
+        }
 
         for (var i in tableData) {
             var row = tableData[i];
@@ -411,6 +430,12 @@ sic.widget.sicDataTable = function(args)
             }
         }
         return result;
+    };
+
+    this.hideSubrows = function() {
+        for (var i in _p.rows)
+            if (_p.rows[i].subRowTr && _p.rows[i].subRowTr.isDisplay())
+                _p.rows[i].subRowTr.displayNone();
     };
 
     this.setValue = function(tableData) {
@@ -497,6 +522,7 @@ sic.widget.sicDataTable = function(args)
     this.refresh = function() {
         if (!_p.dataSource) return;
         _p.infoDiv.selector.css("display", "none");
+        if (_p.subDataTable) _p.hideSubrows();
         _p.dataSource.select();
     };
 
@@ -566,6 +592,14 @@ sic.widget.sicDataTable = function(args)
         });
     }
 
+    // if canExpand, bind expand click event
+    if (_p.canExpand) {
+        _p.onFieldClick(function(args){
+            if (args.field.fieldKey == "_expand") {
+                args.row.expandToggleSubRow();
+            }
+        });
+    }
     // Sort
     _p.onHeaderFieldClick(function(args){
 
@@ -587,7 +621,9 @@ sic.widget.sicDataTable = function(args)
 
     if (this.dataSource) {
         _p.dataSource.callbacks.feedData = _p.feedData;
-        _p.initAndPopulate();
+
+        if (_p.initRefresh)
+            _p.initAndPopulate();
     }
 };
 
@@ -605,6 +641,7 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
 
     this.fields = {};
     this.active = false;
+    this.subRowTr = null;
 
     // Settings
     this.dataTable = sic.getArg(args, "dataTable", null);
@@ -612,12 +649,13 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
     this.headerRow = sic.getArg(args, "headerRow", false);
     this.filterRow = sic.getArg(args, "filterRow", false);
     this.subRow = sic.getArg(args, "subRow", false);
+    this.parentRowTr = sic.getArg(args, "row", null);
     this.dataRow = !this.headerRow && !this.filterRow && !this.subRow;
 
 
     // Implementation
     if (!this.subRow && this.dataTable.hoverRows) this.selector.addClass("hoverable");
-    if (this.dataRow) this.displayNone();
+    if (this.dataRow || this.subRow) this.displayNone();
     if (this.filterRow && !this.dataTable.filter.visible) this.displayNone();
 
     this.addField = function(colName, colValue, args) {
@@ -627,11 +665,13 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
 
     this.show = function(){
         _p.display();
+        //if (_p.subRowTr) _p.subRowTr.show();
         _p.active = true;
     };
 
     this.hide = function(){
         _p.displayNone();
+        if (_p.subRowTr) _p.subRowTr.hide();
         _p.active = false;
     };
 
@@ -684,9 +724,32 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
     };
 
     this.createSubRow = function() {
-        this.subRow = new sic.widget.sicDataTableRow(tableSectionWnd, sic.mergeObjects(_p.getEventArgs(), { subRow: true }));
-        this.subRow.addField("subField", '', sic.mergeObjects(this.getEventArgs(), {
-            colSpan: Object.keys(this.fields).length, subRowField: true }));
+        _p.subRowTr = new sic.widget.sicDataTableRow(tableSectionWnd, sic.mergeObjects(_p.getEventArgs(), {
+            subRow: true }));
+        _p.subRowTr.addField('subField', '', sic.mergeObjects(_p.getEventArgs(), {
+            colSpan: Object.keys(_p.fields).length, subRowField: true }));
+        var subRowField = _p.subRowTr.fields['subField'];
+        subRowField.selector.css("padding-left", "50px");
+
+        _p.subRowTr.subDataTable = new sic.widget.sicDataTable(sic.mergeObjects(_p.dataTable.subDataTable, {
+            parent: subRowField.selector, initRefresh: false
+        }));
+
+    };
+
+    this.expandToggleSubRow = function() {
+        //_p.subRowTr.expandToggle();
+        if (_p.subRowTr.isDisplay()) {
+            _p.subRowTr.displayNone();
+        } else {
+            _p.subRowTr.display();
+            if (_p.subRowTr.subDataTable.dataSource) {
+                _p.subRowTr.subDataTable.dataSource.staticData.parentRow = _p.getValue();
+            }
+            _p.subRowTr.subDataTable.initAndPopulate();
+            if (_p.subRowTr.subDataTable.rows)
+                _p.subRowTr.subDataTable.recalculateInputs();
+        }
     };
 
     this.getEventArgs = function() {
@@ -723,7 +786,6 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
         _p.dataTable.trigger("rowRightClick", _p.getEventArgs());
         if (_p.dataTable.preventContextMenu) { e.preventDefault(); return false; }
     });
-
 };
 
 
@@ -784,6 +846,8 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
             _p.dataTable.refresh();
         });
         this.hasInput = true;
+    } else if (this.subRowField) {
+        // Subrow Field
     } else {
         // Data field
         if (this.editable && this.dataField) {

@@ -12,15 +12,18 @@ use Sic\Admin\Models\Util;
 use Sic\Admin\Models\DbUtil;
 use Sic\Admin\Modules\Pub\PubEdit;
 
-class PubQuoteList extends SicModuleAbs {
+class PubSubQuoteList extends SicModuleAbs {
 
     public function defineSqlSelect($args, Select $select)
     {
         $staticData = Util::getArg($args, 'staticData', null);
+        $parentRow = Util::getArg($staticData, 'parentRow', null);
         $pub_id = Util::getArg($staticData, 'pub_id', 0);
+        $parent_quote_id = Util::getArg($parentRow, 'quote_id', 0);
+
         $select->from('quote')
             ->columns(array("quote_id", "pub_id", "on_page", "quoted_pub_id", "cited_page"))
-            ->where(array('pub_id' => $pub_id, 'parent_quote_id' => 0));
+            ->where(array('pub_id' => $pub_id, 'parent_quote_id' => $parent_quote_id));
     }
 
     public function defineDataTableResponseData($args, ResultInterface $result) {

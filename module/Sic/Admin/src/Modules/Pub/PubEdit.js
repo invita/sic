@@ -132,18 +132,46 @@ var F = function(args) {
             quoted_creator: { canSort:false, editable:false, caption:"Creator" },
             quoted_title: { canSort:false, editable:false, caption:"Title" }
         },
-        customInsert: function() {
+        customInsert: function(insertDT) {
             sic.loadModule({moduleName:'Pub/PubSearch', tabPage:tabPageBasic,  newTab:'New citation - select entity',
                 selectCallback: function(selectArgs){
                     var q_pub_id = selectArgs.row.getValue().pub_id;
                     if (q_pub_id) {
                         sic.callMethod({moduleName:"Pub/PubQuoteEdit", methodName:"quoteInsert", data: { pub_id:args.pub_id, quoted_pub_id: q_pub_id }},
-                            function(response) { quotesDataTable.refresh(); });
+                            function(response) { insertDT.refresh(); });
                     }
                 }});
 
         },
-        subDataTable: { }
+        subDataTable: {
+            dataSource: new sic.widget.sicDataTableDataSource({
+                moduleName:"Pub/PubSubQuoteList",
+                staticData: { pub_id: args.pub_id }
+            }),
+            showPaginator: false,
+            editable: true,
+            fields: {
+                quote_id: { caption:"Id", editable: false },
+                pub_id: { visible:false },
+                quoted_pub_id: { caption:"Cited Entity", editable:false,
+                    hintF: function(args) { sic.hint.publication(args.row.lastRowData.quoted_pub_id) } },
+                quoted_creator: { canSort:false, editable:false, caption:"Creator" },
+                quoted_title: { canSort:false, editable:false, caption:"Title" }
+            },
+            customInsert: function(insertDT) {
+                sic.loadModule({moduleName:'Pub/PubSearch', tabPage:tabPageBasic,  newTab:'New citation - select entity',
+                    selectCallback: function(selectArgs){
+                        var q_pub_id = selectArgs.row.getValue().pub_id;
+                        if (q_pub_id) {
+                            sic.callMethod({moduleName:"Pub/PubSubQuoteEdit", methodName:"quoteInsert", data: {
+                                    pub_id:args.pub_id, quoted_pub_id: q_pub_id,
+                                    parent_quote_id: insertDT.dataSource.staticData.parentRow.quote_id }},
+                                function(response) { insertDT.refresh(); });
+                        }
+                    }});
+
+            },
+        }
     });
     quotesDataTable.onFirstFeedComplete(function() {
         var importFromProj = new sic.widget.sicElement({parent:quotesDataTable.dsControl.selector});

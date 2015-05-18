@@ -502,3 +502,9 @@ CREATE OR REPLACE VIEW view_publication_list AS
   FROM publication;
 
 
+
+-- 2015-05-19
+ALTER TABLE `quote` ADD `parent_quote_id` INT NOT NULL AFTER `pub_id`;
+
+
+

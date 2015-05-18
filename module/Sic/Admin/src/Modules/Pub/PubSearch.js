@@ -1,7 +1,8 @@
 var F = function(args) {
 
-
-    var tabPage = args.helpers.createTabPage({name:"Search"});
+    var name = "Search";
+    if (args.selectCallback) name += " - Select Entity";
+    var tabPage = args.helpers.createTabPage({name:name});
 
     var pubSearchTable = new sic.widget.sicHtmlTable({parent:tabPage.content.selector, tagClass:"borderCollapseSeparate"});
     var searchContainer = new sic.widget.sicElement({parent:pubSearchTable.getCell(0, 0).selector, tagClass:"pubSearch_leftContainer"});
