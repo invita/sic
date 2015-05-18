@@ -120,16 +120,28 @@ var F = function(args) {
             moduleName:"Pub/PubQuoteList",
             staticData: { pub_id: args.pub_id }
         }),
-        editorModuleArgs: {
-            moduleName:"Pub/PubQuoteEdit",
-            tabPage:tabPageQuotes
-        },
+        //editorModuleArgs: {
+        //    moduleName:"Pub/PubQuoteEdit",
+        //    tabPage:tabPageQuotes
+        //},
         fields: {
             quote_id: { caption:"Id", editable: false },
             pub_id: { visible:false },
-            quoted_pub_id: { caption:"Cited Entity" },
+            quoted_pub_id: { caption:"Cited Entity", editable:false,
+                hintF: function(args) { sic.hint.publication(args.row.lastRowData.quoted_pub_id) } },
             quoted_creator: { canSort:false, editable:false, caption:"Creator" },
             quoted_title: { canSort:false, editable:false, caption:"Title" }
+        },
+        customInsert: function() {
+            sic.loadModule({moduleName:'Pub/PubSearch', tabPage:tabPageBasic,  newTab:'New citation - select entity',
+                selectCallback: function(selectArgs){
+                    var q_pub_id = selectArgs.row.getValue().pub_id;
+                    if (q_pub_id) {
+                        sic.callMethod({moduleName:"Pub/PubQuoteEdit", methodName:"quoteInsert", data: { pub_id:args.pub_id, quoted_pub_id: q_pub_id }},
+                            function(response) { quotesDataTable.refresh(); });
+                    }
+                }});
+
         }
     });
     quotesDataTable.onFirstFeedComplete(function() {

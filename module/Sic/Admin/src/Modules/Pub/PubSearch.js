@@ -157,17 +157,14 @@ var F = function(args) {
         tabPage: tabPage.parentTab ? tabPage.parentTab : tabPage,
         selectCallback: args.selectCallback,
         fields: {
-            pub_id: { hintF: function(args) { return sic.hint.publication(args.row.lastRowData.pub_id) } },
-            parent_id: { hintF: function(args) { return sic.hint.publication(args.row.lastRowData.parent_id) } },
+            pub_id: { hintF: function(args) { sic.hint.publication(args.row.lastRowData.pub_id); } },
+            parent_id: { hintF: function(args) { sic.hint.publication(args.row.lastRowData.parent_id); } },
+            series_id: { hintF: function(args) { sic.hint.publication(args.row.lastRowData.series_id); } },
             creator: { tagClass:"sicDataTable_shortText",
-                hintF: function(args) { return sic.replacePipes(args.row.lastRowData._creator_long, "<br/>") } },
+                hintF: function(args) { sic.showHint(sic.replacePipes(args.row.lastRowData.__creator_long, "<br/>")); } },
             title: { tagClass:"sicDataTable_shortText",
-                hintF: function(args) { return sic.replacePipes(args.row.lastRowData._title_long, "<br/>") } },
-            year: { tagClass:"sicDataTable_shortText", caption: "Date" },
-            _creator_long: { visible: false },
-            _title_long: { visible: false },
-            _row: { visible: false },
-            _parentRow: { visible: false }
+                hintF: function(args) { sic.showHint(sic.replacePipes(args.row.lastRowData.__title_long, "<br/>")); } },
+            year: { tagClass:"sicDataTable_shortText", caption: "Date" }
         }
     });
 

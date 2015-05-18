@@ -84,21 +84,26 @@ sic.widget.sicElement = function(args)
     this.hintInited = false;
     this.setHint = function(text) {
         if (!_p.hintInited){
-            this.showHint = function(){ sic.showHint(_p.hint); }
-            this.selector.mouseenter(function(e){
+            _p.lastMousePos = sic.mergeObjects(sic.mouse);
+            _p.showHint = function(){ sic.showHint(_p.hint); }
+            _p.selector.mouseenter(function(e){
                 _p.hintTimeout = setTimeout(_p.showHint, sic.defaults.hintTriggerDelay);
             });
-            this.selector.mousemove(function(e){
+            _p.selector.mousemove(function(e){
+                if (_p.lastMousePos.x == sic.mouse.x && _p.lastMousePos.y == sic.mouse.y) return;
+                _p.lastMousePos = sic.mergeObjects(sic.mouse);
+
                 if (_p.hintTimeout) clearTimeout(_p.hintTimeout);
                 _p.hintTimeout = setTimeout(_p.showHint, sic.defaults.hintTriggerDelay);
             });
-            this.selector.mouseleave(function(e){
+            _p.selector.mouseleave(function(e){
                 if (_p.hintTimeout) clearTimeout(_p.hintTimeout);
             });
             _p.hintInited = true;
         }
         _p.hint = text;
-    }
+    };
+
     if (this.hint) this.setHint(this.hint);
 
 

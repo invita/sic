@@ -26,6 +26,7 @@ sic.widget.sicDataTable = function(args)
     this.tabPage = sic.getArg(args, "tabPage", null);
     this.editable = sic.getArg(args, "editable", false);
     this.selectCallback = sic.getArg(args, "selectCallback", null);
+    this.customInsert = sic.getArg(args, "customInsert", null);
 
     this.rowsPerPage = sic.getArg(args, "rowsPerPage", sic.defaults.dataTableRowsPerPage); // Ignored if dataSource is given
 
@@ -179,15 +180,19 @@ sic.widget.sicDataTable = function(args)
         _p.insertButton.img.selector.attr("src", "/img/insert.png");
         _p.insertButton.span = new sic.widget.sicElement({parent:_p.insertButton.selector, tagName:"span"});
         _p.insertButton.span.selector.html("Insert");
-        _p.insertButton.selector.click(function(e){
-            var row = _p.createEmptyRow();
-            var tabName = sic.mergePlaceholders(_p.entityTitle, row);
-            var editorModuleArgs = sic.mergeObjects(_p.editorModuleArgs, {newTab:tabName, entityTitle:_p.entityTitle});
-            editorModuleArgs.onClosed = function(args){ _p.refresh(); };
-            if (_p.dataSource && _p.dataSource.staticData)
-                editorModuleArgs.staticData = sic.mergeObjects(_p.dataSource.staticData, editorModuleArgs.staticData);
-            sic.loadModule(editorModuleArgs);
-        });
+        if (typeof(_p.customInsert) == "function") {
+            _p.insertButton.selector.click(_p.customInsert);
+        } else {
+            _p.insertButton.selector.click(function(e){
+                var row = _p.createEmptyRow();
+                var tabName = sic.mergePlaceholders(_p.entityTitle, row);
+                var editorModuleArgs = sic.mergeObjects(_p.editorModuleArgs, {newTab:tabName, entityTitle:_p.entityTitle});
+                editorModuleArgs.onClosed = function(args){ _p.refresh(); };
+                if (_p.dataSource && _p.dataSource.staticData)
+                    editorModuleArgs.staticData = sic.mergeObjects(_p.dataSource.staticData, editorModuleArgs.staticData);
+                sic.loadModule(editorModuleArgs);
+            });
+        }
     };
 
     // Paginator
@@ -723,7 +728,7 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
     this.row = sic.getArg(args, "row", null);
     this.dataTable = sic.getArg(args, "dataTable", this.row ? this.row.dataTable : null);
     this.clearValue = sic.getArg(args, "clearValue", "");
-    this.visible = sic.getArg(args, "visible", true);
+    this.visible = sic.getArg(args, "visible", typeof(this.fieldKey) == "string" && this.fieldKey.substr(0,2) != "__");
     this.tagClass = sic.getArg(args, "tagClass", "");
     this.caption = sic.getArg(args, "caption", "");
     this.hint = sic.getArg(args, "hint", null);
@@ -919,7 +924,7 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
     if (this.hint) this.setHint(this.hint);
     if (this.hintF && _p.dataField) {
         this.setHint("");
-        this.showHint = function(){ sic.showHint(_p.hintF(_p.getEventArgs())); }
+        this.showHint = function(){ _p.hintF(_p.getEventArgs()); }
     }
     if (!this.visible) this.displayNone();
     if (this.tagClass) this.selector.addClass(this.tagClass);

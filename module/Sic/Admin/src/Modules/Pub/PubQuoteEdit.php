@@ -26,9 +26,9 @@ class PubQuoteEdit {
 
         $quoteData = array(
             "pub_id" => Util::getArg($data, 'pub_id', 0),
-            "pub_page" => Util::getArg($data, 'pub_page', 0),
+            "on_page" => Util::getArg($data, 'on_page', 0),
             "quoted_pub_id" => Util::getArg($data, 'quoted_pub_id', 0),
-            "quoted_pub_page" => Util::getArg($data, 'quoted_pub_page', 0)
+            "cited_page" => Util::getArg($data, 'cited_page', 0)
         );
         DbUtil::updateTable('quote', $quoteData, array('quote_id' => $quote_id));
 
@@ -41,9 +41,9 @@ class PubQuoteEdit {
 
         $quoteData = array(
             "pub_id" => Util::getArg($data, 'pub_id', 0),
-            "pub_page" => Util::getArg($data, 'pub_page', 0),
+            "on_page" => Util::getArg($data, 'on_page', 0),
             "quoted_pub_id" => Util::getArg($data, 'quoted_pub_id', 0),
-            "quoted_pub_page" => Util::getArg($data, 'quoted_pub_page', 0)
+            "cited_page" => Util::getArg($data, 'cited_page', 0)
         );
         DbUtil::insertInto('quote', $quoteData);
 

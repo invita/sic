@@ -36,18 +36,11 @@ class PubList extends SicModuleAbs {
                 'title' => Util::shortenText($row['title'], PubEdit::$titleMaxLen),
                 'year' => $row['year'],
 
-                '_creator_long' => $row['creator'],
-                '_title_long' => $row['title'],
+                '__creator_long' => $row['creator'],
+                '__title_long' => $row['title'],
 
-                '_row' => $row
+                '__row' => $row
             );
-
-            $newRow['_parentRow'] = array();
-            if ($row['parent_id'])
-                $newRow['_parentRow'] = DbUtil::selectRow("view_publication_list", null, array("pub_id" => $row['parent_id']));
-            $newRow['_seriesRow'] = array();
-            if ($row['parent_id'])
-                $newRow['_parentRow'] = DbUtil::selectRow("view_publication_list", null, array("pub_id" => $row['parent_id']));
 
             //$row['creator'] = Util::shortenText($row['creator'], PubEdit::$creatorMaxLen);
             //$row['title'] = Util::shortenText($row['title'], PubEdit::$titleMaxLen);
@@ -91,5 +84,4 @@ class PubList extends SicModuleAbs {
 
         $delete->from('publication')->where(array("pub_id" => $pub_id));
     }
-
 }

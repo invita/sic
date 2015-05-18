@@ -66,17 +66,13 @@ class PubSearch extends SicModuleAbs {
                 'series_id' => $row['series_id'],
                 'creator' => Util::shortenText($row['creator'], PubEdit::$creatorMaxLen),
                 'title' => Util::shortenText($row['title'], PubEdit::$titleMaxLen),
-                '_creator_long' => $row['creator'],
-                '_title_long' => $row['title'],
+                '__creator_long' => $row['creator'],
+                '__title_long' => $row['title'],
                 'year' => $row['year'],
                 //'is_series' => $row['is_series'],
 
-                '_row' => $row
+                '__row' => $row
             );
-
-            $newRow['_parentRow'] = array();
-            if ($row['parent_id'])
-                $newRow['_parentRow'] = DbUtil::selectRow("view_publication_list", null, array("pub_id" => $row['parent_id']));
 
             //$row['creator'] = Util::shortenText($row['creator'], PubEdit::$creatorMaxLen);
             //$row['title'] = Util::shortenText($row['title'], PubEdit::$titleMaxLen);

@@ -24,8 +24,14 @@ sic.widget.sicHint = function(args)
 
     this.show = function(){
         _p.selector.stop().fadeIn(sic.defaults.hintFadeTime);
+        _p.lastMousePos = sic.mergeObjects(sic.mouse);
         if (this.hideOnMouseMove) {
-            $(document).one("mousemove", function(e) { _p.hide(); });
+            var f = function(e) {
+                if (_p.lastMousePos.x == sic.mouse.x && _p.lastMousePos.y == sic.mouse.y) return;
+                $(document).unbind("mousemove", f);
+                _p.hide();
+            };
+            $(document).mousemove(f);
         }
     };
 
