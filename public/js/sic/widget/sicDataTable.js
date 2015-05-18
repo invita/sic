@@ -27,6 +27,7 @@ sic.widget.sicDataTable = function(args)
     this.editable = sic.getArg(args, "editable", false);
     this.selectCallback = sic.getArg(args, "selectCallback", null);
     this.customInsert = sic.getArg(args, "customInsert", null);
+    this.subDataTable = sic.getArg(args, "subDataTable", null);
 
     this.rowsPerPage = sic.getArg(args, "rowsPerPage", sic.defaults.dataTableRowsPerPage); // Ignored if dataSource is given
 
@@ -169,6 +170,11 @@ sic.widget.sicDataTable = function(args)
             }
 
             _p.rows.push(row);
+
+
+            if (_p.subDataTable) {
+                row.createSubRow();
+            }
         }
     };
 
@@ -605,11 +611,12 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
 
     this.headerRow = sic.getArg(args, "headerRow", false);
     this.filterRow = sic.getArg(args, "filterRow", false);
-    this.dataRow = !this.headerRow && !this.filterRow;
+    this.subRow = sic.getArg(args, "subRow", false);
+    this.dataRow = !this.headerRow && !this.filterRow && !this.subRow;
 
 
     // Implementation
-    if (this.dataTable.hoverRows) this.selector.addClass("hoverable");
+    if (!this.subRow && this.dataTable.hoverRows) this.selector.addClass("hoverable");
     if (this.dataRow) this.displayNone();
     if (this.filterRow && !this.dataTable.filter.visible) this.displayNone();
 
@@ -656,7 +663,7 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
         return _p.dataTable.rowReprValue(_p.getValue());
     };
 
-    this.getFilterValue = function(){
+    this.getFilterValue = function() {
         var result = {};
         if (!_p.dataTable.filterRow) return result;
         for (var i in _p.dataTable.filterRow.fields) {
@@ -666,7 +673,7 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
                 result[filterField.fieldKey] = filterFieldValue;
         }
         return result;
-    }
+    };
 
     this.setFilterValue = function(filterValue){
 
@@ -674,9 +681,15 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
             if (filterValue[i])
                 _p.dataTable.filterRow.fields[i].setFilterValue(filterValue[i]);
         }
-    }
+    };
 
-    this.getEventArgs = function(){
+    this.createSubRow = function() {
+        this.subRow = new sic.widget.sicDataTableRow(tableSectionWnd, sic.mergeObjects(_p.getEventArgs(), { subRow: true }));
+        this.subRow.addField("subField", '', sic.mergeObjects(this.getEventArgs(), {
+            colSpan: Object.keys(this.fields).length, subRowField: true }));
+    };
+
+    this.getEventArgs = function() {
         return sic.mergeObjects(_p.dataTable.getEventArgs(), { row: _p });
     };
 
@@ -735,19 +748,24 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
     this.hintF = sic.getArg(args, "hintF", null);
     this.width = sic.getArg(args, "width", null);
     this.editable = sic.getArg(args, "editable", this.dataTable.editable);
+    this.colSpan = sic.getArg(args, "colSpan", null);
 
     this.headerField = sic.getArg(args, "headerField", this.row ? this.row.headerRow : false);
     this.filterField = sic.getArg(args, "filterField", this.row ? this.row.filterRow : false);
-    this.dataField = !this.headerField && !this.filterField;
+    this.subRowField = sic.getArg(args, "subRowField", false);
+    this.dataField = !this.headerField && !this.filterField && !this.subRowField;
 
     this.cellDataTable = sic.getArg(args, "cellDataTable", null);
     this.formView = sic.getArg(args, "formView", null);
     this.actions = sic.getArg(args, "actions", null);
     this.autoSplitPipes = sic.getArg(args, "autoSplitPipes", ", ");
 
-    this.valueDiv = new sic.widget.sicElement({parent:this.selector, tagClass:"inline"});
+    if (!this.subRowField)
+        this.valueDiv = new sic.widget.sicElement({parent:this.selector, tagClass:"inline"});
 
     this.hasInput = false;
+
+    if (this.colSpan) this.selector.attr("colSpan", this.colSpan);
 
     if (this.headerField) {
         // Header field
@@ -768,7 +786,7 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
         this.hasInput = true;
     } else {
         // Data field
-        if (this.editable) {
+        if (this.editable && this.dataField) {
             this.input = new sic.widget.sicInput({parent:this.valueDiv.selector, name:this.fieldKey,
                 caption:false, showModified:true});
             this.input.selector.addClass('dataTableValueInput');
@@ -858,7 +876,8 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
                 _p.input.calcModified();
                 //_p.valueDiv.selector.html(fVal);
             } else {
-                _p.valueDiv.selector.html(fVal);
+                if (!_p.subRowField)
+                    _p.valueDiv.selector.html(fVal);
             }
         }
     };

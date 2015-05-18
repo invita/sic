@@ -142,7 +142,8 @@ var F = function(args) {
                     }
                 }});
 
-        }
+        },
+        subDataTable: { }
     });
     quotesDataTable.onFirstFeedComplete(function() {
         var importFromProj = new sic.widget.sicElement({parent:quotesDataTable.dsControl.selector});
