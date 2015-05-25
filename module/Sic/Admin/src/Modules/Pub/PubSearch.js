@@ -36,7 +36,7 @@ var F = function(args) {
 
     // Quick Search
     var quickSearchGroup = searchPanel.addGroup("Quick Search");
-    var quickSearchForm = new sic.widget.sicForm({parent:quickSearchGroup.content.selector});
+    var quickSearchForm = new sic.widget.sicForm({parent:quickSearchGroup.content.selector, inputClass:"searchInput"});
     var quickSearchBox = quickSearchForm.addInput({name:"quickSearch", placeholder:"Quick search...", caption:false});
     quickSearchBox.selector.addClass("inline");
     var quickSearchSubmitButton = quickSearchForm.addInput({value:"Quick Search", type:"submit"});
@@ -78,8 +78,8 @@ var F = function(args) {
     var pubSearchGroup = searchPanel.addGroup("Publication Search");
     //var pubCopyParams
 
-    var pubSearchForm = new sic.widget.sicForm({parent:pubSearchGroup.content.selector, captionWidth:"140px",
-        showCopyPaste:true});
+    var pubSearchForm = new sic.widget.sicForm({parent:pubSearchGroup.content.selector, captionWidth:"100px",
+        showCopyPaste:true, inputClass:"searchInput"});
     for (var fieldName in searchFields) {
         if (fieldName[0] == "_") {
             pubSearchForm.addCaption(searchFields[fieldName]);
@@ -108,7 +108,7 @@ var F = function(args) {
 
     // *** Cobiss Search ***
     var cobbisGroup = searchPanel.addGroup("Cobbis");
-    var cobbisForm = new sic.widget.sicForm({parent:cobbisGroup.content.selector, captionWidth:"140px"});
+    var cobbisForm = new sic.widget.sicForm({parent:cobbisGroup.content.selector, captionWidth:"100px", inputClass:"searchInput"});
     cobbisForm.addInput({name:"url", caption:"Cobiss url"});
 
     var cobissScrapeButton = cobbisForm.addInput({value:"Scrape", type:"submit", caption: " "});

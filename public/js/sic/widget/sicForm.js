@@ -21,6 +21,7 @@ sic.widget.sicForm = function(args)
     this.captionWidth = sic.getArg(args, "captionWidth", null);
     this.showCopyPaste = sic.getArg(args, "showCopyPaste", false);
     this.skipTypes = ["submit", "button"];
+    this.inputClass = sic.getArg(args, "inputClass", "");
 
     // Events
     this.onSubmit = function(f) { _p.subscribe("onSubmit", f); };
@@ -53,6 +54,7 @@ sic.widget.sicForm = function(args)
             parent:parent,
             type:"text",
             inputConstruct: sic.widget.sicInput,
+            inputClass:_p.inputClass,
             form: _p
         };
         args = sic.mergeObjects(defArgs, args);

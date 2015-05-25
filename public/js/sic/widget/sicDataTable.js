@@ -29,8 +29,10 @@ sic.widget.sicDataTable = function(args)
     this.customInsert = sic.getArg(args, "customInsert", null);
     this.subDataTable = sic.getArg(args, "subDataTable", null);
     this.canExpand = sic.getArg(args, "canExpand", this.subDataTable ? true : false);
+    this.hideNoData = sic.getArg(args, "hideNoData", false);
     this.showPaginator = sic.getArg(args, "showPaginator", true);
     this.initRefresh = sic.getArg(args, "initRefresh", true);
+
 
     this.rowsPerPage = sic.getArg(args, "rowsPerPage", sic.defaults.dataTableRowsPerPage); // Ignored if dataSource is given
 
@@ -470,8 +472,13 @@ sic.widget.sicDataTable = function(args)
             _p.constructed = true;
         }
 
+        _p.table.display();
         if (_p.bluePrint.noData) {
-            _p.info('No data for this table.');
+            if (_p.hideNoData) {
+                _p.table.displayNone();
+            } else {
+                _p.info('No data for this table.');
+            }
         }
     };
 
@@ -732,7 +739,7 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
         subRowField.selector.css("padding-left", "50px");
 
         _p.subRowTr.subDataTable = new sic.widget.sicDataTable(sic.mergeObjects(_p.dataTable.subDataTable, {
-            parent: subRowField.selector, initRefresh: false
+            parent: subRowField.selector, initRefresh: false, hideNoData: true
         }));
 
     };
