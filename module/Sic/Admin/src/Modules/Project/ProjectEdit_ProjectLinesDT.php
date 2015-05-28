@@ -23,7 +23,7 @@ class ProjectEdit_ProjectLinesDT extends SicModuleAbs {
     public function defineDataTableResponseData($args, ResultInterface $result) {
         $responseData = array();
 
-        $lineColumns = array('line_id','idx',     'title','creator','year','cobiss','issn');
+        $lineColumns = array(                     'title','creator','year','cobiss','issn');
         $pubColumns = array('pub_id','parent_id', 'title','creator','year','idno_cobiss','idno_issn','original_id');
 
         foreach($result as $row) {
@@ -33,17 +33,26 @@ class ProjectEdit_ProjectLinesDT extends SicModuleAbs {
             $resultLine['line_id'] = $row['line_id'];
             $resultLine['idx'] = $row['idx'];
             $resultLine['proj_id'] = $row['proj_id'];
-            $resultLine['title'] = $row['title'];
+            //$resultLine['xml'] = $row['xml'];
+
+            $entity = new \SimpleXMLElement($row['xml']);
+
+            //$resultLine['title'] = $row['title'];
 
             // Copy Line columns
-            $resultLine['line'] = array();
+            $resultLine['line'] = array(
+                "line_id" => $row['line_id'],
+                "idx" => $row['idx'],
+                "---" => ""
+            );
             foreach ($lineColumns as $lineColName) {
-                $resultLine['line'][$lineColName] = $row[$lineColName];
+
+                $resultLine['line'][$lineColName] = Util::getXmlFieldValue($entity, $lineColName, false);
 
                 // Add hr after idx
-                if ($lineColName == 'idx') $resultLine['line']['---'] = "";
+                //if ($lineColName == 'idx') $resultLine['line']['---'] = "";
             }
-            unset($resultLine['line']["line_id"]);
+            //unset($resultLine['line']["line_id"]);
 
             // Select Publication columns
             $resultLine['publication'] = array();

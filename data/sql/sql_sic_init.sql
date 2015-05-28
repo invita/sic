@@ -506,5 +506,10 @@ CREATE OR REPLACE VIEW view_publication_list AS
 -- 2015-05-19
 ALTER TABLE `quote` ADD `parent_quote_id` INT NOT NULL AFTER `pub_id`;
 
+-- 2015-05-28
+TRUNCATE TABLE project_line;
+ALTER TABLE `project_line` DROP `title`, DROP `creator`, DROP `year`, DROP `cobiss`, DROP `issn`;
+ALTER TABLE `project_line` ADD `xml` TEXT NOT NULL AFTER `proj_id`;
+
 
 

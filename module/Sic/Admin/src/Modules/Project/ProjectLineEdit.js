@@ -5,10 +5,14 @@ var F = function(args) {
 
     var formLineData = new sic.widget.sicForm({parent:panel.firstGroup.content.selector, captionWidth:"100px"});
     formLineData.addInput({name:"line_id", type:"text", placeholder:"Line Id...", readOnly:true});
+    formLineData.addInput({name:"xml", type:"textarea", placeholder:"Xml..."});
+
+    /*
     formLineData.addInput({name:"creator", type:"text", placeholder:"Creator..."});
     formLineData.addInput({name:"title", type:"text", placeholder:"Title..."});
     formLineData.addInput({name:"cobiss", type:"text", placeholder:"Cobiss..."});
     formLineData.addInput({name:"issn", type:"text", placeholder:"Issn..."});
+    */
     formLineData.addInput({name:"pub_id", type:"text", placeholder:"Publication Id...", value:sic.getArg(args.staticData, "pub_id", 0)});
     formLineData.addInput({name:"save", type:"submit", value:"Save", caption:" "}).selector.click(function(e){
         var response = sic.callMethod({moduleName:"Project/ProjectLineEdit", methodName:"projLineUpdate",
@@ -16,7 +20,7 @@ var F = function(args) {
         if (response && response.data) {
             formLineData.setValue(response.data);
             args.line_id = response.data.line_id;
-            tabPage.parentTab.setCaption(sic.mergePlaceholders(args.entityTitle, response.data));
+            //tabPage.parentTab.setCaption(sic.mergePlaceholders(args.entityTitle, response.data));
         }
     });
     formLineData.addInput({name:"cancel", type:"button", value:"Cancel"}).selector.click(function(e){ });

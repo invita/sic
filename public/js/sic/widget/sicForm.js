@@ -65,7 +65,7 @@ sic.widget.sicForm = function(args)
             input = new args.inputConstruct(args);
         }
         input.onPaste(_p._onPaste);
-        input.onKeyPressed(_p._onKeyPressed);
+        if (args.type != "textarea") input.onKeyPressed(_p._onKeyPressed);
         if (args.type == "submit") {
             _p._submitInput = input;
             _p._submitInput.selector.click(_p._onSubmit);

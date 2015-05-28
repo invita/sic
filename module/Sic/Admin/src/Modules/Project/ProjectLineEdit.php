@@ -27,10 +27,11 @@ class ProjectLineEdit {
 
 
         $projLineData = array(
-            "title" => Util::getArg($data, "title", ""),
-            "creator" => Util::getArg($data, "creator", ""),
-            "cobiss" => Util::getArg($data, "cobiss", ""),
-            "issn" => Util::getArg($data, "issn", ""),
+            //"title" => Util::getArg($data, "title", ""),
+            //"creator" => Util::getArg($data, "creator", ""),
+            //"cobiss" => Util::getArg($data, "cobiss", ""),
+            //"issn" => Util::getArg($data, "issn", ""),
+            "xml" => Util::getArg($data, "xml", ""),
             "pub_id" => Util::getArg($data, "pub_id", 0)
         );
         DbUtil::updateTable("project_line", $projLineData, array("line_id" => $line_id));
@@ -55,10 +56,11 @@ class ProjectLineEdit {
         $projLineData = array(
             "idx" => $newIdx,
             "proj_id" => $proj_id,
-            "title" => Util::getArg($data, "title", ""),
-            "creator" => Util::getArg($data, "creator", ""),
-            "cobiss" => Util::getArg($data, "cobiss", ""),
-            "issn" => Util::getArg($data, "issn", ""),
+            //"title" => Util::getArg($data, "title", ""),
+            //"creator" => Util::getArg($data, "creator", ""),
+            //"cobiss" => Util::getArg($data, "cobiss", ""),
+            //"issn" => Util::getArg($data, "issn", ""),
+            "xml" => Util::getArg($data, "xml", ""),
             "pub_id" => Util::getArg($data, "pub_id", 0)
         );
         DbUtil::insertInto("project_line", $projLineData);
