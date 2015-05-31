@@ -286,6 +286,8 @@ sic.widget.sicDataTable = function(args)
 
     this.expandAllRows = function() {
         if (!_p.canExpand) return;
+
+        return;
         for (var i = 0; i < _p.rows.length; i++)
             if (_p.rows[i].lastRowData && !_p.rows[i].subRowTr.isDisplay())
                 _p.rows[i].expandToggleSubRow();

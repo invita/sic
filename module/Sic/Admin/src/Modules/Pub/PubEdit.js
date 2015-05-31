@@ -132,7 +132,7 @@ var F = function(args) {
                 hintF: function(args) { sic.hint.publication(args.row.lastRowData.quoted_pub_id) } },
             quoted_creator: { canSort:false, editable:false, caption:"Creator" },
             quoted_title: { canSort:false, editable:false, caption:"Title" },
-            _expand: { visible:false }
+            //_expand: { visible:false }
         },
         customInsert: function(insertDT) {
             sic.loadModule({moduleName:'Pub/PubSearch', tabPage:tabPageBasic,  newTab:'New citation - select entity',
