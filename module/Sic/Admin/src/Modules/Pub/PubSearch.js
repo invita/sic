@@ -131,7 +131,41 @@ var F = function(args) {
         //showResults("cobiss");
     });
 
-      
+
+    // *** Zotero Scrape ***
+    var zoteroGroup = searchPanel.addGroup("Zotero");
+    var zoteroForm = new sic.widget.sicForm({parent:zoteroGroup.content.selector, captionWidth:"100px", inputClass:"searchInput"});
+    zoteroForm.addInput({name:"url", caption:"Zotero url"});
+
+    var zoteroScrapeButton = zoteroForm.addInput({value:"Scrape", type:"submit", caption: " "});
+    zoteroScrapeButton.selector.click(function(e){
+        sic.loading.show();
+
+        var searchData = zoteroForm.getValue();
+        var url = searchData.url;
+
+        /*
+        jQuery.ajax({url:"/cobiss.php", method:"POST", data:{url:url}, dataType:"json", success:function(data){
+            data = data.data;
+            pubSearchForm.setValue({
+                creator : data.authors,
+                title : data.titles,
+                cobiss : data.cobissId,
+                publisher : data.publisher
+            });
+            sic.loading.hide();
+        }});
+        */
+
+        sic.callMethod({ moduleName:"Pub/PubSearch", methodName:"zoteroScrape", url: url }, function(response) {
+            // Callback
+
+            dataTable.refresh();
+        });
+
+
+        //showResults("cobiss");
+    });
 
 
     var filterValue = sic.getArg(args, "filter", {});
@@ -146,7 +180,7 @@ var F = function(args) {
         entityTitle: "Entity %pub_id% - %title%",
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Pub/PubSearch",
-            staticData: { searchType: "pubSearch", fields: pubSearchForm.getValue() },
+            staticData: { searchType: "pubSearch", fields: pubSearchForm.getValue(), zotero:zoteroForm.getValue() },
             pageCount: 20
         }),
         editorModuleArgs: {
