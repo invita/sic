@@ -4,20 +4,15 @@ namespace Sic\Admin\Modules\User;
 use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
 use Zend\Db\Sql\Sql;
 use Zend\Authentication\Result;
+use Sic\Admin\Models\DbUtil;
 
 class UserEdit {
     public function getUser($args) {
 
         $id = $args["id"];
 
-        $adapter = GlobalAdapterFeature::getStaticAdapter();
-        $sql = new Sql($adapter);
-        $select = $sql->select()->from('user')->where(array('id' => $id));
-        $statement = $sql->prepareStatementForSqlObject($select);
-        $results = $statement->execute();
-        $row = $results->current();
+        $row = DbUtil::selectRow('user', null, array('id' => $id));
         unset($row['password']);
-
 
         return array("data" => $row);
     }
@@ -29,11 +24,7 @@ class UserEdit {
 
         $data = $args["data"];
 
-        $adapter = GlobalAdapterFeature::getStaticAdapter();
-        $sql = new Sql($adapter);
-        $update = $sql->update()->table('user')->set($data)->where(array('id' => $id));
-        $statement = $sql->prepareStatementForSqlObject($update);
-        $result = $statement->execute();
+        DbUtil::updateTable('user', $data, array('id' => $id));
 
         return $this->getUser($args);
     }
@@ -42,12 +33,8 @@ class UserEdit {
 
         $data = isset($args["data"]) ? $args["data"] : array();
 
-        $adapter = GlobalAdapterFeature::getStaticAdapter();
-        $sql = new Sql($adapter);
-        $insert = $sql->insert()->into('user')->values($data);
-        $statement = $sql->prepareStatementForSqlObject($insert);
-        $result = $statement->execute();
-        $args['id'] = $result->getGeneratedValue();
+        DbUtil::insertInto('user', $data);
+        $args['id'] = DbUtil::$lastInsertId;
 
         return $this->getUser($args);
     }

@@ -30,3 +30,7 @@ div.hierarchyDiv:hover { color:#87BCEA; }
 div.hierarchyDiv.current { font-weight:bold; }
 
 
+/* Project */
+tr.sicDataTableRow.projectLineFulfilled { background:#CCEECC; }
+tr.sicDataTableRow.projectLineFulfilled:nth-of-type(even) { background:#DDFFDD; }
+

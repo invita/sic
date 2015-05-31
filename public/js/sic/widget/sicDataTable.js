@@ -29,6 +29,7 @@ sic.widget.sicDataTable = function(args)
     this.customInsert = sic.getArg(args, "customInsert", null);
     this.subDataTable = sic.getArg(args, "subDataTable", null);
     this.canExpand = sic.getArg(args, "canExpand", this.subDataTable ? true : false);
+    this.initExpandAll = sic.getArg(args, "initExpandAll", false);
     this.hideNoData = sic.getArg(args, "hideNoData", false);
     this.showPaginator = sic.getArg(args, "showPaginator", true);
     this.initRefresh = sic.getArg(args, "initRefresh", true);
@@ -47,6 +48,7 @@ sic.widget.sicDataTable = function(args)
     this.onDataFeed = function(f) { _p.subscribe("dataFeed", f); };
     this.onDataFeedComplete = function(f) { _p.subscribe("dataFeedComplete", f); };
     this.onFirstFeedComplete = function(f) { _p.subscribe("firstFeedComplete", f); };
+    this.onRowSetValue = function(f) { _p.subscribe("rowSetValue", f); };
 
     // Data Fields Events
     this.onRowClick = function(f) { _p.subscribe("dataRowClick", f); };
@@ -282,6 +284,13 @@ sic.widget.sicDataTable = function(args)
         //sic.dump(_p.getValue(), 0);
     };
 
+    this.expandAllRows = function() {
+        if (!_p.canExpand) return;
+        for (var i = 0; i < _p.rows.length; i++)
+            if (!_p.rows[i].subRowTr.isDisplay())
+                _p.rows[i].expandToggleSubRow();
+    };
+
     this.recalculateInputs = function(){
         for (var i = 0; i < _p.rows.length; i++)
             _p.rows[i].recalculateInputs();
@@ -511,7 +520,12 @@ sic.widget.sicDataTable = function(args)
                 _p.applyFilter();
                 _p.refresh();
             }
+
             _p.firstFeed = false;
+        }
+
+        if (_p.initExpandAll) {
+            _p.expandAllRows();
         }
     };
 
@@ -690,6 +704,8 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
         for (var fieldName in rowData) {
             if (_p.fields[fieldName]) _p.fields[fieldName].setValue(rowData[fieldName]);
         }
+
+        _p.dataTable.trigger('rowSetValue', sic.mergeObjects(_p.getEventArgs(), {rowData:rowData}));
     };
 
     this.getValue = function(){

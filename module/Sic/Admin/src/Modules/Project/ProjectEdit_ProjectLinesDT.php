@@ -23,8 +23,11 @@ class ProjectEdit_ProjectLinesDT extends SicModuleAbs {
     public function defineDataTableResponseData($args, ResultInterface $result) {
         $responseData = array();
 
-        $lineColumns = array(                     'title','creator','year','cobiss','issn');
-        $pubColumns = array('pub_id','parent_id', 'title','creator','year','idno_cobiss','idno_issn','original_id');
+        $lineColumns = array(                     'title','addTitle','creator','year','idno','addIdno','volume',
+                                                  'issue','page','edition','place','publisher','source','online','strng','note');
+        $pubColumns = array('pub_id','parent_id', 'title','addTitle','creator','year','idno','addIdno','volume',
+                                                  'issue','page','edition','place','publisher','source','online','strng','note',
+            'original_id');
 
         foreach($result as $row) {
             $resultLine = array();
@@ -59,7 +62,7 @@ class ProjectEdit_ProjectLinesDT extends SicModuleAbs {
             if ($row['pub_id']) {
                 $pubVals = DbUtil::selectRow('view_publication_list', $pubColumns, array('pub_id' => $row['pub_id']));
                 foreach ($pubVals as $pubKey => $pubVal) {
-                    $resultLine['publication'][$pubKey] = $pubVal;
+                    $resultLine['publication'][$pubKey] = str_replace("||", ", ", $pubVal);
 
                     // Add hr after pub_id
                     if ($pubKey == 'pub_id') $resultLine['publication']['---'] = "";

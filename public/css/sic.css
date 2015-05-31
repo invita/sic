@@ -55,7 +55,7 @@ div.sicInputDiv { }
 input.sicInput, textarea.sicInput { margin:0px 0px 2px 0px; color:#444; }
 input.sicInput.flat { border:none; box-shadow:none; background:inherit; }
 
-input.sicInput[type=text], textarea.sicInput { width:200px; }
+input.sicInput[type=text], input.sicInput[type=password], textarea.sicInput { width:200px; }
 input.sicInput.searchInput[type=text], textarea.sicInput.searchInput { width:120px; }
 div.sicInputDiv.modified > .sicInput { border: orange solid 1px; }
 
