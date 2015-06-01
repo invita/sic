@@ -80,8 +80,12 @@ var F = function(args) {
                     var projLine = rowValue.line;
                     var pub = rowValue.publication;
                     var filter = {};
-                    if (projLine.creator) filter.creator = "*"+projLine.creator+"*";
-                    if (projLine.title) filter.title = "*"+projLine.title+"*";
+                    for (var i in projLine) {
+                        if (projLine[i])
+                            filter[i] = "*"+projLine[i]+"*";
+                    }
+                    //if (projLine.creator) filter.creator = "*"+projLine.creator+"*";
+                    //if (projLine.title) filter.title = "*"+projLine.title+"*";
                     var line_id = args.row.getValue().line_id;
 
                     sic.loadModule({moduleName:'Pub/PubSearch', tabPage:tabPageBasic,  newTab:'Search for Line '+line_id,

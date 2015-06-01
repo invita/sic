@@ -111,8 +111,10 @@ sic.widget.sicDataTable = function(args)
         _p.createRows();
         if (_p.canInsert)
             _p.createInsertButton();
-        if (_p.dataSource)
-            _p.createDSControlDiv();
+        if (_p.dataSource) {
+            _p.createDSControlDiv("dsControl");
+            _p.createDSControlDiv("dsControlBottom");
+        }
     };
 
     // Header
@@ -208,54 +210,66 @@ sic.widget.sicDataTable = function(args)
     };
 
     // Paginator
-    this.createDSControlDiv = function() {
-        if (_p.dsControl) return;
-        _p.dsControl = new sic.widget.sicElement({parent:_p.selector, insertAtTop:true, tagClass:"dsControl"});
+    this.createDSControlDiv = function(cpName) {
+        if (!cpName) cpName = "dsControl";
+        if (_p[cpName]) return;
+        _p[cpName] = new sic.widget.sicElement({parent:_p.selector, insertAtTop:cpName == "dsControl", tagClass:"dsControl"});
 
         if (!_p.showPaginator)
-            _p.dsControl.displayNone();
+            _p[cpName].displayNone();
 
         // Prev page button
-        _p.dsControl.prevPage = new sic.widget.sicElement({parent:_p.dsControl.selector, tagClass:"inline prevButton vmid"});
-        _p.dsControl.prevPageImg = new sic.widget.sicElement({parent:_p.dsControl.prevPage.selector, tagName:"img", tagClass:"icon8 vmid"});
-        _p.dsControl.prevPageImg.selector.attr("src", "/img/icon/dataTable_prev.png");
-        _p.dsControl.prevPageSpan = new sic.widget.sicElement({parent:_p.dsControl.prevPage.selector, tagName:"span", tagClass:"vmid"});
-        _p.dsControl.prevPageSpan.selector.html("Prev");
-        _p.dsControl.prevPage.selector.click(function(){ _p.switchPage(_p.currentPage-1); });
+        _p[cpName].prevPage = new sic.widget.sicElement({parent:_p[cpName].selector, tagClass:"inline prevButton vmid"});
+        _p[cpName].prevPageImg = new sic.widget.sicElement({parent:_p[cpName].prevPage.selector, tagName:"img", tagClass:"icon8 vmid"});
+        _p[cpName].prevPageImg.selector.attr("src", "/img/icon/dataTable_prev.png");
+        _p[cpName].prevPageSpan = new sic.widget.sicElement({parent:_p[cpName].prevPage.selector, tagName:"span", tagClass:"vmid"});
+        _p[cpName].prevPageSpan.selector.html("Prev");
+        _p[cpName].prevPage.selector.click(function(){ _p.switchPage(_p.currentPage-1); });
 
         // Page inputs
-        _p.dsControl.pageInput = new sic.widget.sicElement({parent:_p.dsControl.selector,
+        _p[cpName].pageInput = new sic.widget.sicElement({parent:_p[cpName].selector,
             tagName:"input", tagClass:"inline vmid dataTable_pageInput"});
-        _p.dsControl.pageInput.selector.keypress(function(e){
+        _p[cpName].pageInput.selector.keypress(function(e){
             if (e.which == 13)
-                _p.switchPage(_p.dsControl.pageInput.selector.val());
+                _p.switchPage(_p[cpName].pageInput.selector.val());
         });
-        _p.dsControl.pageInput.selector.val(1);
+        _p[cpName].pageInput.selector.val(1);
 
-        _p.dsControl.slashSpan = new sic.widget.sicElement({parent:_p.dsControl.selector, tagClass:"inline vmid"});
-        _p.dsControl.slashSpan.selector.html('/');
+        _p[cpName].slashSpan = new sic.widget.sicElement({parent:_p[cpName].selector, tagClass:"inline vmid"});
+        _p[cpName].slashSpan.selector.html('/');
 
-        _p.dsControl.pageCount = new sic.widget.sicElement({parent:_p.dsControl.selector,
+        _p[cpName].pageCount = new sic.widget.sicElement({parent:_p[cpName].selector,
             tagName:"input", tagClass:"inline vmid dataTable_pageCount"});
-        _p.dsControl.pageCount.selector.attr("readOnly", true);
-        _p.dsControl.pageCount.selector.val(1);
+        _p[cpName].pageCount.selector.attr("readOnly", true);
+        _p[cpName].pageCount.selector.val(1);
 
         // Next page button
-        _p.dsControl.nextPage = new sic.widget.sicElement({parent:_p.dsControl.selector, tagClass:"inline nextButton vmid"});
-        _p.dsControl.nextPageSpan = new sic.widget.sicElement({parent:_p.dsControl.nextPage.selector, tagName:"span", tagClass:"vmid"});
-        _p.dsControl.nextPageSpan.selector.html("Next");
-        _p.dsControl.nextPageImg = new sic.widget.sicElement({parent:_p.dsControl.nextPage.selector, tagName:"img", tagClass:"icon8 vmid"});
-        _p.dsControl.nextPageImg.selector.attr("src", "/img/icon/dataTable_next.png");
-        _p.dsControl.nextPage.selector.click(function(){ _p.switchPage(_p.currentPage+1); });
+        _p[cpName].nextPage = new sic.widget.sicElement({parent:_p[cpName].selector, tagClass:"inline nextButton vmid"});
+        _p[cpName].nextPageSpan = new sic.widget.sicElement({parent:_p[cpName].nextPage.selector, tagName:"span", tagClass:"vmid"});
+        _p[cpName].nextPageSpan.selector.html("Next");
+        _p[cpName].nextPageImg = new sic.widget.sicElement({parent:_p[cpName].nextPage.selector, tagName:"img", tagClass:"icon8 vmid"});
+        _p[cpName].nextPageImg.selector.attr("src", "/img/icon/dataTable_next.png");
+        _p[cpName].nextPage.selector.click(function(){ _p.switchPage(_p.currentPage+1); });
+
+
+        _p[cpName].recsPerPageInput = new sic.widget.sicElement({parent:_p[cpName].selector,
+            tagName:"input", tagClass:"inline vmid dataTable_recsPerPageInput"});
+        _p[cpName].recsPerPageInput.selector.keypress(function(e){
+            if (e.which == 13) {
+                _p.dataSource.pageCount = _p[cpName].pageInput.selector.val();
+                _p.refresh();
+            }
+        });
+        _p[cpName].recsPerPageInput.selector.val(_p.dataSource.pageCount);
 
         // Filter
         if (_p.filter.enabled) {
-            _p.dsControl.filterDiv = new sic.widget.sicElement({parent:_p.dsControl.selector, tagClass:"inline filterButton vmid"});
-            _p.dsControl.filterImg = new sic.widget.sicElement({parent:_p.dsControl.filterDiv.selector, tagName:"img", tagClass:"icon16 vmid"});
-            _p.dsControl.filterImg.selector.attr("src", "/img/icon/dataTable_filter.png");
-            _p.dsControl.filterSpan = new sic.widget.sicElement({parent:_p.dsControl.filterDiv.selector, tagName:"span", tagClass:"vmid"});
-            _p.dsControl.filterSpan.selector.html("Filter");
-            _p.dsControl.filterDiv.selector.click(function(){ _p.toggleFilter(); });
+            _p[cpName].filterDiv = new sic.widget.sicElement({parent:_p[cpName].selector, tagClass:"inline filterButton vmid"});
+            _p[cpName].filterImg = new sic.widget.sicElement({parent:_p[cpName].filterDiv.selector, tagName:"img", tagClass:"icon16 vmid"});
+            _p[cpName].filterImg.selector.attr("src", "/img/icon/dataTable_filter.png");
+            _p[cpName].filterSpan = new sic.widget.sicElement({parent:_p[cpName].filterDiv.selector, tagName:"span", tagClass:"vmid"});
+            _p[cpName].filterSpan.selector.html("Filter");
+            _p[cpName].filterDiv.selector.click(function(){ _p.toggleFilter(); });
         }
     };
 
@@ -265,6 +279,7 @@ sic.widget.sicDataTable = function(args)
         if (_p.currentPage > _p.currentPageCount) _p.currentPage = _p.currentPageCount;
         if (_p.currentPage < 1) _p.currentPage = 1;
         _p.dsControl.pageInput.selector.val(_p.currentPage);
+        _p.dsControlBottom.pageInput.selector.val(_p.currentPage);
         if (_p.dataSource) {
             _p.dataSource.pageStart = (_p.currentPage -1) * _p.dataSource.pageCount;
             _p.refresh();
@@ -496,6 +511,7 @@ sic.widget.sicDataTable = function(args)
     this.setPaginator = function(rowCount) {
         if (!rowCount) return;
         if (!_p.dsControl) return;
+        if (!_p.dsControlBottom) return;
 
         _p.rowCount = rowCount;
         _p.currentPageCount = Math.floor((rowCount -1) /_p.rowsPerPage) +1;
@@ -504,6 +520,8 @@ sic.widget.sicDataTable = function(args)
 
         _p.dsControl.pageInput.selector.val(_p.currentPage);
         _p.dsControl.pageCount.selector.val(_p.currentPageCount);
+        _p.dsControlBottom.pageInput.selector.val(_p.currentPage);
+        _p.dsControlBottom.pageCount.selector.val(_p.currentPageCount);
     };
 
     this.feedData = function(args) {

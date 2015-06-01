@@ -35,18 +35,30 @@ var F = function(args) {
 
 
     // Quick Search
-    var quickSearchGroup = searchPanel.addGroup("Quick Search");
-    var quickSearchForm = new sic.widget.sicForm({parent:quickSearchGroup.content.selector, inputClass:"searchInput"});
-    var quickSearchBox = quickSearchForm.addInput({name:"quickSearch", placeholder:"Quick search...", caption:false});
+    var quickSearchGroup = searchPanel.addGroup();
+    var quickSearchForm = new sic.widget.sicForm({parent:quickSearchGroup.content.selector, captionWidth:"80px", inputClass:"searchInput"});
+    var quickSearchBox = quickSearchForm.addInput({name:"quickSearch", placeholder:"Quick search...", caption:"Quick search"});
     quickSearchBox.selector.addClass("inline");
-    var quickSearchSubmitButton = quickSearchForm.addInput({value:"Quick Search", type:"submit"});
-    var cobissSearch = quickSearchForm.addInput({value:"Cobiss Search", type:"button"});
+    quickSearchBox.input.selector.css("width", "220px");
+    var quickSearchSubmitButton = quickSearchForm.addInput({value:"Local", type:"submit", caption:" "});
+    var cobissSearch = quickSearchForm.addInput({value:"Cobiss", type:"button"});
     cobissSearch.selector.click(function(){
         var data = quickSearchForm.getValue();
         var srch = cobissForm.find("input[name=srch]");
         srch.val(data.quickSearch);
         cobissForm.submit();
     });
+    var googleSearch = quickSearchForm.addInput({value:"Google", type:"button"});
+    googleSearch.selector.click(function(){
+        var query = quickSearchForm.getValue().quickSearch;
+        query = query.replace(/ /g, "+");
+
+        var googleSearchUrl = "https://www.google.com/webhp?hl=en#hl=en&q="+query;
+        window.open(googleSearchUrl, '_blank');
+    });
+
+    quickSearchForm.addHr();
+
 
     // *** Publication Search ***
     var searchFields = {
@@ -90,17 +102,38 @@ var F = function(args) {
         pubSearchForm.addInput(inputArgs);
     }
 
-    pubSearchForm.addHr();
+    var pubSearchSubmitButton = pubSearchForm.addInput({value:"Local", type:"submit", caption:false});
 
-    var pubSearchSubmitButton = pubSearchForm.addInput({value:"Search Local", type:"submit", caption:"Local Database"});
+    var pubCobissSearchButton = pubSearchForm.addInput({value:"Cobiss", type:"button"});
+    pubCobissSearchButton.selector.click(function(e) {
+        var data = pubSearchForm.getValue();
+        var srch = cobissForm.find("input[name=srch]");
+        srch.val(data.creator[0].value +" "+ data.title[0]);
+        cobissForm.submit();
+    });
+
+    var pubSearchGoogleButton = pubSearchForm.addInput({value:"Google", type:"button"});
+    pubSearchGoogleButton.selector.click(function(e) {
+        var data = pubSearchForm.getValue();
+        var query = data.creator[0].value +", "+ data.title[0];
+        query = query.replace(/ /g, "+");
+
+        var googleSearchUrl = "https://www.google.com/webhp?hl=en#hl=en&q="+query;
+        window.open(googleSearchUrl, '_blank');
+    });
+
     var pubCreateButton = pubSearchForm.addInput({value:"Create Pub", type:"button"});
     pubCreateButton.selector.click(function(e) {
         var searchData = sic.removeStarsFromObject(pubSearchForm.getValue(), true);
         delete searchData.pub_id;
-        sic.loadModule({moduleName:"Pub/PubEdit", newTab:"New Publication", initValue:searchData,
-            entityTitle:"Pub %pub_id% - %title%"});
+        sic.loadModule({moduleName:"Pub/PubEdit", newTab:"New Entity", initValue:searchData,
+            tabPage: tabPage, entityTitle:"Entity %pub_id% - %title%"});
     });
 
+    var pubClearButton = pubSearchForm.addInput({value:"Clear", type:"button"});
+    pubClearButton.selector.click(function(e) {
+        pubSearchForm.allInputs.clear();
+    });
 
     pubSearchForm.addHr();
 
