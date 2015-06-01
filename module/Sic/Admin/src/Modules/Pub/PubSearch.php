@@ -12,6 +12,16 @@ use Zend\Db\Sql\Expression;
 
 class PubSearch extends SicModuleAbs {
 
+
+    public function dataTableSelect($args) {
+        return array(
+            "data" => array(
+            ),
+            "rowCount" => 1
+        );
+    }
+
+    /*
     public function defineSqlSelect($args, Select $select)
     {
         $staticData = Util::getArg($args, 'staticData', array());
@@ -82,6 +92,11 @@ class PubSearch extends SicModuleAbs {
             $responseData[] = $newRow;
         }
         return $responseData;
+    }
+    */
+
+    function zoteroScrape($args) {
+        print_r($args);
     }
 
 }

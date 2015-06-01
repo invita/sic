@@ -36,7 +36,7 @@ var F = function(args) {
 
     // Quick Search
     var quickSearchGroup = searchPanel.addGroup("Quick Search");
-    var quickSearchForm = new sic.widget.sicForm({parent:quickSearchGroup.content.selector});
+    var quickSearchForm = new sic.widget.sicForm({parent:quickSearchGroup.content.selector, inputClass:"searchInput"});
     var quickSearchBox = quickSearchForm.addInput({name:"quickSearch", placeholder:"Quick search...", caption:false});
     quickSearchBox.selector.addClass("inline");
     var quickSearchSubmitButton = quickSearchForm.addInput({value:"Quick Search", type:"submit"});
@@ -78,8 +78,8 @@ var F = function(args) {
     var pubSearchGroup = searchPanel.addGroup("Publication Search");
     //var pubCopyParams
 
-    var pubSearchForm = new sic.widget.sicForm({parent:pubSearchGroup.content.selector, captionWidth:"140px",
-        showCopyPaste:true});
+    var pubSearchForm = new sic.widget.sicForm({parent:pubSearchGroup.content.selector, captionWidth:"100px",
+        showCopyPaste:true, inputClass:"searchInput"});
     for (var fieldName in searchFields) {
         if (fieldName[0] == "_") {
             pubSearchForm.addCaption(searchFields[fieldName]);
@@ -108,7 +108,7 @@ var F = function(args) {
 
     // *** Cobiss Search ***
     var cobbisGroup = searchPanel.addGroup("Cobbis");
-    var cobbisForm = new sic.widget.sicForm({parent:cobbisGroup.content.selector, captionWidth:"140px"});
+    var cobbisForm = new sic.widget.sicForm({parent:cobbisGroup.content.selector, captionWidth:"100px", inputClass:"searchInput"});
     cobbisForm.addInput({name:"url", caption:"Cobiss url"});
 
     var cobissScrapeButton = cobbisForm.addInput({value:"Scrape", type:"submit", caption: " "});
@@ -131,7 +131,41 @@ var F = function(args) {
         //showResults("cobiss");
     });
 
-      
+
+    // *** Zotero Scrape ***
+    var zoteroGroup = searchPanel.addGroup("Zotero");
+    var zoteroForm = new sic.widget.sicForm({parent:zoteroGroup.content.selector, captionWidth:"100px", inputClass:"searchInput"});
+    zoteroForm.addInput({name:"url", caption:"Zotero url", value:"https://api.zotero.org/users/475425/collections/9KH9TNSJ/items"});
+
+    var zoteroScrapeButton = zoteroForm.addInput({value:"Scrape", type:"submit", caption: " "});
+    zoteroScrapeButton.selector.click(function(e){
+        sic.loading.show();
+
+        var searchData = zoteroForm.getValue();
+        var url = searchData.url;
+
+        /*
+        jQuery.ajax({url:"/cobiss.php", method:"POST", data:{url:url}, dataType:"json", success:function(data){
+            data = data.data;
+            pubSearchForm.setValue({
+                creator : data.authors,
+                title : data.titles,
+                cobiss : data.cobissId,
+                publisher : data.publisher
+            });
+            sic.loading.hide();
+        }});
+        */
+
+        sic.callMethod({ moduleName:"Pub/PubSearch", methodName:"zoteroScrape", url: url }, function(response) {
+            // Callback
+
+            dataTable.refresh();
+        });
+
+
+        //showResults("cobiss");
+    });
 
 
     var filterValue = sic.getArg(args, "filter", {});
@@ -146,7 +180,7 @@ var F = function(args) {
         entityTitle: "Entity %pub_id% - %title%",
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Pub/PubSearch",
-            staticData: { searchType: "pubSearch", fields: pubSearchForm.getValue() },
+            staticData: { searchType: "pubSearch", fields: pubSearchForm.getValue(), zotero:zoteroForm.getValue() },
             pageCount: 20
         }),
         editorModuleArgs: {

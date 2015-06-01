@@ -33,6 +33,7 @@ sic.widget.sicInput = function(args)
     this.lookup = sic.getArg(args, "lookup", null);
     this.form = sic.getArg(args, "form", null);
     this.inputArray = sic.getArg(args, "inputArray", null);
+    this.inputClass = sic.getArg(args, "inputClass", "");
 
     // Events
     this.onKeyDown = function(f) { _p.subscribe("onKeyDown", f); };
@@ -43,7 +44,7 @@ sic.widget.sicInput = function(args)
     this.onPaste = function(f) { _p.subscribe("onPaste", f); };
 
     // Create elements
-    this.input = new sic.widget.sicElement({ parent:this.selector, tagName:this.inputTagName });
+    this.input = new sic.widget.sicElement({ parent:this.selector, tagName:this.inputTagName, tagClass:this.inputClass });
     this.input.selector.addClass("sicInput");
     this.inputs = [this.input];
 

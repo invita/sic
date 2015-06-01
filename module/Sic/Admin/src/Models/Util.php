@@ -29,7 +29,7 @@ class Util
         return $text;
     }
 
-    public static function getXmlFieldValue($entity, $fieldName, $asArray = false, $xPathFilter = "") {
+    public static function getXmlFieldValue($entity, $fieldName, $asArray = false, $xPathFilter = "", $sep = ', ') {
         $nodes = $entity->xpath($fieldName.$xPathFilter);
         $result = array();
         foreach ($nodes as $idx => $node)
@@ -37,7 +37,7 @@ class Util
             $result[] = trim((string)$node);
         }
 
-        if (!$asArray) $result = join(", ", $result);
+        if (!$asArray) $result = join($sep, $result);
 
         return $result;
     }

@@ -70,6 +70,12 @@ class ProjectEdit {
         $idx = 1;
         foreach($xml->entity as $entity){
             $lines[] = array(
+                "proj_id" => $proj_id,
+                "idx" => $idx,
+                "xml" => $entity->asXML()
+            );
+            /*
+            $lines[] = array(
                 "idx" => $idx,
                 "title" => Util::getXmlFieldValue($entity, "title", false),
                 "creator" => Util::getXmlFieldValue($entity, "creator", false, "[@creatorType='author']"),
@@ -77,6 +83,7 @@ class ProjectEdit {
                 "cobiss" => Util::getXmlFieldValue($entity, "idno", false, "[@idnoType='cobiss']"),
                 "issn" => Util::getXmlFieldValue($entity, "idno", false, "[@idnoType='issn']"),
             );
+            */
             $idx++;
         }
 
@@ -84,7 +91,6 @@ class ProjectEdit {
         DbUtil::deleteFrom('publication_project_link', array('proj_id' => $proj_id));
 
         foreach ($lines as $line) {
-            $line['proj_id'] = $proj_id;
             DbUtil::insertInto('project_line', $line);
         }
 

@@ -1,6 +1,7 @@
 var F = function(args) {
     var moduleArgs = args;
     var tabPageBasic = args.helpers.createTabPage({name:"Basic"});
+    var scrollToY = 0;
 
     var panel = new sic.widget.sicPanel({parent:tabPageBasic.content.selector, firstGroupName: "Project"});
 
@@ -46,7 +47,8 @@ var F = function(args) {
         filter: { enabled: false },
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Project/ProjectEdit_ProjectLinesDT",
-            staticData: { proj_id: args.proj_id }
+            staticData: { proj_id: args.proj_id },
+            pageCount: 100
         }),
         editorModuleArgs: {
             moduleName:"Project/ProjectLineEdit",
@@ -96,7 +98,52 @@ var F = function(args) {
             }
         }
     });
-    linesTable.onDataFeed(function(data){ formProj.inputs['_pubCount'].setValue(data['rowCount']); });
+    linesTable.onRowSetValue(function(eArgs) {
+        var lineForm = eArgs.row.fields.line.formViewInstance;
+        var pubForm = eArgs.row.fields.publication.formViewInstance;
+
+        for (var i in lineForm.inputs) {
+            var lineInput = lineForm.inputs[i];
+            var pubInput = pubForm.inputs[i] ? pubForm.inputs[i] : null;
+            var lineVal = lineInput.getValue();
+            var pubVal = pubInput ? pubInput.getValue() : '';
+
+            if (!lineVal && !pubVal) {
+                lineInput.displayNone();
+                if (pubInput) pubInput.displayNone();
+            } else {
+                lineInput.display();
+                if (pubInput) pubInput.display();
+            }
+        }
+        //sic.dump(eArgs.row.fields.line.formViewInstance.inputs, 0);
+        //sic.dump(eArgs.row.fields.publication, 0);
+        //eArgs.row.
+
+        // Color fulfilled rows
+        if (eArgs.rowData.publication && eArgs.rowData.publication.pub_id) {
+            eArgs.row.selector.addClass("projectLineFulfilled");
+        } else {
+            eArgs.row.selector.removeClass("projectLineFulfilled");
+            if (scrollToY == 0)
+                scrollToY = eArgs.row.selector.position().top;
+        }
+
+
+    });
+    linesTable.onDataFeed(function(data){ scrollToY = 0; formProj.inputs['_pubCount'].setValue(data['rowCount']); });
+    linesTable.onFirstFeedComplete(function() {
+        var scrollToFirstUnful = new sic.widget.sicElement({parent:linesTable.dsControl.selector});
+        scrollToFirstUnful.selector.addClass("inline filterButton vmid");
+        var scrollToFirstUnfulImg = new sic.widget.sicElement({parent:scrollToFirstUnful.selector, tagName:"img", tagClass:"icon12 vmid"});
+        scrollToFirstUnfulImg.selector.attr("src", "/img/icon/lookup.png");
+        var scrollToFirstUnfulSpan = new sic.widget.sicElement({parent:scrollToFirstUnful.selector, tagName:"span", tagClass:"vmid"});
+        scrollToFirstUnfulSpan.selector.html("Scroll to first Unlinked");
+        scrollToFirstUnful.selector.click(function(e){
+            window.scrollTo(0, scrollToY);
+        });
+    });
+
 
     if (args.proj_id){
         var response = sic.callMethod({moduleName:"Project/ProjectEdit", methodName:"projSelect", proj_id: args.proj_id});

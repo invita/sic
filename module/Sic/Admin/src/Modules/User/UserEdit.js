@@ -5,11 +5,13 @@ var F = function(args) {
     var panelBasic = new sic.widget.sicPanel({parent:tabPageBasic.content.selector,
             firstGroupName:args.id ? "Update User (id: "+args.id+")" : "Insert User"});
 
-    var formUserData = new sic.widget.sicForm({parent:panelBasic.firstGroup.content.selector});
-    formUserData.addInput({name:"username", type:"text", placeholder:"Username...", caption:""});
-    formUserData.addInput({name:"email", type:"text", placeholder:"Email...", caption:""});
-    formUserData.addInput({name:"notes", type:"textarea", placeholder:"Notes...", caption:""});
-    formUserData.addInput({name:"save", type:"submit", value:"Save"}).selector.click(function(e){
+    var formUserData = new sic.widget.sicForm({parent:panelBasic.firstGroup.content.selector, captionWidth:"100px"});
+    formUserData.addInput({name:"username", type:"text", placeholder:"Username...", caption:"username"});
+    formUserData.addInput({name:"email", type:"text", placeholder:"Email...", caption:"email"});
+    formUserData.addInput({name:"notes", type:"textarea", placeholder:"Notes...", caption:"notes"});
+    formUserData.addInput({name:"zotero_id", type:"text", placeholder:"Zotero UserId...", caption:"zotero user"});
+    formUserData.addInput({name:"zotero_col", type:"text", placeholder:"Zotero CollectionId...", caption:"zotero collection"});
+    formUserData.addInput({name:"save", type:"submit", value:"Save", caption: " "}).selector.click(function(e){
             var response = sic.callMethod({moduleName:"User/UserEdit", methodName:"updateUser",
                 id: args.id, data:formUserData.getValue()});
             formUserData.setValue(response.data);
@@ -23,11 +25,11 @@ var F = function(args) {
     // *** Reset Password ***
 
     var panelGroup2 = panelBasic.addGroup("Reset password");
-    var formPassword = new sic.widget.sicForm({parent:panelGroup2.content.selector});
-    formPassword.addInput({name:"password", type:"password", placeholder:"Password...", caption:""});
-    formPassword.addInput({name:"reset", type:"submit", value:"Reset"}).selector.click(function(e){
+    var formPassword = new sic.widget.sicForm({parent:panelGroup2.content.selector, captionWidth:"100px"});
+    formPassword.addInput({name:"password", type:"password", placeholder:"Password...", caption:"password"});
+    formPassword.addInput({name:"reset", type:"submit", value:"Reset", caption:" "}).selector.click(function(e){
         if (!formPassword.getValue().password && !confirm('Are you sure you want to clear password for '+
-                sic.mergePlaceholders(args.entityTitle, args.data)))
+                sic.mergePlaceholders(args.entityTitle, {id:args.id, username:formUserData.getValue().username})))
         {
             return;
         }
@@ -46,7 +48,7 @@ var F = function(args) {
         firstGroupName:"Module Access"});
     var formPermModule = new sic.widget.sicForm({parent:panelPerm.firstGroup.content.selector});
     formPermModule.addInput({name:"moduleAccess", inputConstruct: sic.widget.sicMultiSelect,
-        values:['Search', 'Publications', 'Users', 'System']});
+        values:['Search', 'Publications', 'Users', 'System'], multiSelect: false});
     formPermModule.addInput({name:"save", type:"submit", value:"Save"}).selector.click(function(e){
         var response = sic.callMethod({moduleName:"User/UserEdit", methodName:"updatePermissions",
             id: args.id, data:formPermModule.getValue()});
@@ -55,7 +57,7 @@ var F = function(args) {
     var formPermLevel = new sic.widget.sicForm({parent:panelPermLevelGroup.content.selector});
     formPermLevel.addInput({name:"levelAccess", inputConstruct: sic.widget.sicMultiSelect,
             values:['superAdmin', 'systemAdmin', 'systemModerator', 'manager', 'advancedUser', 'starterUser'],
-            multiSelect: false});
+            multiSelect: true});
     formPermLevel.addInput({name:"save", type:"submit", value:"Save"}).selector.click(function(e){
         var response = sic.callMethod({moduleName:"User/UserEdit", methodName:"updatePermissions",
             id: args.id, data:formPermLevel.getValue()});

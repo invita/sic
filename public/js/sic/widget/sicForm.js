@@ -21,6 +21,7 @@ sic.widget.sicForm = function(args)
     this.captionWidth = sic.getArg(args, "captionWidth", null);
     this.showCopyPaste = sic.getArg(args, "showCopyPaste", false);
     this.skipTypes = ["submit", "button"];
+    this.inputClass = sic.getArg(args, "inputClass", "");
 
     // Events
     this.onSubmit = function(f) { _p.subscribe("onSubmit", f); };
@@ -53,6 +54,7 @@ sic.widget.sicForm = function(args)
             parent:parent,
             type:"text",
             inputConstruct: sic.widget.sicInput,
+            inputClass:_p.inputClass,
             form: _p
         };
         args = sic.mergeObjects(defArgs, args);
@@ -62,8 +64,9 @@ sic.widget.sicForm = function(args)
         } else {
             input = new args.inputConstruct(args);
         }
-        input.onPaste(_p._onPaste);
-        input.onKeyPressed(_p._onKeyPressed);
+        if (input.onPaste)
+            input.onPaste(_p._onPaste);
+        if (args.type != "textarea") input.onKeyPressed(_p._onKeyPressed);
         if (args.type == "submit") {
             _p._submitInput = input;
             _p._submitInput.selector.click(_p._onSubmit);

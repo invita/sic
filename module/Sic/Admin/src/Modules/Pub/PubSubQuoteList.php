@@ -21,7 +21,7 @@ class PubSubQuoteList extends SicModuleAbs {
         $pub_id = Util::getArg($staticData, 'pub_id', 0);
         $parent_quote_id = Util::getArg($parentRow, 'quote_id', 0);
 
-        $select->from('quote')
+        $select->from('quote')//->join('publication', array())
             ->columns(array("quote_id", "pub_id", "on_page", "quoted_pub_id", "cited_page"))
             ->where(array('pub_id' => $pub_id, 'parent_quote_id' => $parent_quote_id));
     }

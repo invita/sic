@@ -14,7 +14,6 @@
     <script src="/js/sic/codes.js"></script>
     <script src="/js/sic/lookup.js"></script>
     <script src="/js/sic/object/sicEventBase.js"></script>
-    <script src="/js/sic/object/sicMessageTunnel.js"></script>
     <script src="/js/sic/object/sicFileUploader.js"></script>
     <script src="/js/sic/widget/sicElement.js"></script>
     <script src="/js/sic/widget/sicTabPage.js"></script>
@@ -44,74 +43,88 @@
 
 <body>
 
+
+
 <div id="header" class="">
+    <div class="inline vtop"><a href="/" title="Slovenian Index of citation - Admin"><img src="/img/logo2.png" class="logoImage"/><img src="/img/loading-book.gif" class="loadingGif" id="loadingGif" style="display:none;"><div class="mainTitle">Slovenian Index of citation v2</div></a></div>
+    <div class="inline vtop">
+
+        <div id="initLoader" class="initLoader">Loading codes...</div>
+
+        <?php if($this->hasIdentity){ ?>
+        <div id="navigation" class="navigation" style="display:none;">
+            <div>
+                <ul class="navigationUl">
+                    <li class="mainMenuList">
+                        <a href="javascript:sic.loadModule({moduleName:'Pub/PubSearch', newTab:'Search'});">Search</a>
+                    </li>
+                    <li class="mainMenuList">
+                        <a href="javascript:sic.loadModule({moduleName:'System/Dashboard', newTab:'System'});">System</a>
+                    </li>
+                    <li class="mainMenuList">
+                        <a href="javascript:sic.loadModule({moduleName:'System/Scripts', newTab:'Scripts'});">Scripts</a>
+                    </li>
+                    <li class="mainMenuList">
+                        <a href="javascript:sic.loadModule({moduleName:'User/UserList', newTab:'Users'});">Users</a>
+                    </li>
+                    <li class="mainMenuList">
+                        <a href="javascript:sic.loadModule({moduleName:'Pub/PubList', newTab:'Entities'});">Entities</a>
+                    </li>
+                    <li class="mainMenuList">
+                        <a href="javascript:sic.loadModule({moduleName:'Project/ProjectList', newTab:'Projects'});">Projects</a>
+                    </li>
+                    <!--
+                    <li class="mainMenuList">
+                        <a href="javascript:sic.loadModule({moduleName:'Cobiss/CobissList'});">Cobiss</a>
+                    </li>
+                    <li class="mainMenuList">
+                        <a href="javascript:sic.loadModule({moduleName:'Test/WidgetTest'});">WidgetTest</a>
+                    </li>
+                    -->
+                </ul>
+            </div>
+        </div>
+        <?php } ?>
+
+    </div>
+
+    <div class="floatRight vtop identityDiv">
+        <?php if($this->hasIdentity){ ?>
+            <span class="loginName"><?php echo $this->username; ?> (<a href="/logout">Logout</a>)</span>
+        <?php } ?>
+        <?php if(!$this->hasIdentity){ ?>
+            <a href="/login">Login</a>
+        <?php } ?>
+    </div>
+
+
+    <!--
+
     <table cellpadding="0" cellspacing="0" width="100%" class="logoTable">
         <tr>
             <td ><a href="/" title="Slovenian Index of citation - Admin"><img src="/img/logo2.png" class="logoImage"/><img src="/img/loading-book.gif" class="loadingGif" id="loadingGif" style="display:none;"><div class="mainTitle">Slovenian Index of citation v2</div></a></td>
             <td align="right" class="pr_20" style="vertical-align:bottom;">
-                <?php if($this->hasIdentity){ ?>
-                    <span class="loginName"><?php echo $this->username; ?> (<a href="/logout">Logout</a>)</span>
-                <?php } ?>
-                <?php if(!$this->hasIdentity){ ?>
-                    <a href="/login">Login</a>
-                <?php } ?>
             </td>
         </tr>
     </table>
+    -->
 </div>
 
-
-<?php if($this->hasIdentity){ ?>
-    <div id="initLoader" class="initLoader">
-        Loading codes...
-    </div>
-    <div id="navigation" class="navigation" style="display:none;">
-    <div>
-        <ul>
-            <li class="mainMenuList">
-                <a href="javascript:sic.loadModule({moduleName:'Pub/PubSearch', newTab:'Search'});">Search</a>
-            </li>
-            <li class="mainMenuList">
-                <a href="javascript:sic.loadModule({moduleName:'System/Dashboard', newTab:'System'});">System</a>
-            </li>
-            <li class="mainMenuList">
-                <a href="javascript:sic.loadModule({moduleName:'System/Scripts', newTab:'Scripts'});">Scripts</a>
-            </li>
-            <li class="mainMenuList">
-                <a href="javascript:sic.loadModule({moduleName:'User/UserList', newTab:'Users'});">Users</a>
-            </li>
-            <li class="mainMenuList">
-                <a href="javascript:sic.loadModule({moduleName:'Cobiss/CobissList'});">Cobiss</a>
-            </li>
-            <li class="mainMenuList">
-                <a href="javascript:sic.loadModule({moduleName:'Pub/PubList', newTab:'Entities'});">Entities</a>
-            </li>
-            <li class="mainMenuList">
-                <a href="javascript:sic.loadModule({moduleName:'Project/ProjectList', newTab:'Projects'});">Projects</a>
-            </li>
-            <li class="mainMenuList">
-                <a href="javascript:sic.loadModule({moduleName:'Test/WidgetTest'});">WidgetTest</a>
-            </li>
-        </ul>
+<div id="content">
+    <div id="pageHolder"></div>
+    <div id="primaryPage">
+        <?php echo $this->layout()->content; ?>
     </div>
 </div>
+
 <script>
     $(document).ready(function(){
-        sic.messageTunnel = new sic.object.sicMessageTunnel();
         sic.codes.load(function(){
             $('#initLoader').css("display", "none");
             $('#navigation').fadeIn(sic.defaults.fadeTime);
         });
     });
 </script>
-<?php } ?>
-
-<div id="content" class="">
-    <div id="pageHolder"></div>
-    <div id="primaryPage">
-        <?php echo $this->layout()->content; ?>
-    </div>
-</div>
 
 </body>
 </html>

@@ -120,6 +120,7 @@ var F = function(args) {
             moduleName:"Pub/PubQuoteList",
             staticData: { pub_id: args.pub_id }
         }),
+        initExpandAll: true,
         //editorModuleArgs: {
         //    moduleName:"Pub/PubQuoteEdit",
         //    tabPage:tabPageQuotes
@@ -130,7 +131,8 @@ var F = function(args) {
             quoted_pub_id: { caption:"Cited Entity", editable:false,
                 hintF: function(args) { sic.hint.publication(args.row.lastRowData.quoted_pub_id) } },
             quoted_creator: { canSort:false, editable:false, caption:"Creator" },
-            quoted_title: { canSort:false, editable:false, caption:"Title" }
+            quoted_title: { canSort:false, editable:false, caption:"Title" },
+            //_expand: { visible:false }
         },
         customInsert: function(insertDT) {
             sic.loadModule({moduleName:'Pub/PubSearch', tabPage:tabPageBasic,  newTab:'New citation - select entity',
