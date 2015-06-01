@@ -511,5 +511,8 @@ TRUNCATE TABLE project_line;
 ALTER TABLE `project_line` DROP `title`, DROP `creator`, DROP `year`, DROP `cobiss`, DROP `issn`;
 ALTER TABLE `project_line` ADD `xml` TEXT NOT NULL AFTER `proj_id`;
 
+-- 2015-06-01
+ALTER TABLE `user` ADD `zotero_id` INT NULL DEFAULT NULL AFTER `notes`, ADD `zotero_col` VARCHAR(64) NULL DEFAULT NULL AFTER `zotero_id`;
+
 
 

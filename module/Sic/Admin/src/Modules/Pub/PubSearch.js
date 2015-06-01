@@ -135,7 +135,12 @@ var F = function(args) {
     // *** Zotero Scrape ***
     var zoteroGroup = searchPanel.addGroup("Zotero");
     var zoteroForm = new sic.widget.sicForm({parent:zoteroGroup.content.selector, captionWidth:"100px", inputClass:"searchInput"});
-    zoteroForm.addInput({name:"url", caption:"Zotero url", value:"https://api.zotero.org/users/475425/collections/9KH9TNSJ/items"});
+
+    sic.callMethod({ moduleName:"Pub/PubSearch", methodName:"getZoteroUrl" }, function(response){
+        //alert(sic.debug(response));
+        zoteroForm.addInput({name:"url", caption:"Zotero url", value:response.url});
+    });
+
 
     var zoteroScrapeButton = zoteroForm.addInput({value:"Scrape", type:"submit", caption: " "});
     zoteroScrapeButton.selector.click(function(e){

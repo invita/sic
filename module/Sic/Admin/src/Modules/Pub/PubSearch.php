@@ -1,6 +1,8 @@
 <?php
 namespace Sic\Admin\Modules\Pub;
 
+use Sic\Admin\Models\Zotero;
+use Zend\Authentication\Storage\Session;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Where;
 use Sic\Admin\Models\Util;
@@ -13,6 +15,7 @@ use Zend\Db\Sql\Expression;
 class PubSearch extends SicModuleAbs {
 
 
+    /*
     public function dataTableSelect($args) {
         return array(
             "data" => array(
@@ -20,8 +23,24 @@ class PubSearch extends SicModuleAbs {
             "rowCount" => 1
         );
     }
+    */
 
-    /*
+    public function getZoteroUrl(){
+
+        $user_id = $_SESSION["Zend_Auth"]['storage']["id"];
+
+        $row = DbUtil::selectRow("user", array("zotero_id", "zotero_col"), "id = ".$user_id);
+        $zotero_id = $row["zotero_id"];
+        $zotero_col = $row["zotero_col"];
+
+        $url = null;
+        if($zotero_id && $zotero_col){
+            $url = "https://api.zotero.org/users/".$zotero_id."/collections/".$zotero_col."/items";
+        }
+
+        return array("url"=>$url);
+    }
+
     public function defineSqlSelect($args, Select $select)
     {
         $staticData = Util::getArg($args, 'staticData', array());
@@ -93,10 +112,14 @@ class PubSearch extends SicModuleAbs {
         }
         return $responseData;
     }
-    */
 
     function zoteroScrape($args) {
-        print_r($args);
+        $url = $args["url"];
+
+        $zotero = new Zotero();
+        $zotero->setUrl($url);
+        $zotero->run();
+
     }
 
 }
