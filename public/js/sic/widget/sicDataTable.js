@@ -254,13 +254,17 @@ sic.widget.sicDataTable = function(args)
 
         _p[cpName].recsPerPageInput = new sic.widget.sicElement({parent:_p[cpName].selector,
             tagName:"input", tagClass:"inline vmid dataTable_recsPerPageInput"});
+        _p[cpName].recsPerPageInput.selector[0].dsControl = _p[cpName];
         _p[cpName].recsPerPageInput.selector.keypress(function(e){
             if (e.which == 13) {
-                _p.dataSource.pageCount = _p[cpName].pageInput.selector.val();
-                _p.refresh();
+                _p.setPaginatorRowsPerPage(this.dsControl.recsPerPageInput.selector.val());
             }
         });
         _p[cpName].recsPerPageInput.selector.val(_p.dataSource.pageCount);
+
+        _p[cpName].recsPerPageText = new sic.widget.sicElement({parent:_p[cpName].selector, tagClass:"inline vmid"});
+        _p[cpName].recsPerPageText.selector.html(' / page');
+
 
         // Filter
         if (_p.filter.enabled) {
@@ -513,8 +517,11 @@ sic.widget.sicDataTable = function(args)
         if (!_p.dsControl) return;
         if (!_p.dsControlBottom) return;
 
+        if (_p.dataSource && _p.dataSource.pageCount) _p.rowsPerPage = _p.dataSource.pageCount;
+
         _p.rowCount = rowCount;
         _p.currentPageCount = Math.floor((rowCount -1) /_p.rowsPerPage) +1;
+        //sic.dump({ rowCount: _p.rowCount, rowsPerPage: _p.rowsPerPage, currentPageCount: _p.currentPageCount, currentPage: _p.currentPage });
 
         if (_p.currentPage > _p.currentPageCount) _p.currentPage = _p.currentPageCount;
 
@@ -523,6 +530,16 @@ sic.widget.sicDataTable = function(args)
         _p.dsControlBottom.pageInput.selector.val(_p.currentPage);
         _p.dsControlBottom.pageCount.selector.val(_p.currentPageCount);
     };
+
+    this.setPaginatorRowsPerPage = function(newMaxRows) {
+        _p.dataSource.pageCount = newMaxRows;
+        _p.dsControl.recsPerPageInput.selector.val(newMaxRows);
+        _p.dsControlBottom.recsPerPageInput.selector.val(newMaxRows);
+        //_p.setPaginator(_p.rowCount);
+
+        _p.refresh();
+    };
+
 
     this.feedData = function(args) {
 
