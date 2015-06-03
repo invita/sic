@@ -45,7 +45,7 @@ span.sicTabButton_closeButton > img:hover { opacity:1.0; }
 
 /* sicPanel */
 div.sicPanel { display:inline-table; }
-div.sicPanelGroup { display:inline-table; margin:5px 5px 5px 10px; }
+div.sicPanelGroup { display:inline-table; /*margin:5px 5px 5px 10px;*/ }
 div.sicPanelGroup > div.header { font-weight:bold; /*border:silver solid 1px;*/ padding:5px; margin-bottom:6px; }
 div.sicPanelGroup > div.content {}
 
@@ -78,6 +78,11 @@ div.sicInputDiv > .lookupButton > img { width:12px; margin:0px -1px -1px -1px; }
 div.sicInputDiv > .editButton { }
 div.sicInputDiv > .editButton > img { width:6px; margin:-2px -1px 1px -1px; }
 div.sicInputDiv > .inputButton:last-of-type { border-radius:0px 8px 8px 0px; }
+
+input::-webkit-input-placeholder { color: #DDDDDD; }
+input:-moz-placeholder { color: #DDDDDD; }
+input::-moz-placeholder { color: #DDDDDD; }
+input:-ms-input-placeholder { color: #DDDDDD; }
 
 div.dataTableFormView.sicForm { margin-bottom:10px; }
 div.dataTableFormView.sicForm > div.sicInputDiv { height:20px; }
@@ -129,6 +134,7 @@ div.sicDataTable > div.dsControl > div.filterButton:hover { color:#6699CC; }
 div.sicDataTable > div.dsControl > div.filterButton > img { margin:0px 2px; }
 div.sicDataTable > div.dsControl > input.dataTable_pageInput { width:35px; text-align:center; color:#444; border:none; }
 div.sicDataTable > div.dsControl > input.dataTable_pageCount { width:35px; text-align:center; color:#444; border:none; }
+div.sicDataTable > div.dsControl > input.dataTable_recsPerPageInput { width:35px; text-align:center; color:#444; border:none; }
 
 
 /* dataTableFilterInput */
@@ -172,8 +178,7 @@ span.hintPropVal { color:black; font-size:12px; line-height:16px; }
 tr.sicHtmlTable_tr { }
 td.sicHtmlTable_td { vertical-align:top; }
 
-div.initLoader { height:35px; vertical-align:middle; font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
-    font-weight: bold; color:gray; padding:6px 5px; }
+div.initLoader { height:35px; margin-left:30px; margin-top:10px; font-weight: bold; color:gray; padding:2px 5px; }
 div.navigation { height:35px; margin-left:30px; margin-top:10px; }
 ul.navigationUl > li:last-child { border-right:none; }
 div.identityDiv { margin:10px; }

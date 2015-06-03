@@ -134,6 +134,13 @@ sic.widget.sicForm = function(args)
                 _p.inputs[i].setValue(_p.inputs[i].getValue());
                 _p.inputs[i].calcModified();
             }
+        },
+        clear: function(){
+            for (var i in _p.inputs) {
+                if (_p.inputs[i].type != "submit" && _p.inputs[i].type != "button")
+                    _p.inputs[i].clear();
+            }
+            _p.allInputs.resetModified();
         }
     };
 

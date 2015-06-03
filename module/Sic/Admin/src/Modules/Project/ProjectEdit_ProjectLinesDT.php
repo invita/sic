@@ -26,8 +26,7 @@ class ProjectEdit_ProjectLinesDT extends SicModuleAbs {
         $lineColumns = array(                     'title','addTitle','creator','year','idno','addIdno','volume',
                                                   'issue','page','edition','place','publisher','source','online','strng','note');
         $pubColumns = array('pub_id','parent_id', 'title','addTitle','creator','year','idno','addIdno','volume',
-                                                  'issue','page','edition','place','publisher','source','online','strng','note',
-            'original_id');
+                                                  'issue','page','edition','place','publisher','source','online','strng','note');
 
         foreach($result as $row) {
             $resultLine = array();
@@ -65,7 +64,7 @@ class ProjectEdit_ProjectLinesDT extends SicModuleAbs {
                     $resultLine['publication'][$pubKey] = str_replace("||", ", ", $pubVal);
 
                     // Add hr after pub_id
-                    if ($pubKey == 'pub_id') $resultLine['publication']['---'] = "";
+                    if ($pubKey == 'parent_id') $resultLine['publication']['---'] = "";
                 }
             }
 

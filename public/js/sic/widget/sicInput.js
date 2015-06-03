@@ -197,6 +197,11 @@ sic.widget.sicInput = function(args)
             _p.lookupResolve();
     };
 
+    this.clear = function() {
+        _p.input.selector.val('');
+        _p.origValue = '';
+    };
+
     this.getCodeId = function(){
         if (!_p.withCode || !_p.codeSelect) return 0;
         return _p.codeSelect.selector.val();
