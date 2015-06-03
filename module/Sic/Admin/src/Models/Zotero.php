@@ -7,6 +7,7 @@ require_once(realpath(__DIR__."/../../../../../library/Httpful/httpful.phar"));
 
 //header("Content-type:text/plain;charset=utf-8;");
 
+use Sic\Admin\Models\Zotero\Document;
 use Zend\Db\Sql\Predicate\Like;
 use Zend\Db\Sql\Predicate\Between;
 use Zend\Db\Sql\Predicate\Operator;
@@ -91,76 +92,77 @@ class Zotero
 
     }
 
+    /**
+     * @var Document
+     */
+    protected $document;
+
     protected function parse($response){
         $json = json_decode($response, true);
+        $lastDocIdx = count($json) - 1;
+        if($lastDocIdx > -1){
+            $lastDoc = $json[$lastDocIdx];
 
-        $this->initTableVariable();
-        $this->deleteTables();
+            $this->document = new Document();
 
-        for($c=0; $c<count($json); $c++){
+            $this->parseItemType($lastDoc);
+            $this->parseCreators($lastDoc);
+            $this->parseDate($lastDoc);
+            $this->parseEdition($lastDoc);
+            $this->parseExtra($lastDoc);
+            $this->parseISBN($lastDoc);
+            $this->parseNumPages($lastDoc);
+            $this->parsePlace($lastDoc);
+            $this->parsePublisher($lastDoc);
+            $this->parseSeries($lastDoc);
+            $this->parseSeriesNumber($lastDoc);
 
-            $pub_id = $this->getPubId();
+
+            $this->parseAccessDate($lastDoc);
+            $this->parseEncyclopediaTitle($lastDoc);
+            $this->parseISSN($lastDoc);
+            $this->parseissue($lastDoc);
+            $this->parseJournalAbbreviation($lastDoc);
+            $this->parseSeriesText($lastDoc);
+            $this->parseSeriesTitle($lastDoc);
+            $this->parseMapType($lastDoc);
+            $this->parseScale($lastDoc);
+            $this->parseSection($lastDoc);
+            $this->parseInstitution($lastDoc);
+            $this->parseReportType($lastDoc);
+            $this->parseReportNumber($lastDoc);
+            $this->parseCode($lastDoc);
+            $this->parseCodeNumber($lastDoc);
+            $this->parseNameOfAct($lastDoc);
+            $this->parsePublicLawNumber($lastDoc);
+            $this->parseThesisType($lastDoc);
+            $this->parseUniversity($lastDoc);
+            $this->parseWebsiteTitle($lastDoc);
+            $this->parseWebsiteType($lastDoc);
 
 
-
-            $this->initTableVariable();
-            $this->addPublication($pub_id);
-            $this->parseItemType($pub_id, $json[$c]);
-            $this->parseCreators($pub_id, $json[$c]);
-            $this->parseDate($pub_id, $json[$c]);
-            $this->parseEdition($pub_id, $json[$c]);
-            $this->parseExtra($pub_id, $json[$c]);
-            $this->parseISBN($pub_id, $json[$c]);
-            $this->parseNumPages($pub_id, $json[$c]);
-            $this->parsePlace($pub_id, $json[$c]);
-            $this->parsePublisher($pub_id, $json[$c]);
-            $this->parseSeries($pub_id, $json[$c]);
-            $this->parseSeriesNumber($pub_id, $json[$c]);
-
-            $this->correctTables();
-            $this->insertTables();
         }
+
     }
 
-    protected function parseItem($pub_id, $json){
-        $this->parseItemType($pub_id, $json);
-    }
 
-    protected $table = null;
-
-    protected function initTableVariable(){
-        $this->table = array(
-            "publication" => array(),
-            "publication_note" => array(),
-            "publication_creator" => array(),
-            "publication_title" => array(),
-            "publication_source" => array(),
-            "publication_year" => array(),
-            "publication_edition" => array(),
-            "publication_idno" => array(),
-            "publication_page" => array(),
-            "publication_place" => array(),
-            "publication_publisher" => array()
-        );
-    }
-
-    protected function parseItemType($pub_id, $json){
+    protected function parseItemType($json){
         $note = $this->getByPath($json, "data/itemType");
         if($note){
-            $this->addNote($pub_id, "itemType: ".$note);
+            $this->document->addNote("itemType: ".$note);
         }
     }
 
-    protected function parseCreators($pub_id, $json){
+    protected function parseCreators($json){
         $creators = $this->getByPath($json, "data/creators");
         if($creators){
             for($c=0; $c<count($creators); $c++){
-                $this->parseCreator($pub_id, $creators[$c]);
+                $this->parseCreator($creators[$c]);
             }
         }
     }
 
-    protected function parseCreator($pub_id, $json){
+    protected function parseCreator($json){
 
         /*
         codes_pub_creator
@@ -191,6 +193,13 @@ class Zotero
         5 - sistory
          */
 
+        /*
+        codes_pub_online
+        1 - url
+        2 - when
+        3 - title
+         */
+
         $creatorType = $this->getByPath($json, "creatorType");
         if($creatorType){
             $firstName = $this->getByPath($json, "firstName");
@@ -201,260 +210,258 @@ class Zotero
                 case "author":
                     $code_id = 1;
                     $string = ($name ? $name : $lastName.", ".$firstName);
-                    $this->addCreator($pub_id, $string, $code_id);
+                    $this->document->addCreator($string, $code_id);
                     break;
                 case "contributor":
                     $code_id = 1;
                     $string = ($name ? $name : $lastName.", ".$firstName);
-                    $this->addCreator($pub_id, $string, $code_id);
+                    $this->document->addCreator($string, $code_id);
                     break;
                 case "editor":
                     $code_id = 3;
                     $string = ($name ? $name : $lastName.", ".$firstName);
-                    $this->addCreator($pub_id, $string, $code_id);
+                    $this->document->addCreator($string, $code_id);
                     break;
                 case "seriesEditor":
                     $code_id = 1;
                     $string = ($name ? $name : $lastName.", ".$firstName);
-                    $this->addCreator($pub_id, $string, $code_id);
+                    $this->document->addCreator($string, $code_id);
                     break;
                 case "translator":
                     $code_id = 6;
                     $string = ($name ? $name : $lastName.", ".$firstName);
-                    $this->addCreator($pub_id, $string, $code_id);
+                    $this->document->addCreator($string, $code_id);
                     break;
                 case "bookAuthor":
                     $code_id = 3;
                     $string = ($name ? $name : $lastName.", ".$firstName);
-                    $this->addSource($pub_id, $string, $code_id);
+                    $this->document->addSource($string, $code_id);
                     break;
                 case "reviewedAuthor":
                     $string = ($name ? $name : $lastName.", ".$firstName);
-                    $this->addTitle($pub_id, $string);
+                    $this->document->addTitle($string);
                     break;
                 default:
                     $code_id = 5;
                     $string = ($name ? $name : $lastName.", ".$firstName);
-                    $this->addCreator($pub_id, $string, $code_id);
+                    $this->document->addCreator($string, $code_id);
                     break;
             }
         }
     }
 
-    protected function parseDate($pub_id, $json){
+    protected function parseDate($json){
         $str = $this->getByPath($json, "data/date");
         if($str){
-            $this->addYear($pub_id, $str);
+            $this->document->addYear($str);
         }
     }
 
-    protected function parseEdition($pub_id, $json){
+    protected function parseEdition($json){
         $str = $this->getByPath($json, "data/edition");
         if($str){
-            $this->addEdition($pub_id, $str);
+            $this->document->addEdition($str);
         }
     }
 
-    protected function parseExtra($pub_id, $json){
+    protected function parseExtra($json){
         $str = $this->getByPath($json, "data/extra");
         if($str){
-            $this->addNote($pub_id, "extra: ".$str);
+            $this->document->addNote("extra: ".$str);
         }
     }
 
-    protected function parseISBN($pub_id, $json){
+    protected function parseISBN($json){
         $str = $this->getByPath($json, "data/ISBN");
         if($str){
-            $this->addIDNO($pub_id, $str, 3);
+            $this->document->addIdno($str, 3);
         }
     }
 
-    protected function parseNumPages($pub_id, $json){
+    protected function parseNumPages($json){
         $str = $this->getByPath($json, "data/numPages");
         if($str){
-            $this->addPage($pub_id, $str);
+            $this->document->addPage($str);
         }
     }
 
-    protected function parsePlace($pub_id, $json){
+    protected function parsePlace($json){
         $str = $this->getByPath($json, "data/place");
         if($str){
-            $this->addPlace($pub_id, $str);
+            $this->document->addPlace($str);
         }
     }
 
-    protected function parsePublisher($pub_id, $json){
+    protected function parsePublisher($json){
         $str = $this->getByPath($json, "data/publisher");
         if($str){
-            $this->addPublisher($pub_id, $str);
+            $this->document->addPublisher($str);
         }
     }
 
-    protected function parseSeries($pub_id, $json){
+    protected function parseSeries($json){
         $str = $this->getByPath($json, "data/series");
         if($str){
-            $this->addSource($pub_id, $str, 4);
+            $this->document->addSource($str, 4);
         }
     }
 
-    protected function parseSeriesNumber($pub_id, $json){
+    protected function parseSeriesNumber($json){
         $str = $this->getByPath($json, "data/seriesNumber");
         if($str){
-            $this->addSource($pub_id, $str, 4);
+            $this->document->addSource($str, 4);
         }
     }
 
-    /*
-    protected function parseShortTitle($json){
-        $str = $this->getByPath($json, "data/shortTitle");
+    protected function parseAccessDate($json){
+        $str = $this->getByPath($json, "data/accessDate");
         if($str){
-            $this->addNote($str);
+            $this->document->addOnline($str, 2);
         }
     }
 
-    protected function parseTitle($json){
-        $str = $this->getByPath($json, "data/title");
+    protected function parseEncyclopediaTitle($json){
+        $str = $this->getByPath($json, "data/encyclopediaTitle");
         if($str){
-            $this->addNote($str);
+            $this->document->addSource($str, 1);
         }
     }
 
-    protected function parseUrl($json){
-        $str = $this->getByPath($json, "data/url");
+    protected function parseISSN($json){
+        $str = $this->getByPath($json, "data/ISSN");
         if($str){
-            $this->addNote($str);
+            $this->document->addIdno($str, 3);
         }
     }
 
-    protected function parseVolume($json){
-        $str = $this->getByPath($json, "data/volume");
+    protected function parseissue($json){
+        $str = $this->getByPath($json, "data/issue");
         if($str){
-            $this->addNote($str);
+            $this->document->addIssue($str);
         }
     }
 
-    protected function parseBookTitle($json){
-        $str = $this->getByPath($json, "data/bookTitle");
+    protected function parseJournalAbbreviation($json){
+        $str = $this->getByPath($json, "data/journalAbbreviation");
         if($str){
-            $this->addNote($str);
+            $this->document->addSource($str, 1);
         }
     }
 
-    protected function parsePublicationTitle($json){
-        $str = $this->getByPath($json, "data/publicationTitle");
+    protected function parseSeriesText($json){
+        $str = $this->getByPath($json, "data/seriesText");
         if($str){
-            $this->addNote($str);
+            $this->document->addNote("seriesText: ".$str);
         }
     }
 
-    protected function parseConferenceName($json){
-        $str = $this->getByPath($json, "data/conferenceName");
+    protected function parseSeriesTitle($json){
+        $str = $this->getByPath($json, "data/seriesTitle");
         if($str){
-            $this->addNote($str);
+            $this->document->addSource($str, 4);
         }
     }
 
-    protected function parseDOI($json){
-        $str = $this->getByPath($json, "data/DOI");
+    protected function parseMapType($json){
+        $str = $this->getByPath($json, "data/mapType");
         if($str){
-            $this->addNote($str);
+            $this->document->addNote("mapType: ".$str);
         }
     }
 
-    protected function parseProceedingsTitle($json){
-        $str = $this->getByPath($json, "data/proceedingsTitle");
+    protected function parseScale($json){
+        $str = $this->getByPath($json, "data/scale");
         if($str){
-            $this->addNote($str);
+            $this->document->addSource($str, "scale: ".$str);
         }
     }
 
-    protected function parseDictionaryTitle($json){
-        $str = $this->getByPath($json, "data/dictionaryTitle");
+    protected function parseSection($json){
+        $str = $this->getByPath($json, "data/section");
         if($str){
-            $this->addNote($str);
-        }
-    }
-    */
-
-    protected function addPublication($pub_id, $parent_id=0, $original_id=0, $is_series=0){
-        array_push($this->table["publication"], array("pub_id"=>$pub_id, "parent_id"=>$parent_id, "original_id"=>$original_id, "is_series"=>$is_series));
-    }
-
-    protected function addNote($pub_id, $note){
-        array_push($this->table["publication_note"], array("pub_id"=>$pub_id, "idx"=>null, "note"=>$note));
-    }
-
-    protected function addCreator($pub_id, $creator, $code_id){
-        array_push($this->table["publication_creator"], array("pub_id"=>$pub_id, "idx"=>null, "creator"=>$creator, "code_id"=>$code_id));
-    }
-
-    protected function addTitle($pub_id, $title){
-        array_push($this->table["publication_title"], array("pub_id"=>$pub_id, "idx"=>null, "title"=>$title));
-    }
-
-    protected function addSource($pub_id, $source, $code_id){
-        array_push($this->table["publication_source"], array("pub_id"=>$pub_id, "idx"=>null, "source"=>$source, "code_id"=>$code_id));
-    }
-
-    protected function addYear($pub_id, $year){
-        array_push($this->table["publication_year"], array("pub_id"=>$pub_id, "idx"=>null, "year"=>$year));
-    }
-
-    protected function addEdition($pub_id, $edition){
-        array_push($this->table["publication_edition"], array("pub_id"=>$pub_id, "idx"=>null, "edition"=>$edition));
-    }
-
-    protected function addIDNO($pub_id, $idno, $code_id){
-        array_push($this->table["publication_idno"], array("pub_id"=>$pub_id, "idx"=>null, "idno"=>$idno, "code_id"=>$code_id));
-    }
-
-    protected function addPage($pub_id, $page){
-        array_push($this->table["publication_page"], array("pub_id"=>$pub_id, "idx"=>null, "page"=>$page));
-    }
-
-    protected function addPlace($pub_id, $place){
-        array_push($this->table["publication_place"], array("pub_id"=>$pub_id, "idx"=>null, "place"=>$place));
-    }
-
-    protected function addPublisher($pub_id, $publisher){
-        array_push($this->table["publication_publisher"], array("pub_id"=>$pub_id, "idx"=>null, "publisher"=>$publisher));
-    }
-
-
-    protected function getPubId(){
-        return DbUtil::selectOne("publication", new \Zend\Db\Sql\Expression("coalesce(max(pub_id)+1, 1)"));
-    }
-
-    protected function correctTables(){
-        $tables = $this->table;
-        foreach($tables as $table => $rows){
-            if(substr($table, 0, strlen("publication_")) == "publication_"){
-                for($c=0; $c<count($rows); $c++){
-                    $this->table[$table][$c]["idx"] = $c+1;
-                }
-            }
+            $this->document->addSource($str, 1);
         }
     }
 
-    protected function deleteTables(){
-        $tables = $this->table;
-        foreach($tables as $table => $rows){
-            for($c=0; $c<count($rows); $c++){
-                DbUtil::deleteFrom($table, "1=1");
-            }
+    protected function parseInstitution($json){
+        $str = $this->getByPath($json, "data/institution");
+        if($str){
+            $this->document->addPublisher($str);
         }
     }
 
-    protected function insertTables(){
-        $tables = $this->table;
-        foreach($tables as $table => $rows){
-            for($c=0; $c<count($rows); $c++){
-                DbUtil::insertInto($table, $rows[$c]);
-            }
+    protected function parseReportType($json){
+        $str = $this->getByPath($json, "data/reportType");
+        if($str){
+            $this->document->addNote("reportType: ".$str);
+        }
+    }
+
+    protected function parseReportNumber($json){
+        $str = $this->getByPath($json, "data/reportNumber");
+        if($str){
+            $this->document->addIssue($str);
+        }
+    }
+
+    protected function parseCode($json){
+        $str = $this->getByPath($json, "data/code");
+        if($str){
+            $this->document->addTitle($str);
+        }
+    }
+
+    protected function parseCodeNumber($json){
+        $str = $this->getByPath($json, "data/codeNumber");
+        if($str){
+            $this->document->addVolume($str);
+        }
+    }
+
+    protected function parseNameOfAct($json){
+        $str = $this->getByPath($json, "data/nameOfAct");
+        if($str){
+            $this->document->addTitle($str);
+        }
+    }
+
+    protected function parsePublicLawNumber($json){
+        $str = $this->getByPath($json, "data/publicLawNumber");
+        if($str){
+            $this->document->addIssue($str);
+        }
+    }
+
+    protected function parseThesisType($json){
+        $str = $this->getByPath($json, "data/thesisType");
+        if($str){
+            $this->document->addNote("thesisType: ".$str);
+        }
+    }
+
+    protected function parseUniversity($json){
+        $str = $this->getByPath($json, "data/university");
+        if($str){
+            $this->document->addPublisher($str);
+        }
+    }
+
+    protected function parseWebsiteTitle($json){
+        $str = $this->getByPath($json, "data/websiteTitle");
+        if($str){
+            $this->document->addOnline($str, 3);
+        }
+    }
+
+    protected function parseWebsiteType($json){
+        $str = $this->getByPath($json, "data/websiteType");
+        if($str){
+            $this->document->addNote("websiteType: ".$str);
         }
     }
 
 
+    public function toArray(){ return $this->document->toArray(); }
 
     /*
 itemType note

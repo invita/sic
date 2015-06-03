@@ -165,7 +165,7 @@ var F = function(args) {
         sic.callMethod({ moduleName:"Pub/PubSearch", methodName:"zoteroScrape", url: url }, function(response) {
             // Callback
 
-            dataTable.refresh();
+            pubSearchForm.setValue(response.data);
         });
 
 

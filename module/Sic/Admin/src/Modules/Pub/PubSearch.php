@@ -120,6 +120,8 @@ class PubSearch extends SicModuleAbs {
         $zotero->setUrl($url);
         $zotero->run();
 
+        return array("data" => $zotero->toArray());
+
     }
 
 }
