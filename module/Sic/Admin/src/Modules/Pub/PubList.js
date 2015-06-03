@@ -26,6 +26,36 @@ var F = function(args) {
     });
 
     /*
+    dataTable.onFirstFeedComplete(function(eArgs) {
+        var table = dataTable.table.selector.dataTable({
+            dom: 'T<"clear">lfrtip',
+            paging: false,
+            ordering: false,
+            info: false,
+            bFilter: false,
+            tableTools: {
+                "sSwfPath": "/lib/jquery/copy_csv_xls_pdf.swf"
+            }
+        });
+
+        var tableTools = new $.fn.dataTable.TableTools(table, {
+            buttons: [
+                "copy",
+                "csv",
+                "xls",
+                "pdf",
+                { type: "print", buttonText: "Print me!" }
+            ],
+            "sSwfPath": "/lib/jquery/copy_csv_xls_pdf.swf"
+        });
+
+        $(tableTools.fnContainer()).insertAfter('div.info');
+
+    });
+    */
+
+
+    /*
 
     var dataTable = new sic.widget.sicDataTable({
         parent:tabPage.content.selector,

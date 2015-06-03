@@ -33,7 +33,7 @@ var F = function(args) {
     formUserData.addInput({name:"idno", type:"text", caption:"idno", placeholder:"Identifier", isArray:true, value:[idno],
         withCode:sic.codes.pubIdno});
     formUserData.addInput({name:"addidno", type:"text", caption:"addIdno", placeholder:"Additional Identifier", isArray:true, value:[addidno]});
-    formUserData.addInput({name:"title", type:"text", caption:"title", placeholder:"Title", isArray:true, value:[title]});
+    formUserData.addInput({name:"title", type:"textarea", caption:"title", placeholder:"Title", isArray:true, value:[title]});
     formUserData.addInput({name:"addtitle", type:"text", caption:"addTitle", placeholder:"Additional Title", isArray:true, value:[addtitle]});
     formUserData.addInput({name:"creator", type:"text", caption:"creator", placeholder:"Creator", isArray:true, value:[creator],
         withCode:sic.codes.pubCreator});
