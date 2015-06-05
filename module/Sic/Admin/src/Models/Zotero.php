@@ -106,6 +106,7 @@ class Zotero
             $this->document = new Document();
 
             $this->parseItemType($lastDoc);
+            $this->parseTitle($lastDoc);
             $this->parseCreators($lastDoc);
             $this->parseDate($lastDoc);
             $this->parseEdition($lastDoc);
@@ -116,8 +117,6 @@ class Zotero
             $this->parsePublisher($lastDoc);
             $this->parseSeries($lastDoc);
             $this->parseSeriesNumber($lastDoc);
-
-
             $this->parseAccessDate($lastDoc);
             $this->parseEncyclopediaTitle($lastDoc);
             $this->parseISSN($lastDoc);
@@ -150,6 +149,13 @@ class Zotero
         $note = $this->getByPath($json, "data/itemType");
         if($note){
             $this->document->addNote("itemType: ".$note);
+        }
+    }
+
+    protected function parseTitle($json){
+        $str = $this->getByPath($json, "data/title");
+        if($str){
+            $this->document->addTitle($str);
         }
     }
 

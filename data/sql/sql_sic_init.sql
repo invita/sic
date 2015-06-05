@@ -523,4 +523,6 @@ CREATE TABLE `project_line_selected` (
   PRIMARY KEY (`user_id`,`proj_id`,`line_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- 2015-06-05
+ALTER TABLE `user` ADD `zotero_key` VARCHAR(64) NULL AFTER `zotero_col`;
 
