@@ -188,6 +188,11 @@ var F = function(args) {
                     var pub_id = args.pub_id;
                     var proj_id = selectArgs.row.getValue().proj_id;
                     if (pub_id && proj_id) {
+                        sic.loadModule({moduleName:'Project/ProjectLineSelect', newTab:'Select', inDialog: true,
+                            selectCallback: function(selectArgs){
+                            }
+                        });
+
                         sic.callMethod({moduleName:"Pub/PubEdit",
                                 methodName:"importQuotesFromProject", pub_id: pub_id, proj_id: proj_id},
                             function(response) { quotesDataTable.refresh(); });

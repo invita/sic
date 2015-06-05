@@ -24,6 +24,10 @@ class Util
         return isset(self::$dict[$key]) ? self::$dict[$key] : null;
     }
 
+    public static function getUserId() {
+        return 3; // TODO
+    }
+
     public static function shortenText($text, $length) {
         if (strlen($text) > $length) $text = substr($text, 0, $length)."...";
         return $text;

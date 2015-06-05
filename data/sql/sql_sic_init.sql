@@ -515,4 +515,12 @@ ALTER TABLE `project_line` ADD `xml` TEXT NOT NULL AFTER `proj_id`;
 ALTER TABLE `user` ADD `zotero_id` INT NULL DEFAULT NULL AFTER `notes`, ADD `zotero_col` VARCHAR(64) NULL DEFAULT NULL AFTER `zotero_id`;
 
 
+-- 2015-06-05
+CREATE TABLE `project_line_selected` (
+  `user_id` int(11) NOT NULL,
+  `proj_id` int(11) NOT NULL,
+  `line_id` int(11) NOT NULL,
+  PRIMARY KEY (`user_id`,`proj_id`,`line_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
