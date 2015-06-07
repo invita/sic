@@ -14,9 +14,10 @@ sic.widget.sicAutoComplete = function(args)
         var lineDiv = new sic.widget.sicElement({parent:_p.selector});
         lineDiv.selector.addClass("sicAutoCompleteLine");
         lineDiv.selector.html(lineText);
+        lineDiv.selector[0].lineText = lineText;
         lineDiv.selector.click(function() {
             if (_p.inputSelector) {
-                _p.inputSelector.val(lineText);
+                _p.inputSelector.val(this.lineText);
             }
         })
     }
