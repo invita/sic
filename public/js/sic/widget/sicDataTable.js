@@ -871,6 +871,8 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
     this.width = sic.getArg(args, "width", null);
     this.editable = sic.getArg(args, "editable", this.dataTable.editable);
     this.colSpan = sic.getArg(args, "colSpan", null);
+    this.editorType = sic.getArg(args, "editorType", "text");
+    this.updateOnEnter = sic.getArg(args, "updateOnEnter", true);
 
     this.headerField = sic.getArg(args, "headerField", this.row ? this.row.headerRow : false);
     this.filterField = sic.getArg(args, "filterField", this.row ? this.row.filterRow : false);
@@ -911,16 +913,31 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
     } else {
         // Data field
         if (this.editable && this.dataField) {
+
             this.input = new sic.widget.sicInput({parent:this.valueDiv.selector, name:this.fieldKey,
-                caption:false, showModified:true});
+                caption:false, showModified:true, type:this.editorType });
             this.input.selector.addClass('dataTableValueInput');
+
+            if (this.editorType == "checkbox") {
+                this.input.selector.click(function(e) {
+
+                    //$(this).prop('checked', true);
+                    //sic.dump($._data( $(this)[0], "events" ), 10);
+                    //var foo = $._data( $(this)[0], "events" );
+                    //sic.dump(foo.click[0].handler, 10);
+                    //$(this).prop("checked", !$(this).prop("checked"));
+                });
+            }
+
             //if (!this.canEdit) this.input.selector.addClass('disabled');
-            this.input.onEnterPressed(function(e) {
-                //_p.dataTable.applyFilter();
-                //_p.dataTable.refresh();
-                //sic.dump(_p.row.getValue());
-                _p.row.updateRow();
-            });
+            if (this.updateOnEnter) {
+                this.input.onEnterPressed(function(e) {
+                    //_p.dataTable.applyFilter();
+                    //_p.dataTable.refresh();
+                    //sic.dump(_p.row.getValue());
+                    _p.row.updateRow();
+                });
+            }
             this.hasInput = true;
         } else {
             if (this.dataTable.hoverCells) this.selector.addClass("hoverable");

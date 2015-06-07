@@ -25,7 +25,11 @@ class Util
     }
 
     public static function getUserId() {
-        return 3; // TODO
+        if (isset($_SESSION["Zend_Auth"]) && isset($_SESSION["Zend_Auth"]['storage'])
+            && isset($_SESSION["Zend_Auth"]['storage']["id"]))
+                return $_SESSION["Zend_Auth"]['storage']["id"];
+
+        return 0;
     }
 
     public static function shortenText($text, $length) {

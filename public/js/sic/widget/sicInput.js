@@ -179,10 +179,13 @@ sic.widget.sicInput = function(args)
     };
 
     this.getValue = function(){
+        var val = _p.input.selector.val();
+        if (_p.type == "checkbox") val = _p.input.selector.prop("checked");
+
         if (_p.withCode)
-            return { codeId: _p.getCodeId(), value: _p.input.selector.val() };
+            return { codeId: _p.getCodeId(), value: val };
         else
-            return _p.input.selector.val();
+            return val;
     };
 
     this.setValue = function(value){
@@ -190,7 +193,12 @@ sic.widget.sicInput = function(args)
             _p.setCodeId(value.codeId);
             value = value.value;
         }
-        _p.input.selector.val(value);
+        if (_p.type == "checkbox") {
+            value = value ? true : false;
+            _p.input.selector.prop("checked", value);
+        } else {
+            _p.input.selector.val(value);
+        }
         _p.origValue = value;
         _p._onChange();
         if (_p.lookup)
@@ -198,7 +206,11 @@ sic.widget.sicInput = function(args)
     };
 
     this.clear = function() {
-        _p.input.selector.val('');
+        if (_p.type == "checkbox")
+            _p.input.selector.prop('checked', false);
+        else
+            _p.input.selector.val('');
+
         _p.origValue = '';
     };
 

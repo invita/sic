@@ -27,6 +27,7 @@ var F = function(args){
     form3.addInput({name:"Test5", type:"text", value:"Some initial Value 1"});
     form3.addInput({name:"Test6", type:"text", value:"Some initial Value 2"});
     form3.addInput({name:"Test7", type:"text", value:"Some initial Value 3"});
+    form3.addInput({name:"Test8", type:"checkbox", value:"Checkbox"});
     form3.addInput({name:"SetFormData", type:"button", gradient:"orange"})
         .selector.click(function(e){
             form3.setValue({ Test5: "Lol", Test6: "Test", Test7: "Fooo!", UnknownName: "This is ignored" });
@@ -45,5 +46,7 @@ var F = function(args){
         hint.moveToCursor();
         hint.show();
     });
+    var testTable = new sic.widget.sicHtmlTable({parent:group4.content.selector, rows:2, columns: 2})
+    var testCheckbox = new sic.widget.sicInput({parent:testTable.getCell(1,1).selector, type:"checkbox"});
 
 };

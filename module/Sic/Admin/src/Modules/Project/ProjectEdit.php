@@ -8,8 +8,10 @@ use Zend\Db\Sql\Expression;
 use Sic\Admin\Models\Util;
 use Sic\Admin\Models\DbUtil;
 
-class ProjectEdit {
-    public function projSelect($args) {
+class ProjectEdit
+{
+    public function projSelect($args)
+    {
 
         $proj_id = Util::getArg($args, 'proj_id', 0);
 
@@ -23,7 +25,8 @@ class ProjectEdit {
         return array("data" => $row);
     }
 
-    public function projUpdate($args) {
+    public function projUpdate($args)
+    {
 
         $proj_id = Util::getArg($args, 'proj_id', null);
         if (!$proj_id) return $this->projInsert($args);
@@ -39,7 +42,8 @@ class ProjectEdit {
         return $this->projSelect($args);
     }
 
-    public function projInsert($args) {
+    public function projInsert($args)
+    {
 
         $data = Util::getArg($args, 'data', null);
         $adapter = GlobalAdapterFeature::getStaticAdapter();
@@ -52,7 +56,7 @@ class ProjectEdit {
         $result = $statement->execute();
         $args['proj_id'] = $result->getGeneratedValue();
 
-        return $this->projSelect(array("proj_id"=>$args['proj_id']));
+        return $this->projSelect(array("proj_id" => $args['proj_id']));
     }
 
     public function loadXml($args)

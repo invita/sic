@@ -145,6 +145,19 @@ var F = function(args) {
                 }});
 
         },
+        actions: {
+            link: {
+                label: 'Dup',
+                type: 'button',
+                onClick: function(args) {
+                    var rowValue = args.row.getValue();
+                    sic.callMethod({moduleName:'Pub/PubQuoteEdit', methodName:'duplicateQuote', quote_id:rowValue.quote_id },
+                        function(cbArgs) {
+                            if (cbArgs.status) quotesDataTable.refresh();
+                        });
+                }
+            }
+        },
         subDataTable: {
             dataSource: new sic.widget.sicDataTableDataSource({
                 moduleName:"Pub/PubSubQuoteList",
@@ -173,6 +186,19 @@ var F = function(args) {
                     }});
 
             },
+            actions: {
+                link: {
+                    label: 'Dup',
+                    type: 'button',
+                    onClick: function(args) {
+                        var rowValue = args.row.getValue();
+                        sic.callMethod({moduleName:'Pub/PubQuoteEdit', methodName:'duplicateQuote', quote_id:rowValue.quote_id },
+                            function(cbArgs) {
+                                if (cbArgs.status) args.dataTable.refresh();
+                            });
+                    }
+                }
+            },
         }
     });
     quotesDataTable.onFirstFeedComplete(function() {
@@ -188,14 +214,13 @@ var F = function(args) {
                     var pub_id = args.pub_id;
                     var proj_id = selectArgs.row.getValue().proj_id;
                     if (pub_id && proj_id) {
-                        sic.loadModule({moduleName:'Project/ProjectLineSelect', newTab:'Select', inDialog: true,
-                            selectCallback: function(selectArgs){
+                        sic.loadModule({moduleName:'Project/ProjectLineSelect', newTab:'Select', inDialog: true, proj_id: proj_id,
+                            closeOKCallback: function(closeOKArgs){
+                                sic.callMethod({moduleName:"Pub/PubEdit",
+                                        methodName:"importQuotesFromProject", pub_id: pub_id, proj_id: proj_id},
+                                    function(response) { quotesDataTable.refresh(); });
                             }
                         });
-
-                        sic.callMethod({moduleName:"Pub/PubEdit",
-                                methodName:"importQuotesFromProject", pub_id: pub_id, proj_id: proj_id},
-                            function(response) { quotesDataTable.refresh(); });
                     }
                 }});
         });

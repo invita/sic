@@ -5,6 +5,7 @@ use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
 use Zend\Db\Sql\Sql;
 use Sic\Admin\Models\Util;
 use Sic\Admin\Models\DbUtil;
+use Sic\Admin\Modules\Project\ProjectLineSelect;
 
 class PubEdit {
 
@@ -239,16 +240,24 @@ class PubEdit {
         $pub_id = Util::getArg($args, 'pub_id', null);
         $proj_id = Util::getArg($args, 'proj_id', null);
 
-        $projLines = DbUtil::selectFrom("project_line", null, array("proj_id" => $proj_id));
+        $projLineSelect = new ProjectLineSelect();
+        $projLines = $projLineSelect->dataTableSelect(array("staticData" => array("proj_id" => $proj_id),
+            "pageCount" => 1000000));
+        $projLines = $projLines["data"];
+
+        //print_r($projLines); die();
+        //$projLines = DbUtil::selectFrom("project_line", null, array("proj_id" => $proj_id));
 
         foreach ($projLines as $projLine) {
+            if (!$projLine["user_id"]) continue;
+
             $quoted_pub_id = $projLine["pub_id"];
 
             DbUtil::insertInto("quote", array(
                 "pub_id" => $pub_id,
-                "pub_page" => 0,
+                "on_page" => 0,
                 "quoted_pub_id" => $quoted_pub_id,
-                "quoted_pub_page" => 0
+                "cited_page" => 0
             ));
         }
 
