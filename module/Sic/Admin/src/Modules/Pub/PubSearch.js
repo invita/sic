@@ -65,7 +65,8 @@ var F = function(args) {
 
         pub_id: { caption:"id", placeholder:"Entity Identifier" },
         idno: { caption:"idno", placeholder:"Identifier", isArray:true, withCode:sic.codes.pubIdno },
-        title: { caption:"title", placeholder:"Title", isArray:true },
+        title: { caption:"title", placeholder:"Title", isArray:true, autoComplete: {
+            moduleName: "Pub/PubSearch", methodName: "autoComplete_title" } },
         creator: { caption:"creator", placeholder:"Creator", isArray:true, withCode:sic.codes.pubCreator },
         year: { caption:"date", placeholder:"Date", isArray:true },
 

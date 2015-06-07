@@ -34,6 +34,7 @@ sic.widget.sicInput = function(args)
     this.form = sic.getArg(args, "form", null);
     this.inputArray = sic.getArg(args, "inputArray", null);
     this.inputClass = sic.getArg(args, "inputClass", "");
+    this.autoComplete = sic.getArg(args, "autoComplete", null);
 
     // Events
     this.onKeyDown = function(f) { _p.subscribe("onKeyDown", f); };
@@ -278,6 +279,32 @@ sic.widget.sicInput = function(args)
         if (_p.showModified) _p.calcModified();
         _p._onChange();
         _p.trigger('onKeyUp', e);
+
+        if (_p.autoComplete) {
+            if (_p.autoCompleteTimeout) clearTimeout(_p.autoCompleteTimeout);
+            _p.autoCompleteTimeout = setTimeout(function() {
+                sic.callMethod(sic.mergeObjects(_p.autoComplete, {typed: _p.getValue()}), function(cbArgs) {
+
+                    if (_p.lastAutoComplete) _p.lastAutoComplete.hide();
+
+                    var sicAutoComplete = new sic.widget.sicAutoComplete({ lines: cbArgs, inputSelector:_p.input.selector });
+                    var position = _p.input.getAbsolutePosition();
+                    position.top += 25;
+                    sicAutoComplete.moveToPoint(position);
+                    sicAutoComplete.show();
+
+                    _p.lastAutoComplete = sicAutoComplete;
+
+                    //sic.dump(cbArgs);
+                });
+            }, sic.defaults.autoCompleteDelay);
+        }
+    };
+    this._onFocus = function(e) {
+    };
+
+    this._onBlur = function(e) {
+        if (_p.lastAutoComplete) _p.lastAutoComplete.hide();
     };
 
     this._onPaste = function(e) {
@@ -288,6 +315,8 @@ sic.widget.sicInput = function(args)
     this.input.selector.keydown(_p._onKeyDown);
     this.input.selector.keypress(_p._onKeyPressed);
     this.input.selector.keyup(_p._onKeyUp);
+    this.input.selector.focus(_p._onFocus);
+    this.input.selector.blur(_p._onBlur);
     this.input.selector.on("paste", _p._onPaste);
 
     if (!this.isButton() && this.caption === null)

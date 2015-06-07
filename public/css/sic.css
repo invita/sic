@@ -175,6 +175,11 @@ span.hintTitle { color:white; font-weight:bold; font-size:14px; line-height:20px
 span.hintPropKey { color:gray; font-size:12px; }
 span.hintPropVal { color:black; font-size:12px; line-height:16px; }
 
+
+div.sicAutoComplete { }
+div.sicAutoCompleteLine { cursor: pointer; }
+div.sicAutoCompleteLine:hover { font-weight: bold; }
+
 tr.sicHtmlTable_tr { }
 td.sicHtmlTable_td { vertical-align:top; }
 

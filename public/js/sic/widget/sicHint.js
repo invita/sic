@@ -22,6 +22,11 @@ sic.widget.sicHint = function(args)
         _p.selector.css("top", (sic.mouse.y -10)+"px");
     };
 
+    this.moveToPoint = function(point){
+        _p.selector.css("left", (point.left)+"px");
+        _p.selector.css("top", (point.top)+"px");
+    };
+
     this.show = function(){
         _p.selector.stop().fadeIn(sic.defaults.hintFadeTime);
         _p.lastMousePos = sic.mergeObjects(sic.mouse);

@@ -128,4 +128,17 @@ class PubSearch extends SicModuleAbs {
 
     }
 
+    public function autoComplete_title($args) {
+        $typed = Util::getArg($args, 'typed', "");
+
+        // $typed is a string for normal inputs,
+        // $typed can also be array of ("codeId" => codeId, "value" => stringValue) for inputs with dropdown
+
+        return array(
+            $typed." Test",
+            $typed." Test 2",
+            $typed." Test 3"
+        );
+    }
+
 }

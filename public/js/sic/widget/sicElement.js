@@ -161,6 +161,10 @@ sic.widget.sicElement = function(args)
         _p.selector.css("position", "absolute").css("top", top).css("left", left);
     };
 
+    this.getAbsolutePosition = function() {
+        return _p.selector.position();
+    };
+
     this.addHtml = function(html){
         _p.selector.html(_p.selector.html()+html);
     };

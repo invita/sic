@@ -5,6 +5,7 @@ sic.defaults = {
     loadingFadeTime: 200,
     hintFadeTime: 600,
     hintTriggerDelay: 500,
+    autoCompleteDelay: 500,
 
     buttonGrad: "blue",
     submitGrad: "orange",
