@@ -1,14 +1,17 @@
 <?php
 namespace Sic\Admin\Modules\Project;
 
+use Zend\Db\Sql\Predicate\Predicate;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Delete;
 use Zend\Db\Sql\Where;
-use Zend\Db\Sql\Expression;
+//use Zend\Db\Sql\Expression;
+//use Zend\Db\Sql\Literal;
 use Sic\Admin\Models\SicModuleAbs;
 use Sic\Admin\Models\Util;
 use Sic\Admin\Models\DbUtil;
 use Zend\Db\Adapter\Driver\ResultInterface;
+use Zend\Db\Sql\Predicate\Expression;
 
 class ProjectLineSelect extends SicModuleAbs {
 
@@ -28,11 +31,7 @@ class ProjectLineSelect extends SicModuleAbs {
         $where = new Where();
         $where->equalTo('project_line.proj_id', $projId);
         $where->notEqualTo('project_line.pub_id', 0);
-        $where->isNull('user_id');
-        $where->addPredicates(array(
-            //"user_id IS NULL",
-            "user_id = ".$userId
-        ), Where::OP_OR);
+        $where->addPredicates(array(new Expression('(user_id IS NULL OR user_id = '.$userId.')')));
 
         $select->where($where);
 
