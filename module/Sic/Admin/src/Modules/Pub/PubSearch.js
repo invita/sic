@@ -174,8 +174,6 @@ var F = function(args) {
         //alert(sic.debug(response));
         zoteroForm.addInput({name:"url", caption:"Zotero url", value:response.url});
     });
-
-
     var zoteroScrapeButton = zoteroForm.addInput({value:"Scrape", type:"submit", caption: " "});
     zoteroScrapeButton.selector.click(function(e){
         sic.loading.show();
@@ -183,28 +181,18 @@ var F = function(args) {
         var searchData = zoteroForm.getValue();
         var url = searchData.url;
 
-        /*
-        jQuery.ajax({url:"/cobiss.php", method:"POST", data:{url:url}, dataType:"json", success:function(data){
-            data = data.data;
-            pubSearchForm.setValue({
-                creator : data.authors,
-                title : data.titles,
-                cobiss : data.cobissId,
-                publisher : data.publisher
-            });
-            sic.loading.hide();
-        }});
-        */
-
         sic.callMethod({ moduleName:"Pub/PubSearch", methodName:"zoteroScrape", url: url }, function(response) {
-            // Callback
-
             pubSearchForm.setValue(response.data);
         });
-
-
         //showResults("cobiss");
     });
+
+    // *** Solr ***
+    var solrGroup = searchPanel.addGroup("Solr");
+    var solrForm = new sic.widget.sicForm({parent:solrGroup.content.selector, captionWidth:"100px", inputClass:"searchInput"});
+    solrForm.addInput({name:"query", caption:"Solr query"});
+    var solrSubmitButton = solrForm.addInput({value:"Solr query", type:"submit", caption: " "});
+
 
 
     var filterValue = sic.getArg(args, "filter", {});

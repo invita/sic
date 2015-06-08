@@ -1,6 +1,8 @@
 <?php
 namespace Sic\Admin\Modules\Pub;
 
+ini_set("display_errors", 1);
+
 use Sic\Admin\Models\Zotero;
 use Zend\Authentication\Storage\Session;
 use Zend\Db\Sql\Select;
@@ -12,18 +14,25 @@ use Zend\Db\Adapter\Driver\ResultInterface;
 use Zend\Db\Sql\Literal;
 use Zend\Db\Sql\Expression;
 
+require_once(realpath(__DIR__."/../../../../../../library/Solr/Solr.php"));
+
 class PubSearch extends SicModuleAbs {
 
-
-    /*
     public function dataTableSelect($args) {
+
+
+        $solr = new \Solr();
+        $solr->setQuery("*:*");
+        $solr->run();
+        $data = $solr->toArray();
+
+
         return array(
-            "data" => array(
-            ),
-            "rowCount" => 1
+            "data" => $data,
+            "rowCount" => count($data)
         );
     }
-    */
+
 
     public function getZoteroUrl(){
 
@@ -44,6 +53,8 @@ class PubSearch extends SicModuleAbs {
 
         return array("url"=>$url);
     }
+
+    /*
 
     public function defineSqlSelect($args, Select $select)
     {
@@ -116,6 +127,7 @@ class PubSearch extends SicModuleAbs {
         }
         return $responseData;
     }
+    */
 
     function zoteroScrape($args) {
         $url = $args["url"];
