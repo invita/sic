@@ -4,14 +4,12 @@ namespace Sic\Admin\Modules\Project;
 use Zend\Db\Sql\Predicate\Predicate;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Delete;
-use Zend\Db\Sql\Where;
-//use Zend\Db\Sql\Expression;
-//use Zend\Db\Sql\Literal;
 use Sic\Admin\Models\SicModuleAbs;
 use Sic\Admin\Models\Util;
 use Sic\Admin\Models\DbUtil;
 use Zend\Db\Adapter\Driver\ResultInterface;
 use Zend\Db\Sql\Predicate\Expression;
+use Zend\Db\Sql\Where;
 
 class ProjectLineSelect extends SicModuleAbs {
 

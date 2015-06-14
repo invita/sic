@@ -979,13 +979,13 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
                     _p.formViewInstance.addInput({name:fKey, type:"flat", value:fVal, readOnly:true});
             }
         } else if (_p.dataField && _p.actions) {
+            _p.valueDiv.actions = {};
             for (var aKey in _p.actions) {
                 var actionArgs = _p.actions[aKey];
                 var actionType = sic.getArg(actionArgs, 'type', 'link');
                 var actionLabel = sic.getArg(actionArgs, 'label', sic.captionize(aKey));
                 var actionOnClick = sic.getArg(actionArgs, 'onClick', function(args) {});
                 var action;
-                _p.valueDiv.actions = {};
                 switch (actionType) {
                     case "link": default:
                         action = new sic.widget.sicElement({parent:_p.valueDiv.selector});
@@ -996,9 +996,11 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
                         action.setValue(actionLabel);
                         break;
                 }
+                action.selector[0].actionOnClick = actionOnClick;
                 action.selector.click(function(e){
+                    if (!this.actionOnClick) return;
                     var clickArgs = sic.mergeObjects(_p.getEventArgs(), {action: actionArgs});
-                    actionOnClick(clickArgs);
+                    this.actionOnClick(clickArgs);
                 });
                 _p.valueDiv.actions[aKey] = action;
             }

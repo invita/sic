@@ -526,3 +526,11 @@ CREATE TABLE `project_line_selected` (
 -- 2015-06-05
 ALTER TABLE `user` ADD `zotero_key` VARCHAR(64) NULL AFTER `zotero_col`;
 
+
+-- 2015-06-14
+CREATE TABLE `publication_doubles_selected` (
+  `user_id` int(11) NOT NULL,
+  `pub_id` int(11) NOT NULL,
+  PRIMARY KEY (`user_id`,`pub_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
