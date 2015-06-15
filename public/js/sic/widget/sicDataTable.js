@@ -303,6 +303,23 @@ sic.widget.sicDataTable = function(args)
         //sic.dump(_p.getValue(), 0);
     };
 
+    this.setColumnVisible = function(colName, visible) {
+        // Header row
+        if (_p.headerRow.fields[colName])
+            if (visible) _p.headerRow.fields[colName].display(); else _p.headerRow.fields[colName].displayNone();
+
+        // Filter row
+        if (_p.filterRow.fields[colName])
+            if (visible) _p.filterRow.fields[colName].display(); else _p.filterRow.fields[colName].displayNone();
+
+        // Data rows
+        for (var i = 0; i < _p.rows.length; i++) {
+            var field = _p.rows[i].fields[colName];
+            if (!field) continue;
+            if (visible) field.display(); else field.displayNone();
+        }
+    };
+
     this.expandAllRows = function() {
         if (!_p.canExpand) return;
 

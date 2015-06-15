@@ -23,6 +23,7 @@ sic.widget.sicMultiSelect = function(args)
     this.onKeyDown = function(f) { _p.subscribe("onKeyDown", f); };
     this.onKeyPressed = function(f) { _p.subscribe("onKeyPressed", f); };
     this.onKeyUp = function(f) { _p.subscribe("onKeyUp", f); };
+    this.onSelectionChange = function(f) { _p.subscribe("onSelectionChange", f); };
 
     this.buttonsContainer = new sic.widget.sicElement({ parent:this.selector });
     this.buttonsContainer.selector.addClass("buttonsContainer inline");
@@ -53,7 +54,7 @@ sic.widget.sicMultiSelect = function(args)
             else
                 button.selector.removeClass("selected");
         };
-        button.selector.click(function(e){ button.setSelected(!button.isSelected); });
+        button.selector.click(function(e){ button.setSelected(!button.isSelected); _p.trigger("onSelectionChange", button); });
         _p.buttons[index] = button;
         return button;
 

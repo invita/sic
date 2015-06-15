@@ -132,6 +132,7 @@ var F = function(args) {
                 hintF: function(args) { sic.hint.publication(args.row.lastRowData.quoted_pub_id) } },
             quoted_creator: { canSort:false, editable:false, caption:"Creator" },
             quoted_title: { canSort:false, editable:false, caption:"Title" },
+            subquote_count: { editable:false, caption:"Children", canFilter: false }
             //_expand: { visible:false }
         },
         customInsert: function(insertDT) {
@@ -171,7 +172,7 @@ var F = function(args) {
                 quoted_pub_id: { caption:"Cited Entity", editable:false,
                     hintF: function(args) { sic.hint.publication(args.row.lastRowData.quoted_pub_id) } },
                 quoted_creator: { canSort:false, editable:false, caption:"Creator" },
-                quoted_title: { canSort:false, editable:false, caption:"Title" }
+                quoted_title: { canSort:false, editable:false, caption:"Title" },
             },
             customInsert: function(insertDT) {
                 sic.loadModule({moduleName:'Pub/PubSearch', tabPage:tabPageBasic,  newTab:'New citation - select entity',

@@ -43,6 +43,7 @@ class RegDoublesSearch extends SicModuleAbs {
         $userId = Util::getUserId();
         $responseData = array();
         foreach ($result as $row) {
+            //print_r($row);
             $newRow = array(
                 'user_id' => $row["user_id"] == $userId ? 1 : 0,
                 'pub_id' => $row['pub_id'],
@@ -51,10 +52,13 @@ class RegDoublesSearch extends SicModuleAbs {
 
                 'creator' => Util::shortenText($row['creator'], PubEdit::$creatorMaxLen),
                 'title' => Util::shortenText($row['title'], PubEdit::$titleMaxLen),
+                'addtitle' => Util::shortenText($row['addtitle'], PubEdit::$titleMaxLen),
+                'idno' => $row['idno'],
                 'year' => $row['year'],
 
                 '__creator_long' => $row['creator'],
                 '__title_long' => $row['title'],
+                '__addtitle_long' => $row['addtitle'],
 
                 '__row' => $row
             );
@@ -94,9 +98,11 @@ class RegDoublesSearch extends SicModuleAbs {
         $adapter = GlobalAdapterFeature::getStaticAdapter(); $sql = new Sql($adapter); $select = $sql->select();
         $select->columns(array('pub_id'))->from('view_publication_list');
 
-        $filterWhere = DbUtil::prepareSqlFilter($filter);
-        if (count($filterWhere->getPredicates()))
-            $select->where->addPredicate($filterWhere);
+        if ($filter && !empty($filter)) {
+            $filterWhere = DbUtil::prepareSqlFilter($filter);
+            if (count($filterWhere->getPredicates()))
+                $select->where->addPredicate($filterWhere);
+        }
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $pubsResult = $statement->execute();
@@ -123,9 +129,11 @@ class RegDoublesSearch extends SicModuleAbs {
         $adapter = GlobalAdapterFeature::getStaticAdapter(); $sql = new Sql($adapter); $select = $sql->select();
         $select->columns(array('pub_id'))->from('view_publication_list');
 
-        $filterWhere = DbUtil::prepareSqlFilter($filter);
-        if (count($filterWhere->getPredicates()))
-            $select->where->addPredicate($filterWhere);
+        if ($filter && !empty($filter)) {
+            $filterWhere = DbUtil::prepareSqlFilter($filter);
+            if (count($filterWhere->getPredicates()))
+                $select->where->addPredicate($filterWhere);
+        }
 
         $statement = $sql->prepareStatementForSqlObject($select);
         $pubsResult = $statement->execute();

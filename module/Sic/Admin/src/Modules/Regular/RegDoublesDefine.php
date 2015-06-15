@@ -115,7 +115,7 @@ class RegDoublesDefine extends SicModuleAbs
         $regularPubId = null;
         foreach ($selectedPubs as $selPub) {
             $pub = DbUtil::selectRow("publication", null, array("pub_id" => $selPub["pub_id"]));
-            if ($pub["original_id"] == -1) {
+            if (isset($pub["original_id"]) && $pub["original_id"] == -1) {
                 $regularPubId = $selPub["pub_id"];
                 break;
             }
