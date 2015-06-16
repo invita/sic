@@ -19,7 +19,13 @@ class PubQuoteList extends SicModuleAbs {
         $staticData = Util::getArg($args, 'staticData', null);
         $pub_id = Util::getArg($staticData, 'pub_id', 0);
         $select->from('quote')
-            ->columns(array("quote_id", "pub_id", "on_page", "quoted_pub_id", "cited_page"))
+            ->columns(array(
+                "quote_id" => "quote_id",
+                "pub_id" => "pub_id",
+                "on_page" => "on_page",
+                "quoted_pub_id" => "quoted_pub_id",
+                "cited_page" => "cited_page",
+                "subquote_count" => new Expression("(SELECT COUNT(*) FROM quote q WHERE q.parent_quote_id = quote.quote_id)")))
             ->where(array('pub_id' => $pub_id, 'parent_quote_id' => 0));
     }
 
@@ -34,6 +40,7 @@ class PubQuoteList extends SicModuleAbs {
                 "quoted_creator" => PubEdit::getCreatorShort($row['quoted_pub_id']),
                 "quoted_title" => PubEdit::getTitleShort($row['quoted_pub_id']),
                 "cited_page" => $row['cited_page'],
+                "subquote_count" => $row['subquote_count'],
             );
             $responseData[] = $newRow;
         }

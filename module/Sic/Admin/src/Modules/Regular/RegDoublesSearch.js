@@ -2,6 +2,8 @@ var F = function(args) {
 
     var tabPage = args.helpers.createTabPage({name:"Find Doubles"});
 
+    var selectFieldNames = ["parent_id", "series_id", "creator", "title", "addtitle", "idno", "year"];
+
     var dataTable = new sic.widget.sicDataTable({
         parent:tabPage.content.selector,
         primaryKey: ['pub_id'],
@@ -17,6 +19,7 @@ var F = function(args) {
             tabPage:tabPage
         },
         fields: {
+            user_id: { caption:"Selected", editable:true, editorType: "checkbox", updateOnEnter: false },
             pub_id: { hintF: function(args) { sic.hint.publication(args.row.lastRowData.pub_id) } },
             parent_id: { hintF: function(args) { sic.hint.publication(args.row.lastRowData.parent_id) } },
             series_id: { hintF: function(args) { sic.hint.publication(args.row.lastRowData.series_id) } },
@@ -24,7 +27,10 @@ var F = function(args) {
                 hintF: function(args) { sic.showHint(sic.replacePipes(args.row.lastRowData.__creator_long, "<br/>")); } },
             title: { tagClass:"sicDataTable_shortText",
                 hintF: function(args) { sic.showHint(sic.replacePipes(args.row.lastRowData.__title_long, "<br/>")); } },
-            user_id: { caption:"Selected", editable:true, editorType: "checkbox", updateOnEnter: false }
+            addtitle: { tagClass:"sicDataTable_shortText", caption: "Add Title", visible: false,
+                hintF: function(args) { sic.showHint(sic.replacePipes(args.row.lastRowData.__addtitle_long, "<br/>")); } },
+            idno: { visible: false },
+            year: { visible: false },
         }
     });
 
@@ -75,6 +81,46 @@ var F = function(args) {
             sic.loadModule({moduleName:'Regular/RegDoublesDefine', newTab:'Define Regular/Alternatives', tabPage: tabPage,
                 onClosed: function(closeArgs){ dataTable.refresh(); } });
         });
+
+
+        var fieldSelectHolder = new sic.widget.sicElement({parent:dataTable.dsControl.selector});
+        fieldSelectHolder.selector.addClass("inline filterButton vmid");
+        var fieldSelectImg = new sic.widget.sicElement({parent:fieldSelectHolder.selector, tagName:"img", tagClass:"icon16 vmid"});
+        fieldSelectImg.selector.attr("src", "/img/icon/lookup.png");
+        var fieldSelectSpan = new sic.widget.sicElement({parent:fieldSelectHolder.selector, tagName:"span", tagClass:"filterButton vmid"});
+        fieldSelectSpan.selector.html("Select Fields");
+
+        var fieldSelect = new sic.widget.sicMultiSelect({parent:fieldSelectHolder.selector});
+        fieldSelect.selector.css("box-shadow", "silver 1px 1px 3px").css("z-index", "100").css("background", "white");
+        fieldSelect.displayNone();
+
+        for (var i in selectFieldNames) {
+            var fieldCaption = sic.captionize(selectFieldNames[i]);
+            if (dataTable.fields[selectFieldNames[i]] && dataTable.fields[selectFieldNames[i]].caption)
+                fieldCaption = dataTable.fields[selectFieldNames[i]].caption;
+            var selected = !(dataTable.fields[selectFieldNames[i]] && dataTable.fields[selectFieldNames[i]].visible === false);
+
+            var option = fieldSelect.addButton(selectFieldNames[i], fieldCaption);
+            option.setSelected(selected);
+        }
+
+        fieldSelect.onSelectionChange(function(button) {
+            var idx = button.index;
+            var isSelected = button.isSelected;
+            dataTable.setColumnVisible(idx, isSelected);
+        });
+
+
+        fieldSelectSpan.selector.click(function() {
+            if (fieldSelect.isDisplay()) {
+                fieldSelect.displayNone();
+            } else {
+                var pos = fieldSelectSpan.selector.position();
+                fieldSelect.setAbsolute(pos.left -2, pos.top +16);
+                fieldSelect.display();
+            }
+        });
+
     });
 
 
