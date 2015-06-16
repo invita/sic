@@ -170,6 +170,38 @@
     <field name="note" type="string" indexed="true" stored="true"/>
     <field name="proj_id" type="string" indexed="true" stored="true"/>
 
+
+    <field name="quickSearch" type="text_general" indexed="true" stored="false" multiValued="true"/>
+
+    <copyField source="pub_id" dest="quickSearch"/>
+    <copyField source="parent_id" dest="quickSearch"/>
+    <copyField source="original_id" dest="quickSearch"/>
+    <copyField source="is_series" dest="quickSearch"/>
+    <copyField source="creator" dest="quickSearch"/>
+    <copyField source="creator_author" dest="quickSearch"/>
+    <copyField source="creator_editor" dest="quickSearch"/>
+    <copyField source="creator_organization" dest="quickSearch"/>
+    <copyField source="idno" dest="quickSearch"/>
+    <copyField source="idno_cobiss" dest="quickSearch"/>
+    <copyField source="idno_issn" dest="quickSearch"/>
+    <copyField source="idno_sistory" dest="quickSearch"/>
+    <copyField source="year" dest="quickSearch"/>
+    <copyField source="title" dest="quickSearch"/>
+    <copyField source="publisher" dest="quickSearch"/>
+    <copyField source="place" dest="quickSearch"/>
+    <copyField source="addidno" dest="quickSearch"/>
+    <copyField source="addtitle" dest="quickSearch"/>
+    <copyField source="volume" dest="quickSearch"/>
+    <copyField source="issue" dest="quickSearch"/>
+    <copyField source="page" dest="quickSearch"/>
+    <copyField source="edition" dest="quickSearch"/>
+    <copyField source="source" dest="quickSearch"/>
+    <copyField source="online" dest="quickSearch"/>
+    <copyField source="strng" dest="quickSearch"/>
+    <copyField source="note" dest="quickSearch"/>
+    <copyField source="proj_id" dest="quickSearch"/>
+
+
     <!-- SIC -->
 
 

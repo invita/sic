@@ -6,7 +6,7 @@ require_once(realpath(__DIR__."/../Httpful/httpful.phar"));
 
 class Solr {
 
-    protected $query = null;
+    protected $queryString = null;
 
     protected $userAgent = null;
 
@@ -16,7 +16,7 @@ class Solr {
         $this->setUserAgent($this->getRandomUserAgent());
     }
 
-    public function setQuery($query){ $this->query = $query; }
+    public function setQueryString($queryString){ $this->queryString = $queryString; }
 
     public function setUserAgent($userAgent){ $this->userAgent = $userAgent; }
 
@@ -35,7 +35,7 @@ class Solr {
     }
 
     protected function getUrl(){
-        return "http://localhost:8983/solr/select?q=".$this->query."&wt=json";
+        return "http://localhost:8983/solr/select".$this->queryString;
     }
 
     protected function getResponse(){

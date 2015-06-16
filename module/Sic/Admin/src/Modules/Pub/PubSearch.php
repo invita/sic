@@ -20,17 +20,71 @@ class PubSearch extends SicModuleAbs {
 
     public function dataTableSelect($args) {
 
+        //var_dump($args);
+
+        $query = $args["staticData"]["query"];
+
+
+
+        $sortField = $args["sortField"];
+        $sortOrder = $args["sortOrder"];
+        $pageStart = $args["pageStart"];
+        $pageCount = $args["pageCount"];
+
+        $rows_all = "rows=2147483647";
+        $rows = "rows=".$pageCount;
+        $wt = "wt=json";
 
         $solr = new \Solr();
-        $solr->setQuery("*:*");
+        $solr->setQueryString("?q=".$query."&".$wt."&".$rows_all);
+        $solr->run();
+        $rowCountData = $solr->toArray();
+
+        $solr = new \Solr();
+        $solr->setQueryString("?q=".$query."&".$wt."&".$rows."&start=".$pageStart);
         $solr->run();
         $data = $solr->toArray();
 
 
         return array(
             "data" => $data,
-            "rowCount" => count($data)
+            "rowCount" => count($rowCountData),
+            "staticData" => array("query" => $query)
         );
+    }
+
+    public function autoComplete_search($args) {
+        $typed = Util::getArg($args, 'typed', "");
+
+        // $typed is a string for normal inputs,
+        // $typed can also be array of ("codeId" => codeId, "value" => stringValue) for inputs with dropdown
+
+
+
+        $array = array();
+        if(strlen($typed) > 0){
+
+            $rows_all = "rows=10";
+            $wt = "wt=json";
+
+            $solr = new \Solr();
+            $solr->setQueryString("?q=quickSearch:*".$typed."*&".$wt."&".$rows_all);
+            $solr->run();
+            $data = $solr->toArray();
+
+            for($c=0; $c<count($data); $c++){
+                $row = $data[$c];
+                foreach($row as $key => $value){
+                    //if(!$value) continue;
+                    //array_push($array, json_encode($row)); continue;
+                    if(strpos($value, $typed) !== false){
+                        array_push($array, $value);
+                    }
+                }
+            }
+        }
+
+        return $array;
     }
 
 
@@ -140,17 +194,6 @@ class PubSearch extends SicModuleAbs {
 
     }
 
-    public function autoComplete_title($args) {
-        $typed = Util::getArg($args, 'typed', "");
 
-        // $typed is a string for normal inputs,
-        // $typed can also be array of ("codeId" => codeId, "value" => stringValue) for inputs with dropdown
-
-        return array(
-            $typed." Test",
-            $typed." Test 2",
-            $typed." Test 3"
-        );
-    }
 
 }

@@ -9,6 +9,50 @@ var F = function(args) {
     var pubResultsContainer = new sic.widget.sicElement({parent:pubSearchTable.getCell(0, 1).selector, tagClass:"pubSearch_rightContainer"});
     var cobissResultsContainer = new sic.widget.sicElement({parent:pubSearchTable.getCell(0, 1).selector, tagClass:"pubSearch_rightContainer"});
 
+    var staticDataQuery = "*:*";
+    var createStaticData = function(fields){
+        if(!fields) return {query : staticDataQuery};
+        else {
+            sic.dump(fields, 2);
+            staticDataQuery = null;
+            for(var key in fields){
+                if(!fields[key] || (fields[key] && !fields[key][0]) || (fields[key][0] && jQuery.isPlainObject(fields[key][0]) && !fields[key][0].value)) continue;
+                if(jQuery.isArray(fields[key])){
+                    for(var c=0; c<fields[key].length; c++){
+                        if(staticDataQuery){
+                            if(jQuery.isPlainObject(fields[key][c])){
+                                staticDataQuery += " and "+key+":\"*"+fields[key][c].value+"*\"";
+                            } else {
+                                staticDataQuery += " and "+key+":\"*"+fields[key][c]+"*\"";
+                            }
+                        } else {
+                            if(jQuery.isPlainObject(fields[key][c])){
+                                staticDataQuery = key+":\"*"+fields[key][c].value+"*\"";
+                            } else {
+                                staticDataQuery = key+":\"*"+fields[key][c]+"*\"";
+                            }
+                        }
+                    }
+                } else {
+                    if(staticDataQuery){
+                        if(jQuery.isPlainObject(fields[key])){
+                            staticDataQuery += " and "+key+":\"*"+fields[key].value+"*\"";
+                        } else {
+                            staticDataQuery += " and "+key+":\"*"+fields[key]+"*\"";
+                        }
+                    } else {
+                        if(jQuery.isPlainObject(fields[key])){
+                            staticDataQuery = key+":\"*"+fields[key].value+"*\"";
+                        } else {
+                            staticDataQuery = key+":\"*"+fields[key]+"*\"";
+                        }
+                    }
+                }
+            }
+            alert(staticDataQuery);
+            return {query : staticDataQuery};
+        }
+    };
 
     // Search Panel (left)
     var searchPanel = new sic.widget.sicPanel({parent:searchContainer.selector});
@@ -37,10 +81,16 @@ var F = function(args) {
     // Quick Search
     var quickSearchGroup = searchPanel.addGroup();
     var quickSearchForm = new sic.widget.sicForm({parent:quickSearchGroup.content.selector, captionWidth:"80px", inputClass:"searchInput"});
-    var quickSearchBox = quickSearchForm.addInput({name:"quickSearch", placeholder:"Quick search...", caption:"Quick search"});
+    var quickSearchBox = quickSearchForm.addInput({name:"quickSearch", placeholder:"Quick search...", caption:"Quick search", autoComplete: {
+        moduleName: "Pub/PubSearch", methodName: "autoComplete_search" }});
     quickSearchBox.selector.addClass("inline");
     quickSearchBox.input.selector.css("width", "220px");
     var quickSearchSubmitButton = quickSearchForm.addInput({value:"Local", type:"submit", caption:" "});
+    /*
+    quickSearchSubmitButton.selector.click(function(){
+        dataTable.dataSource.staticData = createStaticData(quickSearchForm.getValue());
+    });
+    */
     var cobissSearch = quickSearchForm.addInput({value:"Cobiss", type:"button"});
     cobissSearch.selector.click(function(){
         var data = quickSearchForm.getValue();
@@ -65,8 +115,7 @@ var F = function(args) {
 
         pub_id: { caption:"id", placeholder:"Entity Identifier" },
         idno: { caption:"idno", placeholder:"Identifier", isArray:true, withCode:sic.codes.pubIdno },
-        title: { caption:"title", placeholder:"Title", isArray:true, autoComplete: {
-            moduleName: "Pub/PubSearch", methodName: "autoComplete_title" } },
+        title: { caption:"title", placeholder:"Title", isArray:true },
         creator: { caption:"creator", placeholder:"Creator", isArray:true, withCode:sic.codes.pubCreator },
         year: { caption:"date", placeholder:"Date", isArray:true },
 
@@ -104,6 +153,11 @@ var F = function(args) {
     }
 
     var pubSearchSubmitButton = pubSearchForm.addInput({value:"Local", type:"submit", caption:false});
+    /*
+    pubSearchSubmitButton.selector.click(function(){
+        dataTable.dataSource.staticData = createStaticData(pubSearchForm.getValue());
+    });
+    */
 
     var pubCobissSearchButton = pubSearchForm.addInput({value:"Cobiss", type:"button"});
     pubCobissSearchButton.selector.click(function(e) {
@@ -207,7 +261,8 @@ var F = function(args) {
         entityTitle: "Entity %pub_id% - %title%",
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Pub/PubSearch",
-            staticData: { searchType: "pubSearch", fields: pubSearchForm.getValue(), zotero:zoteroForm.getValue() },
+            //staticData: { searchType: "pubSearch", fields: pubSearchForm.getValue(), zotero:zoteroForm.getValue() },
+            staticData : createStaticData(),
             pageCount: 20
         }),
         editorModuleArgs: {
@@ -230,25 +285,32 @@ var F = function(args) {
         }
     });
 
+    dataTable.onDataFeedComplete(function(args){
+        dataTable.dataSource.staticData = args["staticData"];
+    });
+
+
 
     cobissResultsContainer.displayNone();
     var cobissiFrame = new sic.widget.sicElement({parent:cobissResultsContainer.selector, tagName:"iframe",
         attr: { width:1200, height:1200, frameborder:0, scrolling:"no" } });
 
 
+
     quickSearchForm.onSubmit(function(sicForm){
-        dataTable.dataSource.staticData = quickSearchForm.getValue();
-        dataTable.dataSource.staticData.searchType = "quickSearch";
+        dataTable.dataSource.staticData = createStaticData(quickSearchForm.getValue());
+        //dataTable.dataSource.staticData.searchType = "quickSearch";
         dataTable.refresh();
         //showResults("pub");
     });
 
     pubSearchForm.onSubmit(function(sicForm){
-        dataTable.dataSource.staticData = { searchType: "pubSearch", fields: pubSearchForm.getValue() };
-        pubSearchForm.allInputs.resetModified();
+        dataTable.dataSource.staticData = createStaticData(pubSearchForm.getValue())
+        //dataTable.dataSource.staticData.searchType = "quickSearch";
         dataTable.refresh();
         //showResults("pub");
     });
+
 
     var showResults = function(pageName) {
         switch (pageName) {
