@@ -24,8 +24,6 @@ class PubSearch extends SicModuleAbs {
 
         $query = $args["staticData"]["query"];
 
-
-
         $sortField = $args["sortField"];
         $sortOrder = $args["sortOrder"];
         $pageStart = $args["pageStart"];
@@ -62,6 +60,7 @@ class PubSearch extends SicModuleAbs {
 
 
         $array = array();
+        $used = array();
         if(strlen($typed) > 0){
 
             $rows_all = "rows=10";
@@ -77,8 +76,9 @@ class PubSearch extends SicModuleAbs {
                 foreach($row as $key => $value){
                     //if(!$value) continue;
                     //array_push($array, json_encode($row)); continue;
-                    if(strpos($value, $typed) !== false){
+                    if(strpos($value, $typed) !== false && !in_array($value, $used)){
                         array_push($array, $value);
+                        array_push($used, $value);
                     }
                 }
             }

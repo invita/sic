@@ -13,10 +13,33 @@ var F = function(args) {
     var createStaticData = function(fields){
         if(!fields) return {query : staticDataQuery};
         else {
-            sic.dump(fields, 2);
-            staticDataQuery = null;
+            //sic.dump(fields, 2);
+            staticDataQuery = "*:*";
+            var arr = "&fq=(";
+            var count = 0;
             for(var key in fields){
                 if(!fields[key] || (fields[key] && !fields[key][0]) || (fields[key][0] && jQuery.isPlainObject(fields[key][0]) && !fields[key][0].value)) continue;
+
+                if(count != 0) arr += " or ";
+                arr += key+":(";
+                if(jQuery.isArray(fields[key])){
+                    for(var c=0; c<fields[key].length; c++){
+                        var r = fields[key][c];
+                        var value = (jQuery.isPlainObject(r) ? r.value : r);
+                        arr += "*"+value+"*";
+                        if( fields[key].length - 1 != c){
+                            arr += " or "
+                        }
+                    }
+                    arr += ")";
+                } else {
+                    var r = fields[key];
+                    var value = (jQuery.isPlainObject(r) ? r.value : r);
+                    arr += "*"+value+"*"+")";
+                }
+                count++;
+
+                /*
                 if(jQuery.isArray(fields[key])){
                     for(var c=0; c<fields[key].length; c++){
                         if(staticDataQuery){
@@ -48,8 +71,11 @@ var F = function(args) {
                         }
                     }
                 }
+                */
             }
-            alert(staticDataQuery);
+            staticDataQuery += arr+")";
+
+            //alert(staticDataQuery);
             return {query : staticDataQuery};
         }
     };
