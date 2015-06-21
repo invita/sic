@@ -570,6 +570,9 @@ sic.widget.sicDataTable = function(args)
 
         if (_p.firstFeed) {
             _p.trigger('firstFeedComplete', args);
+            if (_p.dataSource && _p.dataSource.filter) {
+                _p.filterRow.setFilterValue(_p.dataSource.filter);
+            }
             if (_p.filter.value && _p.filter.autoApply){
                 _p.applyFilter();
                 _p.refresh();

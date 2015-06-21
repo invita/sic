@@ -32,6 +32,7 @@ class PubList extends SicModuleAbs {
                 'pub_id' => $row['pub_id'],
                 'parent_id' => $row['parent_id'],
                 'series_id' => $row['series_id'],
+                'original_id' => $row['original_id'],
                 'creator' => Util::shortenText($row['creator'], PubEdit::$creatorMaxLen),
                 'title' => Util::shortenText($row['title'], PubEdit::$titleMaxLen),
                 'year' => $row['year'],
