@@ -28,7 +28,7 @@ var F = function(args) {
     var panel = new sic.widget.sicPanel({parent:tabPageBasic.content.selector,
         firstGroupName:"Update Publication"});
 
-    var formUserData = new sic.widget.sicForm({parent:panel.firstGroup.content.selector, captionWidth:"140px"});
+    var formUserData = new sic.widget.sicForm({parent:panel.firstGroup.content.selector, captionWidth:"100px"});
     formUserData.addInput({name:"pub_id", type:"text", caption:"id", placeholder:"Entity Identifier", readOnly:true});
     formUserData.addInput({name:"idno", type:"text", caption:"idno", placeholder:"Identifier", isArray:true, value:[idno],
         withCode:sic.codes.pubIdno});
@@ -116,9 +116,11 @@ var F = function(args) {
         primaryKey: ['quote_id'],
         entityTitle: "Quote %quote_id%",
         editable: true,
+        rowsPerPage: 200,
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Pub/PubQuoteList",
-            staticData: { pub_id: args.pub_id }
+            staticData: { pub_id: args.pub_id },
+            pageCount: 200
         }),
         initExpandAll: true,
         //editorModuleArgs: {

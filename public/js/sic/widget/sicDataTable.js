@@ -549,6 +549,7 @@ sic.widget.sicDataTable = function(args)
     };
 
     this.setPaginatorRowsPerPage = function(newMaxRows) {
+        _p.rowsPerPage = newMaxRows;
         _p.dataSource.pageCount = newMaxRows;
         _p.dsControl.recsPerPageInput.selector.val(newMaxRows);
         _p.dsControlBottom.recsPerPageInput.selector.val(newMaxRows);
