@@ -17,6 +17,10 @@ class Util
         return realpath(self::get('uploadPath')).'/';
     }
 
+    public static function getDownloadPath() {
+        return realpath(self::get('downloadPath')).'/';
+    }
+
     public static function set($key, $val) {
         self::$dict[$key] = $val;
     }

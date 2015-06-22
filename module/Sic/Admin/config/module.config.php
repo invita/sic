@@ -8,6 +8,7 @@ return array(
             'loadModule' => array('type'=>'literal','options'=>array('route'=>'/loadModule','defaults'=>array('controller'=>'Sic\Admin\Controller\Index','action'=>'loadModule'))),
             'callMethod' => array('type'=>'literal','options'=>array('route'=>'/callMethod','defaults'=>array('controller'=>'Sic\Admin\Controller\Index','action'=>'callMethod'))),
             'uploadFile' => array('type'=>'literal','options'=>array('route'=>'/uploadFile','defaults'=>array('controller'=>'Sic\Admin\Controller\Index','action'=>'uploadFile'))),
+            'download' => array('type'=>'literal','options'=>array('route'=>'/download','defaults'=>array('controller'=>'Sic\Admin\Controller\Index','action'=>'download'))),
         ),
     ),
     'service_manager' => array(
@@ -77,6 +78,7 @@ return array(
         ),
     ),
     'sic' => array(
-        'uploadPath' => 'data/upload'
+        'uploadPath' => 'data/upload',
+        'downloadPath' => 'data/download'
     ),
 );

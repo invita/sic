@@ -134,8 +134,8 @@ var F = function(args) {
                 hintF: function(args) { sic.hint.publication(args.row.lastRowData.quoted_pub_id) } },
             quoted_creator: { canSort:false, editable:false, caption:"Creator" },
             quoted_title: { canSort:false, editable:false, caption:"Title" },
-            subquote_count: { editable:false, caption:"Children", canFilter: false }
-            //_expand: { visible:false }
+            subquote_count: { editable:false, caption:"Ind. Source", canFilter: false },
+            _expand: { visible:false }
         },
         customInsert: function(insertDT) {
             sic.loadModule({moduleName:'Pub/PubSearch', tabPage:tabPageBasic,  newTab:'New citation - select entity',
@@ -229,6 +229,12 @@ var F = function(args) {
         });
     });
     tabPageQuotes.onActive(function(){ quotesDataTable.recalculateInputs(); });
+
+    quotesDataTable.onFieldClick(function(eArgs){
+        if (eArgs.field.fieldKey == "subquote_count") {
+            eArgs.row.expandToggleSubRow();
+        }
+    });
 
     if (args.pub_id){
         var response = sic.callMethod({moduleName:"Pub/PubEdit", methodName:"pubSelect", pub_id: args.pub_id});

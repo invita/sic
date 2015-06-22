@@ -145,6 +145,23 @@ class IndexController extends AbstractActionController
         exit;
     }
 
+    public function downloadAction()
+    {
+        $downloadPath = Util::getDownloadPath();
+        $fileName = Util::getArg($_GET, "fileName", "");
+
+        if ($fileName && file_exists($downloadPath."/".$fileName)) {
+            header('Content-Type: application/xml');
+            echo file_get_contents($downloadPath."/".$fileName);
+        } else {
+            echo "File not found";
+        }
+
+        exit;
+    }
+
+
+
     private function getModuleInfo($moduleName){
         $moduleInfo = array();
 
