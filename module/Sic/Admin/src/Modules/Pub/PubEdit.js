@@ -4,6 +4,10 @@ var F = function(args) {
     if (!args.proj_id) args.proj_id = sic.getArg(args.staticData, 'proj_id', null);
 
     //sic.dump(args, 0);
+    var focusLastQuoteRow = false;
+    var importFromLastProjSpan;
+    var importFromLastProj;
+    var lastProjId = 0;
 
     var idno = sic.getArg(cobissData, 'idno', null);
     var addidno = sic.getArg(cobissData, 'addidno', null);
@@ -116,11 +120,11 @@ var F = function(args) {
         primaryKey: ['quote_id'],
         entityTitle: "Quote %quote_id%",
         editable: true,
-        rowsPerPage: 200,
+        rowsPerPage: 100,
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Pub/PubQuoteList",
             staticData: { pub_id: args.pub_id },
-            pageCount: 200
+            pageCount: 10
         }),
         initExpandAll: true,
         //editorModuleArgs: {
@@ -156,7 +160,10 @@ var F = function(args) {
                     var rowValue = args.row.getValue();
                     sic.callMethod({moduleName:'Pub/PubQuoteEdit', methodName:'duplicateQuote', quote_id:rowValue.quote_id },
                         function(cbArgs) {
-                            if (cbArgs.status) quotesDataTable.refresh();
+                            if (cbArgs.status) {
+                                quotesDataTable.goToLastPage();
+                                focusLastQuoteRow = true;
+                            }
                         });
                 }
             }
@@ -216,6 +223,12 @@ var F = function(args) {
                 selectCallback: function(selectArgs){
                     var pub_id = args.pub_id;
                     var proj_id = selectArgs.row.getValue().proj_id;
+
+                    // Set lastProject
+                    lastProjId = proj_id;
+                    importFromLastProjSpan.selector.html("Repeat import ("+lastProjId+" - "+selectArgs.row.getValue().title+")");
+                    importFromLastProj.fadeIn();
+
                     if (pub_id && proj_id) {
                         sic.loadModule({moduleName:'Project/ProjectLineSelect', newTab:'Select', inDialog: true, proj_id: proj_id,
                             closeOKCallback: function(closeOKArgs){
@@ -227,12 +240,49 @@ var F = function(args) {
                     }
                 }});
         });
+
+        importFromLastProj = new sic.widget.sicElement({parent:quotesDataTable.dsControl.selector});
+        importFromLastProj.selector.addClass("inline filterButton vmid");
+        var importFromLastProjImg = new sic.widget.sicElement({parent:importFromLastProj.selector, tagName:"img", tagClass:"icon12 vmid"});
+        importFromLastProjImg.selector.attr("src", "/img/insert.png");
+        importFromLastProjSpan = new sic.widget.sicElement({parent:importFromLastProj.selector, tagName:"span", tagClass:"vmid"});
+        importFromLastProj.selector.click(function(e){
+
+            if (!lastProjId)
+            {
+                alert("No project selected");
+                return;
+            }
+            var pub_id = args.pub_id;
+            if (pub_id) {
+                sic.loadModule({moduleName:'Project/ProjectLineSelect', newTab:'Select', inDialog: true, proj_id: lastProjId,
+                    closeOKCallback: function(closeOKArgs){
+                        sic.callMethod({moduleName:"Pub/PubEdit",
+                                methodName:"importQuotesFromProject", pub_id: pub_id, proj_id: lastProjId},
+                            function(response) { quotesDataTable.refresh(); });
+                    }
+                });
+            }
+        });
+        importFromLastProj.displayNone();
     });
     tabPageQuotes.onActive(function(){ quotesDataTable.recalculateInputs(); });
 
     quotesDataTable.onFieldClick(function(eArgs){
         if (eArgs.field.fieldKey == "subquote_count") {
             eArgs.row.expandToggleSubRow();
+        }
+    });
+
+    quotesDataTable.onDataFeedComplete(function(eArgs) {
+        if (focusLastQuoteRow) {
+            var row = quotesDataTable.findLastVisibleRow();
+            if (row && row.fields['on_page'] && row.fields['on_page'].input && row.fields['on_page'].input.input) {
+                row.fields['on_page'].input.input.selector.focus();
+                row.fields['on_page'].input.input.selector.select();
+                row.addTempClassName('duplicated');
+            }
+            focusLastQuoteRow = false;
         }
     });
 

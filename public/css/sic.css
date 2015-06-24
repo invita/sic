@@ -116,6 +116,8 @@ div.sicDataTable > table.sicDataTable_table thead > tr {  }
 div.sicDataTable > table.sicDataTable_table thead > tr > td.sortable:hover { cursor:pointer; background:#DDEEFF; }
 div.sicDataTable > table.sicDataTable_table tbody > tr { cursor:pointer; height:28px; }
 div.sicDataTable > table.sicDataTable_table tbody > tr.hoverable:hover { background:#DDEEFF; }
+div.sicDataTable > table.sicDataTable_table tbody > tr.duplicated { background:#FFDDAA; }
+div.sicDataTable > table.sicDataTable_table tbody > tr.duplicated.hoverable:hover { background:#EEEECC; }
 div.sicDataTable > table.sicDataTable_table tbody > tr > td.hoverable:hover { cursor:pointer; background:#DDEEFF; }
 div.sicDataTable > table.sicDataTable_table tbody > tr > td.sicDataTable_shortText > div { color:gray; font-size:11px; }
 div.sicDataTable > div.insertButton { margin-bottom:5px; cursor:pointer; }

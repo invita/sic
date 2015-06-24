@@ -277,10 +277,10 @@ sic.widget.sicDataTable = function(args)
         }
     };
 
-    this.switchPage = function(pageIdx) {
+    this.switchPage = function(pageIdx, noPageCountCheck) {
         if (isNaN(pageIdx*1)) return;
         _p.currentPage = pageIdx;
-        if (_p.currentPage > _p.currentPageCount) _p.currentPage = _p.currentPageCount;
+        if (_p.currentPage > _p.currentPageCount && !noPageCountCheck) _p.currentPage = _p.currentPageCount;
         if (_p.currentPage < 1) _p.currentPage = 1;
         _p.dsControl.pageInput.selector.val(_p.currentPage);
         _p.dsControlBottom.pageInput.selector.val(_p.currentPage);
@@ -288,6 +288,13 @@ sic.widget.sicDataTable = function(args)
             _p.dataSource.pageStart = (_p.currentPage -1) * _p.dataSource.pageCount;
             _p.refresh();
         }
+    };
+
+    this.goToLastPage = function() {
+        var lastPage = _p.currentPageCount;
+        //alert(_p.rowCount+" "+_p.dataSource.pageCount+" "+(_p.rowCount % _p.dataSource.pageCount == 0));
+        if (_p.rowCount % _p.dataSource.pageCount == 0) lastPage++;
+        _p.switchPage(lastPage, true);
     };
 
     this.toggleFilter = function(bool){
@@ -558,6 +565,12 @@ sic.widget.sicDataTable = function(args)
         _p.refresh();
     };
 
+    this.findLastVisibleRow = function() {
+        var row = null;
+        for (var i in _p.rows)
+            if (_p.rows[i].isDisplay()) row = _p.rows[i];
+        return row;
+    };
 
     this.feedData = function(args) {
 
@@ -721,6 +734,7 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
     this.fields = {};
     this.active = false;
     this.subRowTr = null;
+    this.tempClassName = "";
 
     // Settings
     this.dataTable = sic.getArg(args, "dataTable", null);
@@ -756,6 +770,10 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
 
     this.setValue = function(rowData){
 
+        if (_p.tempClassName) {
+            _p.selector.removeClass(_p.tempClassName);
+            _p.tempClassName = "";
+        }
         _p.show();
         _p.lastRowData = rowData;
 
@@ -845,6 +863,12 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
             if (_p.fields[i].editable && _p.fields[i].dataField)
                 _p.fields[i]._recalcInputWidth();
         }
+    };
+
+    this.addTempClassName = function(className) {
+        if (_p.tempClassName) _p.selector.removeClass(_p.tempClassName);
+        _p.tempClassName = className;
+        _p.selector.addClass(_p.tempClassName);
     };
 
     // Bind Events
