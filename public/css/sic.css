@@ -118,6 +118,8 @@ div.sicDataTable > table.sicDataTable_table tbody > tr { cursor:pointer; height:
 div.sicDataTable > table.sicDataTable_table tbody > tr.hoverable:hover { background:#DDEEFF; }
 div.sicDataTable > table.sicDataTable_table tbody > tr.duplicated { background:#FFDDAA; }
 div.sicDataTable > table.sicDataTable_table tbody > tr.duplicated.hoverable:hover { background:#EEEECC; }
+div.sicDataTable > table.sicDataTable_table tbody > tr.regular { background:#DDFFDD; }
+div.sicDataTable > table.sicDataTable_table tbody > tr.alternative { background:#FFDDDD; }
 div.sicDataTable > table.sicDataTable_table tbody > tr > td.hoverable:hover { cursor:pointer; background:#DDEEFF; }
 div.sicDataTable > table.sicDataTable_table tbody > tr > td.sicDataTable_shortText > div { color:gray; font-size:11px; }
 div.sicDataTable > div.insertButton { margin-bottom:5px; cursor:pointer; }
