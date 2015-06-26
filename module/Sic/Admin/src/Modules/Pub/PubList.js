@@ -11,7 +11,7 @@ var F = function(args) {
         entityTitle: "Entity %pub_id% - %title%",
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Pub/PubList",
-            pageCount: 20,
+            pageCount: 3,
             filter: {
                 original_id:"-1,0"
             }
@@ -59,7 +59,7 @@ var F = function(args) {
         for (var i in dataTable.rows)
             dataTable.rows[i].selector.removeClass("alternative regular");
 
-        if (showAlts) {
+        if (true || showAlts) {
             for (var i in dataTable.rows) {
                 var row = dataTable.rows[i].getValue();
                 if (row.original_id == -1) {

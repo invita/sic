@@ -151,7 +151,10 @@ class IndexController extends AbstractActionController
         $fileName = Util::getArg($_GET, "fileName", "");
 
         if ($fileName && file_exists($downloadPath."/".$fileName)) {
-            header('Content-Type: application/xml');
+
+            $contentType = Util::getMimeTypeFromFileName($fileName);
+            header('Content-Type: '.$contentType);
+            header('Content-Disposition: attachment; filename="'.$fileName.'"');
             echo file_get_contents($downloadPath."/".$fileName);
         } else {
             echo "File not found";
@@ -159,8 +162,6 @@ class IndexController extends AbstractActionController
 
         exit;
     }
-
-
 
     private function getModuleInfo($moduleName){
         $moduleInfo = array();

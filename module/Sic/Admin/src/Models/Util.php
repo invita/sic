@@ -4,6 +4,16 @@ namespace Sic\Admin\Models;
 class Util
 {
     protected static $dict = array();
+    public static $mimeTypes = array(
+        '_default' => 'text/plain',
+        'xml' => 'application/xml',
+        'png' => 'image/png', 'jpg' => 'image/jpeg',
+        'zip' => 'application/zip',
+        'pdf' => 'application/pdf',
+        'doc' => 'application/msword', 'docx' => 'application/msword',
+        'xls' => 'application/vnd.ms-excel', 'xlsx' => 'application/vnd.ms-excel',
+        'csv' => 'text/csv',
+    );
 
     public static function getArg($args, $key, $defaultValue){
         if (!$args || !$key || !isset($args[$key])) return $defaultValue;
@@ -52,5 +62,15 @@ class Util
         if (!$asArray) $result = join($sep, $result);
 
         return $result;
+    }
+
+    public static function getMimeTypeFromFileName($fileName) {
+        // 'application/xml'
+        $ext = pathinfo($fileName, PATHINFO_EXTENSION);
+
+        if ($ext && isset(self::$mimeTypes[$ext]))
+            return self::$mimeTypes[$ext];
+
+        return self::$mimeTypes['_default'];
     }
 }

@@ -33,6 +33,8 @@ sic.widget.sicDataTable = function(args)
     this.hideNoData = sic.getArg(args, "hideNoData", false);
     this.showPaginator = sic.getArg(args, "showPaginator", true);
     this.initRefresh = sic.getArg(args, "initRefresh", true);
+    this.canExportXls = sic.getArg(args, "canExportXls", true);
+    this.canExportCsv = sic.getArg(args, "canExportCsv", true);
 
 
     this.rowsPerPage = sic.getArg(args, "rowsPerPage", sic.defaults.dataTableRowsPerPage); // Ignored if dataSource is given
@@ -154,7 +156,10 @@ sic.widget.sicDataTable = function(args)
 
     this.createRows = function() {
         if (_p.rows && _p.rows.length) {
-            for (var i in _p.rows) _p.rows[i].selector.remove();
+            for (var i in _p.rows) {
+                if (_p.rows[i].subRowTr) _p.rows[i].subRowTr.selector.remove();
+                _p.rows[i].selector.remove();
+            }
         }
 
         _p.rows = [];
@@ -265,6 +270,26 @@ sic.widget.sicDataTable = function(args)
         _p[cpName].recsPerPageText = new sic.widget.sicElement({parent:_p[cpName].selector, tagClass:"inline vmid"});
         _p[cpName].recsPerPageText.selector.html(' / page');
 
+
+        // Export
+        if (_p.canExportXls) {
+            _p[cpName].exportXlsDiv = new sic.widget.sicElement({parent:_p[cpName].selector, tagClass:"inline exportButton vmid", hint:"Export Excel file (xlsx)"});
+            _p[cpName].exportXlsImg = new sic.widget.sicElement({parent:_p[cpName].exportXlsDiv.selector, tagName:"img", tagClass:"icon16 vmid"});
+            _p[cpName].exportXlsImg.selector.attr("src", "/img/icon/exportXls.png");
+            _p[cpName].exportXlsDiv.selector.click(function(){
+                if (!_p.dataSource) return;
+                _p.dataSource.exportXls();
+            });
+        }
+        if (_p.canExportCsv) {
+            _p[cpName].exportCsvDiv = new sic.widget.sicElement({parent:_p[cpName].selector, tagClass:"inline exportButton vmid", hint:"Export Comma separated values file (csv)"});
+            _p[cpName].exportCsvImg = new sic.widget.sicElement({parent:_p[cpName].exportCsvDiv.selector, tagName:"img", tagClass:"icon16 vmid"});
+            _p[cpName].exportCsvImg.selector.attr("src", "/img/icon/exportCsv.png");
+            _p[cpName].exportCsvDiv.selector.click(function(){
+                if (!_p.dataSource) return;
+                _p.dataSource.exportCsv();
+            });
+        }
 
         // Filter
         if (_p.filter.enabled) {
@@ -556,12 +581,18 @@ sic.widget.sicDataTable = function(args)
     };
 
     this.setPaginatorRowsPerPage = function(newMaxRows) {
+        if (newMaxRows > 300) {
+            if (!confirm("Datatable will prepare to display "+newMaxRows+" rows. This will take a few seconds. Do you wish to continue?")) return;
+        }
+
         _p.rowsPerPage = newMaxRows;
         _p.dataSource.pageCount = newMaxRows;
+        _p.dataSource.pageStart = 0;
         _p.dsControl.recsPerPageInput.selector.val(newMaxRows);
         _p.dsControlBottom.recsPerPageInput.selector.val(newMaxRows);
         //_p.setPaginator(_p.rowCount);
 
+        _p.createRows();
         _p.refresh();
     };
 
@@ -584,7 +615,7 @@ sic.widget.sicDataTable = function(args)
 
         if (_p.firstFeed) {
             _p.trigger('firstFeedComplete', args);
-            if (_p.dataSource && _p.dataSource.filter) {
+            if (_p.dataSource && _p.dataSource.filter && _p.filterRow) {
                 _p.filterRow.setFilterValue(_p.dataSource.filter);
             }
             if (_p.filter.value && _p.filter.autoApply){
@@ -1147,7 +1178,7 @@ sic.widget.sicDataTableDataSource = function(args) {
 
     this.moduleName = sic.getArg(args, "moduleName", null);
     this.methodNames = sic.getArg(args, "methodNames", { select:'dataTableSelect', delete:'dataTableDelete',
-        updateRow:'dataTableUpdateRow' });
+        updateRow:'dataTableUpdateRow', exportXls:'dataTableExportXls', exportCsv:'dataTableExportCsv' });
     this.filter = sic.getArg(args, "filter", {});
     this.sortField = sic.getArg(args, "sortField", null);
     this.sortOrder = sic.getArg(args, "sortOrder", "asc");
@@ -1190,5 +1221,17 @@ sic.widget.sicDataTableDataSource = function(args) {
 
     this.updateRow = function(args) {
         return sic.callMethod(_p.getMethodCallData(_p.methodNames.updateRow, args), _p.callbacks.feedData);
+    }
+
+    this.exportXls = function(args) {
+        return sic.callMethod(_p.getMethodCallData(_p.methodNames.exportXls, args), function(rArgs) {
+            if (rArgs.status && rArgs.link) window.open(rArgs.link, "_blank");
+        });
+    }
+
+    this.exportCsv = function(args) {
+        return sic.callMethod(_p.getMethodCallData(_p.methodNames.exportCsv, args), function(rArgs) {
+            if (rArgs.status && rArgs.link) window.open(rArgs.link, "_blank");
+        });
     }
 }

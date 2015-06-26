@@ -135,9 +135,10 @@ div.sicDataTable > div.dsControl > div.prevButton > img { margin:1px 2px; }
 div.sicDataTable > div.dsControl > div.nextButton { margin-left:6px; cursor:pointer; color:#666; font-weight:bold; }
 div.sicDataTable > div.dsControl > div.nextButton:hover { color:#6699CC; }
 div.sicDataTable > div.dsControl > div.nextButton > img { margin:1px 3px; }
-div.sicDataTable > div.dsControl > div.filterButton { margin-left:16px; cursor:pointer; color:#666; font-weight:bold; }
+div.sicDataTable > div.dsControl > div.filterButton { margin-left:12px; cursor:pointer; color:#666; font-weight:bold; }
 div.sicDataTable > div.dsControl > div.filterButton:hover { color:#6699CC; }
 div.sicDataTable > div.dsControl > div.filterButton > img { margin:0px 2px; }
+div.sicDataTable > div.dsControl > div.exportButton { margin-left:16px; cursor:pointer; }
 div.sicDataTable > div.dsControl > input.dataTable_pageInput { width:35px; text-align:center; color:#444; border:none; }
 div.sicDataTable > div.dsControl > input.dataTable_pageCount { width:35px; text-align:center; color:#444; border:none; }
 div.sicDataTable > div.dsControl > input.dataTable_recsPerPageInput { width:35px; text-align:center; color:#444; border:none; }
