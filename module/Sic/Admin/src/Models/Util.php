@@ -73,4 +73,9 @@ class Util
 
         return self::$mimeTypes['_default'];
     }
+
+    public static function hasPermission($powerLevel, $actionName) {
+        if ($powerLevel == 'superUser') return true;
+        else return false;
+    }
 }

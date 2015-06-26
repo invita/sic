@@ -65,24 +65,37 @@
         <div id="navigation" class="navigation" style="display:none;">
             <div>
                 <ul class="navigationUl">
+
                     <li class="mainMenuList">
                         <a href="javascript:sic.loadModule({moduleName:'Pub/PubSearch', newTab:'Search'});">Search</a>
                     </li>
+
+                    <?php if (\Sic\Admin\Models\Util::hasPermission($this->power, 'systemModule')): ?>
                     <li class="mainMenuList">
                         <a href="javascript:sic.loadModule({moduleName:'System/Dashboard', newTab:'System'});">System</a>
                     </li>
+                    <?php endif; ?>
+
+                    <?php if (\Sic\Admin\Models\Util::hasPermission($this->power, 'scriptsModule')): ?>
                     <li class="mainMenuList">
                         <a href="javascript:sic.loadModule({moduleName:'System/Scripts', newTab:'Scripts'});">Scripts</a>
                     </li>
+                    <?php endif; ?>
+
+                    <?php if (\Sic\Admin\Models\Util::hasPermission($this->power, 'usersModule')): ?>
                     <li class="mainMenuList">
                         <a href="javascript:sic.loadModule({moduleName:'User/UserList', newTab:'Users'});">Users</a>
                     </li>
+                    <?php endif; ?>
+
                     <li class="mainMenuList">
                         <a href="javascript:sic.loadModule({moduleName:'Pub/PubList', newTab:'Entities'});">Entities</a>
                     </li>
+
                     <li class="mainMenuList">
                         <a href="javascript:sic.loadModule({moduleName:'Project/ProjectList', newTab:'Projects'});">Projects</a>
                     </li>
+
                     <li class="mainMenuList">
                         <a href="javascript:sic.loadModule({moduleName:'Regular/RegDoublesSearch', newTab:'Find Regular/Alternatives'});">Find Regular/Alternatives</a>
                     </li>

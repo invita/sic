@@ -9,6 +9,8 @@ var F = function(args) {
     formUserData.addInput({name:"username", type:"text", placeholder:"Username...", caption:"username"});
     formUserData.addInput({name:"email", type:"text", placeholder:"Email...", caption:"email"});
     formUserData.addInput({name:"notes", type:"textarea", placeholder:"Notes...", caption:"notes"});
+    formUserData.addInput({name:"power", caption:"access", inputConstruct: sic.widget.sicMultiSelect,
+        values:['normalUser', 'superUser'], multiSelect: false});
     formUserData.addInput({name:"zotero_id", type:"text", placeholder:"Zotero UserId...", caption:"zotero user"});
     formUserData.addInput({name:"zotero_col", type:"text", placeholder:"Zotero CollectionId...", caption:"zotero collection"});
     formUserData.addInput({name:"zotero_key", type:"text", placeholder:"Zotero Key...", caption:"zotero key"});
@@ -38,30 +40,6 @@ var F = function(args) {
         var response = sic.callMethod({moduleName:"User/UserEdit", methodName:"updatePassword",
             id: args.id, data:formPassword.getValue()});
         formPassword.setValue({password:""});
-    });
-
-
-    // *** Permissions ***
-
-    var tabPagePerm = tabPageBasic.createTabPage({name:"Permissions", canClose:false, autoActive:false});
-    //args.helpers.createTabPage({name:"Permissions", canClose:false, tabPage: tabPageBasic });
-    var panelPerm = new sic.widget.sicPanel({parent:tabPagePerm.content.selector,
-        firstGroupName:"Module Access"});
-    var formPermModule = new sic.widget.sicForm({parent:panelPerm.firstGroup.content.selector});
-    formPermModule.addInput({name:"moduleAccess", inputConstruct: sic.widget.sicMultiSelect,
-        values:['Search', 'Publications', 'Users', 'System'], multiSelect: false});
-    formPermModule.addInput({name:"save", type:"submit", value:"Save"}).selector.click(function(e){
-        var response = sic.callMethod({moduleName:"User/UserEdit", methodName:"updatePermissions",
-            id: args.id, data:formPermModule.getValue()});
-    });
-    var panelPermLevelGroup = panelPerm.addGroup('Security Level');
-    var formPermLevel = new sic.widget.sicForm({parent:panelPermLevelGroup.content.selector});
-    formPermLevel.addInput({name:"levelAccess", inputConstruct: sic.widget.sicMultiSelect,
-            values:['superAdmin', 'systemAdmin', 'systemModerator', 'manager', 'advancedUser', 'starterUser'],
-            multiSelect: true});
-    formPermLevel.addInput({name:"save", type:"submit", value:"Save"}).selector.click(function(e){
-        var response = sic.callMethod({moduleName:"User/UserEdit", methodName:"updatePermissions",
-            id: args.id, data:formPermLevel.getValue()});
     });
 
 

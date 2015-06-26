@@ -535,4 +535,6 @@ CREATE TABLE `publication_doubles_selected` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- 2015-06-26
-ALTER TABLE  `publication_doubles_selected` ADD  `temp_original_id` INT NOT NULL ;
+ALTER TABLE `publication_doubles_selected` ADD `temp_original_id` INT NOT NULL ;
+ALTER TABLE `user` ADD `power` VARCHAR(16) NOT NULL AFTER `notes` ;
+UPDATE `user` SET power = 'superUser';

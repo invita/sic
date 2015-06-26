@@ -23,8 +23,12 @@ class IndexController extends AbstractActionController
         $this->layout()->setVariable("hasIdentity", $this->hasIdentity);
         if ($this->hasIdentity){
             $identity = $auth->getIdentity();
+
             $username = isset($identity['username']) ? $identity['username'] : '';
             $this->layout()->setVariable("username", $username);
+
+            $power = isset($identity['power']) ? $identity['power'] : 0;
+            $this->layout()->setVariable("power", $power);
         }
 
         return parent::onDispatch( $e );
