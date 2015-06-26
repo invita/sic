@@ -25,6 +25,9 @@ class RegDoublesSearch extends SicModuleAbs {
 
         $userId = Util::getUserId();
 
+        $filter = Util::getArg($args, 'filter', null);
+        $creatorFilter = Util::getArg($filter, 'creator', '');
+
         $select->from('view_publication_list')
             ->join('publication_doubles_selected',
                 new Expression('publication_doubles_selected.pub_id = view_publication_list.pub_id '.
@@ -68,6 +71,8 @@ class RegDoublesSearch extends SicModuleAbs {
                 'source' => $row['source'],
                 'page' => $row['page'],
                 'volume' => $row['volume'],
+
+                'leven' => $row['leven'],
 
                 '__creator_long' => $row['creator'],
                 '__title_long' => $row['title'],

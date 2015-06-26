@@ -1,6 +1,8 @@
 <?php
 namespace Sic\Admin\Models;
 
+use Zend\Db\Sql\Predicate\Expression;
+use Zend\Db\Sql\Predicate\Literal;
 use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
 use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Select;
@@ -27,16 +29,42 @@ abstract class SicModuleAbs
         $pageStart = intval(Util::getArg($args, 'pageStart', 0));
         $pageCount = intval(Util::getArg($args, 'pageCount', 5));
 
-        if ($sortField) $select->order($sortField." ".$sortOrder);
+        if ($sortField) {
+            $orderArray = $select->getRawState(Select::ORDER);
+            $select->order(array_merge($orderArray, array($sortField." ".$sortOrder)));
+        }
         $select->offset($pageStart);
         $select->limit($pageCount);
     }
 
     public function defineSqlSelectFilter($args, Select $select) {
         $filter = Util::getArg($args, 'filter', array());
-        $filterWhere = DbUtil::prepareSqlFilter($filter);
-        if (count($filterWhere->getPredicates()))
-            $select->where->addPredicate($filterWhere);
+        $filterMode = Util::getArg($args, 'filterMode', 'normal');
+        switch($filterMode) {
+            case "normal": default:
+                $filterWhere = DbUtil::prepareSqlFilter($filter);
+                if (count($filterWhere->getPredicates()))
+                    $select->where->addPredicate($filterWhere);
+                break;
+            case "levenshtein":
+
+                $columns = $select->getRawState(Select::COLUMNS);
+                //print_r($columns);
+                $levenExpr = "";
+                foreach ($filter as $key => $val) {
+                    if (!$val) continue;
+                    if ($levenExpr) $levenExpr .= " + ";
+                    $levenExpr .= "levenshtein(".$key.", '".$val."')";
+                    break;
+                }
+
+                if (!$levenExpr) $levenExpr = "'0'";
+                $columns = array_merge($columns, array("leven" => new Expression("(".$levenExpr.")")));
+                $select->columns($columns);
+
+                $select->order("leven ASC");
+                break;
+        }
     }
 
     public function defineDataTableResponseData($args, ResultInterface $result) {

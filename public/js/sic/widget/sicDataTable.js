@@ -369,8 +369,9 @@ sic.widget.sicDataTable = function(args)
     this.applyFilter = function() {
         if (_p.filterRow)
             _p.filter.value = _p.filterRow.getFilterValue();
-        if (_p.dataSource)
+        if (_p.dataSource) {
             _p.dataSource.filter = _p.filter.value;
+        }
     };
 
     this.rowReprValue = function(row, entityTitle, primaryKey){
@@ -1180,6 +1181,7 @@ sic.widget.sicDataTableDataSource = function(args) {
     this.methodNames = sic.getArg(args, "methodNames", { select:'dataTableSelect', delete:'dataTableDelete',
         updateRow:'dataTableUpdateRow', exportXls:'dataTableExportXls', exportCsv:'dataTableExportCsv' });
     this.filter = sic.getArg(args, "filter", {});
+    this.filterMode = sic.getArg(args, "filterMode", "normal");
     this.sortField = sic.getArg(args, "sortField", null);
     this.sortOrder = sic.getArg(args, "sortOrder", "asc");
     this.pageStart = sic.getArg(args, "pageStart", 0);
@@ -1201,6 +1203,7 @@ sic.widget.sicDataTableDataSource = function(args) {
             methodName:methodName,
             aSync:_p.aSync,
             filter: _p.filter,
+            filterMode: _p.filterMode,
             data:args
         };
 

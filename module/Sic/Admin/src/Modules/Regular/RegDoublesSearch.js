@@ -13,7 +13,8 @@ var F = function(args) {
         canInsert: false,
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Regular/RegDoublesSearch",
-            pageCount: 20
+            pageCount: 20,
+            filterMode: "levenshtein"
         }),
         editorModuleArgs: {
             moduleName:"Pub/PubEdit",
