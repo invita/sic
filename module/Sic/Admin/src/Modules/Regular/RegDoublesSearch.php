@@ -49,12 +49,25 @@ class RegDoublesSearch extends SicModuleAbs {
                 'pub_id' => $row['pub_id'],
                 'parent_id' => $row['parent_id'],
                 'series_id' => $row['series_id'],
+                'original_id' => $row['original_id'],
 
                 'creator' => Util::shortenText($row['creator'], PubEdit::$creatorMaxLen),
                 'title' => Util::shortenText($row['title'], PubEdit::$titleMaxLen),
                 'addtitle' => Util::shortenText($row['addtitle'], PubEdit::$titleMaxLen),
                 'idno' => $row['idno'],
+                'addidno' => $row['addidno'],
                 'year' => $row['year'],
+
+                'publisher' => $row['publisher'],
+                'edition' => $row['edition'],
+                'place' => $row['place'],
+                'issue' => $row['issue'],
+                'online' => $row['online'],
+                'note' => $row['note'],
+                'strng' => $row['strng'],
+                'source' => $row['source'],
+                'page' => $row['page'],
+                'volume' => $row['volume'],
 
                 '__creator_long' => $row['creator'],
                 '__title_long' => $row['title'],
@@ -74,21 +87,6 @@ class RegDoublesSearch extends SicModuleAbs {
     }
 
 
-    /*
-    public function defineDataTableResponseData($args, ResultInterface $result) {
-        $responseData = array();
-        foreach($result as $row) {
-            $responseData[] = $row;
-        }
-        return $responseData;
-    }
-    */
-
-    public function defineSqlDelete($args, Delete $delete)
-    {
-
-    }
-
     public function selectAll($args) {
         //print_r($args);
         $userId = Util::getUserId();
@@ -96,7 +94,7 @@ class RegDoublesSearch extends SicModuleAbs {
         unset($filter["user_id"]);
 
         $adapter = GlobalAdapterFeature::getStaticAdapter(); $sql = new Sql($adapter); $select = $sql->select();
-        $select->columns(array('pub_id'))->from('view_publication_list');
+        $select->columns(array('pub_id', 'original_id'))->from('view_publication_list');
 
         if ($filter && !empty($filter)) {
             $filterWhere = DbUtil::prepareSqlFilter($filter);
@@ -107,15 +105,15 @@ class RegDoublesSearch extends SicModuleAbs {
         $statement = $sql->prepareStatementForSqlObject($select);
         $pubsResult = $statement->execute();
         $pubs = array();
-        foreach($pubsResult as $row) { $pubs[] = $row["pub_id"]; }
+        foreach($pubsResult as $row) { $pubs[] = array("pub_id" => $row["pub_id"], "original_id" => $row["original_id"]); }
 
         foreach ($pubs as $pub) {
             $isSelected = DbUtil::selectOne('publication_doubles_selected', 'pub_id', array(
-                'pub_id' => $pub, 'user_id' => $userId));
+                'pub_id' => $pub['pub_id'], 'user_id' => $userId));
 
             if (!$isSelected)
                 DbUtil::insertInto('publication_doubles_selected', array(
-                    'pub_id' => $pub, 'user_id' => $userId));
+                    'pub_id' => $pub['pub_id'], 'user_id' => $userId, 'temp_original_id' => $pub['original_id']));
         }
         return array("status" => true);
     }
@@ -138,11 +136,11 @@ class RegDoublesSearch extends SicModuleAbs {
         $statement = $sql->prepareStatementForSqlObject($select);
         $pubsResult = $statement->execute();
         $pubs = array();
-        foreach($pubsResult as $row) { $pubs[] = $row["pub_id"]; }
+        foreach($pubsResult as $row) { $pubs[] = array('pub_id' => $row["pub_id"]); }
 
         foreach ($pubs as $pub) {
             DbUtil::deleteFrom('publication_doubles_selected', array(
-                'pub_id' => $pub, 'user_id' => $userId));
+                'pub_id' => $pub['pub_id'], 'user_id' => $userId));
         }
         return array("status" => true);
     }
@@ -152,8 +150,10 @@ class RegDoublesSearch extends SicModuleAbs {
         $userId = Util::getUserId();
         if (!$pubId || !$userId) return array("status" => false);
 
+        $original_id = DbUtil::selectOne('publication', 'original_id', array('pub_id' => $pubId));
+
         DbUtil::insertInto('publication_doubles_selected', array(
-            'pub_id' => $pubId, 'user_id' => $userId));
+            'pub_id' => $pubId, 'user_id' => $userId, 'temp_original_id' => $original_id));
 
         return array("status" => true);
     }
@@ -170,8 +170,9 @@ class RegDoublesSearch extends SicModuleAbs {
             DbUtil::deleteFrom('publication_doubles_selected', array(
                 'pub_id' => $pubId, 'user_id' => $userId));
         } else {
+            $original_id = DbUtil::selectOne('publication', 'original_id', array('pub_id' => $pubId));
             DbUtil::insertInto('publication_doubles_selected', array(
-                'pub_id' => $pubId, 'user_id' => $userId));
+                'pub_id' => $pubId, 'user_id' => $userId, 'temp_original_id' => $original_id));
         }
 
         return array("status" => true);

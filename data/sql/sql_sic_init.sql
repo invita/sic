@@ -534,3 +534,5 @@ CREATE TABLE `publication_doubles_selected` (
   PRIMARY KEY (`user_id`,`pub_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- 2015-06-26
+ALTER TABLE  `publication_doubles_selected` ADD  `temp_original_id` INT NOT NULL ;

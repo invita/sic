@@ -22,7 +22,7 @@ var F = function(args) {
                 hintF: function(args) { sic.showHint(sic.replacePipes(args.row.lastRowData.__creator_long, "<br/>")); } },
             title: { tagClass:"sicDataTable_shortText",
                 hintF: function(args) { sic.showHint(sic.replacePipes(args.row.lastRowData.__title_long, "<br/>")); } },
-            original_id: { visible:false }
+            temp_original_id: { visible:false }
         },
         actions: {
             regular: {
@@ -57,7 +57,7 @@ var F = function(args) {
     });
 
     dataTable.onRowSetValue(function(rvArgs){
-        var originalId = rvArgs.rowData.original_id;
+        var originalId = rvArgs.rowData.temp_original_id;
 
         var regularButton = rvArgs.row.fields._actions.valueDiv.actions.regular;
         var altButton = rvArgs.row.fields._actions.valueDiv.actions.alt;
@@ -87,6 +87,19 @@ var F = function(args) {
 
         //sic.dump(rvArgs.row.fields._actions.valueDiv.actions, 0);
         //sic.dump(rvArgs.rowData, 0);
+    });
+
+    dataTable.onFirstFeedComplete(function() {
+        var saveButton = new sic.widget.sicElement({parent:dataTable.dsControl.selector});
+        saveButton.selector.addClass("inline filterButton vmid");
+        var saveButtonImg = new sic.widget.sicElement({parent:saveButton.selector, tagName:"img", tagClass:"icon12 vmid"});
+        saveButtonImg.selector.attr("src", "/img/icon/apply.png");
+        var saveButtonSpan = new sic.widget.sicElement({parent:saveButton.selector, tagName:"span", tagClass:"vmid"});
+        saveButtonSpan.selector.html("Save changes");
+        saveButton.selector.click(function(e){
+            sic.callMethod({moduleName:"Regular/RegDoublesDefine", methodName:"saveSelected"},
+                function(response) { if (response.status) tabPage.parentTab.destroyTab(); });
+        });
     });
 
 };

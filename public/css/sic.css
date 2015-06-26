@@ -108,6 +108,8 @@ div.multiSelectButton { padding:4px; cursor:pointer; }
 div.multiSelectButton:hover { background:#DDEEFF;  }
 div.multiSelectButton.selected { background:#99BBDD; }
 
+div.sicMultiSelect > .buttonsContainer > hr { margin:4px 2px; }
+
 /* sicDataTable */
 img.dataTableSortIcon { margin-left:6px; }
 div.sicDataTable { margin:5px; }

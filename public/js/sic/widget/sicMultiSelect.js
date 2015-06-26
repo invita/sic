@@ -60,6 +60,13 @@ sic.widget.sicMultiSelect = function(args)
 
     };
 
+    this.addHr = function(){
+        var hr = new sic.widget.sicElement({parent:_p.buttonsContainer.selector, tagName:"hr"});
+        //_p.buttons[index] = hr;
+        return hr;
+
+    };
+
     this.getValue = function(){
         var result = [];
         for (var i in _p.buttons)

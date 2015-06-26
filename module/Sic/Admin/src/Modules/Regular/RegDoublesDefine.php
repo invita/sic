@@ -25,7 +25,7 @@ class RegDoublesDefine extends SicModuleAbs
             ->join('publication_doubles_selected',
                 new Expression('publication_doubles_selected.pub_id = view_publication_list.pub_id ' .
                     'AND publication_doubles_selected.user_id = ' . $userId),
-                array("user_id"),
+                array("user_id", "temp_original_id"),
                 Select::JOIN_INNER);
 
 
@@ -43,7 +43,7 @@ class RegDoublesDefine extends SicModuleAbs
                 'pub_id' => $row['pub_id'],
                 'parent_id' => $row['parent_id'],
                 'series_id' => $row['series_id'],
-                'original_id' => $row['original_id'],
+                'temp_original_id' => $row['temp_original_id'],
 
                 'creator' => Util::shortenText($row['creator'], PubEdit::$creatorMaxLen),
                 'title' => Util::shortenText($row['title'], PubEdit::$titleMaxLen),
@@ -96,9 +96,9 @@ class RegDoublesDefine extends SicModuleAbs
         foreach ($selectedPubs as $selPub) {
             $selPubId = $selPub["pub_id"];
             if ($selPubId == $pubId)
-                DbUtil::updateTable("publication", array("original_id" => -1), array("pub_id" => $selPubId));
+                DbUtil::updateTable("publication_doubles_selected", array("temp_original_id" => -1), array("pub_id" => $selPubId, "user_id" => $userId));
             else
-                DbUtil::updateTable("publication", array("original_id" => $pubId), array("pub_id" => $selPubId));
+                DbUtil::updateTable("publication_doubles_selected", array("temp_original_id" => $pubId), array("pub_id" => $selPubId, "user_id" => $userId));
         }
 
         return array("status" => true);
@@ -114,16 +114,34 @@ class RegDoublesDefine extends SicModuleAbs
 
         $regularPubId = null;
         foreach ($selectedPubs as $selPub) {
-            $pub = DbUtil::selectRow("publication", null, array("pub_id" => $selPub["pub_id"]));
-            if (isset($pub["original_id"]) && $pub["original_id"] == -1) {
+            //$pub = DbUtil::selectRow("publication", null, array("pub_id" => $selPub["pub_id"]));
+            if (isset($selPub["temp_original_id"]) && $selPub["temp_original_id"] == -1) {
                 $regularPubId = $selPub["pub_id"];
                 break;
             }
         }
 
-        if (!$regularPubId) return array("status" => false, "message" => "No Regular entity selected!");
+        if (!$regularPubId) return array("status" => false, "alert" => "Entity can not be marked as Alternative because no listed entity is marked Regular!");
 
-        DbUtil::updateTable("publication", array("original_id" => $regularPubId), array("pub_id" => $pubId));
+        DbUtil::updateTable("publication_doubles_selected", array("temp_original_id" => $regularPubId), array("pub_id" => $pubId));
+
+        return array("status" => true);
+    }
+
+    public function saveSelected($args) {
+        $userId = Util::getUserId();
+        $selectedPubs = DbUtil::selectFrom("publication_doubles_selected", null, array("user_id" => $userId));
+
+        // Check if Regular selected
+        foreach ($selectedPubs as $selPub) {
+            DbUtil::updateTable("publication", array("original_id" => $selPub['temp_original_id']), array("pub_id" => $selPub['pub_id']));
+        }
+
+        foreach ($selectedPubs as $selPub) {
+            DbUtil::updateTable("publication", array("original_id" => $selPub['temp_original_id']), array("pub_id" => $selPub['pub_id']));
+        }
+
+        DbUtil::deleteFrom("publication_doubles_selected", array("user_id" => $userId));
 
         return array("status" => true);
     }
