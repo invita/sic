@@ -1228,13 +1228,13 @@ sic.widget.sicDataTableDataSource = function(args) {
 
     this.exportXls = function(args) {
         return sic.callMethod(_p.getMethodCallData(_p.methodNames.exportXls, args), function(rArgs) {
-            if (rArgs.status && rArgs.link) window.open(rArgs.link, "_blank");
+            if (rArgs.status && rArgs.link) location.href = rArgs.link;
         });
     }
 
     this.exportCsv = function(args) {
         return sic.callMethod(_p.getMethodCallData(_p.methodNames.exportCsv, args), function(rArgs) {
-            if (rArgs.status && rArgs.link) window.open(rArgs.link, "_blank");
+            if (rArgs.status && rArgs.link) location.href = rArgs.link;
         });
     }
 }
