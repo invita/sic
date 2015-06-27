@@ -11,7 +11,7 @@ var F = function(args) {
         entityTitle: "Entity %pub_id% - %title%",
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Pub/PubList",
-            pageCount: 3,
+            pageCount: 15,
             filter: {
                 original_id:"-1,0"
             }
