@@ -40,7 +40,8 @@ CREATE FUNCTION levenshtein( s1 VARCHAR(255), s2 VARCHAR(255) )
     RETURN c; 
   END $$
 
-CREATE FUNCTION levenshtein_ratio( s1 VARCHAR(255), s2 VARCHAR(255) ) 
+DROP FUNCTION IF EXISTS `sic`.`levenshtein_ratio` $$
+CREATE FUNCTION levenshtein_ratio( s1 VARCHAR(255), s2 VARCHAR(255) )
   RETURNS INT 
   DETERMINISTIC 
   BEGIN 

@@ -54,7 +54,7 @@ abstract class SicModuleAbs
                 foreach ($filter as $key => $val) {
                     if (!$val) continue;
                     if ($levenExpr) $levenExpr .= " + ";
-                    $levenExpr .= "levenshtein(".$key.", '".$val."')";
+                    $levenExpr .= "levenshtein(COALESCE(".$key.", ''), '".$val."')";
                     break;
                 }
 
