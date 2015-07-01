@@ -64,7 +64,7 @@ abstract class SicModuleAbs
 
                 $select->order("leven ASC");
 
-                print_r($select->getSqlString());
+                //print_r($select->getSqlString());
                 break;
         }
     }
