@@ -63,6 +63,8 @@ abstract class SicModuleAbs
                 $select->columns($columns);
 
                 $select->order("leven ASC");
+
+                print_r($select->getSqlString());
                 break;
         }
     }
