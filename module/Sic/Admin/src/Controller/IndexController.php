@@ -23,8 +23,12 @@ class IndexController extends AbstractActionController
         $this->layout()->setVariable("hasIdentity", $this->hasIdentity);
         if ($this->hasIdentity){
             $identity = $auth->getIdentity();
+
             $username = isset($identity['username']) ? $identity['username'] : '';
             $this->layout()->setVariable("username", $username);
+
+            $power = isset($identity['power']) ? $identity['power'] : 0;
+            $this->layout()->setVariable("power", $power);
         }
 
         return parent::onDispatch( $e );
@@ -141,6 +145,24 @@ class IndexController extends AbstractActionController
         $result = array('data' => $respData);
 
         echo json_encode($result);
+
+        exit;
+    }
+
+    public function downloadAction()
+    {
+        $downloadPath = Util::getDownloadPath();
+        $fileName = Util::getArg($_GET, "fileName", "");
+
+        if ($fileName && file_exists($downloadPath."/".$fileName)) {
+
+            $contentType = Util::getMimeTypeFromFileName($fileName);
+            header('Content-Type: '.$contentType);
+            header('Content-Disposition: attachment; filename="'.$fileName.'"');
+            echo file_get_contents($downloadPath."/".$fileName);
+        } else {
+            echo "File not found";
+        }
 
         exit;
     }

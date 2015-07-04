@@ -15,6 +15,10 @@ class DbUtil
     public static $lastRowsAffected = 0;
     public static $lastSqlSelect = 0;
 
+    public static $pubTableNames = array(
+        "addidno","addtitle","creator","edition","idno","issue","note","online",
+        "page","place","publisher","source","strng","title","volume","year"
+    );
 
     // Sql Select
     public static function selectFrom($table, $fields = null, $where = null, $limit = null) {

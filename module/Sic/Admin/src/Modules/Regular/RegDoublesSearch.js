@@ -2,7 +2,8 @@ var F = function(args) {
 
     var tabPage = args.helpers.createTabPage({name:"Find Doubles"});
 
-    var selectFieldNames = ["parent_id", "series_id", "creator", "title", "addtitle", "idno", "year"];
+    var selectFieldNames = ["parent_id", "series_id", "original_id", "creator", "title", "addtitle", "idno", "addidno", "---",
+        "year", "publisher", "edition", "place", "issue", "online", "note", "strng", "source", "page", "volume"];
 
     var dataTable = new sic.widget.sicDataTable({
         parent:tabPage.content.selector,
@@ -12,7 +13,8 @@ var F = function(args) {
         canInsert: false,
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Regular/RegDoublesSearch",
-            pageCount: 20
+            pageCount: 20,
+            filterMode: "levenshtein"
         }),
         editorModuleArgs: {
             moduleName:"Pub/PubEdit",
@@ -23,6 +25,7 @@ var F = function(args) {
             pub_id: { hintF: function(args) { sic.hint.publication(args.row.lastRowData.pub_id) } },
             parent_id: { hintF: function(args) { sic.hint.publication(args.row.lastRowData.parent_id) } },
             series_id: { hintF: function(args) { sic.hint.publication(args.row.lastRowData.series_id) } },
+            original_id: { visible: false, caption: "Regular/Alt" },
             creator: { tagClass:"sicDataTable_shortText",
                 hintF: function(args) { sic.showHint(sic.replacePipes(args.row.lastRowData.__creator_long, "<br/>")); } },
             title: { tagClass:"sicDataTable_shortText",
@@ -30,7 +33,19 @@ var F = function(args) {
             addtitle: { tagClass:"sicDataTable_shortText", caption: "Add Title", visible: false,
                 hintF: function(args) { sic.showHint(sic.replacePipes(args.row.lastRowData.__addtitle_long, "<br/>")); } },
             idno: { visible: false },
+            addidno: { visible: false, caption:"Add Idno" },
+
             year: { visible: false },
+            publisher: { visible: false },
+            edition: { visible: false },
+            place: { visible: false },
+            issue: { visible: false },
+            online: { visible: false },
+            note: { visible: false },
+            strng: { visible: false, caption:"String" },
+            source: { visible: false },
+            page: { visible: false },
+            volume: { visible: false },
         }
     });
 
@@ -95,13 +110,17 @@ var F = function(args) {
         fieldSelect.displayNone();
 
         for (var i in selectFieldNames) {
-            var fieldCaption = sic.captionize(selectFieldNames[i]);
-            if (dataTable.fields[selectFieldNames[i]] && dataTable.fields[selectFieldNames[i]].caption)
-                fieldCaption = dataTable.fields[selectFieldNames[i]].caption;
-            var selected = !(dataTable.fields[selectFieldNames[i]] && dataTable.fields[selectFieldNames[i]].visible === false);
+            if (selectFieldNames[i] == '---') {
+                var hr = fieldSelect.addHr();
+            } else {
+                var fieldCaption = sic.captionize(selectFieldNames[i]);
+                if (dataTable.fields[selectFieldNames[i]] && dataTable.fields[selectFieldNames[i]].caption)
+                    fieldCaption = dataTable.fields[selectFieldNames[i]].caption;
+                var selected = !(dataTable.fields[selectFieldNames[i]] && dataTable.fields[selectFieldNames[i]].visible === false);
 
-            var option = fieldSelect.addButton(selectFieldNames[i], fieldCaption);
-            option.setSelected(selected);
+                var option = fieldSelect.addButton(selectFieldNames[i], fieldCaption);
+                option.setSelected(selected);
+            }
         }
 
         fieldSelect.onSelectionChange(function(button) {
@@ -121,6 +140,23 @@ var F = function(args) {
             }
         });
 
+    });
+
+    dataTable.onDataFeedComplete(function(eArgs) {
+        for (var i in dataTable.rows)
+            dataTable.rows[i].selector.removeClass("alternative regular");
+
+        for (var i in dataTable.rows) {
+            var row = dataTable.rows[i].getValue();
+            if (row.original_id == -1) {
+                // Is Original
+                dataTable.rows[i].selector.addClass("regular");
+            } else
+            if (row.original_id > 0) {
+                // Is Alternative
+                dataTable.rows[i].selector.addClass("alternative");
+            }
+        }
     });
 
 

@@ -141,7 +141,7 @@ var F = function(args) {
 
         pub_id: { caption:"id", placeholder:"Entity Identifier" },
         idno: { caption:"idno", placeholder:"Identifier", isArray:true, withCode:sic.codes.pubIdno },
-        title: { caption:"title", placeholder:"Title", isArray:true },
+        title: { caption:"title", placeholder:"Title", isArray:true, type:"textarea" },
         creator: { caption:"creator", placeholder:"Creator", isArray:true, withCode:sic.codes.pubCreator },
         year: { caption:"date", placeholder:"Date", isArray:true },
 
@@ -167,7 +167,7 @@ var F = function(args) {
     //var pubCopyParams
 
     var pubSearchForm = new sic.widget.sicForm({parent:pubSearchGroup.content.selector, captionWidth:"100px",
-        showCopyPaste:true, inputClass:"searchInput"});
+        inputClass:"searchInput"});
     for (var fieldName in searchFields) {
         if (fieldName[0] == "_") {
             pubSearchForm.addCaption(searchFields[fieldName]);

@@ -2,13 +2,19 @@ var F = function(args) {
 
     var tabPage = args.helpers.createTabPage({name:"List"});
 
+    var showAlts = false;
+
+
     var dataTable = new sic.widget.sicDataTable({
         parent:tabPage.content.selector,
         primaryKey: ['pub_id'],
         entityTitle: "Entity %pub_id% - %title%",
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Pub/PubList",
-            pageCount: 20
+            pageCount: 15,
+            filter: {
+                original_id:"-1,0"
+            }
         }),
         editorModuleArgs: {
             moduleName:"Pub/PubEdit",
@@ -18,6 +24,7 @@ var F = function(args) {
             pub_id: { hintF: function(args) { sic.hint.publication(args.row.lastRowData.pub_id) } },
             parent_id: { hintF: function(args) { sic.hint.publication(args.row.lastRowData.parent_id) } },
             series_id: { hintF: function(args) { sic.hint.publication(args.row.lastRowData.series_id) } },
+            //original_id: { visible:false },
             creator: { tagClass:"sicDataTable_shortText",
                 hintF: function(args) { sic.showHint(sic.replacePipes(args.row.lastRowData.__creator_long, "<br/>")); } },
             title: { tagClass:"sicDataTable_shortText",
@@ -25,58 +32,45 @@ var F = function(args) {
         }
     });
 
-    /*
-    dataTable.onFirstFeedComplete(function(eArgs) {
-        var table = dataTable.table.selector.dataTable({
-            dom: 'T<"clear">lfrtip',
-            paging: false,
-            ordering: false,
-            info: false,
-            bFilter: false,
-            tableTools: {
-                "sSwfPath": "/lib/jquery/copy_csv_xls_pdf.swf"
+    dataTable.onFirstFeedComplete(function() {
+        var showHideAlts = new sic.widget.sicElement({parent:dataTable.dsControl.selector});
+        showHideAlts.selector.addClass("inline filterButton vmid");
+        var showHideAltsImg = new sic.widget.sicElement({parent:showHideAlts.selector, tagName:"img", tagClass:"icon12 vmid"});
+        showHideAltsImg.selector.attr("src", "/img/icon/lookup.png");
+        var showHideAltsSpan = new sic.widget.sicElement({parent:showHideAlts.selector, tagName:"span", tagClass:"vmid"});
+        showHideAltsSpan.selector.html("Show alternatives");
+        showHideAlts.selector.click(function(e){
+            if (showAlts) {
+                dataTable.filterRow.fields.original_id.setFilterValue("-1,0");
+                showHideAltsSpan.selector.html("Show alternatives");
+                showAlts = false;
+            } else {
+                dataTable.filterRow.fields.original_id.setFilterValue("");
+                showHideAltsSpan.selector.html("Hide alternatives");
+                showAlts = true;
             }
+
+            dataTable.applyFilter();
+            dataTable.refresh();
         });
-
-        var tableTools = new $.fn.dataTable.TableTools(table, {
-            buttons: [
-                "copy",
-                "csv",
-                "xls",
-                "pdf",
-                { type: "print", buttonText: "Print me!" }
-            ],
-            "sSwfPath": "/lib/jquery/copy_csv_xls_pdf.swf"
-        });
-
-        $(tableTools.fnContainer()).insertAfter('div.info');
-
     });
-    */
 
+    dataTable.onDataFeedComplete(function(eArgs) {
+        for (var i in dataTable.rows)
+            dataTable.rows[i].selector.removeClass("alternative regular");
 
-    /*
-
-    var dataTable = new sic.widget.sicDataTable({
-        parent:tabPage.content.selector,
-        canDelete: false,
-        primaryKey: ['pub_id'],
-        entityTitle: "Pub %pub_id% - %title%",
-        dataSource: new sic.widget.sicDataTableDataSource({
-            moduleName:"Test/TestDT"
-        }),
-        actions: {
-            createPub: {
-                label: 'Create Pub',
-                type: 'button',
-                onClick: function(args) {
-                    sic.dump(args.action, 0);
-                    //alert('Create Pub');
+        if (true || showAlts) {
+            for (var i in dataTable.rows) {
+                var row = dataTable.rows[i].getValue();
+                if (row.original_id == -1) {
+                    // Is Original
+                    dataTable.rows[i].selector.addClass("regular");
+                } else
+                if (row.original_id > 0) {
+                    // Is Alternative
+                    dataTable.rows[i].selector.addClass("alternative");
                 }
             }
         }
     });
-
-    */
-
 };

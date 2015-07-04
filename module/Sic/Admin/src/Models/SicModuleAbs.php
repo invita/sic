@@ -1,6 +1,8 @@
 <?php
 namespace Sic\Admin\Models;
 
+use Zend\Db\Sql\Predicate\Expression;
+use Zend\Db\Sql\Predicate\Literal;
 use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
 use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Select;
@@ -27,16 +29,44 @@ abstract class SicModuleAbs
         $pageStart = intval(Util::getArg($args, 'pageStart', 0));
         $pageCount = intval(Util::getArg($args, 'pageCount', 5));
 
-        if ($sortField) $select->order($sortField." ".$sortOrder);
+        if ($sortField) {
+            $orderArray = $select->getRawState(Select::ORDER);
+            $select->order(array_merge($orderArray, array($sortField." ".$sortOrder)));
+        }
         $select->offset($pageStart);
         $select->limit($pageCount);
     }
 
     public function defineSqlSelectFilter($args, Select $select) {
         $filter = Util::getArg($args, 'filter', array());
-        $filterWhere = DbUtil::prepareSqlFilter($filter);
-        if (count($filterWhere->getPredicates()))
-            $select->where->addPredicate($filterWhere);
+        $filterMode = Util::getArg($args, 'filterMode', 'normal');
+        switch($filterMode) {
+            case "normal": default:
+                $filterWhere = DbUtil::prepareSqlFilter($filter);
+                if (count($filterWhere->getPredicates()))
+                    $select->where->addPredicate($filterWhere);
+                break;
+            case "levenshtein":
+
+                $columns = $select->getRawState(Select::COLUMNS);
+                //print_r($columns);
+                $levenExpr = "";
+                foreach ($filter as $key => $val) {
+                    if (!$val) continue;
+                    if ($levenExpr) $levenExpr .= " + ";
+                    $levenExpr .= "levenshtein(COALESCE(".$key.", ''), '".$val."')";
+                    break;
+                }
+
+                if (!$levenExpr) $levenExpr = "'0'";
+                $columns = array_merge($columns, array("leven" => new Expression("(".$levenExpr.")")));
+                $select->columns($columns);
+
+                $select->order("leven ASC");
+
+                //print_r($select->getSqlString());
+                break;
+        }
     }
 
     public function defineDataTableResponseData($args, ResultInterface $result) {
@@ -48,18 +78,6 @@ abstract class SicModuleAbs
     }
 
     public function defineRowCount($args, Select $select) {
-
-        /*
-        $adapter = GlobalAdapterFeature::getStaticAdapter();
-        $sql = new Sql($adapter);
-        $select->columns(array("count" => new \Zend\Db\Sql\Expression('COUNT(*)')));
-        $statement = $sql->prepareStatementForSqlObject($select);
-        $sqlResult = $statement->execute();
-        $row = $sqlResult->current();
-        $rowCount = Util::getArg($row, 'count', 0);
-        return $rowCount;
-        */
-
         $adapter = GlobalAdapterFeature::getStaticAdapter();
         $sql = new Sql($adapter);
         $statement = $sql->prepareStatementForSqlObject($select);
@@ -159,6 +177,132 @@ abstract class SicModuleAbs
         $result['rowsAffected'] = $rowsAffected;
         return $result;
     }
+    //</editor-fold>
+
+
+    //<editor-fold desc="DataTable Export">
+
+    public function prepareExportData($args) {
+        $selectResp = $this->dataTableSelect($args);
+        $data = Util::getArg($selectResp, "data", array());
+        foreach($data as $idx => $line) {
+            foreach($line as $fieldName => $fieldValue) {
+                if (substr($fieldName, 0, 1) == '_')
+                    unset($line[$fieldName]);
+                else if (is_array($fieldValue))
+                    $line[$fieldName] = join(',', $fieldValue);
+            }
+            $data[$idx] = $line;
+        }
+        return $data;
+    }
+
+    public function dataTableExportXls($args) {
+
+        $data = $this->prepareExportData($args);
+        if (!$data) {
+            return array(
+                "status" => false,
+                "alert" => "No data in dataTable"
+            );
+        }
+
+        $headerFields = array_keys($data[0]);
+        $filePath = Util::getDownloadPath();
+        $userId = Util::getUserId();
+        $moduleName = Util::getArg($args, 'moduleName', 'dataTable');
+        $title = ucwords(str_replace('/', ' - ', $moduleName));
+        $fileName = "sic.".$userId.".export.".strtolower(str_replace('/', '.', $moduleName)).".xlsx";
+
+        include __DIR__."/../../../../../library/PHPExcel/PHPExcel.php";
+
+        $errReporting = error_reporting();
+        error_reporting(0);
+
+        $objPHPExcel = new \PHPExcel();
+        $objPHPExcel->getProperties()->setCreator("sic");
+        $objPHPExcel->getProperties()->setLastModifiedBy("sic");
+        $objPHPExcel->getProperties()->setTitle($title);
+        //$objPHPExcel->getProperties()->setSubject("Data export");
+        //$objPHPExcel->getProperties()->setDescription("SAMPLE1");
+        $worksheet = $objPHPExcel->getActiveSheet();
+
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, "Excel2007");
+
+        // Title Row
+        $worksheet->getStyle('A1')->getFont()->setBold(true);
+        $worksheet->getStyle('A1')->getFont()->setColor(new \PHPExcel_Style_Color('FF3366CC'));
+        $worksheet->setCellValue('A1', $title);
+        $worksheet->mergeCells("A1:".(chr(64 + min(count($headerFields), 26)))."1");
+
+        // Header Row
+        $worksheet->fromArray($headerFields, NULL, 'A2' );
+
+        // Data Rows
+        $worksheet->fromArray($data, NULL, 'A3' );
+
+        // Write
+        $objWriter->save($filePath."/".$fileName);
+
+        error_reporting($errReporting);
+
+        return array(
+            "status" => true,
+            "file" => $filePath."/".$fileName,
+            "link" => "/download?fileName=".$fileName
+        );
+    }
+
+    public function dataTableExportCsv($args) {
+
+        $data = $this->prepareExportData($args);
+        if (!$data) {
+            return array(
+                "status" => false,
+                "alert" => "No data in dataTable"
+            );
+        }
+
+        $headerFields = array_keys($data[0]);
+        $filePath = Util::getDownloadPath();
+        $userId = Util::getUserId();
+        $moduleName = Util::getArg($args, 'moduleName', 'dataTable');
+        $fileName = "sic.".$userId.".export.".strtolower(str_replace('/', '.', $moduleName)).".csv";
+        $fieldSep = ";";
+        $lineSep = "\n";
+
+        $csvContent = "";
+
+        // Header Row
+        foreach($headerFields as $headerField) {
+            if ($csvContent) $csvContent .= $fieldSep;
+            $csvContent .= $headerField;
+        }
+        $csvContent .= $lineSep;
+
+        // Data Rows
+        foreach($data as $line) {
+            $lineStr = '';
+            foreach ($line as $fieldName => $fieldValue) {
+                if ($lineStr !== '') $lineStr .= $fieldSep;
+                $lineStr .= $fieldValue;
+            }
+            $csvContent .= $lineStr.$lineSep;
+        }
+
+        // Prepend utf-8 Byte Order Mark characters
+        $bom = chr(0xEF).chr(0xBB).chr(0xBF);
+        $csvContent = $bom.$csvContent;
+
+        file_put_contents($filePath."/".$fileName, $csvContent);
+
+        return array(
+            "status" => true,
+            "file" => $filePath."/".$fileName,
+            "link" => "/download?fileName=".$fileName
+        );
+    }
+
     //</editor-fold>
 
 //</editor-fold>

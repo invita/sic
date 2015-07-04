@@ -16,4 +16,19 @@ class Codes
         );
         return $result;
     }
+
+    public function getCodesMap() {
+        $codes = $this->getCodes(null);
+
+        $result = array();
+        foreach ($codes as $codeName => $codesTable) {
+            $result[$codeName] = array();
+            foreach ($codesTable as $codeRow) {
+                $codeId = $codeRow['code_id'];
+                $value = $codeRow['value'];
+                $result[$codeName][$codeId] = $value;
+            }
+        }
+        return $result;
+    }
 }

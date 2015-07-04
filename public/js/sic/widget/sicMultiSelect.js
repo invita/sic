@@ -60,28 +60,44 @@ sic.widget.sicMultiSelect = function(args)
 
     };
 
+    this.addHr = function(){
+        var hr = new sic.widget.sicElement({parent:_p.buttonsContainer.selector, tagName:"hr"});
+        //_p.buttons[index] = hr;
+        return hr;
+
+    };
+
     this.getValue = function(){
-        var result = [];
-        for (var i in _p.buttons)
-            if (_p.buttons[i].isSelected)
-                result.push(_p.buttons[i].index);
-        return result;
+        if (_p.multiSelect) {
+            var result = [];
+            for (var i in _p.buttons)
+                if (_p.buttons[i].isSelected)
+                    result.push(_p.buttons[i].index);
+            return result;
+        } else {
+            for (var i in _p.buttons)
+                if (_p.buttons[i].isSelected)
+                    return _p.buttons[i].index;
+        }
     };
 
     this.setValues = function(value){
         if (value && value.length) {
             _p.buttons = {};
             _p.buttonsContainer.selector.empty();
-            for (var i in value)
+            for (var i in value) {
                 _p.addButton(value[i]);
+            }
         }
     };
 
     this.setValue = function(value){
-        if (value && value.length) {
+        if (value && $.isArray(value)) {
             _p.clear();
             for (var i in value) _p.buttons[value[i]].setSelected(true);
             this.value = value;
+        } else if (_p.buttons[value]) {
+            _p.buttons[value].setSelected(true);
         }
     };
 

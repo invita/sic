@@ -37,34 +37,37 @@ class ProjectEdit_ProjectLinesDT extends SicModuleAbs {
             $resultLine['proj_id'] = $row['proj_id'];
             //$resultLine['xml'] = $row['xml'];
 
-            $entity = new \SimpleXMLElement($row['xml']);
-
-            //$resultLine['title'] = $row['title'];
-
             // Copy Line columns
             $resultLine['line'] = array(
                 "line_id" => $row['line_id'],
                 "idx" => $row['idx'],
                 "---" => ""
             );
-            foreach ($lineColumns as $lineColName) {
 
-                $resultLine['line'][$lineColName] = Util::getXmlFieldValue($entity, $lineColName, false);
+            if ($row['xml']) {
+                $entity = new \SimpleXMLElement($row['xml']);
 
-                // Add hr after idx
-                //if ($lineColName == 'idx') $resultLine['line']['---'] = "";
-            }
-            //unset($resultLine['line']["line_id"]);
+                //$resultLine['title'] = $row['title'];
 
-            // Select Publication columns
-            $resultLine['publication'] = array();
-            if ($row['pub_id']) {
-                $pubVals = DbUtil::selectRow('view_publication_list', $pubColumns, array('pub_id' => $row['pub_id']));
-                foreach ($pubVals as $pubKey => $pubVal) {
-                    $resultLine['publication'][$pubKey] = str_replace("||", ", ", $pubVal);
+                foreach ($lineColumns as $lineColName) {
 
-                    // Add hr after pub_id
-                    if ($pubKey == 'parent_id') $resultLine['publication']['---'] = "";
+                    $resultLine['line'][$lineColName] = Util::getXmlFieldValue($entity, $lineColName, false);
+
+                    // Add hr after idx
+                    //if ($lineColName == 'idx') $resultLine['line']['---'] = "";
+                }
+                //unset($resultLine['line']["line_id"]);
+
+                // Select Publication columns
+                $resultLine['publication'] = array();
+                if ($row['pub_id']) {
+                    $pubVals = DbUtil::selectRow('view_publication_list', $pubColumns, array('pub_id' => $row['pub_id']));
+                    foreach ($pubVals as $pubKey => $pubVal) {
+                        $resultLine['publication'][$pubKey] = str_replace("||", ", ", $pubVal);
+
+                        // Add hr after pub_id
+                        if ($pubKey == 'parent_id') $resultLine['publication']['---'] = "";
+                    }
                 }
             }
 

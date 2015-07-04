@@ -14,7 +14,7 @@ sic.widget.sicInput = function(args)
     this.type = sic.getArg(args, "type", "text");
     this.inputType = this.type;
     switch(this.type){
-        case "textarea": this.inputTagName = "textarea"; break;
+        case "textarea":case "codemirror": this.inputTagName = "textarea"; break;
         case "flat": this.inputTagName = "input"; this.inputType = "text"; break;
         default: this.inputTagName = "input"; break;
     }
@@ -47,12 +47,14 @@ sic.widget.sicInput = function(args)
     // Create elements
     this.input = new sic.widget.sicElement({ parent:this.selector, tagName:this.inputTagName, tagClass:this.inputClass });
     this.input.selector.addClass("sicInput");
+    if (this.inputType == "codemirror")
+        this.input.selector.addClass("sicCodeMirror");
     this.inputs = [this.input];
 
     // Implementation
     if (!this.name) this.name = sic.widget._nextInputId();
 
-    if (this.inputType != "textarea")
+    if (this.inputType != "textarea" && this.inputType != "codemirror")
         this.input.selector.attr("type", this.inputType);
 
     if (this.name)
@@ -182,6 +184,7 @@ sic.widget.sicInput = function(args)
     this.getValue = function(){
         var val = _p.input.selector.val();
         if (_p.type == "checkbox") val = _p.input.selector.prop("checked");
+        if (_p.type == "codemirror") val = _p.codemirror.getValue();
 
         if (_p.withCode)
             return { codeId: _p.getCodeId(), value: val };
@@ -197,6 +200,8 @@ sic.widget.sicInput = function(args)
         if (_p.type == "checkbox") {
             value = value ? true : false;
             _p.input.selector.prop("checked", value);
+        } else if (_p.type == "codemirror") {
+            _p.codemirror.setValue(value);
         } else {
             _p.input.selector.val(value);
         }
@@ -341,9 +346,17 @@ sic.widget.sicInput = function(args)
         this.captionDiv.displayNone();
 
     if (this.placeholder) this.setPlaceholder(this.placeholder);
-    this.setValue(this.value);
     if (this.gradient) this.input.setGradient(this.gradient);
 
+    if (this.type == "codemirror") {
+        this.codemirror = CodeMirror.fromTextArea(this.input.selector[0], {
+            lineNumbers: true,
+            //mode: "text/html",
+            matchBrackets: true
+        });
+    }
+
+    this.setValue(this.value);
 };
 
 // Id Generator

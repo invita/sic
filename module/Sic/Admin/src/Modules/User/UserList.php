@@ -12,7 +12,7 @@ class UserList extends SicModuleAbs {
     public function defineSqlSelect($args, Select $select)
     {
         $select->from('user')->columns(array(
-            'id', 'username', 'email', 'notes',
+            'id', 'username', 'email', 'notes', 'power',
             'password' => new Literal("'(hidden)'")
         ));
     }

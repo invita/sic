@@ -9,11 +9,14 @@ sic.widget.sicPanel = function(args)
     this.firstGroup = null;
 
     // Settings
+    this.layoutClass = sic.getArg(args, "layoutClass", "sicPanelFlowLayout");
     this.firstGroupName = sic.getArg(args, "firstGroupName", "");
 
     // Implementation
+    this.selector.addClass(this.layoutClass);
+
     this.addGroup = function(groupName){
-        var group = new sic.widget.sicPanelGroup({parent:_p.selector, name:groupName});
+        var group = new sic.widget.sicPanelGroup({parent:_p.selector, name:groupName, layoutClass: _p.layoutClass});
         _p.groups.push(group);
         if (!_p.firstGroup) _p.firstGroup = group;
         return group;
@@ -30,6 +33,9 @@ sic.widget.sicPanelGroup = function(args){
     this.selector.addClass("sicPanelGroup");
 
     this.name = sic.getArg(args, "name", "");
+    this.layoutClass = sic.getArg(args, "layoutClass", "sicPanelFlowLayout");
+
+    this.selector.addClass(this.layoutClass);
 
     // Header
     this.header = new sic.widget.sicElement({parent:this.selector});
