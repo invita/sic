@@ -31,6 +31,17 @@ class Util
         return realpath(self::get('downloadPath')).'/';
     }
 
+    public static function getSolrConfigPath($fileName) {
+        $solrConfigPaths = self::get('solrConfigPaths');
+        if (!$solrConfigPaths) return false;
+
+        if (isset($solrConfigPaths[$fileName])) {
+            return realpath($solrConfigPaths[$fileName]).'/';
+        }
+
+        return false;
+    }
+
     public static function set($key, $val) {
         self::$dict[$key] = $val;
     }

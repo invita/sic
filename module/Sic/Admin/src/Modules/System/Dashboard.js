@@ -16,5 +16,5 @@ var F = function(args){
         valDiv.selector.html(data[key]);
     }
 
-    //tabPage.content.selector.html(sic.debug(data, 2, '<br/>\n'));
+    sic.loadModule({moduleName:"System/SolrConfig", tabPage:tabPage, newTab:"Solr Config" });
 };

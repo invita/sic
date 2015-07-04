@@ -79,6 +79,10 @@ return array(
     ),
     'sic' => array(
         'uploadPath' => 'data/upload',
-        'downloadPath' => 'data/download'
+        'downloadPath' => 'data/download',
+        'solrConfigPaths' => array(
+            'test.xml' => 'data/download',
+            'schema.xml' => 'data/download',
+        )
     ),
 );
