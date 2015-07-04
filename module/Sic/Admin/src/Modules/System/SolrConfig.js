@@ -42,33 +42,4 @@ var F = function(args){
         }
     });
 
-
-    /*
-    var tabPageSchema = args.helpers.createTabPage({name:"Schema.xml"});
-    var schemaForm = new sic.widget.sicForm({parent:tabPageSchema.content.selector});
-    var schemaInput = schemaForm.addInput({name:"content", type:"codemirror", placeholder:"schema.xml...", caption:false});
-    schemaForm.addInput({name:"save", type:"submit", value:"Save", caption:false}).selector.click(function(e){
-        sic.callMethod({moduleName:"System/SolrConfig", methodName:"saveConfig",
-            fileName:"schema.xml", fileContent:schemaInput.getValue()}, function(rArgs) {});
-    });
-
-    var tabPageTest = tabPageSchema.createTabPage({name:"Test.xml", canClose:false});
-    var testForm = new sic.widget.sicForm({parent:tabPageTest.content.selector});
-    var testInput = testForm.addInput({name:"test.xml", type:"codemirror", placeholder:"test.xml...", caption:false});
-    testForm.addInput({name:"save", type:"submit", value:"Save", caption:false}).selector.click(function(e){
-        sic.callMethod({moduleName:"System/SolrConfig", methodName:"saveConfig",
-            fileName:"test.xml", fileContent:testInput.getValue()}, function(rArgs) {});
-    });
-
-     // *** Load Config ***
-     sic.callMethod({moduleName:"System/SolrConfig", methodName:"loadConfig", fileName:"schema.xml"}, function(rArgs) {
-     if (rArgs.status) schemaInput.setValue(rArgs.fileContent);
-     });
-
-     sic.callMethod({moduleName:"System/SolrConfig", methodName:"loadConfig", fileName:"test.xml"}, function(rArgs) {
-     if (rArgs.status) testInput.setValue(rArgs.fileContent);
-     });
-
-*/
-
 };
