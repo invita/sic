@@ -299,6 +299,14 @@ sic.widget.sicDataTable = function(args)
             _p[cpName].filterSpan = new sic.widget.sicElement({parent:_p[cpName].filterDiv.selector, tagName:"span", tagClass:"vmid"});
             _p[cpName].filterSpan.selector.html("Filter");
             _p[cpName].filterDiv.selector.click(function(){ _p.toggleFilter(); });
+            _p[cpName].filterDiv.setHint("<b>Filter options:</b><br/>"+
+                "<br/>"+
+                "<b>*</b> - Add a star to search for any characters, example: 'John*' will find 'John Smith' and 'Johnny Bravo'<br/>"+
+                "<b>,</b> - List multiple values with comma, example: '1,2,3' will find values 1, 2 and 3<br/>"+
+                "<b>..</b> - Search by range with two dots, example: '1..5' will find values 1, 2, 3, 4 and 5.<br/>"+
+                "<br/>"+
+                "Note: All filter values are automatically fitted with stars on both ends. When you search for 'John', you actually search for '*John*'<br/>"+
+                "");
         }
     };
 

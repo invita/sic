@@ -34,3 +34,6 @@ div.hierarchyDiv.current { font-weight:bold; }
 tr.sicDataTableRow.projectLineFulfilled { background:#CCEECC; }
 tr.sicDataTableRow.projectLineFulfilled:nth-of-type(even) { background:#DDFFDD; }
 
+/* Regular/Alt Doubles */
+span.doublesSaveButton { color:#CC9933; }
+span.doublesSaveButton:hover { color:#DDAA66; }
