@@ -128,6 +128,10 @@ div.sicDataTable > table.sicDataTable_table tbody > tr.regular { background:#DDF
 div.sicDataTable > table.sicDataTable_table tbody > tr.alternative { background:#FFDDDD; }
 div.sicDataTable > table.sicDataTable_table tbody > tr > td.hoverable:hover { cursor:pointer; background:#DDEEFF; }
 div.sicDataTable > table.sicDataTable_table tbody > tr > td.sicDataTable_shortText > div { color:gray; font-size:11px; }
+div.sicDataTable > table.sicDataTable_table tbody > tr > td.dataTable_td_button { padding:0px; }
+div.sicDataTable > table.sicDataTable_table tbody > tr > td.dataTable_td_button > div { display:block; text-align: center;
+    padding: 4px; border-style:solid; border-color:#bbb #888 #666 #aaa; aborder-width:2px 2px 2px 2px; }
+
 div.sicDataTable > div.insertButton { margin-bottom:5px; cursor:pointer; }
 div.sicDataTable > div.insertButton > span { color:#6699CC; font-weight:bold; margin-left:4px; vertical-align:middle; }
 div.sicDataTable > div.insertButton > img { vertical-align:middle; }

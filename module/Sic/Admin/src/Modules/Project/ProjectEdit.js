@@ -102,6 +102,7 @@ var F = function(args) {
             }
         }
     });
+    linesTable.selector.addClass("projectLinesTable");
     linesTable.onRowSetValue(function(eArgs) {
         var lineForm = eArgs.row.fields.line.formViewInstance;
         var pubForm = eArgs.row.fields.publication.formViewInstance;

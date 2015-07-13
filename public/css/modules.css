@@ -23,6 +23,9 @@
 div.pubSearch_leftContainer { width:324px; display: inline-table; }
 div.pubSearch_rightContainer { display: inline-table; }
 
+div.search_additionalFields { text-decoration:underline; }
+div.search_additionalFields:hover { text-decoration:none; }
+
 
 /* Pub */
 div.hierarchyDiv { margin:2px 2px 2px 10px; color:#333333; cursor:pointer; }
@@ -34,6 +37,9 @@ div.hierarchyDiv.current { font-weight:bold; }
 tr.sicDataTableRow.projectLineFulfilled { background:#CCEECC; }
 tr.sicDataTableRow.projectLineFulfilled:nth-of-type(even) { background:#DDFFDD; }
 
+div.projectLinesTable > table.sicDataTable_table { min-width:780px; }
+
 /* Regular/Alt Doubles */
 span.doublesSaveButton { color:#CC9933; }
 span.doublesSaveButton:hover { color:#DDAA66; }
+

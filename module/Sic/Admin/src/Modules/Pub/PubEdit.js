@@ -138,7 +138,7 @@ var F = function(args) {
                 hintF: function(args) { sic.hint.publication(args.row.lastRowData.quoted_pub_id) } },
             quoted_creator: { canSort:false, editable:false, caption:"Creator" },
             quoted_title: { canSort:false, editable:false, caption:"Title" },
-            subquote_count: { editable:false, caption:"Ind. Source", canFilter: false },
+            subquote_count: { editable:false, caption:"Ind. Source", canFilter: false, displayType: "button" },
             _expand: { visible:false }
         },
         customInsert: function(insertDT) {
@@ -171,9 +171,10 @@ var F = function(args) {
         subDataTable: {
             dataSource: new sic.widget.sicDataTableDataSource({
                 moduleName:"Pub/PubSubQuoteList",
-                staticData: { pub_id: args.pub_id }
+                staticData: { pub_id: args.pub_id },
+                pageCount: 10
             }),
-            showPaginator: false,
+            showPaginator: true,
             editable: true,
             fields: {
                 quote_id: { caption:"Id", editable: false },

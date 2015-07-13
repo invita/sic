@@ -958,6 +958,7 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
     this.colSpan = sic.getArg(args, "colSpan", null);
     this.editorType = sic.getArg(args, "editorType", "text");
     this.updateOnEnter = sic.getArg(args, "updateOnEnter", true);
+    this.displayType = sic.getArg(args, "displayType", "");
 
     this.headerField = sic.getArg(args, "headerField", this.row ? this.row.headerRow : false);
     this.filterField = sic.getArg(args, "filterField", this.row ? this.row.filterRow : false);
@@ -969,8 +970,14 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
     this.actions = sic.getArg(args, "actions", null);
     this.autoSplitPipes = sic.getArg(args, "autoSplitPipes", ", ");
 
-    if (!this.subRowField)
+    if (!this.subRowField) {
         this.valueDiv = new sic.widget.sicElement({parent:this.selector, tagClass:"inline"});
+        if (this.displayType == "button" && this.dataField)
+            this.valueDiv.setGradient("blue");
+    }
+
+    if (this.displayType == "button")
+        this.selector.addClass("dataTable_td_button");
 
     this.hasInput = false;
 

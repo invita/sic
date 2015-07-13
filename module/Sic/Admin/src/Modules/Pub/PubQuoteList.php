@@ -33,7 +33,6 @@ class PubQuoteList extends SicModuleAbs {
         $responseData = array();
         foreach($result as $row) {
             $newRow = array(
-                "subquote_count" => $row['subquote_count'],
                 "quote_id" => $row['quote_id'],
                 "pub_id" => $row['pub_id'],
                 "on_page" => $row['on_page'],
@@ -41,6 +40,7 @@ class PubQuoteList extends SicModuleAbs {
                 "quoted_creator" => PubEdit::getCreatorShort($row['quoted_pub_id']),
                 "quoted_title" => PubEdit::getTitleShort($row['quoted_pub_id']),
                 "cited_page" => $row['cited_page'],
+                "subquote_count" => $row['subquote_count'],
             );
             $responseData[] = $newRow;
         }
