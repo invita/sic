@@ -35,7 +35,7 @@ class Solr {
     }
 
     protected function getUrl(){
-        return "http://localhost:8983/solr/select".$this->queryString;
+        return "http://sic.invita.si:8983/solr/select".$this->queryString;
     }
 
     protected function getResponse(){
