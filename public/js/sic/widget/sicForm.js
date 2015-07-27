@@ -84,12 +84,16 @@ sic.widget.sicForm = function(args)
         var caption = sic.getArg(args, "caption", "");
         var canMinimize = sic.getArg(args, "canMinimize", false);
         var initHide = sic.getArg(args, "initHide", false);
+        var className = sic.getArg(args, "className", "");
 
         _p.lastCaptionHeader = new sic.widget.sicElement({ parent:_p.selector, tagClass:"header" });
         if (caption)
             _p.lastCaptionHeader.selector.html(caption);
         else
             _p.lastCaptionHeader.displayNone();
+
+        _p.lastCaptionHeader.selector.addClass(className);
+
         _p.lastCaptionContent = new sic.widget.sicElement({ parent:_p.selector, tagClass:"content" });
 
         if (canMinimize) {

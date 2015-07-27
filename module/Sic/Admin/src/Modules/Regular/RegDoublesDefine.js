@@ -95,7 +95,7 @@ var F = function(args) {
         var saveButtonImg = new sic.widget.sicElement({parent:saveButton.selector, tagName:"img", tagClass:"icon12 vmid"});
         saveButtonImg.selector.attr("src", "/img/icon/apply.png");
         var saveButtonSpan = new sic.widget.sicElement({parent:saveButton.selector, tagName:"span", tagClass:"vmid"});
-        saveButtonSpan.selector.html("Save changes");
+        saveButtonSpan.selector.html("Save changes").addClass("doublesSaveButton");
         saveButton.selector.click(function(e){
             sic.callMethod({moduleName:"Regular/RegDoublesDefine", methodName:"saveSelected"},
                 function(response) { if (response.status) tabPage.parentTab.destroyTab(); });

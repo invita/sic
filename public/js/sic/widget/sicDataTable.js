@@ -299,6 +299,14 @@ sic.widget.sicDataTable = function(args)
             _p[cpName].filterSpan = new sic.widget.sicElement({parent:_p[cpName].filterDiv.selector, tagName:"span", tagClass:"vmid"});
             _p[cpName].filterSpan.selector.html("Filter");
             _p[cpName].filterDiv.selector.click(function(){ _p.toggleFilter(); });
+            _p[cpName].filterDiv.setHint("<b>Filter options:</b><br/>"+
+                "<br/>"+
+                "<b>*</b> - Add a star to search for any characters, example: 'John*' will find 'John Smith' and 'Johnny Bravo'<br/>"+
+                "<b>,</b> - List multiple values with comma, example: '1,2,3' will find values 1, 2 and 3<br/>"+
+                "<b>..</b> - Search by range with two dots, example: '1..5' will find values 1, 2, 3, 4 and 5.<br/>"+
+                "<br/>"+
+                "Note: All filter values are automatically fitted with stars on both ends. When you search for 'John', you actually search for '*John*'<br/>"+
+                "");
         }
     };
 
@@ -950,6 +958,7 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
     this.colSpan = sic.getArg(args, "colSpan", null);
     this.editorType = sic.getArg(args, "editorType", "text");
     this.updateOnEnter = sic.getArg(args, "updateOnEnter", true);
+    this.displayType = sic.getArg(args, "displayType", "");
 
     this.headerField = sic.getArg(args, "headerField", this.row ? this.row.headerRow : false);
     this.filterField = sic.getArg(args, "filterField", this.row ? this.row.filterRow : false);
@@ -961,8 +970,14 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
     this.actions = sic.getArg(args, "actions", null);
     this.autoSplitPipes = sic.getArg(args, "autoSplitPipes", ", ");
 
-    if (!this.subRowField)
+    if (!this.subRowField) {
         this.valueDiv = new sic.widget.sicElement({parent:this.selector, tagClass:"inline"});
+        if (this.displayType == "button" && this.dataField)
+            this.valueDiv.setGradient("blue");
+    }
+
+    if (this.displayType == "button")
+        this.selector.addClass("dataTable_td_button");
 
     this.hasInput = false;
 

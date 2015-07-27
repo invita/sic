@@ -30,7 +30,7 @@ var F = function(args) {
     var panelGroup2 = panelBasic.addGroup("Reset password");
     var formPassword = new sic.widget.sicForm({parent:panelGroup2.content.selector, captionWidth:"100px"});
     formPassword.addInput({name:"password", type:"password", placeholder:"Password...", caption:"password"});
-    formPassword.addInput({name:"reset", type:"submit", value:"Reset", caption:" "}).selector.click(function(e){
+    formPassword.addInput({name:"reset", type:"submit", value:"Save", caption:" "}).selector.click(function(e){
         if (!formPassword.getValue().password && !confirm('Are you sure you want to clear password for '+
                 sic.mergePlaceholders(args.entityTitle, {id:args.id, username:formUserData.getValue().username})))
         {

@@ -106,11 +106,11 @@ var F = function(args) {
 
     // Quick Search
     var quickSearchGroup = searchPanel.addGroup();
-    var quickSearchForm = new sic.widget.sicForm({parent:quickSearchGroup.content.selector, captionWidth:"80px", inputClass:"searchInput"});
-    var quickSearchBox = quickSearchForm.addInput({name:"quickSearch", placeholder:"Quick search...", caption:"Quick search", autoComplete: {
+    var quickSearchForm = new sic.widget.sicForm({parent:quickSearchGroup.content.selector, captionWidth:"90px", inputClass:"searchInput"});
+    var quickSearchBox = quickSearchForm.addInput({name:"quickSearch", placeholder:"Quick search...", caption:false, autoComplete: {
         moduleName: "Pub/PubSearch", methodName: "autoComplete_search" }});
     quickSearchBox.selector.addClass("inline");
-    quickSearchBox.input.selector.css("width", "220px");
+    quickSearchBox.input.selector.css("width", "285px");
     var quickSearchSubmitButton = quickSearchForm.addInput({value:"Local", type:"submit", caption:" "});
     /*
     quickSearchSubmitButton.selector.click(function(){
@@ -145,7 +145,7 @@ var F = function(args) {
         creator: { caption:"creator", placeholder:"Creator", isArray:true, withCode:sic.codes.pubCreator },
         year: { caption:"date", placeholder:"Date", isArray:true },
 
-        _group1: { caption: "Additional Fields (Click)", canMinimize: true, initHide: true }, // Group
+        _group1: { caption: "Additional Fields (Click)", canMinimize: true, initHide: true, className:"search_additionalFields" }, // Group
 
         addidno: { caption:"addIdno", placeholder:"Additional Identifier", isArray:true },
         addtitle: { caption:"addTitle", placeholder:"Additional Title", isArray:true },

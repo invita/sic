@@ -99,7 +99,7 @@ class RegDoublesSearch extends SicModuleAbs {
         unset($filter["user_id"]);
 
         $adapter = GlobalAdapterFeature::getStaticAdapter(); $sql = new Sql($adapter); $select = $sql->select();
-        $select->columns(array('pub_id', 'original_id'))->from('view_publication_list');
+        $select->columns(array('pub_id'))->from('view_publication_list');
 
         if ($filter && !empty($filter)) {
             $filterWhere = DbUtil::prepareSqlFilter($filter);
@@ -110,15 +110,10 @@ class RegDoublesSearch extends SicModuleAbs {
         $statement = $sql->prepareStatementForSqlObject($select);
         $pubsResult = $statement->execute();
         $pubs = array();
-        foreach($pubsResult as $row) { $pubs[] = array("pub_id" => $row["pub_id"], "original_id" => $row["original_id"]); }
+        foreach($pubsResult as $row) { $pubs[] = array("pub_id" => $row["pub_id"]); }
 
         foreach ($pubs as $pub) {
-            $isSelected = DbUtil::selectOne('publication_doubles_selected', 'pub_id', array(
-                'pub_id' => $pub['pub_id'], 'user_id' => $userId));
-
-            if (!$isSelected)
-                DbUtil::insertInto('publication_doubles_selected', array(
-                    'pub_id' => $pub['pub_id'], 'user_id' => $userId, 'temp_original_id' => $pub['original_id']));
+            $this->_selectPub($pub['pub_id']);
         }
         return array("status" => true);
     }
@@ -150,36 +145,129 @@ class RegDoublesSearch extends SicModuleAbs {
         return array("status" => true);
     }
 
+    /*
     public function selectLine($args) {
         $pubId = Util::getArg($args, "pub_id", 0);
         $userId = Util::getUserId();
         if (!$pubId || !$userId) return array("status" => false);
 
         $original_id = DbUtil::selectOne('publication', 'original_id', array('pub_id' => $pubId));
-
         DbUtil::insertInto('publication_doubles_selected', array(
             'pub_id' => $pubId, 'user_id' => $userId, 'temp_original_id' => $original_id));
 
         return array("status" => true);
     }
+    */
 
     public function selectLineToggle($args) {
         $pubId = Util::getArg($args, "pub_id", 0);
         $userId = Util::getUserId();
         if (!$pubId || !$userId) return array("status" => false);
 
-        $selected = DbUtil::selectOne('publication_doubles_selected', 'pub_id', array(
-            'pub_id' => $pubId, 'user_id' => $userId));
-
-        if ($selected) {
-            DbUtil::deleteFrom('publication_doubles_selected', array(
-                'pub_id' => $pubId, 'user_id' => $userId));
+        if ($this->_isPubSelected($pubId)) {
+            $this->_deselectPub($pubId);
         } else {
-            $original_id = DbUtil::selectOne('publication', 'original_id', array('pub_id' => $pubId));
-            DbUtil::insertInto('publication_doubles_selected', array(
-                'pub_id' => $pubId, 'user_id' => $userId, 'temp_original_id' => $original_id));
+            $this->_selectPub($pubId);
         }
 
         return array("status" => true);
     }
+
+    public function _isPubSelected($pubId) {
+        $userId = Util::getUserId();
+        $selected = DbUtil::selectOne('publication_doubles_selected', 'pub_id', array(
+            'pub_id' => $pubId, 'user_id' => $userId));
+        return $selected ? true : false;
+    }
+
+    public function _selectPub($pubId) {
+        $userId = Util::getUserId();
+        if ($this->_isPubSelected($pubId)) return;
+
+        $original_id = DbUtil::selectOne('publication', 'original_id', array('pub_id' => $pubId));
+
+        if ($original_id == -1) {
+
+            // Select all with pub.original_id = pubId + this one
+            $pubs = DbUtil::selectFrom('publication', array('pub_id', 'original_id'), array('original_id' => $pubId));
+
+            foreach($pubs as $pub) {
+                if (!$this->_isPubSelected($pub['pub_id']))
+                    DbUtil::insertInto('publication_doubles_selected', array(
+                        'pub_id' => $pub['pub_id'], 'user_id' => $userId, 'temp_original_id' => $pub['original_id']));
+            }
+
+            if (!$this->_isPubSelected($pubId))
+                DbUtil::insertInto('publication_doubles_selected', array(
+                    'pub_id' => $pubId, 'user_id' => $userId, 'temp_original_id' => $original_id));
+
+
+        } else if ($original_id > 0) {
+
+            // Select all with pub.original_id = original_id + original one
+            $pubs = DbUtil::selectFrom('publication', array('pub_id', 'original_id'), array('original_id' => $original_id));
+
+            foreach($pubs as $pub) {
+                if (!$this->_isPubSelected($pub['pub_id']))
+                    DbUtil::insertInto('publication_doubles_selected', array(
+                        'pub_id' => $pub['pub_id'], 'user_id' => $userId, 'temp_original_id' => $pub['original_id']));
+            }
+
+            if (!$this->_isPubSelected($original_id))
+                DbUtil::insertInto('publication_doubles_selected', array(
+                    'pub_id' => $original_id, 'user_id' => $userId, 'temp_original_id' => -1));
+
+        } else if ($original_id == 0) {
+
+            // Unspecified pub, only select it
+            if (!$this->_isPubSelected($pubId))
+                DbUtil::insertInto('publication_doubles_selected', array(
+                    'pub_id' => $pubId, 'user_id' => $userId, 'temp_original_id' => $original_id));
+        }
+
+
+
+    }
+
+    public function _deselectPub($pubId) {
+        $userId = Util::getUserId();
+        if (!$this->_isPubSelected($pubId)) return;
+
+        $original_id = DbUtil::selectOne('publication', 'original_id', array('pub_id' => $pubId));
+
+        if ($original_id == -1) {
+
+            // Deselect all with pub.original_id = pubId + this one
+            $pubs = DbUtil::selectFrom('publication', array('pub_id', 'original_id'), array('original_id' => $pubId));
+
+            foreach($pubs as $pub) {
+                DbUtil::deleteFrom('publication_doubles_selected', array(
+                    'pub_id' => $pub['pub_id'], 'user_id' => $userId));
+            }
+
+            DbUtil::deleteFrom('publication_doubles_selected', array(
+                'pub_id' => $pubId, 'user_id' => $userId));
+
+
+        } else if ($original_id > 0) {
+
+            // Deselect all with pub.original_id = original_id + original one
+            $pubs = DbUtil::selectFrom('publication', array('pub_id', 'original_id'), array('original_id' => $original_id));
+
+            foreach($pubs as $pub) {
+                DbUtil::deleteFrom('publication_doubles_selected', array(
+                    'pub_id' => $pub['pub_id'], 'user_id' => $userId));
+            }
+
+            DbUtil::deleteFrom('publication_doubles_selected', array(
+                'pub_id' => $original_id, 'user_id' => $userId));
+
+        } else if ($original_id == 0) {
+
+            // Unspecified pub, only Deselect it
+            DbUtil::deleteFrom('publication_doubles_selected', array(
+                'pub_id' => $pubId, 'user_id' => $userId));
+        }
+    }
+
 }
