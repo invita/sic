@@ -35,7 +35,12 @@ class Solr {
     }
 
     protected function getUrl(){
-        return "http://sic.invita.si:8983/solr/select".$this->queryString;
+        $url = "http://sic.invita.si:8983/solr/select".$this->queryString;
+        //$url = urlencode($url);
+        $url = str_replace("\\\"", "%22", $url);
+        $url = str_replace(" ", "%20", $url);
+        //echo $url."\n";
+        return $url;
     }
 
     protected function getResponse(){
