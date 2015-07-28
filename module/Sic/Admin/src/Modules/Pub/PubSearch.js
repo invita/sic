@@ -1,5 +1,32 @@
 var F = function(args) {
 
+    var solrFields = [
+        "edition",
+        "issue",
+        "online",
+        "creator",
+        "creator_author",
+        "publisher",
+        "title",
+        "strng",
+        "pub_id",
+        "page",
+        "year",
+        "place",
+        "note",
+        "addtitle",
+        "addidno",
+        "source",
+        "volume",
+        "idno",
+        "idno_cobiss",
+    ];
+
+
+
+    // *:*&fq=(f1:val OR f2:val ...)
+
+
     var name = "Search";
     if (args.selectCallback) name += " - Select Entity";
     var tabPage = args.helpers.createTabPage({name:name});
@@ -10,7 +37,21 @@ var F = function(args) {
     var cobissResultsContainer = new sic.widget.sicElement({parent:pubSearchTable.getCell(0, 1).selector, tagClass:"pubSearch_rightContainer"});
 
     var staticDataQuery = "*:*";
+    /*
     var createStaticData = function(fields){
+
+        var neki = "";
+
+
+
+        var query = "*:*&fq=("+neki+")";
+
+        return {query : query};
+
+
+*/
+
+        /*
         if(!fields) return {query : staticDataQuery};
         else {
             //sic.dump(fields, 2);
@@ -38,7 +79,7 @@ var F = function(args) {
                     arr += "*"+value+"*"+")";
                 }
                 count++;
-
+*/
                 /*
                 if(jQuery.isArray(fields[key])){
                     for(var c=0; c<fields[key].length; c++){
@@ -72,13 +113,15 @@ var F = function(args) {
                     }
                 }
                 */
+        /*
             }
             staticDataQuery += arr+")";
 
             //alert(staticDataQuery);
             return {query : staticDataQuery};
         }
-    };
+         */
+    //};
 
     // Search Panel (left)
     var searchPanel = new sic.widget.sicPanel({parent:searchContainer.selector});
@@ -107,8 +150,9 @@ var F = function(args) {
     // Quick Search
     var quickSearchGroup = searchPanel.addGroup();
     var quickSearchForm = new sic.widget.sicForm({parent:quickSearchGroup.content.selector, captionWidth:"90px", inputClass:"searchInput"});
-    var quickSearchBox = quickSearchForm.addInput({name:"quickSearch", placeholder:"Quick search...", caption:false, autoComplete: {
-        moduleName: "Pub/PubSearch", methodName: "autoComplete_search" }});
+    var quickSearchBox = quickSearchForm.addInput({name:"quickSearch", placeholder:"Quick search...", caption:false,
+        //autoComplete: {moduleName: "Pub/PubSearch", methodName: "autoComplete_search" }
+        });
     quickSearchBox.selector.addClass("inline");
     quickSearchBox.input.selector.css("width", "285px");
     var quickSearchSubmitButton = quickSearchForm.addInput({value:"Local", type:"submit", caption:" "});
@@ -162,6 +206,7 @@ var F = function(args) {
 
         _group2: { }, // Separator Group, make buttons (local db search) their own group
     }
+
 
     var pubSearchGroup = searchPanel.addGroup("Publication Search");
     //var pubCopyParams
@@ -288,7 +333,8 @@ var F = function(args) {
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Pub/PubSearch",
             //staticData: { searchType: "pubSearch", fields: pubSearchForm.getValue(), zotero:zoteroForm.getValue() },
-            staticData : createStaticData(),
+            //staticData : createStaticData(),
+            staticData : { query: "*:*" },
             pageCount: 20
         }),
         editorModuleArgs: {
@@ -324,15 +370,68 @@ var F = function(args) {
 
 
     quickSearchForm.onSubmit(function(sicForm){
-        dataTable.dataSource.staticData = createStaticData(quickSearchForm.getValue());
-        //dataTable.dataSource.staticData.searchType = "quickSearch";
+        var fq = "";
+        if (quickSearchBox.getValue() != "") {
+            var fields = [];
+            for (var sfKey in searchFields)
+            {
+                if (sfKey.substr(0, 1) == "_") continue;
+
+                var value = quickSearchBox.getValue();
+                var values = value.split(" ");
+                for (var i in values)
+                    values[i] = sfKey+":*"+values[i]+"*";
+
+                fields.push("("+values.join(" AND ")+")");
+            }
+            fq = '&fq=('+fields.join(" OR ")+')';
+        }
+
+        dataTable.dataSource.staticData = { query: "*:*"+fq };
         dataTable.refresh();
         //showResults("pub");
     });
 
+
     pubSearchForm.onSubmit(function(sicForm){
-        dataTable.dataSource.staticData = createStaticData(pubSearchForm.getValue())
-        //dataTable.dataSource.staticData.searchType = "quickSearch";
+        var fq = "";
+
+        var formData = pubSearchForm.getValue();
+        //sic.dump(formData); return;
+
+        var fields = [];
+        for (var sfKey in searchFields)
+        {
+            if (sfKey.substr(0, 1) == "_") continue;
+
+            var value;
+            if (typeof(formData[sfKey]) == "string") {
+                // String
+                value = formData[sfKey];
+            } else if ($.isArray(formData[sfKey])) {
+                if (formData[sfKey][0] && formData[sfKey][0].codeId) {
+                    // Object
+                    var vals = [];
+                    for (var i in formData[sfKey]) vals.push(formData[sfKey][i].value);
+                    value = vals.join(" ");
+                } else {
+                    // Array
+                    value = formData[sfKey].join(" ");
+                }
+            }
+
+            if (value == "") continue;
+
+            var values = value.split(" ");
+            for (var i in values)
+                values[i] = sfKey+":*"+values[i]+"*";
+
+            fields.push("("+values.join(" AND ")+")");
+        }
+        if (fields.length) fq = '&fq=('+fields.join(" AND ")+')';
+        //sic.dump(fq);
+
+        dataTable.dataSource.staticData = { query: "*:*"+fq };
         dataTable.refresh();
         //showResults("pub");
     });

@@ -43,6 +43,7 @@ class PubSearch extends SicModuleAbs {
         $solr->run();
         $data = $solr->toArray();
 
+        if ($data === null) $data = array();
 
         return array(
             "data" => $data,
