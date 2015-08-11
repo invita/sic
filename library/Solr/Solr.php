@@ -35,11 +35,10 @@ class Solr {
     }
 
     protected function getUrl(){
-        print_r($_ENV);
-        print_r($_SERVER);
-
-        $url = "http://sici.sistory.si:8983/solr/select".$this->queryString;
+        //$url = $_SERVER["HTTP_ORIGIN"].":8983/solr/select".$this->queryString;
+        $url = "http://localhost:8983/solr/select".$this->queryString;
         //$url = urlencode($url);
+
         $url = str_replace("\\\"", "%22", $url);
         $url = str_replace(" ", "%20", $url);
         //echo $url."\n";
