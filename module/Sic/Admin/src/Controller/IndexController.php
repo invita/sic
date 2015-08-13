@@ -131,7 +131,7 @@ class IndexController extends AbstractActionController
     // Upload File
     public function uploadFileAction()
     {
-        //print_r($_POST); print_r($_FILES); die();
+        print_r($_POST); print_r($_FILES); die();
 
         $uploadPath = Util::getUploadPath();
         $fileNamePrefix = Util::getArg($_POST, 'fileNamePrefix', '');
