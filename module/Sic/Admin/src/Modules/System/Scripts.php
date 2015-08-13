@@ -69,13 +69,27 @@ class Scripts
 
             try {
 
+                /*
                 DbUtil::deleteFrom('publication', array('pub_id' => $pubId));
-                DbUtil::deleteFrom('publication_title', array('pub_id' => $pubId));
+                DbUtil::deleteFrom('publication_addidno', array('pub_id' => $pubId));
+                DbUtil::deleteFrom('publication_addtitle', array('pub_id' => $pubId));
                 DbUtil::deleteFrom('publication_creator', array('pub_id' => $pubId));
+                DbUtil::deleteFrom('publication_doubles_selected', array('pub_id' => $pubId));
+                DbUtil::deleteFrom('publication_edition', array('pub_id' => $pubId));
                 DbUtil::deleteFrom('publication_idno', array('pub_id' => $pubId));
+                DbUtil::deleteFrom('publication_issue', array('pub_id' => $pubId));
+                DbUtil::deleteFrom('publication_note', array('pub_id' => $pubId));
+                DbUtil::deleteFrom('publication_online', array('pub_id' => $pubId));
+                DbUtil::deleteFrom('publication_page', array('pub_id' => $pubId));
                 DbUtil::deleteFrom('publication_place', array('pub_id' => $pubId));
+                DbUtil::deleteFrom('publication_project_link', array('pub_id' => $pubId));
                 DbUtil::deleteFrom('publication_publisher', array('pub_id' => $pubId));
-
+                DbUtil::deleteFrom('publication_source', array('pub_id' => $pubId));
+                DbUtil::deleteFrom('publication_strng', array('pub_id' => $pubId));
+                DbUtil::deleteFrom('publication_title', array('pub_id' => $pubId));
+                DbUtil::deleteFrom('publication_volume', array('pub_id' => $pubId));
+                DbUtil::deleteFrom('publication_year', array('pub_id' => $pubId));
+                */
 
                 $pubData = array(
                     "pub_id" => $pubId,
