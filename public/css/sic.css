@@ -217,5 +217,6 @@ table.borderCollapseSeparate { border-collapse: separate; }
 .minWidth300 { min-width:300px; }
 .valignTop { vertical-align:top; }
 
+div.CodeMirror { height:auto; }
 
 

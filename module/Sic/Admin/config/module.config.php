@@ -81,8 +81,9 @@ return array(
         'uploadPath' => 'data/upload',
         'downloadPath' => 'data/download',
         'solrConfigPaths' => array(
-            'test.xml' => 'data/download',
-            'schema.xml' => 'data/download',
+            'schema.xml' => 'opt/solr-4.9.1/example/solr/collection1/conf',
+            'data-config.xml' => 'opt/solr-4.9.1/example/solr/collection1/conf',
+            'solrconfig.xml' => 'opt/solr-4.9.1/example/solr/collection1/conf',
         )
     ),
 );

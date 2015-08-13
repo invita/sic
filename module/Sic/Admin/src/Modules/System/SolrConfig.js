@@ -21,13 +21,24 @@ var F = function(args){
                 tabPages[fileName] = tabPage;
 
                 tabPage.form = new sic.widget.sicForm({parent:tabPage.content.selector});
+
+                // Save Button Top
+                tabPage.saveButtonTop = tabPage.form.addInput({name:"save", type:"submit", value:"Save", caption:false});
+                tabPage.saveButtonTop.selector[0].fileName = fileName;
+                tabPage.saveButtonTop.selector[0].tabPage = tabPage;
+                tabPage.saveButtonTop.selector.click(function(e){
+                    sic.callMethod({moduleName:"System/SolrConfig", methodName:"saveConfig",
+                        fileName:this.fileName, fileContent:this.tabPage.contentInput.getValue()}, function(rArgs) {});
+                });
+
+                // File content
                 tabPage.contentInput = tabPage.form.addInput({name:"content", type:"codemirror", placeholder:fileName+"...", caption:false});
 
-                // Save Button
-                tabPage.saveButton = tabPage.form.addInput({name:"save", type:"submit", value:"Save", caption:false});
-                tabPage.saveButton.selector[0].fileName = fileName;
-                tabPage.saveButton.selector[0].tabPage = tabPage;
-                tabPage.saveButton.selector.click(function(e){
+                // Save Button Bottom
+                tabPage.saveButtonBot = tabPage.form.addInput({name:"save", type:"submit", value:"Save", caption:false});
+                tabPage.saveButtonBot.selector[0].fileName = fileName;
+                tabPage.saveButtonBot.selector[0].tabPage = tabPage;
+                tabPage.saveButtonBot.selector.click(function(e){
                     sic.callMethod({moduleName:"System/SolrConfig", methodName:"saveConfig",
                         fileName:this.fileName, fileContent:this.tabPage.contentInput.getValue()}, function(rArgs) {});
                 });
