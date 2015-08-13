@@ -1,0 +1,37 @@
+<dataConfig>
+    <dataSource type="JdbcDataSource" driver="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost:3306/sic" user="sic" password="s1cSql" batchSize="1" />
+    <document name="publications">
+        <entity name="publication" query="SELECT *, pub_id as id FROM view_publication_list">
+
+            <field column="pub_id" name="pub_id"/>
+            <field column="parent_id" name="parent_id"/>
+            <field column="original_id" name="original_id"/>
+            <field column="is_series" name="is_series"/>
+            <field column="series_id" name="series_id"/>
+            <field column="creator" name="creator"/>
+            <field column="creator_author" name="creator_author"/>
+            <field column="creator_editor" name="creator_editor"/>
+            <field column="creator_organization" name="creator_organization"/>
+            <field column="idno" name="idno"/>
+            <field column="idno_cobiss" name="idno_cobiss"/>
+            <field column="idno_issn" name="idno_issn"/>
+            <field column="idno_sistory" name="idno_sistory"/>
+            <field column="year" name="year"/>
+            <field column="title" name="title"/>
+            <field column="publisher" name="publisher"/>
+            <field column="place" name="place"/>
+            <field column="addidno" name="addidno"/>
+            <field column="addtitle" name="addtitle"/>
+            <field column="volume" name="volume"/>
+            <field column="issue" name="issue"/>
+            <field column="page" name="page"/>
+            <field column="edition" name="edition"/>
+            <field column="source" name="source"/>
+            <field column="online" name="online"/>
+            <field column="strng" name="strng"/>
+            <field column="note" name="note"/>
+            <field column="proj_id" name="proj_id"/>
+
+        </entity>
+    </document>
+</dataConfig>
