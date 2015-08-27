@@ -285,6 +285,20 @@ var F = function(args) {
             }
             focusLastQuoteRow = false;
         }
+
+        for (var i in quotesDataTable.rows)
+        {
+            var r = quotesDataTable.rows[i];
+            var subquote_count_field = r.fields["subquote_count"];
+            if (subquote_count_field.getValue() == 0) {
+                subquote_count_field.valueDiv.selector.removeClass("gradGold");
+                subquote_count_field.valueDiv.selector.addClass("gradBlue");
+            } else {
+                subquote_count_field.valueDiv.selector.removeClass("gradBlue");
+                subquote_count_field.valueDiv.selector.addClass("gradGold");
+            }
+
+        }
     });
 
     if (args.pub_id){

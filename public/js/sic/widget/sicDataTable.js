@@ -223,6 +223,14 @@ sic.widget.sicDataTable = function(args)
         if (!_p.showPaginator)
             _p[cpName].displayNone();
 
+        // First page button
+        _p[cpName].firstPage = new sic.widget.sicElement({parent:_p[cpName].selector, tagClass:"inline prevButton vmid"});
+        _p[cpName].firstPageImg = new sic.widget.sicElement({parent:_p[cpName].firstPage.selector, tagName:"img", tagClass:"icon8 vmid"});
+        _p[cpName].firstPageImg.selector.attr("src", "/img/icon/dataTable_prev.png");
+        _p[cpName].firstPageSpan = new sic.widget.sicElement({parent:_p[cpName].firstPage.selector, tagName:"span", tagClass:"vmid"});
+        _p[cpName].firstPageSpan.selector.html("First");
+        _p[cpName].firstPage.selector.click(function(){ _p.switchPage(1); });
+
         // Prev page button
         _p[cpName].prevPage = new sic.widget.sicElement({parent:_p[cpName].selector, tagClass:"inline prevButton vmid"});
         _p[cpName].prevPageImg = new sic.widget.sicElement({parent:_p[cpName].prevPage.selector, tagName:"img", tagClass:"icon8 vmid"});
@@ -255,6 +263,14 @@ sic.widget.sicDataTable = function(args)
         _p[cpName].nextPageImg = new sic.widget.sicElement({parent:_p[cpName].nextPage.selector, tagName:"img", tagClass:"icon8 vmid"});
         _p[cpName].nextPageImg.selector.attr("src", "/img/icon/dataTable_next.png");
         _p[cpName].nextPage.selector.click(function(){ _p.switchPage(_p.currentPage+1); });
+
+        // Last page button
+        _p[cpName].lastPage = new sic.widget.sicElement({parent:_p[cpName].selector, tagClass:"inline lastButton vmid"});
+        _p[cpName].lastPageSpan = new sic.widget.sicElement({parent:_p[cpName].lastPage.selector, tagName:"span", tagClass:"vmid"});
+        _p[cpName].lastPageSpan.selector.html("Last");
+        _p[cpName].lastPageImg = new sic.widget.sicElement({parent:_p[cpName].lastPage.selector, tagName:"img", tagClass:"icon8 vmid"});
+        _p[cpName].lastPageImg.selector.attr("src", "/img/icon/dataTable_next.png");
+        _p[cpName].lastPage.selector.click(function(){ _p.switchPage(_p.currentPageCount); });
 
 
         _p[cpName].recsPerPageInput = new sic.widget.sicElement({parent:_p[cpName].selector,
