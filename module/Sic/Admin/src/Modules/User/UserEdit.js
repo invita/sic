@@ -12,7 +12,7 @@ var F = function(args) {
     formUserData.addInput({name:"power", caption:"access", inputConstruct: sic.widget.sicMultiSelect,
         values:['normalUser', 'superUser'], multiSelect: false});
     formUserData.addInput({name:"zotero_id", type:"text", placeholder:"Zotero UserId...", caption:"zotero user"});
-    formUserData.addInput({name:"zotero_col", type:"text", placeholder:"Zotero CollectionId...", caption:"zotero collection"});
+    //formUserData.addInput({name:"zotero_col", type:"text", placeholder:"Zotero CollectionId...", caption:"zotero collection"});
     formUserData.addInput({name:"zotero_key", type:"text", placeholder:"Zotero Key...", caption:"zotero key"});
     formUserData.addInput({name:"save", type:"submit", value:"Save", caption: " "}).selector.click(function(e){
             var response = sic.callMethod({moduleName:"User/UserEdit", methodName:"updateUser",

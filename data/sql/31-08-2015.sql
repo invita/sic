@@ -1,0 +1,1 @@
+ALTER TABLE `user` DROP `zotero_col`;
