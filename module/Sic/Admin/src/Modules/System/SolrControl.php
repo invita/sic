@@ -27,7 +27,17 @@ class SolrControl
         $solr->setAction("/collection1/dataimport");
         $solr->setQueryParams($solrQueryParams);
         $solr->run();
-        $response = $solr->toArray();
+
+
+        $solrStatus = new \Solr();
+        $solrStatus->setAction("/collection1/dataimport");
+        $solrStatus->setQueryParams(array(
+            "command" => "status",
+            "wt" => "json"
+        ));
+        $solrStatus->run();
+        $response = $solrStatus->toArray();
+
 
         $result = array(
             "status" => true,
