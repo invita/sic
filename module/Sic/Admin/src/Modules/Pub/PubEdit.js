@@ -33,7 +33,8 @@ var F = function(args) {
         firstGroupName:"Update Publication"});
 
     var formUserData = new sic.widget.sicForm({parent:panel.firstGroup.content.selector, captionWidth:"100px"});
-    formUserData.addInput({name:"pub_id", type:"text", caption:"id", placeholder:"Entity Identifier", readOnly:true});
+    formUserData.addInput({name:"pub_id", type:"text", caption:"id", placeholder:"Entity Identifier", readOnly:true,
+        focus: true });
     formUserData.addInput({name:"idno", type:"text", caption:"idno", placeholder:"Identifier", isArray:true, value:[idno],
         withCode:sic.codes.pubIdno});
     formUserData.addInput({name:"addidno", type:"text", caption:"addIdno", placeholder:"Additional Identifier", isArray:true, value:[addidno]});

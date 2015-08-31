@@ -9,11 +9,12 @@ var F = function(args) {
         parent:tabPage.content.selector,
         primaryKey: ['pub_id'],
         entityTitle: "Entity %pub_id% - %title%",
+        filter: { visible: true },
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Pub/PubList",
             pageCount: 15,
             filter: {
-                original_id:"-1,0"
+                original_id:"-1,0",
             }
         }),
         editorModuleArgs: {

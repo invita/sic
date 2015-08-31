@@ -7,6 +7,7 @@ var F = function(args){
         entityTitle: "Project %proj_id% - %title%",
         canInsert: !args.inDialog,
         canDelete: !args.inDialog,
+        filter: { visible: true },
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Project/ProjectList"
         }),

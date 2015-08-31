@@ -36,8 +36,6 @@ var F = function(args) {
     var pubResultsContainer = new sic.widget.sicElement({parent:pubSearchTable.getCell(0, 1).selector, tagClass:"pubSearch_rightContainer"});
     var cobissResultsContainer = new sic.widget.sicElement({parent:pubSearchTable.getCell(0, 1).selector, tagClass:"pubSearch_rightContainer"});
 
-    var staticDataQuery = "*:*";
-
 
     // Search Panel (left)
     var searchPanel = new sic.widget.sicPanel({parent:searchContainer.selector});
@@ -245,11 +243,12 @@ var F = function(args) {
         parent:pubResultsContainer.selector,
         primaryKey: ['pub_id'],
         entityTitle: "Entity %pub_id% - %title%",
+        filter: { enabled: false },
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Pub/PubSearch",
             //staticData: { searchType: "pubSearch", fields: pubSearchForm.getValue(), zotero:zoteroForm.getValue() },
             //staticData : createStaticData(),
-            staticData : { query: "*:*" },
+            staticData : { q: "*:*", fq: "" },
             pageCount: 20
         }),
         editorModuleArgs: {
@@ -300,10 +299,10 @@ var F = function(args) {
 
                 fields.push("("+values.join(" AND ")+")");
             }
-            fq = '&fq=('+fields.join(" OR ")+')';
+            fq = '('+fields.join(" OR ")+')';
         }
 
-        dataTable.dataSource.staticData = { query: "*:*"+fq };
+        dataTable.dataSource.staticData = { q: "*:*", fq: fq };
         dataTable.refresh();
         //showResults("pub");
     });
@@ -347,7 +346,7 @@ var F = function(args) {
         if (fields.length) fq = '&fq=('+fields.join(" AND ")+')';
         //sic.dump(fq);
 
-        dataTable.dataSource.staticData = { query: "*:*"+fq };
+        dataTable.dataSource.staticData = { q: "*:*", fq: fq };
         dataTable.refresh();
         //showResults("pub");
     });

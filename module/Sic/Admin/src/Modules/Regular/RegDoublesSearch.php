@@ -72,14 +72,15 @@ class RegDoublesSearch extends SicModuleAbs {
                 'page' => $row['page'],
                 'volume' => $row['volume'],
 
-                'leven' => $row['leven'],
-
                 '__creator_long' => $row['creator'],
                 '__title_long' => $row['title'],
                 '__addtitle_long' => $row['addtitle'],
 
                 '__row' => $row
             );
+
+            if (isset($row['leven']))
+                $newRow['leven'] = $row['leven'];
 
             //$row['creator'] = Util::shortenText($row['creator'], PubEdit::$creatorMaxLen);
             //$row['title'] = Util::shortenText($row['title'], PubEdit::$titleMaxLen);

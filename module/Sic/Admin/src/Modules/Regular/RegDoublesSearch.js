@@ -11,10 +11,11 @@ var F = function(args) {
         entityTitle: "Entity %pub_id% - %title%",
         canDelete: false,
         canInsert: false,
+        filter: { visible: true },
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Regular/RegDoublesSearch",
             pageCount: 20,
-            filterMode: "levenshtein"
+            //filterMode: "levenshtein"
         }),
         editorModuleArgs: {
             moduleName:"Pub/PubEdit",

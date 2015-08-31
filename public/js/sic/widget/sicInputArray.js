@@ -10,6 +10,7 @@ sic.widget.sicInputArray = function(args)
 
     this.selector.addClass("sicInputArray");
     this.inputs = {};
+    this.tempDisableAutoFocus = true;
 
     // Settings
     this.name = sic.getArg(args, "name", null);
@@ -52,7 +53,7 @@ sic.widget.sicInputArray = function(args)
         });
 
         delete _p.inputArgs.focus;
-        if (_p.autoFocus && _p.inputCount() > 0) input.input.selector.focus();
+        if (_p.autoFocus && _p.inputCount() > 0 && !_p.tempDisableAutoFocus) input.input.selector.focus();
 
         _p.inputs[inputId] = input;
         return input;
@@ -92,6 +93,7 @@ sic.widget.sicInputArray = function(args)
     };
 
     this.setValue = function(value){
+        _p.tempDisableAutoFocus = true;
         var oldLength = _p.inputCount();
         if (!value || !value.length) {
             _p.clear();
@@ -101,7 +103,7 @@ sic.widget.sicInputArray = function(args)
             value = [value];
         }
         while (value && value.length && _p.inputCount() < value.length) {
-            _p.addInput();
+            _p.addInput(false);
             if (_p.inputCount() == oldLength) break;
         }
         for (var i in value) {
@@ -113,6 +115,7 @@ sic.widget.sicInputArray = function(args)
             _p.removeInput();
             if (_p.inputCount() == oldLength) break;
         }
+        _p.tempDisableAutoFocus = false;
     };
 
     this.calcModified = function(){

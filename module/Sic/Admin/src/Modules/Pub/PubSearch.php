@@ -22,7 +22,8 @@ class PubSearch extends SicModuleAbs {
 
         //var_dump($args);
 
-        $query = $args["staticData"]["query"];
+        $q = $args["staticData"]["q"];
+        $fq = $args["staticData"]["fq"];
 
         $sortField = Util::getArg($args, "sortField", "");
         $sortOrder = Util::getArg($args, "sortOrder", "");
@@ -37,7 +38,8 @@ class PubSearch extends SicModuleAbs {
         $solr = new \Solr();
         //$solr->setQueryString("?q=".$query."&".$wt."&".$rows_all);
         $solr->setQueryParams(array(
-            "q" => $query,
+            "q" => $q,
+            "fq" => $fq,
             "wt" => "json",
             "rows" => "2147483647"
         ));
@@ -47,7 +49,8 @@ class PubSearch extends SicModuleAbs {
         $solr = new \Solr();
         //$solr->setQueryString("?q=".$query."&".$wt."&".$rows."&start=".$pageStart."&sort=".$sort);
         $solr->setQueryParams(array(
-            "q" => $query,
+            "q" => $q,
+            "fq" => $fq,
             "wt" => "json",
             "rows" => $pageCount,
             "start" => $pageStart,
@@ -102,7 +105,7 @@ class PubSearch extends SicModuleAbs {
         return array(
             "data" => $data,
             "rowCount" => count($rowCountData),
-            "staticData" => array("query" => $query)
+            "staticData" => array("q" => $q, "fq" => $fq)
         );
     }
 
