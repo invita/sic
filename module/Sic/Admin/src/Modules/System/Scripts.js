@@ -19,10 +19,6 @@ var F = function(args){
         });
     });
 
-    var outputDiv = new sic.widget.sicElement({parent:tabPage.content.selector, tagName:"pre"});
-    outputDiv.selector.addClass("outputElement");
-
-
     var exportPanel = panel.addGroup("Export to XML");
     var exportButton = new sic.widget.sicInput({parent:exportPanel.content.selector, name:"exportButton",
         type:"button", caption:"Export", value:"Export All"});
@@ -33,6 +29,18 @@ var F = function(args){
                 window.open(respArgs.link, "_blank");
         });
     });
+
+    var solrPanel = panel.addGroup("Solr");
+    var solrReindexButton = new sic.widget.sicInput({parent:solrPanel.content.selector, name:"solrReindex",
+        type:"button", caption:"Reindex", value:"Reindex All"});
+    solrReindexButton.selector.click(function(){
+        sic.callMethod({moduleName:"System/SolrControl", methodName:"reindex"}, function(respArgs) {
+            outputDiv.addHtml(sic.debug(respArgs)+"<br/>\n");
+        });
+    });
+
+    var outputDiv = new sic.widget.sicElement({parent:tabPage.content.selector, tagName:"pre"});
+    outputDiv.selector.addClass("outputElement");
 
 
 };

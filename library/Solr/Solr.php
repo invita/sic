@@ -8,6 +8,7 @@ use Sic\Admin\Models\Util;
 
 class Solr {
 
+    protected $action = "/select";
     protected $queryParams = array();
 
     protected $userAgent = null;
@@ -18,6 +19,7 @@ class Solr {
         $this->setUserAgent($this->getRandomUserAgent());
     }
 
+    public function setAction($action){ $this->action = $action; }
     public function setQueryParams($queryParams){ $this->queryParams = $queryParams; }
     public function setUserAgent($userAgent){ $this->userAgent = $userAgent; }
 
@@ -38,7 +40,7 @@ class Solr {
     protected function getUrl(){
         //$url = $_SERVER["HTTP_ORIGIN"].":8983/solr/select";
         //$url = "http://localhost:8983/solr/select";
-        $urlBase = Util::getSolrUrl()."/select";
+        $urlBase = Util::getSolrUrl().$this->action;
 
         $kvArray = array();
         foreach ($this->queryParams as $key => $param) {
