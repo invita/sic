@@ -32,7 +32,7 @@ class SolrControl
         $result = array(
             "status" => true,
             "response" => $response,
-            "queryParams" => $solrQueryParams
+            "message" => "Reindex in progress..."
         );
 
         return $result;
