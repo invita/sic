@@ -24,26 +24,80 @@ class PubSearch extends SicModuleAbs {
 
         $query = $args["staticData"]["query"];
 
-        $sortField = $args["sortField"];
-        $sortOrder = $args["sortOrder"];
-        $pageStart = $args["pageStart"];
-        $pageCount = $args["pageCount"];
+        $sortField = Util::getArg($args, "sortField", "");
+        $sortOrder = Util::getArg($args, "sortOrder", "");
+        $pageStart = Util::getArg($args, "pageStart", "");
+        $pageCount = Util::getArg($args, "pageCount", 10);
 
-        $rows_all = "rows=2147483647";
         $rows = "rows=".$pageCount;
         $wt = "wt=json";
 
+        $sort = ($sortField && $sortOrder) ? $sortField." ".$sortOrder : "score desc";
+
         $solr = new \Solr();
-        $solr->setQueryString("?q=".$query."&".$wt."&".$rows_all);
+        //$solr->setQueryString("?q=".$query."&".$wt."&".$rows_all);
+        $solr->setQueryParams(array(
+            "q" => $query,
+            "wt" => "json",
+            "rows" => "2147483647"
+        ));
         $solr->run();
         $rowCountData = $solr->toArray();
 
         $solr = new \Solr();
-        $solr->setQueryString("?q=".$query."&".$wt."&".$rows."&start=".$pageStart);
+        //$solr->setQueryString("?q=".$query."&".$wt."&".$rows."&start=".$pageStart."&sort=".$sort);
+        $solr->setQueryParams(array(
+            "q" => $query,
+            "wt" => "json",
+            "rows" => $pageCount,
+            "start" => $pageStart,
+            "sort" => $sort
+        ));
         $solr->run();
         $data = $solr->toArray();
 
         if ($data === null) $data = array();
+
+        // Sort columns
+        $columns = array(
+            "pub_id",
+            "parent_id",
+            "series_id",
+            "original_id",
+            "creator",
+            "title",
+            "year",
+
+/*
+            "edition",
+            "issue",
+            "online",
+            "source",
+            "volume",
+            "idno",
+
+            "addidno",
+            "addtitle",
+            "creator_author",
+            "idno_cobiss",
+            "is_series",
+            "note",
+            "page",
+            "place",
+            "proj_id",
+            "publisher",
+            "strng",
+*/
+        );
+
+
+        for ($lineIdx = 0; $lineIdx < count($data); $lineIdx++) {
+            $line = array();
+            foreach ($columns as $colName)
+                $line[$colName] = Util::getArg($data[$lineIdx], $colName, null);
+
+            $data[$lineIdx] = $line;
+        }
 
         return array(
             "data" => $data,
@@ -61,33 +115,72 @@ class PubSearch extends SicModuleAbs {
 
 
         $array = array();
-        $used = array();
-        if(strlen($typed) > 0){
-
-            $rows_all = "rows=10";
-            $wt = "wt=json";
+        if(strlen($typed) >= 3){
 
             $solr = new \Solr();
-            $solr->setQueryString("?q=quickSearch:*".$typed."*&".$wt."&".$rows_all);
+            $solr->setQueryParams(array(
+                "q" => "quickSearch:*".$typed."*",
+                "wt" => "json",
+                "rows" => "10"
+                ));
+            //$solr->setQueryString("?q=quickSearch:*".$typed."*&".$wt."&".$rows_all);
             $solr->run();
             $data = $solr->toArray();
 
-            for($c=0; $c<count($data); $c++){
+            for($c = 0; $c < count($data); $c++){
                 $row = $data[$c];
+                $vals = array_values($row);
+                //print_r($vals); die();
+
+                // Split ||
+                for ($i = 0; $i < count($vals); $i++){
+                    if (!$this->isSubstring($typed, $vals[$i])) continue;
+
+                    if (strpos($vals[$i], "||") !== false) {
+                        $exp = explode("||", $vals[$i]);
+                        foreach ($exp as $e) {
+                            if ($this->isSubstring($typed, $e) && !in_array($e, $array)) {
+                                array_push($array, $e);
+                            }
+                        }
+                    } else {
+                        if (!in_array($vals[$i], $array))
+                        array_push($array, $vals[$i]);
+                    }
+                }
+
+                //array_push($array, json_encode($row)); continue;
+
+
+/*
                 foreach($row as $key => $value){
                     //if(!$value) continue;
-                    //array_push($array, json_encode($row)); continue;
+                    array_push($array, json_encode($row)); continue;
+                    if (strpos($array[$i], "||") !== false) {
+                        $multiLine = explode("||", $array[$i]);
+                        foreach ($multiLine as $ln) {
+                            if (strpos($ln, $typed) !== false) {
+                                $array[$i] = $ln;
+                                break;
+                            }
+                        }
+                    }
                     if(strpos($value, $typed) !== false && !in_array($value, $used)){
                         array_push($array, $value);
                         array_push($used, $value);
                     }
                 }
+*/
+
             }
         }
 
         return $array;
     }
 
+    private function isSubstring($sub, $main) {
+        return strpos(strtoupper($main), strtoupper($sub)) !== false;
+    }
 
     public function getZoteroUrl(){
 

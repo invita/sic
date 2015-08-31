@@ -37,91 +37,7 @@ var F = function(args) {
     var cobissResultsContainer = new sic.widget.sicElement({parent:pubSearchTable.getCell(0, 1).selector, tagClass:"pubSearch_rightContainer"});
 
     var staticDataQuery = "*:*";
-    /*
-    var createStaticData = function(fields){
 
-        var neki = "";
-
-
-
-        var query = "*:*&fq=("+neki+")";
-
-        return {query : query};
-
-
-*/
-
-        /*
-        if(!fields) return {query : staticDataQuery};
-        else {
-            //sic.dump(fields, 2);
-            staticDataQuery = "*:*";
-            var arr = "&fq=(";
-            var count = 0;
-            for(var key in fields){
-                if(!fields[key] || (fields[key] && !fields[key][0]) || (fields[key][0] && jQuery.isPlainObject(fields[key][0]) && !fields[key][0].value)) continue;
-
-                if(count != 0) arr += " or ";
-                arr += key+":(";
-                if(jQuery.isArray(fields[key])){
-                    for(var c=0; c<fields[key].length; c++){
-                        var r = fields[key][c];
-                        var value = (jQuery.isPlainObject(r) ? r.value : r);
-                        arr += "*"+value+"*";
-                        if( fields[key].length - 1 != c){
-                            arr += " or "
-                        }
-                    }
-                    arr += ")";
-                } else {
-                    var r = fields[key];
-                    var value = (jQuery.isPlainObject(r) ? r.value : r);
-                    arr += "*"+value+"*"+")";
-                }
-                count++;
-*/
-                /*
-                if(jQuery.isArray(fields[key])){
-                    for(var c=0; c<fields[key].length; c++){
-                        if(staticDataQuery){
-                            if(jQuery.isPlainObject(fields[key][c])){
-                                staticDataQuery += " and "+key+":\"*"+fields[key][c].value+"*\"";
-                            } else {
-                                staticDataQuery += " and "+key+":\"*"+fields[key][c]+"*\"";
-                            }
-                        } else {
-                            if(jQuery.isPlainObject(fields[key][c])){
-                                staticDataQuery = key+":\"*"+fields[key][c].value+"*\"";
-                            } else {
-                                staticDataQuery = key+":\"*"+fields[key][c]+"*\"";
-                            }
-                        }
-                    }
-                } else {
-                    if(staticDataQuery){
-                        if(jQuery.isPlainObject(fields[key])){
-                            staticDataQuery += " and "+key+":\"*"+fields[key].value+"*\"";
-                        } else {
-                            staticDataQuery += " and "+key+":\"*"+fields[key]+"*\"";
-                        }
-                    } else {
-                        if(jQuery.isPlainObject(fields[key])){
-                            staticDataQuery = key+":\"*"+fields[key].value+"*\"";
-                        } else {
-                            staticDataQuery = key+":\"*"+fields[key]+"*\"";
-                        }
-                    }
-                }
-                */
-        /*
-            }
-            staticDataQuery += arr+")";
-
-            //alert(staticDataQuery);
-            return {query : staticDataQuery};
-        }
-         */
-    //};
 
     // Search Panel (left)
     var searchPanel = new sic.widget.sicPanel({parent:searchContainer.selector});
@@ -151,8 +67,7 @@ var F = function(args) {
     var quickSearchGroup = searchPanel.addGroup();
     var quickSearchForm = new sic.widget.sicForm({parent:quickSearchGroup.content.selector, captionWidth:"90px", inputClass:"searchInput"});
     var quickSearchBox = quickSearchForm.addInput({name:"quickSearch", placeholder:"Quick search...", caption:false,
-        //autoComplete: {moduleName: "Pub/PubSearch", methodName: "autoComplete_search" }
-        });
+        autoComplete: {moduleName: "Pub/PubSearch", methodName: "autoComplete_search" } });
     quickSearchBox.selector.addClass("inline");
     quickSearchBox.input.selector.css("width", "285px");
     var quickSearchSubmitButton = quickSearchForm.addInput({value:"Local", type:"submit", caption:" "});
@@ -346,9 +261,10 @@ var F = function(args) {
         tabPage: tabPage.parentTab ? tabPage.parentTab : tabPage,
         selectCallback: args.selectCallback,
         fields: {
-            pub_id: { hintF: function(args) { sic.hint.publication(args.row.lastRowData.pub_id); } },
-            parent_id: { hintF: function(args) { sic.hint.publication(args.row.lastRowData.parent_id); } },
-            series_id: { hintF: function(args) { sic.hint.publication(args.row.lastRowData.series_id); } },
+            pub_id: { caption:"Entity&nbsp;Id", hintF: function(args) { sic.hint.publication(args.row.lastRowData.pub_id); } },
+            parent_id: { caption:"Parent&nbsp;Id", hintF: function(args) { sic.hint.publication(args.row.lastRowData.parent_id); } },
+            series_id: { caption:"Series&nbsp;Id", hintF: function(args) { sic.hint.publication(args.row.lastRowData.series_id); } },
+            original_id: { caption:"Original&nbsp;Id" },
             creator: { tagClass:"sicDataTable_shortText",
                 hintF: function(args) { sic.showHint(sic.replacePipes(args.row.lastRowData.__creator_long, "<br/>")); } },
             title: { tagClass:"sicDataTable_shortText",

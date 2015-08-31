@@ -292,7 +292,12 @@ sic.widget.sicInput = function(args)
 
                     if (_p.lastAutoComplete) _p.lastAutoComplete.hide();
 
-                    var sicAutoComplete = new sic.widget.sicAutoComplete({ lines: cbArgs, inputSelector:_p.input.selector });
+                    if (!cbArgs || !cbArgs.length) {
+                        _p.lastAutoComplete = null;
+                        return;
+                    }
+
+                    var sicAutoComplete = new sic.widget.sicAutoComplete({ lines: cbArgs, typed:_p.getValue(), inputSelector:_p.input.selector });
                     var position = _p.input.getAbsolutePosition();
                     position.top += 25;
                     sicAutoComplete.moveToPoint(position);

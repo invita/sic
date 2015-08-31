@@ -42,6 +42,11 @@ class Util
         return false;
     }
 
+    public static function getSolrUrl() {
+        return self::get('solrUrl');
+    }
+
+
     public static function set($key, $val) {
         self::$dict[$key] = $val;
     }

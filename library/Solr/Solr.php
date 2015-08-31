@@ -4,9 +4,11 @@ ini_set("display_errors", 1);
 
 require_once(realpath(__DIR__."/../Httpful/httpful.phar"));
 
+use Sic\Admin\Models\Util;
+
 class Solr {
 
-    protected $queryString = null;
+    protected $queryParams = array();
 
     protected $userAgent = null;
 
@@ -16,8 +18,7 @@ class Solr {
         $this->setUserAgent($this->getRandomUserAgent());
     }
 
-    public function setQueryString($queryString){ $this->queryString = $queryString; }
-
+    public function setQueryParams($queryParams){ $this->queryParams = $queryParams; }
     public function setUserAgent($userAgent){ $this->userAgent = $userAgent; }
 
     protected function getRandomUserAgent(){
@@ -35,12 +36,19 @@ class Solr {
     }
 
     protected function getUrl(){
-        //$url = $_SERVER["HTTP_ORIGIN"].":8983/solr/select".$this->queryString;
-        $url = "http://localhost:8983/solr/select".$this->queryString;
-        //$url = urlencode($url);
+        //$url = $_SERVER["HTTP_ORIGIN"].":8983/solr/select";
+        //$url = "http://localhost:8983/solr/select";
+        $urlBase = Util::getSolrUrl()."/select";
 
-        $url = str_replace("\\\"", "%22", $url);
-        $url = str_replace(" ", "%20", $url);
+        $kvArray = array();
+        foreach ($this->queryParams as $key => $param) {
+            $param = urlencode($param);
+            array_push($kvArray, $key."=".$param);
+        }
+        $queryStr = "?".join("&", $kvArray);
+
+        $url = $urlBase.$queryStr;
+
         //echo $url."\n";
         return $url;
     }
@@ -53,7 +61,10 @@ class Solr {
 
     protected function parse($response){
         $json = json_decode($response->body, true);
-        $this->data = $json["response"]["docs"];
+        if (isset($json["response"]) && isset($json["response"]["docs"]))
+            $this->data = $json["response"]["docs"];
+        else
+            $this->data = array();
     }
 
     public function run(){
