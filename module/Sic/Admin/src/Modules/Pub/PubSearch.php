@@ -189,14 +189,14 @@ class PubSearch extends SicModuleAbs {
 
         $user_id = $_SESSION["Zend_Auth"]['storage']["id"];
 
-        $row = DbUtil::selectRow("user", array("zotero_id", "zotero_col", "zotero_key"), "id = ".$user_id);
+        //$row = DbUtil::selectRow("user", array("zotero_id", "zotero_col", "zotero_key"), "id = ".$user_id);
+        $row = DbUtil::selectRow("user", array("zotero_id", "zotero_key"), "id = ".$user_id);
         $zotero_id = $row["zotero_id"];
-        $zotero_col = $row["zotero_col"];
         $zotero_key = $row["zotero_key"];
 
         $url = null;
-        if($zotero_id && $zotero_col){
-            $url = "https://api.zotero.org/users/".$zotero_id."/collections/".$zotero_col."/items";
+        if($zotero_id){
+            $url = "https://api.zotero.org/users/".$zotero_id."/items";
             if($zotero_key){
                 $url .= "?key=".$zotero_key;
             }
