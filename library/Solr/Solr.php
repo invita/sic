@@ -13,6 +13,7 @@ class Solr {
 
     protected $userAgent = null;
 
+    protected $lastRawData = null;
     protected $data = null;
 
     public function __construct(){
@@ -62,6 +63,7 @@ class Solr {
     }
 
     protected function parse($response){
+        $this->lastRawData = $response;
         $json = json_decode($response->body, true);
         if (isset($json["response"]) && isset($json["response"]["docs"]))
             $this->data = $json["response"]["docs"];
@@ -75,4 +77,5 @@ class Solr {
     }
 
     public function toArray(){ return $this->data; }
+    public function getLastRawData(){ return $this->lastRawData; }
 }

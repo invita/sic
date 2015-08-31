@@ -27,6 +27,7 @@ class SolrControl
         $solr->setAction("/collection1/dataimport");
         $solr->setQueryParams($solrQueryParams);
         $solr->run();
+        $response1 = print_r($solr->getLastRawData(), true);
 
 
         $solrStatus = new \Solr();
@@ -36,13 +37,13 @@ class SolrControl
             "wt" => "json"
         ));
         $solrStatus->run();
-        $response = $solrStatus->toArray();
-
+        $response2 = print_r($solrStatus->getLastRawData(), true);
 
         $result = array(
             "status" => true,
-            "response" => $response,
-            "message" => "Reindex in progress..."
+            "message" => "Reindex in progress...",
+            //"response1" => $response1,
+            //"response2" => $response2,
         );
 
         return $result;
