@@ -343,7 +343,7 @@ var F = function(args) {
 
             fields.push("("+values.join(" AND ")+")");
         }
-        if (fields.length) fq = '&fq=('+fields.join(" AND ")+')';
+        if (fields.length) fq = '('+fields.join(" AND ")+')';
         //sic.dump(fq);
 
         dataTable.dataSource.staticData = { q: "*:*", fq: fq };

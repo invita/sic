@@ -125,7 +125,7 @@ class DbUtil
             foreach ($fValueExplode as $fVal) {
 
                 // Auto add stars to strings on both ends
-                if (is_string($fVal) && !is_numeric($fVal))
+                if (is_string($fVal) && !is_numeric($fVal) && strpos($fVal, "..") === false)
                     $fVal = '*'.$fVal.'*';
 
                 $whereAnd = new Where(null, PredicateSet::COMBINED_BY_AND);

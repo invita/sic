@@ -43,6 +43,7 @@ abstract class SicModuleAbs
         switch($filterMode) {
             case "normal": default:
                 $filterWhere = DbUtil::prepareSqlFilter($filter);
+                //print_r($filterWhere); die("foo");
                 if (count($filterWhere->getPredicates()))
                     $select->where->addPredicate($filterWhere);
                 break;
