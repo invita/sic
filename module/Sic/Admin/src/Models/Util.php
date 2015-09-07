@@ -1,6 +1,8 @@
 <?php
 namespace Sic\Admin\Models;
 
+use Zend\Authentication\AuthenticationService;
+
 class Util
 {
     protected static $dict = array();
@@ -91,7 +93,27 @@ class Util
     }
 
     public static function hasPermission($powerLevel, $actionName) {
+
+        $permMap = array(
+            "searchModule" => true,
+            "systemModule" => false,
+            "scriptsModule" => false,
+            "usersModule" => false,
+            "entitiesModule" => true,
+            "projectModule" => true,
+            "regularModule" => false,
+
+            "System/ImportEntities" => false,
+        );
+
         if ($powerLevel == 'superUser') return true;
-        else return false;
+        else return $permMap[$actionName];
+    }
+
+    public static function userHasPermission($actionName) {
+        $auth = new AuthenticationService();
+        $identity = $auth->getIdentity();
+        $powerLevel = isset($identity['power']) ? $identity['power'] : 0;
+        return self::hasPermission($powerLevel, $actionName);
     }
 }

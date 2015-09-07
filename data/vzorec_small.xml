@@ -674,8 +674,9 @@
    <sameAs>
       <wrapper>
          <id>1</id>
-         <entityID status="regular">2371</entityID>
-         <entityID status="alternative">2372</entityID>
+         <entityID status="regular">1</entityID>
+         <entityID status="alternative">2</entityID>
+         <entityID status="alternative">3</entityID>
       </wrapper>
       <wrapper>
          <id>2</id>

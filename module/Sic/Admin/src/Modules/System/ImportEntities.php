@@ -7,10 +7,17 @@ use Zend\Db\Sql\Sql;
 use Sic\Admin\Models\Util;
 use Sic\Admin\Models\DbUtil;
 
-class Scripts
+class ImportEntities
 {
     public function importEntities($args)
     {
+        if (!Util::userHasPermission("System/ImportEntities")) {
+            return array(
+                "status" => false,
+                "alert" => "You don't have permissions to access this action!"
+            );
+        }
+
         $entityCount = 0;
         $relationsCount = 0;
         $sameAsCount = 0;
@@ -25,8 +32,7 @@ class Scripts
         catch (Exception $e) {
             return array(
                 "status" => false,
-                "error" => "Error reading file ".$fileName,
-                "message" => $e->getMessage()
+                "alert" => "Error reading file ".$fileName.", ".$e->getMessage(),
             );
         }
 
@@ -40,8 +46,7 @@ class Scripts
             }
             return array(
                 "status" => false,
-                "error" => "Error parsing XML",
-                "message" => $errorMessage
+                "alert" => "Error parsing XML: ".$errorMessage
             );
         }
 
@@ -62,10 +67,10 @@ class Scripts
         $testEntity = null;
         $errors = array();
 
+        // Parse entities
         foreach($xml->entities->entity as $entity){
 
             $pubId = (int)$entity->id;
-
 
             try {
 
@@ -154,16 +159,47 @@ class Scripts
             $entityCount++;
         }
 
+
+        // Parse sameAs
+        foreach($xml->sameAs->wrapper as $sameAsWrapper){
+            $alternativeList = array();
+            $regular = null;
+            foreach ($sameAsWrapper->entityID as $entityID_element) {
+                $status = trim((string)$entityID_element->attributes()["status"][0]);
+                $entityId = trim((string)$entityID_element);
+
+                if (strtoupper($status) == "ALTERNATIVE")
+                    $alternativeList[] = $entityId;
+                else if (strtoupper($status) == "REGULAR")
+                    $regular = $entityId;
+                else
+                    $errors[] = "Unknown sameAs status: ".$status.". Expected 'regular' or 'alternative'";
+            }
+
+            DbUtil::updateTable("publication", array("original_id" => -1), array("pub_id" => $regular));
+            foreach ($alternativeList as $alternative) {
+                DbUtil::updateTable("publication", array("original_id" => $regular), array("pub_id" => $alternative));
+            }
+        }
+
+
         $result = array(
             "status" => true,
             "entityCount" => $entityCount
         );
-        if (count($errors)) $result["errors"] = $errors;
+        if (count($errors)) {
+            $result["errors"] = $errors;
+            $result["alert"] = count($errors)." errors: ".join("\n", $errors);
+        } else {
+            $result["alert"] = "Import successful! Imported ".$entityCount." entities";
+        }
 
         return $result;
     }
 
+    private function clearEntities($args)
+    {
 
-
+    }
 
 }

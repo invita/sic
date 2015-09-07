@@ -19,7 +19,8 @@ TRUNCATE TABLE `publication_title`;
 TRUNCATE TABLE `publication_volume`;
 TRUNCATE TABLE `publication_year`;
 TRUNCATE TABLE `quote`;
-TRUNCATE TABLE `session`;
 TRUNCATE TABLE `project`;
 TRUNCATE TABLE `project_line`;
 TRUNCATE TABLE `project_line_selected`;
+
+TRUNCATE TABLE `session`;

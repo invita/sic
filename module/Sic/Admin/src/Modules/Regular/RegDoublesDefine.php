@@ -137,9 +137,9 @@ class RegDoublesDefine extends SicModuleAbs
             DbUtil::updateTable("publication", array("original_id" => $selPub['temp_original_id']), array("pub_id" => $selPub['pub_id']));
         }
 
-        foreach ($selectedPubs as $selPub) {
-            DbUtil::updateTable("publication", array("original_id" => $selPub['temp_original_id']), array("pub_id" => $selPub['pub_id']));
-        }
+        //foreach ($selectedPubs as $selPub) {
+        //    DbUtil::updateTable("publication", array("original_id" => $selPub['temp_original_id']), array("pub_id" => $selPub['pub_id']));
+        //}
 
         DbUtil::deleteFrom("publication_doubles_selected", array("user_id" => $userId));
 

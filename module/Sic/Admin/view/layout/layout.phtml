@@ -70,9 +70,11 @@
             <div>
                 <ul class="navigationUl">
 
+                    <?php if (\Sic\Admin\Models\Util::hasPermission($this->power, 'searchModule')): ?>
                     <li class="mainMenuList">
                         <a href="javascript:sic.loadModule({moduleName:'Pub/PubSearch', newTab:'Search'});">Search</a>
                     </li>
+                    <?php endif; ?>
 
                     <?php if (\Sic\Admin\Models\Util::hasPermission($this->power, 'systemModule')): ?>
                     <li class="mainMenuList">
@@ -92,13 +94,17 @@
                     </li>
                     <?php endif; ?>
 
+                    <?php if (\Sic\Admin\Models\Util::hasPermission($this->power, 'entitiesModule')): ?>
                     <li class="mainMenuList">
                         <a href="javascript:sic.loadModule({moduleName:'Pub/PubList', newTab:'Entities'});">Entities</a>
                     </li>
+                    <?php endif; ?>
 
+                    <?php if (\Sic\Admin\Models\Util::hasPermission($this->power, 'projectModule')): ?>
                     <li class="mainMenuList">
                         <a href="javascript:sic.loadModule({moduleName:'Project/ProjectList', newTab:'Projects'});">Projects</a>
                     </li>
+                    <?php endif; ?>
 
                     <?php if (\Sic\Admin\Models\Util::hasPermission($this->power, 'regularModule')): ?>
                     <li class="mainMenuList">
