@@ -14,13 +14,18 @@ var F = function(args) {
     formUserData.addInput({name:"zotero_id", type:"text", placeholder:"Zotero UserId...", caption:"zotero user"});
     //formUserData.addInput({name:"zotero_col", type:"text", placeholder:"Zotero CollectionId...", caption:"zotero collection"});
     formUserData.addInput({name:"zotero_key", type:"text", placeholder:"Zotero Key...", caption:"zotero key"});
-    formUserData.addInput({name:"save", type:"submit", value:"Save", caption: " "}).selector.click(function(e){
+    formUserData.addInput({name:"save", type:"submit", value:"Save", caption: " "})
+        .selector.click(function(e){
             var response = sic.callMethod({moduleName:"User/UserEdit", methodName:"updateUser",
                 id: args.id, data:formUserData.getValue()});
             formUserData.setValue(response.data);
             args.id = response.data.id;
-        panelBasic.firstGroup.setName("Update User (id: "+response.data.id+")");
-        tabPageBasic.parentTab.setCaption(sic.mergePlaceholders(args.entityTitle, response.data));
+            panelBasic.firstGroup.setName("Update User (id: "+response.data.id+")");
+            tabPageBasic.parentTab.setCaption(sic.mergePlaceholders(args.entityTitle, response.data));
+
+            if (confirm("Saved! Do you want to close this tab?")) {
+                tabPageBasic.parentTab.destroyTab();
+            }
         });
 
 
@@ -40,6 +45,7 @@ var F = function(args) {
         var response = sic.callMethod({moduleName:"User/UserEdit", methodName:"updatePassword",
             id: args.id, data:formPassword.getValue()});
         formPassword.setValue({password:""});
+        alert("Password is reset!");
     });
 
 

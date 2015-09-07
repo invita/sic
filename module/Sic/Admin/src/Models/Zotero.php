@@ -99,8 +99,10 @@ class Zotero
 
     protected function parse($response){
         $json = json_decode($response, true);
-        $lastDocIdx = count($json) - 1;
-        if($lastDocIdx > -1){
+        if (!count($json)) {
+            // No results
+        } else {
+            $lastDocIdx = 0; //count($json) - 1;
             $lastDoc = $json[$lastDocIdx];
 
             $this->document = new Document();
@@ -138,8 +140,6 @@ class Zotero
             $this->parseUniversity($lastDoc);
             $this->parseWebsiteTitle($lastDoc);
             $this->parseWebsiteType($lastDoc);
-
-
         }
 
     }
@@ -280,7 +280,7 @@ class Zotero
     protected function parseISBN($json){
         $str = $this->getByPath($json, "data/ISBN");
         if($str){
-            $this->document->addIdno($str, 3);
+            $this->document->addIdno($str, 2);
         }
     }
 

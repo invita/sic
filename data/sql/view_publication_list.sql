@@ -1,67 +1,62 @@
-DROP VIEW view_publication_list;
-CREATE ALGORITHM=MERGE
+CREATE OR REPLACE ALGORITHM=MERGE
 VIEW `view_publication_list` AS
-SELECT
-    `publication`.`pub_id` AS `pub_id`,
-    `publication`.`parent_id` AS `parent_id`,
-    `publication`.`original_id` AS `original_id`,
-    `publication`.`is_series` AS `is_series`,
-    `pubGetSeries`(`publication`.`pub_id`) AS `series_id`,
-    (select group_concat(`publication_creator`.`creator` separator '||')
-      from `publication_creator`
-      where (`publication_creator`.`pub_id` = `publication`.`pub_id`)
-      order by `publication_creator`.`idx`) AS `creator`,
-    (select group_concat(`publication_creator`.`creator` separator '||')
-      from (`publication_creator`
-      join `codes_pub_creator` on((`codes_pub_creator`.`code_id` = `publication_creator`.`code_id`)))
-       where ((`publication_creator`.`pub_id` = `publication`.`pub_id`)
-       and (`codes_pub_creator`.`value` = 'author'))
-       order by `publication_creator`.`idx`) AS `creator_author`,
-    (select group_concat(`publication_creator`.`creator` separator '||')
-      from (`publication_creator`
-      join `codes_pub_creator` on((`codes_pub_creator`.`code_id` = `publication_creator`.`code_id`)))
-      where ((`publication_creator`.`pub_id` = `publication`.`pub_id`)
-      and (`codes_pub_creator`.`value` = 'editor'))
-      order by `publication_creator`.`idx`) AS `creator_editor`,
-    (select group_concat(`publication_creator`.`creator` separator '||')
-      from (`publication_creator`
-      join `codes_pub_creator` on((`codes_pub_creator`.`code_id` = `publication_creator`.`code_id`)))
-      where ((`publication_creator`.`pub_id` = `publication`.`pub_id`)
-      and (`codes_pub_creator`.`value` = 'organization'))
-      order by `publication_creator`.`idx`) AS `creator_organization`,
-    (select group_concat(`publication_idno`.`idno` separator '||')
-      from `publication_idno`
-      where (`publication_idno`.`pub_id` = `publication`.`pub_id`)
-      order by `publication_idno`.`idx`) AS `idno`,
-    (select group_concat(`publication_idno`.`idno` separator '||')
-      from (`publication_idno` join `codes_pub_idno` on((`codes_pub_idno`.`code_id` = `publication_idno`.`code_id`)))
-      where ((`publication_idno`.`pub_id` = `publication`.`pub_id`)
-      and (`codes_pub_idno`.`value` = 'cobiss'))
-      order by `publication_idno`.`idx`) AS `idno_cobiss`,
-    (select group_concat(`publication_idno`.`idno` separator '||')
-      from (`publication_idno` join `codes_pub_idno` on((`codes_pub_idno`.`code_id` = `publication_idno`.`code_id`)))
-      where ((`publication_idno`.`pub_id` = `publication`.`pub_id`)
-      and (`codes_pub_idno`.`value` = 'issn'))
-      order by `publication_idno`.`idx`) AS `idno_issn`,
-    (select group_concat(`publication_idno`.`idno` separator '||')
-      from (`publication_idno`
-      join `codes_pub_idno` on((`codes_pub_idno`.`code_id` = `publication_idno`.`code_id`)))
-      where ((`publication_idno`.`pub_id` = `publication`.`pub_id`)
-      and (`codes_pub_idno`.`value` = 'sistory'))
-      order by `publication_idno`.`idx`) AS `idno_sistory`,
-    (select group_concat(`publication_year`.`year` separator '||')
-      from `publication_year`
-      where (`publication_year`.`pub_id` = `publication`.`pub_id`) order by `publication_year`.`idx`) AS `year`,
-    (select group_concat(`publication_title`.`title` separator '||')
-      from `publication_title`
-      where (`publication_title`.`pub_id` = `publication`.`pub_id`)
-      order by `publication_title`.`idx`) AS `title`,
-    (select group_concat(`publication_publisher`.`publisher` separator '||')
-      from `publication_publisher`
-      where (`publication_publisher`.`pub_id` = `publication`.`pub_id`)
-      order by `publication_publisher`.`idx`) AS `publisher`,
-    (select group_concat(`publication_place`.`place` separator '||')
-      from `publication_place`
-      where (`publication_place`.`pub_id` = `publication`.`pub_id`)
-      order by `publication_place`.`idx`) AS `place`,
-    (select group_concat(`publication_addidno`.`addidno` separator '||') from `publication_addidno` where (`publication_addidno`.`pub_id` = `publication`.`pub_id`) order by `publication_addidno`.`idx`) AS `addidno`,(select group_concat(`publication_addtitle`.`addtitle` separator '||') from `publication_addtitle` where (`publication_addtitle`.`pub_id` = `publication`.`pub_id`) order by `publication_addtitle`.`idx`) AS `addtitle`,(select group_concat(`publication_volume`.`volume` separator '||') from `publication_volume` where (`publication_volume`.`pub_id` = `publication`.`pub_id`) order by `publication_volume`.`idx`) AS `volume`,(select group_concat(`publication_issue`.`issue` separator '||') from `publication_issue` where (`publication_issue`.`pub_id` = `publication`.`pub_id`) order by `publication_issue`.`idx`) AS `issue`,(select group_concat(`publication_page`.`page` separator '||') from `publication_page` where (`publication_page`.`pub_id` = `publication`.`pub_id`) order by `publication_page`.`idx`) AS `page`,(select group_concat(`publication_edition`.`edition` separator '||') from `publication_edition` where (`publication_edition`.`pub_id` = `publication`.`pub_id`) order by `publication_edition`.`idx`) AS `edition`,(select group_concat(`publication_source`.`source` separator '||') from `publication_source` where (`publication_source`.`pub_id` = `publication`.`pub_id`) order by `publication_source`.`idx`) AS `source`,(select group_concat(`publication_online`.`online` separator '||') from `publication_online` where (`publication_online`.`pub_id` = `publication`.`pub_id`) order by `publication_online`.`idx`) AS `online`,(select group_concat(`publication_strng`.`strng` separator '||') from `publication_strng` where (`publication_strng`.`pub_id` = `publication`.`pub_id`) order by `publication_strng`.`idx`) AS `strng`,(select group_concat(`publication_note`.`note` separator '||') from `publication_note` where (`publication_note`.`pub_id` = `publication`.`pub_id`) order by `publication_note`.`idx`) AS `note`,(select group_concat(`publication_project_link`.`proj_id` separator '||') from `publication_project_link` where (`publication_project_link`.`pub_id` = `publication`.`pub_id`) order by `publication_project_link`.`link_id`) AS `proj_id` from `publication`
+select
+	pub.pub_id as `pub_id`,
+    pub.parent_id as `parent_id`,
+    pub.original_id as `original_id`,
+    pub.is_series as `is_series`,
+    PUBGETSERIES(pub.pub_id) as `series_id`,
+    GROUP_CONCAT(distinct creator.creator order by creator.idx  SEPARATOR '||') as `creator`,
+    GROUP_CONCAT(distinct creator_author.creator order by creator_author.idx  SEPARATOR '||') as `creator_author`,
+    GROUP_CONCAT(distinct creator_editor.creator order by creator_editor.idx  SEPARATOR '||') as `creator_editor`,
+    GROUP_CONCAT(distinct creator_organization.creator order by creator_organization.idx  SEPARATOR '||') as `creator_organization`,
+    GROUP_CONCAT(distinct idno.idno order by idno.idx  SEPARATOR '||') as `idno`,
+    GROUP_CONCAT(distinct idno_cobiss.idno order by idno_cobiss.idx  SEPARATOR '||') as `idno_cobiss`,
+    GROUP_CONCAT(distinct idno_issn.idno order by idno_issn.idx  SEPARATOR '||') as `idno_issn`,
+    GROUP_CONCAT(distinct idno_sistory.idno order by idno_sistory.idx  SEPARATOR '||') as `idno_sistory`,
+    GROUP_CONCAT(distinct `year`.`year` order by `year`.idx  SEPARATOR '||') as `year`,
+    GROUP_CONCAT(distinct title.title order by title.idx  SEPARATOR '||') as `title`,
+    GROUP_CONCAT(distinct publisher.publisher order by publisher.idx  SEPARATOR '||') as `publisher`,
+    GROUP_CONCAT(distinct place.place order by place.idx  SEPARATOR '||') as `place`,
+    GROUP_CONCAT(distinct addidno.addidno order by addidno.idx  SEPARATOR '||') as `addidno`,
+    GROUP_CONCAT(distinct addtitle.addtitle order by addtitle.idx  SEPARATOR '||') as `addtitle`,
+    GROUP_CONCAT(distinct volume.volume order by volume.idx  SEPARATOR '||') as `volume`,
+    GROUP_CONCAT(distinct issue.issue order by issue.idx  SEPARATOR '||') as `issue`,
+    GROUP_CONCAT(distinct `page`.`page` order by `page`.idx  SEPARATOR '||') as `page`,
+    GROUP_CONCAT(distinct edition.edition order by edition.idx  SEPARATOR '||') as `edition`,
+    GROUP_CONCAT(distinct `source`.`source` order by `source`.idx  SEPARATOR '||') as `source`,
+    GROUP_CONCAT(distinct `online`.`online` order by `online`.idx  SEPARATOR '||') as `online`,
+    GROUP_CONCAT(distinct strng.strng order by strng.idx  SEPARATOR '||') as `strng`,
+    GROUP_CONCAT(distinct note.note order by note.idx  SEPARATOR '||') as `note`,
+    GROUP_CONCAT(distinct project_link.proj_id order by project_link.link_id  SEPARATOR '||') as `proj_id`
+
+from publication pub
+
+left join publication_creator creator on creator.pub_id = pub.pub_id
+left join publication_creator creator_author on creator_author.pub_id = pub.pub_id and creator_author.code_id = 1 -- codes_pub_creator.value = 'author'
+left join publication_creator creator_editor on creator_editor.pub_id = pub.pub_id and creator_editor.code_id = 3 -- codes_pub_creator.value = 'editor'
+left join publication_creator creator_organization on creator_organization.pub_id = pub.pub_id and creator_organization.code_id = 5 -- codes_pub_creator.value = 'organization'
+left join publication_idno idno on idno.pub_id = pub.pub_id
+left join publication_idno idno_cobiss on idno_cobiss.pub_id = pub.pub_id and idno_cobiss.code_id = 1 -- codes_pub_idno.value = 'cobiss'
+left join publication_idno idno_issn on idno_issn.pub_id = pub.pub_id and idno_issn.code_id = 3 -- codes_pub_idno.value = 'issn'
+left join publication_idno idno_sistory on idno_sistory.pub_id = pub.pub_id and idno_sistory.code_id = 5 -- codes_pub_idno.value = 'sistory'
+left join publication_year `year` on `year`.pub_id = pub.pub_id
+left join publication_title title on title.pub_id = pub.pub_id
+left join publication_publisher publisher on publisher.pub_id = pub.pub_id
+left join publication_place place on place.pub_id = pub.pub_id
+left join publication_addidno addidno on addidno.pub_id = pub.pub_id
+left join publication_addtitle addtitle on addtitle.pub_id = pub.pub_id
+left join publication_volume volume on volume.pub_id = pub.pub_id
+left join publication_issue issue on issue.pub_id = pub.pub_id
+left join publication_page `page` on page.pub_id = pub.pub_id
+left join publication_edition edition on edition.pub_id = pub.pub_id
+left join publication_source `source` on `source`.pub_id = pub.pub_id
+left join publication_online `online` on `online`.pub_id = pub.pub_id
+left join publication_strng strng on strng.pub_id = pub.pub_id
+left join publication_note note on note.pub_id = pub.pub_id
+left join publication_project_link project_link on project_link.pub_id = pub.pub_id
+
+group by pub.pub_id
+
+
+
