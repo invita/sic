@@ -34,7 +34,7 @@ var F = function(args){
     var solrReindexButton = new sic.widget.sicInput({parent:solrPanel.content.selector, name:"solrReindex",
         type:"button", caption:"Reindex", value:"Reindex All"});
     solrReindexButton.selector.click(function(){
-        sic.callMethod({moduleName:"System/SolrControl", methodName:"reindex"}, function(respArgs) {
+        sic.callMethod({moduleName:"System/SolrControl", methodName:"reindex", waitTime:1000}, function(respArgs) {
             outputDiv.addHtml(sic.debug(respArgs)+"<br/>\n");
         });
     });

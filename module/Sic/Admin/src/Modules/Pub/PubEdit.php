@@ -6,6 +6,7 @@ use Zend\Db\Sql\Sql;
 use Sic\Admin\Models\Util;
 use Sic\Admin\Models\DbUtil;
 use Sic\Admin\Modules\Project\ProjectLineSelect;
+use Zend\Db\Sql\Expression;
 
 class PubEdit {
 
@@ -59,7 +60,8 @@ class PubEdit {
         $pubData = array(
             "parent_id" => intval(Util::getArg($data, 'parent_id', 0)),
             "original_id" => intval(Util::getArg($data, 'original_id', 0)),
-            "is_series" => intval(Util::getArg($data, 'is_series', 0))
+            "is_series" => intval(Util::getArg($data, 'is_series', 0)),
+            "modified_date" => new Expression("NOW()")
         );
 
         DbUtil::updateTable('publication', $pubData, array('pub_id' => $pub_id));

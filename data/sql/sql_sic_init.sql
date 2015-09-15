@@ -538,3 +538,7 @@ CREATE TABLE `publication_doubles_selected` (
 ALTER TABLE `publication_doubles_selected` ADD `temp_original_id` INT NOT NULL ;
 ALTER TABLE `user` ADD `power` VARCHAR(16) NOT NULL AFTER `notes` ;
 UPDATE `user` SET power = 'superUser';
+
+
+-- 2015-09-15
+ALTER TABLE `publication` ADD `modified_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , ADD INDEX (`modified_date`) ;

@@ -106,16 +106,16 @@ var F = function(args) {
 
         addidno: { caption:"addIdno", placeholder:"Additional Identifier", isArray:true },
         addtitle: { caption:"addTitle", placeholder:"Additional Title", isArray:true },
-        place: { caption:"place", placeholder:"Place", isArray:true },
-        publisher: { caption:"publisher", placeholder:"Publisher", isArray:true },
+        place: { caption:"place", placeholder:"Place", isArray:true, type:"textarea" },
+        publisher: { caption:"publisher", placeholder:"Publisher", isArray:true, type:"textarea" },
         volume: { caption:"volume", placeholder:"Volume", isArray:true },
         issue: { caption:"issue", placeholder:"Issue", isArray:true },
         page: { caption:"page", placeholder:"Page", isArray:true },
         edition: { caption:"edition", placeholder:"Edition", isArray:true },
-        source: { caption:"source", placeholder:"Source", isArray:true, withCode:sic.codes.pubSource },
-        online: { caption:"online", placeholder:"Online", isArray:true, withCode:sic.codes.pubOnline },
-        strng: { caption:"string", placeholder:"String", isArray:true },
-        note: { caption:"note", placeholder:"Note", isArray:true },
+        source: { caption:"source", placeholder:"Source", isArray:true, withCode:sic.codes.pubSource, type:"textarea" },
+        online: { caption:"online", placeholder:"Online", isArray:true, withCode:sic.codes.pubOnline, type:"textarea" },
+        strng: { caption:"string", placeholder:"String", isArray:true, type:"textarea" },
+        note: { caption:"note", placeholder:"Note", isArray:true, type:"textarea" },
 
         _group2: { }, // Separator Group, make buttons (local db search) their own group
     }
@@ -226,11 +226,12 @@ var F = function(args) {
     });
 
     // *** Solr ***
+    /*
     var solrGroup = searchPanel.addGroup("Solr");
     var solrForm = new sic.widget.sicForm({parent:solrGroup.content.selector, captionWidth:"100px", inputClass:"searchInput"});
     solrForm.addInput({name:"query", caption:"Solr query"});
     var solrSubmitButton = solrForm.addInput({value:"Solr query", type:"submit", caption: " "});
-
+    */
 
 
     var filterValue = sic.getArg(args, "filter", {});

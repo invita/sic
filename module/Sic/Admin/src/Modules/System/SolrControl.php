@@ -9,41 +9,54 @@ class SolrControl
 {
     public function reindex($args) {
 
+        $command = Util::getArg($args, "command", "full-import");
+        $rows = Util::getArg($args, "rows", null);
+        $waitTime = Util::getArg($args, "waitTime", null);
+
         $dataConfigFile = 'data-config.xml';
         $dataConfigFullPath = Util::getSolrConfigPath($dataConfigFile).$dataConfigFile;
         $dataConfigContent = file_get_contents($dataConfigFullPath);
 
         $solrQueryParams = array(
             "wt" => "json",
-            "command" => "full-import",
-            "clean" => true,
+            "command" => $command,
+            "clean" => false,
             "commit" => true,
             "verbose" => false,
             "optimize" => false,
-            "dataConfig" => $dataConfigContent,
+            "indent" => false,
+            //"dataConfig" => $dataConfigContent,
         );
+
+        if ($rows)
+            $solrQueryParams["rows"] = $rows;
+
 
         $solr = new \Solr();
         $solr->setAction("/collection1/dataimport");
         $solr->setQueryParams($solrQueryParams);
         $solr->run();
-        $response1 = print_r($solr->getLastRawData(), true);
+        $fullImportResp = json_decode($solr->getLastRawData()->body, true);
 
+        if (is_numeric($waitTime))
+            usleep($waitTime * 1000);
 
         $solrStatus = new \Solr();
         $solrStatus->setAction("/collection1/dataimport");
         $solrStatus->setQueryParams(array(
             "command" => "status",
-            "wt" => "json"
+            "indent" => "false",
+            "wt" => "json",
+            "_" => microtime()
         ));
         $solrStatus->run();
-        $response2 = print_r($solrStatus->getLastRawData(), true);
+        $statusResp = json_decode($solrStatus->getLastRawData()->body, true);
 
         $result = array(
             "status" => true,
             "message" => "Reindex in progress...",
-            //"response1" => $response1,
-            //"response2" => $response2,
+            "status" => $statusResp["status"],
+            "statusMessage" => $statusResp["statusMessages"],
         );
 
         return $result;

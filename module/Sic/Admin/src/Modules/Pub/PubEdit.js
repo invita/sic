@@ -42,19 +42,19 @@ var F = function(args) {
     formUserData.addInput({name:"addtitle", type:"text", caption:"addTitle", placeholder:"Additional Title", isArray:true, value:[addtitle]});
     formUserData.addInput({name:"creator", type:"text", caption:"creator", placeholder:"Creator", isArray:true, value:[creator],
         withCode:sic.codes.pubCreator});
-    formUserData.addInput({name:"place", type:"text", caption:"pubPlace", placeholder:"Publication Place", isArray:true, value:[place]});
-    formUserData.addInput({name:"publisher", type:"text", caption:"publisher", placeholder:"Publisher", isArray:true, value:[publisher]});
+    formUserData.addInput({name:"place", type:"textarea", caption:"pubPlace", placeholder:"Publication Place", isArray:true, value:[place]});
+    formUserData.addInput({name:"publisher", type:"textarea", caption:"publisher", placeholder:"Publisher", isArray:true, value:[publisher]});
     formUserData.addInput({name:"year", type:"text", caption:"date", placeholder:"Date", isArray:true, value:[year]});
     formUserData.addInput({name:"volume", type:"text", caption:"volume", placeholder:"Volume", isArray:true, value:[volume]});
     formUserData.addInput({name:"issue", type:"text", caption:"issue", placeholder:"Issue", isArray:true, value:[issue]});
     formUserData.addInput({name:"page", type:"text", caption:"page", placeholder:"Page", isArray:true, value:[page]});
     formUserData.addInput({name:"edition", type:"text", caption:"edition", placeholder:"Edition", isArray:true, value:[edition]});
-    formUserData.addInput({name:"source", type:"text", caption:"source", placeholder:"Source", isArray:true, value:[source],
+    formUserData.addInput({name:"source", type:"textarea", caption:"source", placeholder:"Source", isArray:true, value:[source],
         withCode:sic.codes.pubSource});
-    formUserData.addInput({name:"online", type:"text", caption:"online", placeholder:"Online", isArray:true, value:[online],
+    formUserData.addInput({name:"online", type:"textarea", caption:"online", placeholder:"Online", isArray:true, value:[online],
         withCode:sic.codes.pubOnline});
-    formUserData.addInput({name:"strng", type:"text", caption:"string", placeholder:"String", isArray:true, value:[strng]});
-    formUserData.addInput({name:"note", type:"text", caption:"note", placeholder:"Note", isArray:true, value:[note]});
+    formUserData.addInput({name:"strng", type:"textarea", caption:"string", placeholder:"String", isArray:true, value:[strng]});
+    formUserData.addInput({name:"note", type:"textarea", caption:"note", placeholder:"Note", isArray:true, value:[note]});
 
     formUserData.addInput({name:"parent_id", type:"text", caption:"parent", placeholder:"Parent Identifier",
         lookup:sic.mergeObjects(sic.lookup.publication, { fieldMap: { parent_id: "pub_id" }, tabPage:tabPageBasic }) });
@@ -67,6 +67,7 @@ var F = function(args) {
         var response = sic.callMethod({moduleName:"Pub/PubEdit", methodName:"pubUpdate",
             pub_id: args.pub_id, proj_id: args.proj_id, line_id: args.line_id, data:formUserData.getValue()});
         if (response && response.data) {
+            sic.deltaReindex();
             if (confirm("Saved! Do you want to close this tab?")) {
                 tabPageBasic.parentTab.destroyTab();
             } else {
@@ -291,7 +292,7 @@ var F = function(args) {
         {
             var r = quotesDataTable.rows[i];
             var subquote_count_field = r.fields["subquote_count"];
-            if (subquote_count_field.getValue() == 0) {
+            if (subquote_count_field && subquote_count_field.getValue() == 0) {
                 subquote_count_field.valueDiv.selector.removeClass("gradGold");
                 subquote_count_field.valueDiv.selector.addClass("gradBlue");
             } else {

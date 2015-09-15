@@ -15,7 +15,7 @@ class ExportXml
         $tab = "    "; $tab2 = $tab.$tab; $tab3 = $tab2.$tab; $tab4 = $tab2.$tab2;
 
         $result = '<?xml version="1.0" encoding="UTF-8"?>'.$NL;
-        $result .= '<sic exportDate="'.date("Y-m-d").'">'.$NL;
+        $result .= '<sici exportDate="'.date("Y-m-d").'">'.$NL;
 
         $publications = DbUtil::selectFrom('publication');
         $codesObj = new Codes();
@@ -91,7 +91,7 @@ class ExportXml
         }
         $result .= $tab.'</codes>'.$NL;
 
-        $result .= '</sic>'.$NL;
+        $result .= '</sici>'.$NL;
 
         $userId = Util::getUserId();
         $fileName = "sic.".$userId.".export.all.xml";

@@ -1,13 +1,15 @@
 <dataConfig>
     <dataSource type="JdbcDataSource" driver="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost:3306/sici" user="urednik" password="urednikSQLS2015" batchSize="1" />
     <document name="publications">
-        <entity name="publication" query="SELECT *, pub_id as id FROM view_publication_list">
+        <entity name="publication" query="SELECT *, pub_id as id FROM view_publication_list"
+                deltaQuery="SELECT *, pub_id as id FROM view_publication_list ORDER BY modified_date DESC LIMIT 3">
 
             <field column="pub_id" name="pub_id"/>
             <field column="parent_id" name="parent_id"/>
             <field column="original_id" name="original_id"/>
             <field column="is_series" name="is_series"/>
             <field column="series_id" name="series_id"/>
+            <field column="modified_date" name="modified_date"/>
             <field column="creator" name="creator"/>
             <field column="creator_author" name="creator_author"/>
             <field column="creator_editor" name="creator_editor"/>

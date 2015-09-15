@@ -5,6 +5,7 @@ select
     pub.parent_id as `parent_id`,
     pub.original_id as `original_id`,
     pub.is_series as `is_series`,
+    pub.modified_date as `modified_date`,
     PUBGETSERIES(pub.pub_id) as `series_id`,
     GROUP_CONCAT(distinct creator.creator order by creator.idx  SEPARATOR '||') as `creator`,
     GROUP_CONCAT(distinct creator_author.creator order by creator_author.idx  SEPARATOR '||') as `creator_author`,

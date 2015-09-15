@@ -110,6 +110,10 @@ sic.callMethod = function(args, f) {
     return ajaxResult.responseJSON;
 };
 
+sic.deltaReindex = function() {
+    sic.callMethod({moduleName:"System/SolrControl", methodName:"reindex", command:"delta-import"}, function(respArgs) {});
+};
+
 // Loading Animation
 sic.loading = {
     show: function(){
