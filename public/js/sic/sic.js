@@ -111,7 +111,7 @@ sic.callMethod = function(args, f) {
 };
 
 sic.deltaReindex = function() {
-    sic.callMethod({moduleName:"System/SolrControl", methodName:"reindex", command:"delta-import"}, function(respArgs) {});
+    //sic.callMethod({moduleName:"System/SolrControl", methodName:"reindex", command:"delta-import"}, function(respArgs) {});
 };
 
 // Loading Animation
