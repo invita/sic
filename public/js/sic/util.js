@@ -131,6 +131,7 @@ sic.attachCopyToClipboard = function(sel, text, afterCopyF) {
 sic.solrSpecialChars = ["+", "-", "!", "(", ")", "{", "}", "[", "]", "^", '"', "~", "*", "?", ":", "\\"];
 sic.stripSolrSpecialChars = function(text) {
     /*
+    // Escape Solr chars
     for (var cIdx in sic.solrSpecialChars) {
         var solrChar = sic.solrSpecialChars[cIdx];
         var searchRegEx = new RegExp("\\"+solrChar, 'ig');
@@ -138,6 +139,7 @@ sic.stripSolrSpecialChars = function(text) {
     }
     */
 
+    // Strip Solr chars
     for (var cIdx in sic.solrSpecialChars) {
         var solrChar = sic.solrSpecialChars[cIdx];
         var searchRegEx = new RegExp("\\"+solrChar, 'g');

@@ -304,6 +304,7 @@ var F = function(args) {
             {
                 if (sfKey.substr(0, 1) == "_") continue;
 
+                // Strip Solr chars
                 var value = sic.stripSolrSpecialChars(quickSearchBox.getValue());
                 var values = value.split(" ");
                 for (var i in values)
@@ -349,7 +350,7 @@ var F = function(args) {
 
             if (value == "") continue;
 
-            // Escape Solr chars
+            // Strip Solr chars
             value = sic.stripSolrSpecialChars(value);
 
             var values = value.split(" ");
