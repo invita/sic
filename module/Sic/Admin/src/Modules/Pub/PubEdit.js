@@ -126,7 +126,7 @@ var F = function(args) {
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Pub/PubQuoteList",
             staticData: { pub_id: args.pub_id },
-            pageCount: 10
+            pageCount: 100
         }),
         initExpandAll: true,
         //editorModuleArgs: {
