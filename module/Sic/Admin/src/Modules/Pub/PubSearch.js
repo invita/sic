@@ -349,6 +349,9 @@ var F = function(args) {
 
             if (value == "") continue;
 
+            // Escape Solr chars
+            value = sic.stripSolrSpecialChars(value);
+
             var values = value.split(" ");
             for (var i in values)
                 values[i] = sfKey+":*"+values[i]+"*";
