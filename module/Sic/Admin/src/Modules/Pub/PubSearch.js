@@ -93,6 +93,65 @@ var F = function(args) {
     quickSearchForm.addHr();
 
 
+    // *** Cobiss Search ***
+    var cobbisGroup = searchPanel.addGroup("Cobbis");
+    cobbisGroup.header.displayNone();
+    var cobbisForm = new sic.widget.sicForm({parent:cobbisGroup.content.selector, captionWidth:"100px", inputClass:"searchInput"});
+    var cobissInput = cobbisForm.addInput({name:"url", caption:"Cobiss url"});
+    cobissInput.selector.addClass("inline");
+
+    var cobissScrapeButton = cobbisForm.addInput({value:"Scrape", type:"submit", caption: " "});
+    cobissScrapeButton.selector.addClass("inline");
+    cobissScrapeButton.captionDiv.displayNone();
+    cobissScrapeButton.selector.click(function(e){
+        sic.loading.show();
+        var searchData = cobbisForm.getValue();
+        var url = searchData.url;
+
+        jQuery.ajax({url:"/cobiss.php", method:"POST", data:{url:url}, dataType:"json", success:function(data){
+            data = data.data;
+            pubSearchForm.setValue({
+                creator : data.authors,
+                title : data.titles,
+                cobiss : data.cobissId,
+                publisher : data.publisher
+            });
+            sic.loading.hide();
+        }});
+
+        //showResults("cobiss");
+    });
+
+
+    // *** Zotero Scrape ***
+    var zoteroGroup = searchPanel.addGroup("Zotero");
+    zoteroGroup.header.displayNone();
+    var zoteroForm = new sic.widget.sicForm({parent:zoteroGroup.content.selector, captionWidth:"100px", inputClass:"searchInput"});
+
+    sic.callMethod({ moduleName:"Pub/PubSearch", methodName:"getZoteroUrl" }, function(response){
+        //alert(sic.debug(response));
+        var zoteroInput = zoteroForm.addInput({name:"url", caption:"Zotero url", value:response.url});
+        zoteroInput.selector.addClass("inline");
+    });
+    var zoteroScrapeButton = zoteroForm.addInput({value:"Scrape", type:"submit", caption: " "});
+    zoteroScrapeButton.selector.addClass("inline");
+    zoteroScrapeButton.captionDiv.displayNone();
+    zoteroScrapeButton.selector.click(function(e){
+        sic.loading.show();
+
+        var searchData = zoteroForm.getValue();
+        var url = searchData.url;
+
+        sic.callMethod({ moduleName:"Pub/PubSearch", methodName:"zoteroScrape", url: url }, function(response) {
+            pubSearchForm.setValue(response.data);
+        });
+        //showResults("cobiss");
+    });
+
+    zoteroForm.addHr();
+
+
+
     // *** Publication Search ***
     var searchFields = {
 
@@ -102,7 +161,7 @@ var F = function(args) {
         creator: { caption:"creator", placeholder:"Creator", isArray:true, withCode:sic.codes.pubCreator },
         year: { caption:"date", placeholder:"Date", isArray:true },
 
-        _group1: { caption: "Additional Fields (Click)", canMinimize: true, initHide: true, className:"search_additionalFields" }, // Group
+        //_group1: { caption: "Additional Fields (Click)", canMinimize: true, initHide: true, className:"search_additionalFields" }, // Group
 
         addidno: { caption:"addIdno", placeholder:"Additional Identifier", isArray:true },
         addtitle: { caption:"addTitle", placeholder:"Additional Title", isArray:true },
@@ -126,22 +185,10 @@ var F = function(args) {
 
     var pubSearchForm = new sic.widget.sicForm({parent:pubSearchGroup.content.selector, captionWidth:"100px",
         inputClass:"searchInput"});
-    for (var fieldName in searchFields) {
-        if (fieldName[0] == "_") {
-            pubSearchForm.addCaption(searchFields[fieldName]);
-            continue;
-        }
-        var fieldCaption = sic.captionize(searchFields[fieldName].caption ? searchFields[fieldName].caption : fieldName);
-        var inputArgs = sic.mergeObjects({name:fieldName, placeholder:fieldCaption+"...", caption:fieldCaption}, searchFields[fieldName]);
-        pubSearchForm.addInput(inputArgs);
-    }
 
+
+    // Pub Search Buttons
     var pubSearchSubmitButton = pubSearchForm.addInput({value:"Local", type:"submit", caption:false});
-    /*
-    pubSearchSubmitButton.selector.click(function(){
-        dataTable.dataSource.staticData = createStaticData(pubSearchForm.getValue());
-    });
-    */
 
     var pubCobissSearchButton = pubSearchForm.addInput({value:"Cobiss", type:"button"});
     pubCobissSearchButton.selector.click(function(e) {
@@ -161,7 +208,7 @@ var F = function(args) {
         window.open(googleSearchUrl, '_blank');
     });
 
-    var pubCreateButton = pubSearchForm.addInput({value:"Create Pub", type:"button"});
+    var pubCreateButton = pubSearchForm.addInput({value:"Create", type:"button"});
     pubCreateButton.selector.click(function(e) {
         var searchData = sic.removeStarsFromObject(pubSearchForm.getValue(), true);
         delete searchData.pub_id;
@@ -178,52 +225,16 @@ var F = function(args) {
 
 
 
-    // *** Cobiss Search ***
-    var cobbisGroup = searchPanel.addGroup("Cobbis");
-    var cobbisForm = new sic.widget.sicForm({parent:cobbisGroup.content.selector, captionWidth:"100px", inputClass:"searchInput"});
-    cobbisForm.addInput({name:"url", caption:"Cobiss url"});
+    for (var fieldName in searchFields) {
+        if (fieldName[0] == "_") {
+            pubSearchForm.addCaption(searchFields[fieldName]);
+            continue;
+        }
+        var fieldCaption = sic.captionize(searchFields[fieldName].caption ? searchFields[fieldName].caption : fieldName);
+        var inputArgs = sic.mergeObjects({name:fieldName, placeholder:fieldCaption+"...", caption:fieldCaption}, searchFields[fieldName]);
+        pubSearchForm.addInput(inputArgs);
+    }
 
-    var cobissScrapeButton = cobbisForm.addInput({value:"Scrape", type:"submit", caption: " "});
-    cobissScrapeButton.selector.click(function(e){
-        sic.loading.show();
-        var searchData = cobbisForm.getValue();
-        var url = searchData.url;
-
-        jQuery.ajax({url:"/cobiss.php", method:"POST", data:{url:url}, dataType:"json", success:function(data){
-            data = data.data;
-            pubSearchForm.setValue({
-                creator : data.authors,
-                title : data.titles,
-                cobiss : data.cobissId,
-                publisher : data.publisher
-            });
-            sic.loading.hide();
-        }});
-
-        //showResults("cobiss");
-    });
-
-
-    // *** Zotero Scrape ***
-    var zoteroGroup = searchPanel.addGroup("Zotero");
-    var zoteroForm = new sic.widget.sicForm({parent:zoteroGroup.content.selector, captionWidth:"100px", inputClass:"searchInput"});
-
-    sic.callMethod({ moduleName:"Pub/PubSearch", methodName:"getZoteroUrl" }, function(response){
-        //alert(sic.debug(response));
-        zoteroForm.addInput({name:"url", caption:"Zotero url", value:response.url});
-    });
-    var zoteroScrapeButton = zoteroForm.addInput({value:"Scrape", type:"submit", caption: " "});
-    zoteroScrapeButton.selector.click(function(e){
-        sic.loading.show();
-
-        var searchData = zoteroForm.getValue();
-        var url = searchData.url;
-
-        sic.callMethod({ moduleName:"Pub/PubSearch", methodName:"zoteroScrape", url: url }, function(response) {
-            pubSearchForm.setValue(response.data);
-        });
-        //showResults("cobiss");
-    });
 
     // *** Solr ***
     /*
