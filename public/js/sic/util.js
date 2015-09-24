@@ -128,6 +128,16 @@ sic.attachCopyToClipboard = function(sel, text, afterCopyF) {
 
 };
 
+sic.solrSpecialChars = ["+", "-", "!", "(", ")", "{", "}", "[", "]", "^", '"', "~", "*", "?", ":", "\\"];
+sic.stripSolrSpecialChars = function(text) {
+    for (var cIdx in sic.solrSpecialChars) {
+        var solrChar = sic.solrSpecialChars[cIdx];
+        var searchRegEx = new RegExp("\\"+solrChar, 'ig');
+        text = text.replace(searchRegEx, "\\"+solrChar);
+    }
+    return text;
+};
+
 sic.dump = function(obj, depth, nl, spaceChar) {
     alert(sic.debug(obj, depth, nl, spaceChar));
 };

@@ -304,7 +304,7 @@ var F = function(args) {
             {
                 if (sfKey.substr(0, 1) == "_") continue;
 
-                var value = quickSearchBox.getValue();
+                var value = sic.stripSolrSpecialChars(quickSearchBox.getValue());
                 var values = value.split(" ");
                 for (var i in values)
                     values[i] = sfKey+":*"+values[i]+"*";
