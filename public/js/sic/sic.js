@@ -117,13 +117,19 @@ sic.deltaReindex = function() {
 
 // Loading Animation
 sic.loading = {
+    isVisible: false,
     show: function(){
         //$('img#loadingGif').stop().css("display", "");
         $('img#loadingGif').stop().fadeIn(sic.defaults.loadingFadeTime);
+        $('img#loadingGif2').stop().fadeIn(sic.defaults.loadingFadeTime);
+        sic.loading.isVisible = true;
+        sic.mouse.loadingMove();
     },
     hide: function(){
         //$('img#loadingGif').stop().css("display", "none");
         $('img#loadingGif').stop().fadeOut(sic.defaults.loadingFadeTime);
+        $('img#loadingGif2').stop().fadeOut(sic.defaults.loadingFadeTime);
+        sic.loading.isVisible = false;
     }
 };
 
@@ -132,7 +138,16 @@ sic.mouse = { x: 0, y: 0 };
 $(document).mousemove(function(e) {
     sic.mouse.x = e.pageX;
     sic.mouse.y = e.pageY;
+    if (sic.loading.isVisible)
+        sic.mouse.loadingMove();
 });
+
+// Move loadingGif2 with cursor
+sic.mouse.loadingMove = function() {
+    if (!sic.mouse.loadingGif2)
+        sic.mouse.loadingGif2 = $("img#loadingGif2");
+    sic.mouse.loadingGif2.css("left", (sic.mouse.x+5)+"px").css("top", (sic.mouse.y+5)+"px");
+};
 
 
 $(document).ready(function() {
@@ -145,6 +160,5 @@ $(document).ready(function() {
     var primaryPage = $('#primaryPage');
     if (primaryPage)
         sic.data.mainTab.content.selector.append(primaryPage);
-
 });
 
