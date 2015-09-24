@@ -143,7 +143,7 @@ sic.stripSolrSpecialChars = function(text) {
     for (var cIdx in sic.solrSpecialChars) {
         var solrChar = sic.solrSpecialChars[cIdx];
         var searchRegEx = new RegExp("\\"+solrChar, 'g');
-        text = text.replace(searchRegEx, "");
+        text = text.replace(searchRegEx, " ");
     }
 
     if (text.length > 80)
