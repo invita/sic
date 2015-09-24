@@ -5,6 +5,7 @@ var F = function(args) {
 
     //sic.dump(args, 0);
     var focusLastQuoteRow = false;
+    var focusLastSubQuoteDT = null;
     var importFromLastProjSpan;
     var importFromLastProj;
     var lastProjId = 0;
@@ -144,6 +145,11 @@ var F = function(args) {
             _expand: { visible:false }
         },
         customInsert: function(insertDT) {
+            for (var rowIdx in insertDT.rows) {
+                if (insertDT.rows[rowIdx].isModified)
+                    insertDT.rows[rowIdx].updateRow();
+            }
+
             sic.loadModule({moduleName:'Pub/PubSearch', tabPage:tabPageBasic,  newTab:'New citation - select entity',
                 selectCallback: function(selectArgs){
                     var q_pub_id = selectArgs.row.getValue().pub_id;
@@ -163,7 +169,8 @@ var F = function(args) {
                     sic.callMethod({moduleName:'Pub/PubQuoteEdit', methodName:'duplicateQuote', quote_id:rowValue.quote_id },
                         function(cbArgs) {
                             if (cbArgs.status) {
-                                quotesDataTable.goToLastPage();
+                                quotesDataTable.goToLastPage(true);
+                                args.row.updateRow();
                                 focusLastQuoteRow = true;
                             }
                         });
@@ -187,6 +194,10 @@ var F = function(args) {
                 quoted_title: { canSort:false, editable:false, caption:"Title" },
             },
             customInsert: function(insertDT) {
+                for (var rowIdx in insertDT.rows) {
+                    if (insertDT.rows[rowIdx].isModified)
+                        insertDT.rows[rowIdx].updateRow();
+                }
                 sic.loadModule({moduleName:'Pub/PubSearch', tabPage:tabPageBasic,  newTab:'New citation - select entity',
                     selectCallback: function(selectArgs){
                         var q_pub_id = selectArgs.row.getValue().pub_id;
@@ -207,7 +218,11 @@ var F = function(args) {
                         var rowValue = args.row.getValue();
                         sic.callMethod({moduleName:'Pub/PubQuoteEdit', methodName:'duplicateQuote', quote_id:rowValue.quote_id },
                             function(cbArgs) {
-                                if (cbArgs.status) args.dataTable.refresh();
+                                if (cbArgs.status) {
+                                    args.dataTable.goToLastPage(true);
+                                    args.row.updateRow();
+                                    focusLastSubQuoteDT = args.dataTable;
+                                }
                             });
                     }
                 }
@@ -274,7 +289,24 @@ var F = function(args) {
     quotesDataTable.onFieldClick(function(eArgs){
         if (eArgs.field.fieldKey == "subquote_count") {
             eArgs.row.expandToggleSubRow();
+            if (!eArgs.row.wasShownBefore) {
+                eArgs.row.wasShownBefore = true;
+                var subDT = eArgs.row.subRowTr.subDataTable;
+                subDT.onDataFeedComplete(function(subEArgs){
+                    if (focusLastSubQuoteDT && focusLastSubQuoteDT.tagId == subDT.tagId) {
+                        var row = subDT.findLastVisibleRow();
+                        if (row && row.fields['on_page'] && row.fields['on_page'].input && row.fields['on_page'].input.input) {
+                            row.fields['on_page'].input.input.selector.focus();
+                            row.fields['on_page'].input.input.selector.select();
+                            row.addTempClassName('duplicated');
+                        }
+                        focusLastSubQuoteDT = null;
+                    }
+                });
+
+            }
         }
+
     });
 
     quotesDataTable.onDataFeedComplete(function(eArgs) {

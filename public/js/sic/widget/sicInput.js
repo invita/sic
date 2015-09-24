@@ -41,6 +41,7 @@ sic.widget.sicInput = function(args)
     this.onKeyPressed = function(f) { _p.subscribe("onKeyPressed", f); };
     this.onKeyUp = function(f) { _p.subscribe("onKeyUp", f); };
     this.onEnterPressed = function(f) { _p.subscribe("onEnterPressed", f); };
+    this.onModified = function(f) { _p.subscribe("onModified", f); };
 
     this.onPaste = function(f) { _p.subscribe("onPaste", f); };
 
@@ -239,6 +240,8 @@ sic.widget.sicInput = function(args)
             modified = _p.getValue() != _p.origValue;
 
         if (_p.modified == modified) return;
+
+        _p.trigger('onModified', {modified:modified, input: _p});
 
         _p.modified = modified;
         if (_p.modified) {

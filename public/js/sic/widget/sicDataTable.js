@@ -193,7 +193,8 @@ sic.widget.sicDataTable = function(args)
 
     this.createInsertButton = function() {
         if (_p.insertButton) return;
-        _p.insertButton = new sic.widget.sicElement({parent:_p.selector, tagClass:"insertButton"});
+        _p.insertButton = new sic.widget.sicElement({parent:_p.selector, tagClass:"insertButton", tagName:"button"});
+        _p.insertButton.selector.attr("tabindex", 0);
         _p.insertButton.img = new sic.widget.sicElement({parent:_p.insertButton.selector, tagName:"img"});
         _p.insertButton.img.selector.addClass("icon16");
         _p.insertButton.img.selector.attr("src", "/img/insert.png");
@@ -326,7 +327,7 @@ sic.widget.sicDataTable = function(args)
         }
     };
 
-    this.switchPage = function(pageIdx, noPageCountCheck) {
+    this.switchPage = function(pageIdx, noPageCountCheck, noRefresh) {
         if (isNaN(pageIdx*1)) return;
         _p.currentPage = pageIdx;
         if (_p.currentPage > _p.currentPageCount && !noPageCountCheck) _p.currentPage = _p.currentPageCount;
@@ -335,15 +336,15 @@ sic.widget.sicDataTable = function(args)
         _p.dsControlBottom.pageInput.selector.val(_p.currentPage);
         if (_p.dataSource) {
             _p.dataSource.pageStart = (_p.currentPage -1) * _p.dataSource.pageCount;
-            _p.refresh();
+            if (!noRefresh) _p.refresh();
         }
     };
 
-    this.goToLastPage = function() {
+    this.goToLastPage = function(noRefresh) {
         var lastPage = _p.currentPageCount;
         //alert(_p.rowCount+" "+_p.dataSource.pageCount+" "+(_p.rowCount % _p.dataSource.pageCount == 0));
         if (_p.rowCount % _p.dataSource.pageCount == 0) lastPage++;
-        _p.switchPage(lastPage, true);
+        _p.switchPage(lastPage, true, noRefresh);
     };
 
     this.toggleFilter = function(bool){
@@ -792,6 +793,8 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
     this.subRowTr = null;
     this.tempClassName = "";
 
+    this.isModified = false;
+
     // Settings
     this.dataTable = sic.getArg(args, "dataTable", null);
 
@@ -852,6 +855,7 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
     this.updateRow = function() {
         if (!_p.dataTable.dataSource) return;
         _p.dataTable.dataSource.updateRow({orig:_p.lastRowData, row:_p.getValue()});
+        _p.isModified = false;
     };
 
     this.reprValue = function(){
@@ -1025,6 +1029,9 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
             this.input = new sic.widget.sicInput({parent:this.valueDiv.selector, name:this.fieldKey,
                 caption:false, showModified:true, type:this.editorType });
             this.input.selector.addClass('dataTableValueInput');
+            this.input.onModified(function(modArgs) {
+                if (modArgs.modified) _p.row.isModified = true;
+            });
 
             if (this.editorType == "checkbox") {
                 this.input.selector.click(function(e) {
