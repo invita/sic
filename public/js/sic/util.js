@@ -146,6 +146,9 @@ sic.stripSolrSpecialChars = function(text) {
         text = text.replace(searchRegEx, "");
     }
 
+    if (text.length > 80)
+        text = text.substring(0, 80);
+
     return text;
 };
 
