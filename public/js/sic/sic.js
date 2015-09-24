@@ -28,44 +28,49 @@ sic.loadModule = function(loadArgs) {
     onModuleLoad(loadArgs);
 
     $.post("/loadModule", {args: {moduleName:moduleName, postData:postData}}, function(data) {
-        var dataObj = JSON.parse(data);
-        if (dataObj) {
-            var args = sic.mergeObjects(loadArgs, dataObj.args);
+        try {
+            var dataObj = JSON.parse(data);
+            if (dataObj) {
+                var args = sic.mergeObjects(loadArgs, dataObj.args);
 
-            if (inDialog) {
-                var dialogTitle = "Dialog";
-                if (newTab) {
-                    dialogTitle = newTab;
-                    newTab = null;
+                if (inDialog) {
+                    var dialogTitle = "Dialog";
+                    if (newTab) {
+                        dialogTitle = newTab;
+                        newTab = null;
+                    }
+                    var dialog = new sic.widget.sicDialog({title:dialogTitle});
+                    tabPage = dialog.mainTab;
                 }
-                var dialog = new sic.widget.sicDialog({title:dialogTitle});
-                tabPage = dialog.mainTab;
+
+                // Prepare some useful functions
+                args.helpers = {};
+
+                // Create TabPage Function
+                args.helpers.createTabPage = function(tabArgs){
+                    var tab = (tabPage && typeof(tabPage) == "object" && tabPage.isTabPage) ? tabPage : sic.data.mainTab;
+                    loadArgs.tabPage = tab;
+
+                    if (newTab)
+                        tab = new sic.widget.sicTabPage({name:newTab, parent:tab});
+
+                    if (!tabArgs) tabArgs = {};
+                    if (!tabArgs.name) tabArgs.name = 'Tab';
+                    if (!tabArgs.parent) tabArgs.parent = tab == sic.data.mainTab ? tab : tab.content;
+                    var childTabPage = new sic.widget.sicTabPage(tabArgs);
+                    if (loadArgs.onClose && typeof(loadArgs.onClose) == "function") childTabPage.onClose(loadArgs.onClose);
+                    if (loadArgs.onClosed && typeof(loadArgs.onClosed) == "function") childTabPage.onClosed(loadArgs.onClosed);
+                    return childTabPage;
+                };
+
+                if (dataObj["F"] && typeof(dataObj["F"]) == "string") {
+                    eval(dataObj["F"]);
+                    if (F && typeof(F) == "function") F(args);
+                }
             }
-
-            // Prepare some useful functions
-            args.helpers = {};
-
-            // Create TabPage Function
-            args.helpers.createTabPage = function(tabArgs){
-                var tab = (tabPage && typeof(tabPage) == "object" && tabPage.isTabPage) ? tabPage : sic.data.mainTab;
-                loadArgs.tabPage = tab;
-
-                if (newTab)
-                    tab = new sic.widget.sicTabPage({name:newTab, parent:tab});
-
-                if (!tabArgs) tabArgs = {};
-                if (!tabArgs.name) tabArgs.name = 'Tab';
-                if (!tabArgs.parent) tabArgs.parent = tab == sic.data.mainTab ? tab : tab.content;
-                var childTabPage = new sic.widget.sicTabPage(tabArgs);
-                if (loadArgs.onClose && typeof(loadArgs.onClose) == "function") childTabPage.onClose(loadArgs.onClose);
-                if (loadArgs.onClosed && typeof(loadArgs.onClosed) == "function") childTabPage.onClosed(loadArgs.onClosed);
-                return childTabPage;
-            };
-
-            if (dataObj["F"] && typeof(dataObj["F"]) == "string") {
-                eval(dataObj["F"]);
-                if (F && typeof(F) == "function") F(args);
-            }
+        }
+        catch (ex) {
+            alert("Error loading module "+moduleName+"\n\nMessage:\n"+ex.message);
         }
 
         sic.loading.hide();
@@ -85,6 +90,11 @@ sic.callMethod = function(args, f) {
             // Alert
             if (typeof(result['alert']) != "undefined")
                 alert(result['alert']);
+
+            if (typeof(result['sessionExpired']) != "undefined") {
+                alert("Your session expired. Please login again");
+                location.href = "/";
+            }
 
             // Message
             if (typeof(f) == "function")
