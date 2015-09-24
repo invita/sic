@@ -67,7 +67,7 @@ var F = function(args) {
     var quickSearchBox = quickSearchForm.addInput({name:"quickSearch", placeholder:"Quick search...", caption:false,
         autoComplete: {moduleName: "Pub/PubSearch", methodName: "autoComplete_search" } });
     quickSearchBox.selector.addClass("inline");
-    quickSearchBox.input.selector.css("width", "285px");
+    quickSearchBox.input.selector.css("width", "285px").attr("maxlength", 80);
     var quickSearchSubmitButton = quickSearchForm.addInput({value:"Local", type:"submit", caption:" "});
     /*
     quickSearchSubmitButton.selector.click(function(){
