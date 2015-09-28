@@ -128,7 +128,7 @@ sic.attachCopyToClipboard = function(sel, text, afterCopyF) {
 
 };
 
-sic.solrSpecialChars = ["+", "-", "!", "(", ")", "{", "}", "[", "]", "^", '"', "~", "*", "?", ":", "\\"];
+sic.solrSpecialChars = ["+", "-", "!", "(", ")", "{", "}", "[", "]", "^", '"', "~", "*", "?", ":", "\\", ","];
 sic.stripSolrSpecialChars = function(text) {
     /*
     // Escape Solr chars

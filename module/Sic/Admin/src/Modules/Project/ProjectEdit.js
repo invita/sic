@@ -48,7 +48,7 @@ var F = function(args) {
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Project/ProjectEdit_ProjectLinesDT",
             staticData: { proj_id: args.proj_id },
-            pageCount: 100
+            pageCount: 50
         }),
         editorModuleArgs: {
             moduleName:"Project/ProjectLineEdit",
