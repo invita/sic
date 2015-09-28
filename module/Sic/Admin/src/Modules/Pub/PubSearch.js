@@ -64,10 +64,6 @@ var F = function(args) {
     // Quick Search
     var quickSearchGroup = searchPanel.addGroup();
     var quickSearchForm = new sic.widget.sicForm({parent:quickSearchGroup.content.selector, captionWidth:"90px", inputClass:"searchInput"});
-    var quickSearchBox = quickSearchForm.addInput({name:"quickSearch", placeholder:"Quick search...", caption:false,
-        autoComplete: {moduleName: "Pub/PubSearch", methodName: "autoComplete_search" } });
-    quickSearchBox.selector.addClass("inline");
-    quickSearchBox.input.selector.css("width", "285px").attr("maxlength", 80);
     var quickSearchSubmitButton = quickSearchForm.addInput({value:"Local", type:"submit", caption:" "});
     /*
     quickSearchSubmitButton.selector.click(function(){
@@ -89,6 +85,11 @@ var F = function(args) {
         var googleSearchUrl = "https://www.google.com/webhp?hl=en#hl=en&q="+query;
         window.open(googleSearchUrl, '_blank');
     });
+
+    var quickSearchBox = quickSearchForm.addInput({name:"quickSearch", placeholder:"Quick search...", caption:false,
+        autoComplete: {moduleName: "Pub/PubSearch", methodName: "autoComplete_search" } });
+    quickSearchBox.selector.addClass("inline");
+    quickSearchBox.input.selector.css("width", "285px").attr("maxlength", 80);
 
     quickSearchForm.addHr();
 
@@ -221,7 +222,7 @@ var F = function(args) {
         pubSearchForm.allInputs.clear();
     });
 
-    pubSearchForm.addHr();
+    //pubSearchForm.addHr();
 
 
 
