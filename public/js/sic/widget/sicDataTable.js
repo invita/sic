@@ -193,7 +193,8 @@ sic.widget.sicDataTable = function(args)
 
     this.createInsertButton = function() {
         if (_p.insertButton) return;
-        _p.insertButton = new sic.widget.sicElement({parent:_p.selector, tagClass:"insertButton", tagName:"button"});
+        _p.insertBar = new sic.widget.sicElement({ parent:_p.selector });
+        _p.insertButton = new sic.widget.sicElement({parent:_p.insertBar.selector, tagClass:"insertButton", tagName:"button"});
         _p.insertButton.selector.attr("tabindex", 0);
         _p.insertButton.img = new sic.widget.sicElement({parent:_p.insertButton.selector, tagName:"img"});
         _p.insertButton.img.selector.addClass("icon16");
@@ -338,6 +339,10 @@ sic.widget.sicDataTable = function(args)
             _p.dataSource.pageStart = (_p.currentPage -1) * _p.dataSource.pageCount;
             if (!noRefresh) _p.refresh();
         }
+    };
+
+    this.goToFirstPage = function(noRefresh) {
+        _p.switchPage(1, true, noRefresh);
     };
 
     this.goToLastPage = function(noRefresh) {
@@ -668,8 +673,13 @@ sic.widget.sicDataTable = function(args)
         }
     };
 
-    this.refresh = function() {
+    this.refresh = function(resetPagination) {
         if (!_p.dataSource) return;
+
+        if (resetPagination) {
+            _p.goToFirstPage(true);
+        }
+
         _p.infoDiv.selector.css("display", "none");
         if (_p.subDataTable) _p.hideSubrows();
         _p.dataSource.select();

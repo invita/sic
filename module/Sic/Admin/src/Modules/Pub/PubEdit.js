@@ -145,17 +145,19 @@ var F = function(args) {
             _expand: { visible:false }
         },
         customInsert: function(insertDT) {
-            for (var rowIdx in insertDT.rows) {
-                if (insertDT.rows[rowIdx].isModified)
-                    insertDT.rows[rowIdx].updateRow();
-            }
+            saveAllModifiedRows(insertDT);
 
             sic.loadModule({moduleName:'Pub/PubSearch', tabPage:tabPageBasic,  newTab:'New citation - select entity',
                 selectCallback: function(selectArgs){
                     var q_pub_id = selectArgs.row.getValue().pub_id;
                     if (q_pub_id) {
                         sic.callMethod({moduleName:"Pub/PubQuoteEdit", methodName:"quoteInsert", data: { pub_id:args.pub_id, quoted_pub_id: q_pub_id }},
-                            function(response) { insertDT.refresh(); });
+                            function(response) {
+                                // New Quote After Entity selected:
+                                quotesDataTable.goToLastPage(true);
+                                focusLastQuoteRow = true;
+                                insertDT.refresh();
+                            });
                     }
                 }});
 
@@ -194,10 +196,7 @@ var F = function(args) {
                 quoted_title: { canSort:false, editable:false, caption:"Title" },
             },
             customInsert: function(insertDT) {
-                for (var rowIdx in insertDT.rows) {
-                    if (insertDT.rows[rowIdx].isModified)
-                        insertDT.rows[rowIdx].updateRow();
-                }
+                saveAllModifiedRows(insertDT);
                 sic.loadModule({moduleName:'Pub/PubSearch', tabPage:tabPageBasic,  newTab:'New citation - select entity',
                     selectCallback: function(selectArgs){
                         var q_pub_id = selectArgs.row.getValue().pub_id;
@@ -205,7 +204,13 @@ var F = function(args) {
                             sic.callMethod({moduleName:"Pub/PubSubQuoteEdit", methodName:"quoteInsert", data: {
                                     pub_id:args.pub_id, quoted_pub_id: q_pub_id,
                                     parent_quote_id: insertDT.dataSource.staticData.parentRow.quote_id }},
-                                function(response) { insertDT.refresh(); });
+                                function(response)
+                                {
+                                    // New Subquote After Entity selected:
+                                    quotesDataTable.goToLastPage(true);
+                                    focusLastSubQuoteDT = insertDT;
+                                    insertDT.refresh();
+                                });
                         }
                     }});
 
@@ -237,6 +242,9 @@ var F = function(args) {
         var importFromProjSpan = new sic.widget.sicElement({parent:importFromProj.selector, tagName:"span", tagClass:"vmid"});
         importFromProjSpan.selector.html("Import from project");
         importFromProj.selector.click(function(e){
+
+            saveAllModifiedRows(quotesDataTable);
+
             sic.loadModule({moduleName:'Project/ProjectList', newTab:'Project', inDialog: true,
                 selectCallback: function(selectArgs){
                     var pub_id = args.pub_id;
@@ -266,6 +274,8 @@ var F = function(args) {
         importFromLastProjSpan = new sic.widget.sicElement({parent:importFromLastProj.selector, tagName:"span", tagClass:"vmid"});
         importFromLastProj.selector.click(function(e){
 
+            saveAllModifiedRows(quotesDataTable);
+
             if (!lastProjId)
             {
                 alert("No project selected");
@@ -283,6 +293,18 @@ var F = function(args) {
             }
         });
         importFromLastProj.displayNone();
+
+
+        var saveAllButton = new sic.widget.sicElement({parent:quotesDataTable.insertBar.selector, tagName:"button"});
+        saveAllButton.selector.addClass("insertButton").css("margin-left", "10px");
+        var saveAllButtonImg = new sic.widget.sicElement({parent:saveAllButton.selector, tagName:"img", tagClass:"icon12 vmid"});
+        saveAllButtonImg.selector.attr("src", "/img/icon/apply.png");
+        var saveAllButtonSpan = new sic.widget.sicElement({parent:saveAllButton.selector, tagName:"span", tagClass:"vmid"});
+        saveAllButtonSpan.selector.html("Save all");
+        saveAllButton.selector.click(function() {
+            saveAllModifiedRows(quotesDataTable);
+        });
+
     });
     tabPageQuotes.onActive(function(){ quotesDataTable.recalculateInputs(); });
 
@@ -336,6 +358,13 @@ var F = function(args) {
             }
         }
     });
+
+    var saveAllModifiedRows = function(dataTable) {
+        for (var rowIdx in dataTable.rows) {
+            if (dataTable.rows[rowIdx].isModified)
+                dataTable.rows[rowIdx].updateRow();
+        }
+    };
 
     if (args.pub_id){
         var response = sic.callMethod({moduleName:"Pub/PubEdit", methodName:"pubSelect", pub_id: args.pub_id});

@@ -317,7 +317,7 @@ var F = function(args) {
         }
 
         dataTable.dataSource.staticData = { q: "*:*", fq: fq };
-        dataTable.refresh();
+        dataTable.refresh(true);
         //showResults("pub");
     });
 
@@ -364,7 +364,7 @@ var F = function(args) {
         //sic.dump(fq);
 
         dataTable.dataSource.staticData = { q: "*:*", fq: fq };
-        dataTable.refresh();
+        dataTable.refresh(true);
         //showResults("pub");
     });
 

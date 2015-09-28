@@ -133,10 +133,10 @@ div.sicDataTable > table.sicDataTable_table tbody > tr > td.dataTable_td_button 
 div.sicDataTable > table.sicDataTable_table tbody > tr > td.dataTable_td_button > div { display:block; text-align: center;
     padding: 4px; border-style:solid; border-color:#bbb #888 #666 #aaa; aborder-width:2px 2px 2px 2px; }
 
-div.sicDataTable > button.insertButton { margin-bottom:5px; cursor:pointer; background:none; border:none;
+div.sicDataTable > div > button.insertButton { margin-bottom:5px; cursor:pointer; background:none; border:none;
     padding:0px; }
-div.sicDataTable > button.insertButton > span { color:#6699CC; font-weight:bold; margin-left:4px; vertical-align:middle; }
-div.sicDataTable > button.insertButton > img { vertical-align:middle; }
+div.sicDataTable > div > button.insertButton > span { color:#6699CC; font-weight:bold; margin-left:4px; vertical-align:middle; }
+div.sicDataTable > div > button.insertButton > img { vertical-align:middle; }
 div.sicDataTable > div.dsControl { margin: 2px 0px 3px 0px; }
 
 div.sicDataTable > div.dsControl > div.firstButton { margin-right:6px; cursor:pointer; color:#666; font-weight:bold; }
