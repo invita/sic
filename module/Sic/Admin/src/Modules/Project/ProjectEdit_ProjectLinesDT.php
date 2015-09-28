@@ -1,6 +1,7 @@
 <?php
 namespace Sic\Admin\Modules\Project;
 
+use Zend\Db\Sql\Expression;
 use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Delete;
 use Zend\Db\Sql\Literal;
@@ -28,6 +29,7 @@ class ProjectEdit_ProjectLinesDT extends SicModuleAbs {
         $pubColumns = array('pub_id','parent_id', 'title','addTitle','creator','year','idno','addIdno','volume',
                                                   'issue','page','edition','place','publisher','source','online','strng','note');
 
+        $pubIdsToSelect = array();
         foreach($result as $row) {
             $resultLine = array();
 
@@ -47,8 +49,6 @@ class ProjectEdit_ProjectLinesDT extends SicModuleAbs {
             if ($row['xml']) {
                 $entity = new \SimpleXMLElement($row['xml']);
 
-                //$resultLine['title'] = $row['title'];
-
                 foreach ($lineColumns as $lineColName) {
 
                     $resultLine['line'][$lineColName] = Util::getXmlFieldValue($entity, $lineColName, false);
@@ -56,23 +56,38 @@ class ProjectEdit_ProjectLinesDT extends SicModuleAbs {
                     // Add hr after idx
                     //if ($lineColName == 'idx') $resultLine['line']['---'] = "";
                 }
-                //unset($resultLine['line']["line_id"]);
 
-                // Select Publication columns
-                $resultLine['publication'] = array();
+                // Select Publication columns: Add to queue, to select them all at once
                 if ($row['pub_id']) {
-                    $pubVals = DbUtil::selectRow('view_publication_list', $pubColumns, array('pub_id' => $row['pub_id']));
-                    foreach ($pubVals as $pubKey => $pubVal) {
-                        $resultLine['publication'][$pubKey] = str_replace("||", ", ", $pubVal);
-
-                        // Add hr after pub_id
-                        if ($pubKey == 'parent_id') $resultLine['publication']['---'] = "";
-                    }
+                    $resultLine['publication'] = array("pub_id" => $row['pub_id']);
+                    $pubIdsToSelect[] = $row['pub_id'];
                 }
             }
 
             $responseData[] = $resultLine;
         }
+
+        // Select all queued pubs
+        if ($pubIdsToSelect) {
+
+            $pubDict = array();
+            $pubs = DbUtil::selectFrom('view_publication_list', $pubColumns, new Literal("pub_id in (".join(", ", $pubIdsToSelect).")"));
+            foreach ($pubs as $pubRecord) {
+                $pubId = $pubRecord["pub_id"];
+                $pubDict[$pubId] = array();
+                foreach ($pubRecord as $pubKey => $pubVal) {
+                    $pubDict[$pubId][$pubKey] = str_replace("||", ", ", $pubVal);
+                }
+            }
+
+            foreach($responseData as $rrIdx => $responseRecord) {
+                if (!isset($responseData[$rrIdx]['publication'])) continue;
+                $pubId = $responseData[$rrIdx]['publication']['pub_id'];
+                $responseData[$rrIdx]['publication'] = $pubDict[$pubId];
+            }
+        }
+
+
         return $responseData;
     }
 
