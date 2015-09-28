@@ -90,6 +90,7 @@ var F = function(args) {
         autoComplete: {moduleName: "Pub/PubSearch", methodName: "autoComplete_search" } });
     quickSearchBox.selector.addClass("inline");
     quickSearchBox.input.selector.css("width", "285px").attr("maxlength", 80);
+    quickSearchBox.input.selector.focus();
 
     quickSearchForm.addHr();
 
