@@ -5,15 +5,11 @@ var F = function(args) {
 
     var formLineData = new sic.widget.sicForm({parent:panel.firstGroup.content.selector, captionWidth:"100px"});
     formLineData.addInput({name:"line_id", type:"text", placeholder:"Line Id...", readOnly:true});
-    formLineData.addInput({name:"xml", type:"textarea", placeholder:"Xml..."});
-
-    /*
-    formLineData.addInput({name:"creator", type:"text", placeholder:"Creator..."});
-    formLineData.addInput({name:"title", type:"text", placeholder:"Title..."});
-    formLineData.addInput({name:"cobiss", type:"text", placeholder:"Cobiss..."});
-    formLineData.addInput({name:"issn", type:"text", placeholder:"Issn..."});
-    */
     formLineData.addInput({name:"pub_id", type:"text", placeholder:"Publication Id...", value:sic.getArg(args.staticData, "pub_id", 0)});
+
+    var codemirror = formLineData.addInput({name:"xml", type:"codemirror", placeholder:"Xml...", caption:false});
+    codemirror.selector.css("width", $(window).width()+"px");
+
     formLineData.addInput({name:"save", type:"submit", value:"Save", caption:" "}).selector.click(function(e){
         var response = sic.callMethod({moduleName:"Project/ProjectLineEdit", methodName:"projLineUpdate",
             line_id: args.line_id, proj_id: args.staticData.proj_id, data:formLineData.getValue()});
