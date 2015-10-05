@@ -15,7 +15,7 @@ sic.widget.sicInput = function(args)
     this.inputType = this.type;
     switch(this.type){
         case "textarea":case "codemirror": this.inputTagName = "textarea"; break;
-        case "flat": this.inputTagName = "input"; this.inputType = "text"; break;
+        case "flat": this.inputTagName = "div"; this.inputType = null; break;
         default: this.inputTagName = "input"; break;
     }
 
@@ -64,8 +64,10 @@ sic.widget.sicInput = function(args)
     if (this.type == "button" && !this.value)
         this.value = this.name;
 
-    if (this.type == "flat")
+    if (this.type == "flat") {
         this.input.selector.addClass("flat");
+        this.selector.addClass("inline");
+    }
 
     if (this.readOnly)
         this.input.selector.attr("readonly", true);
@@ -184,8 +186,11 @@ sic.widget.sicInput = function(args)
 
     this.getValue = function(){
         var val = _p.input.selector.val();
-        if (_p.type == "checkbox") val = _p.input.selector.prop("checked");
-        if (_p.type == "codemirror") val = _p.codemirror.getValue();
+        if (_p.type == "checkbox")
+            val = _p.input.selector.prop("checked");
+        else if (_p.type == "flat")
+            val = _p.input.selector.html();
+        else if (_p.type == "codemirror") val = _p.codemirror.getValue();
 
         if (_p.withCode)
             return { codeId: _p.getCodeId(), value: val };
@@ -203,6 +208,8 @@ sic.widget.sicInput = function(args)
             _p.input.selector.prop("checked", value);
         } else if (_p.type == "codemirror") {
             _p.codemirror.setValue(value);
+        } else if (_p.type == "flat") {
+            _p.input.selector.html(value);
         } else {
             _p.input.selector.val(value);
         }
@@ -215,6 +222,8 @@ sic.widget.sicInput = function(args)
     this.clear = function() {
         if (_p.type == "checkbox")
             _p.input.selector.prop('checked', false);
+        else if (_p.type == "flat")
+            _p.input.selector.html("");
         else
             _p.input.selector.val('');
 

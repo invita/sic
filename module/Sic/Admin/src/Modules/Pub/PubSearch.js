@@ -250,6 +250,7 @@ var F = function(args) {
     var filterValue = sic.getArg(args, "filter", {});
     if (Object.keys(filterValue).length) {
         pubSearchForm.setValue(filterValue);
+        //sic.dump(pubSearchForm.getValue());
         pubSearchForm.submit();
     }
 
@@ -325,6 +326,8 @@ var F = function(args) {
 
     pubSearchForm.onSubmit(function(sicForm){
         var fq = "";
+
+        sic.dump(pubSearchForm.getValue());
 
         var formData = pubSearchForm.getValue();
         //sic.dump(formData); return;

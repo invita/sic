@@ -82,8 +82,10 @@ var F = function(args) {
                     var pub = rowValue.publication;
                     var filter = {};
                     for (var i in projLine) {
-                        if (projLine[i])
-                            filter[i] = "*"+projLine[i]+"*";
+                        if (projLine[i]) {
+                            //if (typeof(projLine[i]) == "object")
+                            filter[i] = projLine[i];
+                        }
                     }
                     //if (projLine.creator) filter.creator = "*"+projLine.creator+"*";
                     //if (projLine.title) filter.title = "*"+projLine.title+"*";
@@ -133,7 +135,8 @@ var F = function(args) {
         } else {
             eArgs.row.selector.removeClass("projectLineFulfilled");
             if (scrollToY == 0) {
-                scrollToY = eArgs.row.selector.prev().position().top;
+                if (eArgs.row.selector.prev() && eArgs.row.selector.prev().position())
+                    scrollToY = eArgs.row.selector.prev().position().top;
                 if (!scrollToY)
                     scrollToY = eArgs.row.selector.position().top;
             }

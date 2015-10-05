@@ -51,7 +51,7 @@ class ProjectEdit_ProjectLinesDT extends SicModuleAbs {
 
                 foreach ($lineColumns as $lineColName) {
 
-                    $resultLine['line'][$lineColName] = Util::getXmlFieldValue($entity, $lineColName, false);
+                    $resultLine['line'][$lineColName] = Util::getXmlFieldValue($entity, $lineColName, true);
 
                     // Add hr after idx
                     //if ($lineColName == 'idx') $resultLine['line']['---'] = "";

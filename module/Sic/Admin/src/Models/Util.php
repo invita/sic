@@ -2,6 +2,7 @@
 namespace Sic\Admin\Models;
 
 use Zend\Authentication\AuthenticationService;
+use Sic\Admin\Models\DbUtil;
 
 class Util
 {
@@ -69,19 +70,6 @@ class Util
         return $text;
     }
 
-    public static function getXmlFieldValue($entity, $fieldName, $asArray = false, $xPathFilter = "", $sep = ', ') {
-        $nodes = $entity->xpath($fieldName.$xPathFilter);
-        $result = array();
-        foreach ($nodes as $idx => $node)
-        {
-            $result[] = trim((string)$node);
-        }
-
-        if (!$asArray) $result = join($sep, $result);
-
-        return $result;
-    }
-
     public static function getMimeTypeFromFileName($fileName) {
         // 'application/xml'
         $ext = pathinfo($fileName, PATHINFO_EXTENSION);
@@ -115,5 +103,44 @@ class Util
         $identity = $auth->getIdentity();
         $powerLevel = isset($identity['power']) ? $identity['power'] : 0;
         return self::hasPermission($powerLevel, $actionName);
+    }
+
+
+    public static function getXmlFieldValue($entity, $fieldName, $asArray = false, $sep = ', ') {
+        $nodes = $entity->xpath($fieldName);
+        $result = array();
+
+        if (!$asArray) {
+            foreach ($nodes as $idx => $node)
+                $result[] = trim((string)$node);
+            $result = join($sep, $result);
+        } else {
+            foreach ($nodes as $idx => $node) {
+                switch($fieldName) {
+                    case "creator":
+                    case "idno":
+                    case "online":
+                    case "sameas":
+                    case "source":
+                        $attr = self::getArg($node->attributes(), $fieldName."Type", "");
+                        $result[] = array(
+                            "codeId" => self::getCodeIdFromValue("codes_pub_".$fieldName, $attr),
+                            "value" => trim((string)$node)
+                        );
+                        break;
+
+                    default:
+                        $result[] = trim((string)$node);
+                        break;
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    public static function getCodeIdFromValue($codeTable, $codeValue) {
+        $codeId = DbUtil::selectOne($codeTable, "code_id", array("value" => $codeValue));
+        return $codeId ? $codeId : 1;
     }
 }

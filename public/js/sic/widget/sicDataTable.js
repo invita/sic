@@ -1100,8 +1100,26 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
                 var fVal = _p.fieldValue[fKey];
                 if (typeof(fKey) == "string" && fKey.substr(0,3) == "---")
                     _p.formViewInstance.addHr();
-                else
+                else {
+                    if (typeof(fVal) == "object" && typeof(fVal[0]) == "object") {
+                        var newval = "";
+                        for (var k in fVal) {
+                            if (newval) newval += "<br />";
+                            newval += fVal[k].value;
+                        }
+                        fVal = newval;
+                    }
                     _p.formViewInstance.addInput({name:fKey, type:"flat", value:fVal, readOnly:true});
+
+                    /*
+                    var inputArgs = {name:fKey, type:"flat", value:fVal, readOnly:true};
+                    if (fVal && fVal[0] && fVal[0].codeId) {
+                        inputArgs.isArray = true;
+                        inputArgs.withCode = sic.codes.pubSource;
+                    }
+                    _p.formViewInstance.addInput(inputArgs);
+                    */
+                }
             }
         } else if (_p.dataField && _p.actions) {
             _p.valueDiv.actions = {};
