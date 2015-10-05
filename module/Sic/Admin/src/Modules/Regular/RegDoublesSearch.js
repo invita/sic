@@ -57,6 +57,8 @@ var F = function(args) {
             sic.callMethod({moduleName: "Regular/RegDoublesSearch", methodName: "selectLineToggle",
                 pub_id:row.pub_id}, function()
             {
+                //eArgs.field.input.selector.prop("checked", true);
+                //sic.dump(eArgs.field.input, 0);
                 dataTable.refresh();
             });
 
