@@ -6,6 +6,7 @@ use Zend\Db\Sql\Predicate\Between;
 use Zend\Db\Sql\Predicate\Operator;
 use Zend\Db\Sql\Predicate\PredicateSet;
 use Zend\Db\Sql\Where;
+use Zend\Db\Sql\Expression;
 use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
 use Zend\Db\Sql\Sql;
 
@@ -157,5 +158,34 @@ class DbUtil
         }
 
         return $whereFinal;
+    }
+
+
+
+    public static function touchPublication($pub_id) {
+        DbUtil::updateTable("publication",
+            array(
+                'modified_date' => new Expression('NOW()'),
+                'modified_by' => Util::getUserId()
+            ),
+            array("pub_id" => $pub_id));
+    }
+
+    public static function touchProject($proj_id) {
+        DbUtil::updateTable("project",
+            array(
+                'modified_date' => new Expression('NOW()'),
+                'modified_by' => Util::getUserId()
+            ),
+            array("proj_id" => $proj_id));
+    }
+
+    public static function touchQuote($quote_id) {
+        DbUtil::updateTable("quote",
+            array(
+                'modified_date' => new Expression('NOW()'),
+                'modified_by' => Util::getUserId()
+            ),
+            array("quote_id" => $quote_id));
     }
 }

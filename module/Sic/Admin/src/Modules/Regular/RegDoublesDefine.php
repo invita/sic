@@ -135,6 +135,7 @@ class RegDoublesDefine extends SicModuleAbs
         // Check if Regular selected
         foreach ($selectedPubs as $selPub) {
             DbUtil::updateTable("publication", array("original_id" => $selPub['temp_original_id']), array("pub_id" => $selPub['pub_id']));
+            DbUtil::touchPublication($selPub['pub_id']);
         }
 
         //foreach ($selectedPubs as $selPub) {

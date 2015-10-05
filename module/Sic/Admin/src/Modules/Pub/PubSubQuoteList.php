@@ -47,7 +47,10 @@ class PubSubQuoteList extends SicModuleAbs {
     {
         $data = Util::getArg($args, 'data', null);
         $quote_id = Util::getArg($data, 'quote_id', 0);
+        $pub_id = DbUtil::selectOne('quote', 'pub_id', array('quote_id' => $quote_id));
         $delete->from('quote')->where(array("quote_id" => $quote_id));
+
+        if ($pub_id) DbUtil::touchPublication($pub_id);
     }
 
     public function defineSqlUpdateRow($args, Update $update)
@@ -63,6 +66,11 @@ class PubSubQuoteList extends SicModuleAbs {
                 "cited_page" => Util::getArg($row, 'cited_page', null)
             );
             $update->table('quote')->set($updateFields)->where(array("quote_id" => $quote_id));
+
+            DbUtil::touchQuote($quote_id);
+
+            $pub_id = DbUtil::selectOne('quote', 'pub_id', array('quote_id' => $quote_id));
+            if ($pub_id) DbUtil::touchPublication($pub_id);
         }
     }
 

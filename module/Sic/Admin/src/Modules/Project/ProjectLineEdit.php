@@ -4,6 +4,7 @@ namespace Sic\Admin\Modules\Project;
 use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
 use Zend\Db\Sql\Sql;
 use Zend\Db\Sql\Literal;
+use Zend\Db\Sql\Expression;
 use Sic\Admin\Models\Util;
 use Sic\Admin\Models\DbUtil;
 
@@ -25,18 +26,15 @@ class ProjectLineEdit {
 
         $this->deleteOldPubProjLinkIfExists($proj_id, $pub_id, $line_id);
 
-
         $projLineData = array(
-            //"title" => Util::getArg($data, "title", ""),
-            //"creator" => Util::getArg($data, "creator", ""),
-            //"cobiss" => Util::getArg($data, "cobiss", ""),
-            //"issn" => Util::getArg($data, "issn", ""),
             "xml" => Util::getArg($data, "xml", ""),
             "pub_id" => Util::getArg($data, "pub_id", 0)
         );
         DbUtil::updateTable("project_line", $projLineData, array("line_id" => $line_id));
 
         $this->createPubProjLink($proj_id, $pub_id, $line_id);
+
+        DbUtil::touchProject($proj_id);
 
         return $this->projLineSelect($args);
     }
@@ -56,10 +54,6 @@ class ProjectLineEdit {
         $projLineData = array(
             "idx" => $newIdx,
             "proj_id" => $proj_id,
-            //"title" => Util::getArg($data, "title", ""),
-            //"creator" => Util::getArg($data, "creator", ""),
-            //"cobiss" => Util::getArg($data, "cobiss", ""),
-            //"issn" => Util::getArg($data, "issn", ""),
             "xml" => Util::getArg($data, "xml", ""),
             "pub_id" => Util::getArg($data, "pub_id", 0)
         );
@@ -68,6 +62,8 @@ class ProjectLineEdit {
         $args["line_id"] = DbUtil::$lastInsertId;
 
         $this->createPubProjLink($proj_id, $pub_id, $line_id);
+
+        DbUtil::touchProject($proj_id);
 
         return $this->projLineSelect($args);
     }
@@ -81,6 +77,8 @@ class ProjectLineEdit {
         $this->deleteOldPubProjLinkIfExists($proj_id, $pub_id, $line_id);
         DbUtil::updateTable("project_line", array('pub_id' => $pub_id), array("line_id" => $line_id));
         $this->createPubProjLink($proj_id, $pub_id, $line_id);
+
+        DbUtil::touchProject($proj_id);
 
         return array("status" => true);
     }
@@ -98,5 +96,4 @@ class ProjectLineEdit {
         if (!$link_id)
             DbUtil::insertInto("publication_project_link", array("pub_id" => $pub_id, "proj_id" => $proj_id));
     }
-
 }

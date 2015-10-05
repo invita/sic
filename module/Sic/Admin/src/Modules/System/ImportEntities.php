@@ -99,11 +99,14 @@ class ImportEntities
                 $pubData = array(
                     "pub_id" => $pubId,
                     "parent_id" => Util::getXmlFieldValue($entity, "parent", false),
+                    "created_date" => new Expression("NOW()"),
+                    "created_by" => Util::getUserId()
                     //"year" => Util::getXmlFieldValue($entity, "date", false),
                     //"cobiss" => Util::getXmlFieldValue($entity, "idno", false, "[@idnoType='cobiss']"),
                     //"issn" => Util::getXmlFieldValue($entity, "idno", false, "[@idnoType='issn']"),
                 );
                 DbUtil::insertInto("publication", $pubData);
+                DbUtil::touchPublication($pubId);
 
 
                 $title = Util::getXmlFieldValue($entity, "title", true);

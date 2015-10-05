@@ -119,12 +119,18 @@ abstract class SicModuleAbs
 
     }
 
+    public function defineSqlAllowDelete($args) {
+        return array("status" => true);
+    }
+
     public function dataTableDelete($args) {
 
         $data = Util::getArg($args, 'data', null);
         $rowsAffected = 0;
 
-        if ($data) {
+        $allowDelete = $this->defineSqlAllowDelete($args);
+
+        if ($data && $allowDelete['status']) {
             $adapter = GlobalAdapterFeature::getStaticAdapter();
             $sql = new Sql($adapter);
             $delete = $sql->delete();
@@ -147,6 +153,10 @@ abstract class SicModuleAbs
 
         $result = $this->dataTableSelect($args);
         $result['rowsAffected'] = $rowsAffected;
+
+        if (!$allowDelete['status']) {
+            $result = array_merge($result, $allowDelete);
+        }
         return $result;
     }
     //</editor-fold>

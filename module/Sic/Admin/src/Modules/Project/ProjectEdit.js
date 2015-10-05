@@ -8,6 +8,8 @@ var F = function(args) {
 
     var formProj = new sic.widget.sicForm({parent:panel.firstGroup.content.selector, captionWidth:"100px"});
     formProj.addInput({name:"proj_id", type:"text", placeholder:"Project Id...", readOnly:true});
+    formProj.addInput({name:"created_by_username", type:"text", placeholder:"Created by...", readOnly:true, caption:"Created by"});
+    formProj.addInput({name:"created_date", type:"text", placeholder:"Created date...", readOnly:true});
     formProj.addInput({name:"title", type:"text", placeholder:"Title..."});
     formProj.addInput({name:"save", type:"submit", value:"Save", caption:" "}).selector.click(function(e){
         var response = sic.callMethod({moduleName:"Project/ProjectEdit", methodName:"projUpdate",

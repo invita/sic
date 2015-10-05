@@ -105,6 +105,12 @@ class Util
         return self::hasPermission($powerLevel, $actionName);
     }
 
+    public static function isSuperUser() {
+        $auth = new AuthenticationService();
+        $identity = $auth->getIdentity();
+        return isset($identity['power']) ? $identity['power'] : "normalUser";
+    }
+
 
     public static function getXmlFieldValue($entity, $fieldName, $asArray = false, $sep = ', ') {
         $nodes = $entity->xpath($fieldName);

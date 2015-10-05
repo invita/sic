@@ -542,3 +542,22 @@ UPDATE `user` SET power = 'superUser';
 
 -- 2015-09-15
 ALTER TABLE `publication` ADD `modified_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , ADD INDEX (`modified_date`) ;
+
+
+-- 2015-10-05
+ALTER TABLE `publication` ADD `modified_by` int(11), ADD INDEX (`modified_by`) ;
+ALTER TABLE `publication` ADD `regalt_modified_by` int(11), ADD INDEX (`regalt_modified_by`) ;
+ALTER TABLE `publication` ADD `created_date` TIMESTAMP NOT NULL, ADD INDEX (`created_date`) ;
+ALTER TABLE `publication` ADD `created_by` int(11), ADD INDEX (`created_by`) ;
+
+ALTER TABLE `project` DROP `date_created`;
+
+ALTER TABLE `project` ADD `modified_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , ADD INDEX (`modified_date`) ;
+ALTER TABLE `project` ADD `modified_by` int(11), ADD INDEX (`modified_by`) ;
+ALTER TABLE `project` ADD `created_date` TIMESTAMP NOT NULL, ADD INDEX (`created_date`) ;
+ALTER TABLE `project` ADD `created_by` int(11), ADD INDEX (`created_by`) ;
+
+ALTER TABLE `quote` ADD `modified_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , ADD INDEX (`modified_date`) ;
+ALTER TABLE `quote` ADD `modified_by` int(11), ADD INDEX (`modified_by`) ;
+ALTER TABLE `quote` ADD `created_date` TIMESTAMP NOT NULL, ADD INDEX (`created_date`) ;
+ALTER TABLE `quote` ADD `created_by` int(11), ADD INDEX (`created_by`) ;

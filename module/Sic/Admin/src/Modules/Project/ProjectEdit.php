@@ -22,6 +22,8 @@ class ProjectEdit
         $results = $statement->execute();
         $row = $results->current();
 
+        $row['created_by_username'] = DbUtil::selectOne('user', 'username', array('id' => $row['created_by']));
+
         return array("data" => $row);
     }
 
@@ -32,12 +34,15 @@ class ProjectEdit
         if (!$proj_id) return $this->projInsert($args);
 
         $data = Util::getArg($args, 'data', null);
+        unset($data['created_by_username']);
 
         $adapter = GlobalAdapterFeature::getStaticAdapter();
         $sql = new Sql($adapter);
         $update = $sql->update()->table('project')->set($data)->where(array('proj_id' => $proj_id));
         $statement = $sql->prepareStatementForSqlObject($update);
         $result = $statement->execute();
+
+        DbUtil::touchProject($proj_id);
 
         return $this->projSelect($args);
     }
@@ -46,15 +51,20 @@ class ProjectEdit
     {
 
         $data = Util::getArg($args, 'data', null);
+        unset($data['created_by_username']);
+
         $adapter = GlobalAdapterFeature::getStaticAdapter();
         $sql = new Sql($adapter);
 
-        $data['date_created'] = new \Zend\Db\Sql\Expression('CURDATE()');
+        $data['created_date'] = new Expression('NOW()');
+        $data['created_by'] = Util::getUserId();
 
         $insert = $sql->insert()->into('project')->values($data);
         $statement = $sql->prepareStatementForSqlObject($insert);
         $result = $statement->execute();
         $args['proj_id'] = $result->getGeneratedValue();
+
+        DbUtil::touchProject($args['proj_id']);
 
         return $this->projSelect(array("proj_id" => $args['proj_id']));
     }
@@ -64,8 +74,8 @@ class ProjectEdit
         $proj_id = Util::getArg($args, 'proj_id', 0);
         $fileName = Util::getArg($args, 'fileName', null);
 
-        if (!$proj_id) {return array('status' => false, 'alert' => 'Save the project first!'); }
-        if (!$fileName) {return array('status' => false, 'alert' => 'No fileName selected!'); }
+        if (!$proj_id) { return array('status' => false, 'alert' => 'Save the project first!'); }
+        if (!$fileName) { return array('status' => false, 'alert' => 'No fileName selected!'); }
 
         $contents = file_get_contents(Util::getUploadPath().$fileName);
         $xml = new \SimpleXMLElement($contents);
@@ -105,6 +115,7 @@ class ProjectEdit
             echo DbUtil::$lastSqlSelect->getSqlString();
         }
 
+        DbUtil::touchProject($proj_id);
 
         return array('status' => true, 'count' => $rowCount);
     }

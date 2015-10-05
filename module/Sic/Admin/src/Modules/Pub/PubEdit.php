@@ -61,12 +61,13 @@ class PubEdit {
             "parent_id" => intval(Util::getArg($data, 'parent_id', 0)),
             "original_id" => intval(Util::getArg($data, 'original_id', 0)),
             "is_series" => intval(Util::getArg($data, 'is_series', 0)),
-            "modified_date" => new Expression("NOW()")
         );
 
         DbUtil::updateTable('publication', $pubData, array('pub_id' => $pub_id));
 
         $this->updateArrayFields($args);
+
+        DbUtil::touchPublication($pub_id);
 
         return $this->pubSelect($args);
     }
@@ -79,7 +80,9 @@ class PubEdit {
         $pubData = array(
             "parent_id" => Util::getArg($data, 'parent_id', 0),
             "original_id" => Util::getArg($data, 'original_id', 0),
-            "is_series" => intval(Util::getArg($data, 'is_series', 0))
+            "is_series" => intval(Util::getArg($data, 'is_series', 0)),
+            "created_date" => new Expression("NOW()"),
+            "created_by" => Util::getUserId()
         );
         DbUtil::insertInto('publication', $pubData);
 
@@ -102,6 +105,8 @@ class PubEdit {
                     array('pub_id' => $args['pub_id'], 'proj_id' => $proj_id));
             }
         }
+
+        DbUtil::touchPublication($args['pub_id']);
 
         return $this->pubSelect($args);
     }
@@ -262,6 +267,8 @@ class PubEdit {
                 "cited_page" => 0
             ));
         }
+
+        DbUtil::touchPublication($pub_id);
 
         return array("status" => true);
     }

@@ -10,7 +10,7 @@ var F = function(args) {
         primaryKey: ['pub_id'],
         entityTitle: "Entity %pub_id% - %title%",
         filter: { visible: true },
-        canDelete: false,
+        canDelete: true,
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Pub/PubList",
             pageCount: 15,

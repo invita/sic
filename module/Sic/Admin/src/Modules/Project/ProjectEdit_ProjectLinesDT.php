@@ -69,7 +69,6 @@ class ProjectEdit_ProjectLinesDT extends SicModuleAbs {
 
         // Select all queued pubs
         if ($pubIdsToSelect) {
-
             $pubDict = array();
             $pubs = DbUtil::selectFrom('view_publication_list', $pubColumns, new Literal("pub_id in (".join(", ", $pubIdsToSelect).")"));
             foreach ($pubs as $pubRecord) {
@@ -83,7 +82,8 @@ class ProjectEdit_ProjectLinesDT extends SicModuleAbs {
             foreach($responseData as $rrIdx => $responseRecord) {
                 if (!isset($responseData[$rrIdx]['publication'])) continue;
                 $pubId = $responseData[$rrIdx]['publication']['pub_id'];
-                $responseData[$rrIdx]['publication'] = $pubDict[$pubId];
+                if (isset($pubDict[$pubId]))
+                    $responseData[$rrIdx]['publication'] = $pubDict[$pubId];
             }
         }
 
@@ -98,6 +98,8 @@ class ProjectEdit_ProjectLinesDT extends SicModuleAbs {
         $data = Util::getArg($args, 'data', null);
         $line_id = Util::getArg($data, 'line_id', 0);
         if (!$line_id) return false;
+
+        DbUtil::touchProject($proj_id);
 
         $delete->from('project_line')->where(array('proj_id' => $proj_id, 'line_id' => $line_id));
     }
