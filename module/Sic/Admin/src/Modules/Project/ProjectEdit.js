@@ -2,6 +2,7 @@ var F = function(args) {
     var moduleArgs = args;
     var tabPageBasic = args.helpers.createTabPage({name:"Basic"});
     var scrollToY = 0;
+    var autoScrollToFirstUnlinked = false;
 
     var panel = new sic.widget.sicPanel({parent:tabPageBasic.content.selector, firstGroupName: "Project"});
 
@@ -95,7 +96,7 @@ var F = function(args) {
                             if (line_id && pub_id) {
                                 var response = sic.callMethod({moduleName:"Project/ProjectLineEdit",
                                     methodName:"linkLine", line_id: line_id, pub_id: pub_id, proj_id: proj_id},
-                                    function(response) { linesTable.refresh(); });
+                                    function(response) { autoScrollToFirstUnlinked = true; linesTable.refresh(); });
                             }
                         }});
                 }
@@ -131,13 +132,23 @@ var F = function(args) {
             eArgs.row.selector.addClass("projectLineFulfilled");
         } else {
             eArgs.row.selector.removeClass("projectLineFulfilled");
-            if (scrollToY == 0)
-                scrollToY = eArgs.row.selector.position().top;
+            if (scrollToY == 0) {
+                scrollToY = eArgs.row.selector.prev().position().top;
+                if (!scrollToY)
+                    scrollToY = eArgs.row.selector.position().top;
+            }
         }
-
-
     });
-    linesTable.onDataFeed(function(data){ scrollToY = 0; formProj.inputs['_pubCount'].setValue(data['rowCount']); });
+    linesTable.onDataFeed(function(data){
+        scrollToY = 0;
+        formProj.inputs['_pubCount'].setValue(data['rowCount']);
+    });
+    linesTable.onDataFeedComplete(function(data){
+        if (autoScrollToFirstUnlinked) {
+            scrollToFirstUnlinked();
+            autoScrollToFirstUnlinked = false;
+        }
+    });
     linesTable.onFirstFeedComplete(function() {
         var scrollToFirstUnful = new sic.widget.sicElement({parent:linesTable.dsControl.selector});
         scrollToFirstUnful.selector.addClass("inline filterButton vmid");
@@ -146,9 +157,13 @@ var F = function(args) {
         var scrollToFirstUnfulSpan = new sic.widget.sicElement({parent:scrollToFirstUnful.selector, tagName:"span", tagClass:"vmid"});
         scrollToFirstUnfulSpan.selector.html("Scroll to first Unlinked");
         scrollToFirstUnful.selector.click(function(e){
-            window.scrollTo(0, scrollToY);
+            scrollToFirstUnlinked();
         });
     });
+
+    var scrollToFirstUnlinked = function() {
+        window.scrollTo(0, scrollToY);
+    };
 
 
     if (args.proj_id){
