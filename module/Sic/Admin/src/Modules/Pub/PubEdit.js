@@ -256,11 +256,15 @@ var F = function(args) {
                     importFromLastProj.fadeIn();
 
                     if (pub_id && proj_id) {
-                        sic.loadModule({moduleName:'Project/ProjectLineSelect', newTab:'Select', inDialog: true, proj_id: proj_id,
+                        sic.loadModule({moduleName:'Project/ProjectLineSelect', tabPage:tabPageQuotes,
+                            newTab:'Select project entites', /*inDialog: true*/ proj_id: proj_id,
                             closeOKCallback: function(closeOKArgs){
                                 sic.callMethod({moduleName:"Pub/PubEdit",
                                         methodName:"importQuotesFromProject", pub_id: pub_id, proj_id: proj_id},
-                                    function(response) { quotesDataTable.refresh(); });
+                                    function(response) {
+                                        focusLastQuoteRow = true;
+                                        quotesDataTable.refresh();
+                                    });
                             }
                         });
                     }
@@ -283,11 +287,15 @@ var F = function(args) {
             }
             var pub_id = args.pub_id;
             if (pub_id) {
-                sic.loadModule({moduleName:'Project/ProjectLineSelect', newTab:'Select', inDialog: true, proj_id: lastProjId,
+                sic.loadModule({moduleName:'Project/ProjectLineSelect', tabPage:tabPageQuotes,
+                    newTab:'Select project entites', /*inDialog: true,*/ proj_id: lastProjId,
                     closeOKCallback: function(closeOKArgs){
                         sic.callMethod({moduleName:"Pub/PubEdit",
                                 methodName:"importQuotesFromProject", pub_id: pub_id, proj_id: lastProjId},
-                            function(response) { quotesDataTable.refresh(); });
+                            function(response) {
+                                focusLastQuoteRow = true;
+                                quotesDataTable.refresh();
+                            });
                     }
                 });
             }

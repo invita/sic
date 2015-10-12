@@ -1,6 +1,7 @@
 var F = function(args) {
     var moduleArgs = args;
     var tabPageBasic = args.helpers.createTabPage({name:"Select"});
+    var okButton;
 
     var linesTable = new sic.widget.sicDataTable({
         parent: tabPageBasic.content.selector,
@@ -10,7 +11,7 @@ var F = function(args) {
         canInsert: false,
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Project/ProjectLineSelect",
-            staticData: { proj_id: args.proj_id },
+            staticData: { proj_id: args.proj_id, deselectAll: true },
             pageCount: 10
         }),
         fields: {
@@ -19,16 +20,32 @@ var F = function(args) {
     });
 
     linesTable.onFieldClick(function(eArgs) {
-        var row = eArgs.row.getValue();
+        if (eArgs.field.fieldKey == 'user_id') {
+            var row = eArgs.row.getValue();
+            sic.callMethod({moduleName: "Project/ProjectLineSelect", methodName: "selectLineToggle",
+                proj_id: args.proj_id, line_id:row.line_id}, function()
+            {
+                linesTable.refresh();
+            });
+        }
+    });
 
-        sic.callMethod({moduleName: "Project/ProjectLineSelect", methodName: "selectLineToggle",
-            proj_id: args.proj_id, line_id:row.line_id}, function()
-        {
-            linesTable.refresh();
-        });
+    linesTable.onFieldDoubleClick(function(eArgs) {
+        if (eArgs.field.fieldKey != 'user_id') {
+            var row = eArgs.row.getValue();
+            sic.callMethod({moduleName: "Project/ProjectLineSelect", methodName: "selectOneLine",
+                proj_id: args.proj_id, line_id:row.line_id}, function()
+            {
+                okButton.selector.click();
+                linesTable.refresh();
+            });
+        }
     });
 
     linesTable.onFirstFeedComplete(function() {
+
+        delete linesTable.dataSource.staticData.deselectAll;
+
         var selectAllButton = new sic.widget.sicElement({parent:linesTable.dsControl.selector});
         selectAllButton.selector.addClass("inline filterButton vmid");
         var selectAllImg = new sic.widget.sicElement({parent:selectAllButton.selector, tagName:"img", tagClass:"icon12 vmid"});
@@ -57,10 +74,14 @@ var F = function(args) {
 
     var div = new sic.widget.sicElement({parent:tabPageBasic.content.selector});
     if (typeof(args.closeOKCallback) == "function") {
-        var okButton = new sic.widget.sicInput({parent:div.selector,type:"button", caption:false, name:"import"});
+        okButton = new sic.widget.sicInput({parent:div.selector,type:"button", caption:false, name:"import"});
         okButton.selector.click(function() {
             args.closeOKCallback(args);
-            tabPageBasic.destroyTab();
+
+            if (tabPageBasic.parentTab) {
+                var citsPage = tabPageBasic.parentTab.header.findPageByName("Citations");
+                if (citsPage) citsPage.selectTab();
+            }
         });
     }
 };

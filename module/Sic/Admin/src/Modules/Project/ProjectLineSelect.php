@@ -17,7 +17,13 @@ class ProjectLineSelect extends SicModuleAbs {
     {
         $userId = Util::getUserId();
         $staticData = Util::getArg($args, "staticData", null);
+        $deselectAll = Util::getArg($staticData, "deselectAll", false);
         $projId = Util::getArg($staticData, "proj_id", 0);
+
+        if ($deselectAll) {
+            $args["proj_id"] = $projId;
+            $this->deselectAll($args);
+        }
 
         $select->columns(array("line_id", "pub_id"))->from('project_line')
             ->join(
@@ -87,6 +93,7 @@ class ProjectLineSelect extends SicModuleAbs {
     public function deselectAll($args) {
         $projId = Util::getArg($args, "proj_id", 0);
         $userId = Util::getUserId();
+
         if (!$projId || !$userId) return array("status" => false);
 
         DbUtil::deleteFrom('project_line_selected', array('proj_id' => $projId, 'user_id' => $userId));
@@ -113,4 +120,18 @@ class ProjectLineSelect extends SicModuleAbs {
 
         return array("status" => true);
     }
+
+    public function selectOneLine($args) {
+        $projId = Util::getArg($args, "proj_id", 0);
+        $lineId = Util::getArg($args, "line_id", 0);
+        $userId = Util::getUserId();
+        if (!$projId || !$lineId || !$userId) return array("status" => false);
+
+        $this->deselectAll($args);
+        DbUtil::insertInto('project_line_selected', array(
+            'proj_id' => $projId, 'line_id' => $lineId, 'user_id' => $userId));
+
+        return array("status" => true);
+    }
+
 }
