@@ -36,6 +36,7 @@ class PubSubQuoteList extends SicModuleAbs {
                 "quoted_pub_id" => $row['quoted_pub_id'],
                 "quoted_creator" => PubEdit::getCreatorShort($row['quoted_pub_id']),
                 "quoted_title" => PubEdit::getTitleShort($row['quoted_pub_id']),
+                "quoted_year" => DbUtil::selectOne('publication_year', 'year', array('pub_id' => $row['quoted_pub_id'])),
                 "cited_page" => $row['cited_page'],
             );
             $responseData[] = $newRow;

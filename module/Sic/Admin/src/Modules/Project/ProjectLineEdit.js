@@ -14,13 +14,20 @@ var F = function(args) {
         var response = sic.callMethod({moduleName:"Project/ProjectLineEdit", methodName:"projLineUpdate",
             line_id: args.line_id, proj_id: args.staticData.proj_id, data:formLineData.getValue()});
         if (response && response.data) {
-            formLineData.setValue(response.data);
-            args.line_id = response.data.line_id;
-            //tabPage.parentTab.setCaption(sic.mergePlaceholders(args.entityTitle, response.data));
+
+            if (confirm("Saved! Do you want to close this tab?")) {
+                tabPage.parentTab.destroyTab();
+            } else {
+                formLineData.setValue(response.data);
+                args.line_id = response.data.line_id;
+            }
         }
     });
+
+    /*
     formLineData.addInput({name:"cancel", type:"button", value:"Cancel"}).selector.click(function(e){ });
     formLineData.addInput({name:"clear", type:"button", value:"Clear"}).selector.click(function(e){ });
+    */
 
     if (args.line_id){
         var response = sic.callMethod({moduleName:"Project/ProjectLineEdit", methodName:"projLineSelect", line_id: args.line_id});

@@ -141,6 +141,7 @@ var F = function(args) {
                 hintF: function(args) { sic.hint.publication(args.row.lastRowData.quoted_pub_id) } },
             quoted_creator: { canSort:false, editable:false, caption:"Creator" },
             quoted_title: { canSort:false, editable:false, caption:"Title" },
+            quoted_year: { canSort:false, editable:false, caption:"Date" },
             subquote_count: { editable:false, caption:"Ind. Source", canFilter: false, displayType: "button" },
             _expand: { visible:false }
         },

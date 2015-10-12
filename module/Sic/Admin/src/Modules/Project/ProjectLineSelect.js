@@ -19,7 +19,8 @@ var F = function(args) {
             pageCount: 10
         }),
         fields: {
-            user_id: { caption:"Selected", editable:true, editorType: "checkbox", updateOnEnter: false }
+            user_id: { caption:"Selected", editable:true, editorType: "checkbox", updateOnEnter: false },
+            year: { caption:"Date" }
         }
     });
 
