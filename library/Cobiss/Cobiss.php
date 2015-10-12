@@ -433,21 +433,25 @@ class Cobiss_Detail_Window{
             $thNode = $trNode("th", 0);
             if($thNode && $thNode->getInnerText() == "Avtor"){
                 foreach($trNode("td a") as $aNode){
-                    $detailData->addAuthor($aNode->getInnerText());
+                    $author = trim(str_replace(",", "", $aNode->getInnerText()));
+                    $detailData->addAuthor($author);
                 }
             } else if($thNode && $thNode->getInnerText() == "Naslov"){
                 $tdNode = $trNode("td", 0);
                 $titles = $tdNode->getInnerText();
                 $array = explode("/", $titles);
                 for($a=0; $a<count($array); $a++){
-                    $detailData->addTitle($array[$a]);
+                    $title = trim($array[$a]);
+                    $detailData->addTitle($title);
                 }
             } else if($thNode && $thNode->getInnerText() == "Založništvo in izdelava"){
                 $tdNode = $trNode("td", 0);
-                $detailData->setPublisher($tdNode->getInnerText());
+                $publisher = trim($tdNode->getInnerText());
+                $detailData->setPublisher($publisher);
             } else if($thNode && $thNode->getInnerText() == "COBISS.SI-ID"){
                 $tdNode = $trNode("td", 0);
-                $detailData->setCobissId($tdNode->getInnerText());
+                $cobissId = trim($tdNode->getInnerText());
+                $detailData->setCobissId($cobissId);
             }
         }
         $this->setData($detailData);

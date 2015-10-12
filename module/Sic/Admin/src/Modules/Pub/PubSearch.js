@@ -327,7 +327,7 @@ var F = function(args) {
     pubSearchForm.onSubmit(function(sicForm){
         var fq = "";
 
-        sic.dump(pubSearchForm.getValue());
+        //sic.dump(pubSearchForm.getValue());
 
         var formData = pubSearchForm.getValue();
         //sic.dump(formData); return;
@@ -359,8 +359,12 @@ var F = function(args) {
             value = sic.stripSolrSpecialChars(value);
 
             var values = value.split(" ");
-            for (var i in values)
-                values[i] = sfKey+":*"+values[i]+"*";
+            for (var i in values) {
+                if (sfKey == "title")
+                    values[i] = sfKey+":"+values[i];
+                else
+                    values[i] = sfKey+":*"+values[i]+"*";
+            }
 
             fields.push("("+values.join(" AND ")+")");
         }
