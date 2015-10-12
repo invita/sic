@@ -6,9 +6,9 @@ var F = function(args) {
     //sic.dump(args, 0);
     var focusLastQuoteRow = false;
     var focusLastSubQuoteDT = null;
-    var importFromLastProjSpan;
-    var importFromLastProj;
-    var lastProjId = 0;
+    var importFromLastProjSpan, importFromLastProj2Span;
+    var importFromLastProj, importFromLastProj2;
+    var lastProjId = 0, lastProjTitle = "";
 
     var idno = sic.getArg(cobissData, 'idno', null);
     var addidno = sic.getArg(cobissData, 'addidno', null);
@@ -249,15 +249,19 @@ var F = function(args) {
                 selectCallback: function(selectArgs){
                     var pub_id = args.pub_id;
                     var proj_id = selectArgs.row.getValue().proj_id;
+                    var proj_title = selectArgs.row.getValue().title;
 
                     // Set lastProject
                     lastProjId = proj_id;
-                    importFromLastProjSpan.selector.html("Repeat import ("+lastProjId+" - "+selectArgs.row.getValue().title+")");
+                    lastProjTitle = proj_title;
+                    importFromLastProjSpan.selector.html("Repeat import project");
                     importFromLastProj.fadeIn();
+                    importFromLastProj2Span.selector.html("Repeat import project");
+                    importFromLastProj2.fadeIn();
 
                     if (pub_id && proj_id) {
                         sic.loadModule({moduleName:'Project/ProjectLineSelect', tabPage:tabPageQuotes,
-                            newTab:'Select project entites', /*inDialog: true*/ proj_id: proj_id,
+                            newTab:'Select from Project: '+proj_id, /*inDialog: true*/ proj_id: proj_id, proj_title: proj_title,
                             closeOKCallback: function(closeOKArgs){
                                 sic.callMethod({moduleName:"Pub/PubEdit",
                                         methodName:"importQuotesFromProject", pub_id: pub_id, proj_id: proj_id},
@@ -271,12 +275,7 @@ var F = function(args) {
                 }});
         });
 
-        importFromLastProj = new sic.widget.sicElement({parent:quotesDataTable.dsControl.selector});
-        importFromLastProj.selector.addClass("inline filterButton vmid");
-        var importFromLastProjImg = new sic.widget.sicElement({parent:importFromLastProj.selector, tagName:"img", tagClass:"icon12 vmid"});
-        importFromLastProjImg.selector.attr("src", "/img/insert.png");
-        importFromLastProjSpan = new sic.widget.sicElement({parent:importFromLastProj.selector, tagName:"span", tagClass:"vmid"});
-        importFromLastProj.selector.click(function(e){
+        var importLastProjClick = function(e){
 
             saveAllModifiedRows(quotesDataTable);
 
@@ -288,10 +287,10 @@ var F = function(args) {
             var pub_id = args.pub_id;
             if (pub_id) {
                 sic.loadModule({moduleName:'Project/ProjectLineSelect', tabPage:tabPageQuotes,
-                    newTab:'Select project entites', /*inDialog: true,*/ proj_id: lastProjId,
+                    newTab:'Select from Project: '+lastProjId, /*inDialog: true,*/ proj_id: lastProjId, proj_title: lastProjTitle,
                     closeOKCallback: function(closeOKArgs){
                         sic.callMethod({moduleName:"Pub/PubEdit",
-                                methodName:"importQuotesFromProject", pub_id: pub_id, proj_id: lastProjId},
+                                methodName:"importQuotesFromProject", pub_id: pub_id, proj_id: lastProjId, proj_title: lastProjTitle},
                             function(response) {
                                 focusLastQuoteRow = true;
                                 quotesDataTable.refresh();
@@ -299,8 +298,24 @@ var F = function(args) {
                     }
                 });
             }
-        });
+        };
+
+        importFromLastProj = new sic.widget.sicElement({parent:quotesDataTable.dsControl.selector});
+        importFromLastProj.selector.addClass("inline filterButton vmid");
+        var importFromLastProjImg = new sic.widget.sicElement({parent:importFromLastProj.selector, tagName:"img", tagClass:"icon12 vmid"});
+        importFromLastProjImg.selector.attr("src", "/img/insert.png");
+        importFromLastProjSpan = new sic.widget.sicElement({parent:importFromLastProj.selector, tagName:"span", tagClass:"vmid"});
+        importFromLastProj.selector.click(importLastProjClick);
         importFromLastProj.displayNone();
+
+
+        importFromLastProj2 = new sic.widget.sicElement({parent:quotesDataTable.insertBar.selector, tagName:"button", insertAtTop:true});
+        importFromLastProj2.selector.addClass("insertButton").css("margin-right", "10px");
+        var importFromLastProj2Img = new sic.widget.sicElement({parent:importFromLastProj2.selector, tagName:"img", tagClass:"icon16 vmid"});
+        importFromLastProj2Img.selector.attr("src", "/img/insert.png");
+        importFromLastProj2Span = new sic.widget.sicElement({parent:importFromLastProj2.selector, tagName:"span", tagClass:"vmid"});
+        importFromLastProj2.selector.click(importLastProjClick);
+        importFromLastProj2.displayNone();
 
 
         var saveAllButton = new sic.widget.sicElement({parent:quotesDataTable.insertBar.selector, tagName:"button"});

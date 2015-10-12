@@ -1,6 +1,10 @@
 var F = function(args) {
     var moduleArgs = args;
-    var tabPageBasic = args.helpers.createTabPage({name:"Select"});
+
+    var caption = "Project " + args.proj_id;
+    if (args.proj_title) caption += " - "+args.proj_title;
+    var tabPageBasic = args.helpers.createTabPage({name:"Select", caption: caption});
+
     var okButton;
 
     var linesTable = new sic.widget.sicDataTable({
