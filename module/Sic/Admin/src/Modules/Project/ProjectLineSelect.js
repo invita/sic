@@ -13,10 +13,11 @@ var F = function(args) {
         entityTitle: "Line %idx% - %title%",
         canDelete: false,
         canInsert: false,
+        filter: { visible:true },
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Project/ProjectLineSelect",
             staticData: { proj_id: args.proj_id, deselectAll: true },
-            pageCount: 10
+            pageCount: 500
         }),
         fields: {
             user_id: { caption:"Selected", editable:true, editorType: "checkbox", updateOnEnter: false },

@@ -53,8 +53,8 @@ class ProjectLineSelect extends SicModuleAbs {
                 "pub_id" => $row["pub_id"]
             );
 
-            $newRow['title'] = DbUtil::selectRow('publication_title', 'title', array('pub_id' => $row['pub_id']));
             $newRow['creator'] = DbUtil::selectRow('publication_creator', 'creator', array('pub_id' => $row['pub_id']));
+            $newRow['title'] = DbUtil::selectRow('publication_title', 'title', array('pub_id' => $row['pub_id']));
             $newRow['year'] = DbUtil::selectRow('publication_year', 'year', array('pub_id' => $row['pub_id']));
 
             $responseData[] = $newRow;

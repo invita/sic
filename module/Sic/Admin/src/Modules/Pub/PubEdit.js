@@ -273,7 +273,8 @@ var F = function(args) {
                             }
                         });
                     }
-                }});
+                }
+            });
         });
 
         var importLastProjClick = function(e){
