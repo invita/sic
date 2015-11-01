@@ -85,6 +85,6 @@ return array(
             'data-config.xml' => 'opt/solr-4.9.1/example/solr/collection1/conf',
             'solrconfig.xml' => 'opt/solr-4.9.1/example/solr/collection1/conf',
         ),
-        'solrUrl' => 'http://sic.invita.si:8983/solr'
+        'solrUrl' => 'http://sici.sistory.si:8983/solr'
     ),
 );

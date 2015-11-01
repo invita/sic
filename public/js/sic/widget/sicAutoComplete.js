@@ -10,6 +10,8 @@ sic.widget.sicAutoComplete = function(args)
     this.typed = sic.getArg(args, "typed", "");
     this.inputSelector = sic.getArg(args, "inputSelector", null);
 
+    if (this.typed.value) this.typed = this.typed.value;
+
     for (var i in this.lines) {
         var lineText = this.lines[i];
         var lineTextBuffer = lineText;

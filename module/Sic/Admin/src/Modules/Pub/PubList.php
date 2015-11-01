@@ -79,8 +79,16 @@ class PubList extends SicModuleAbs {
         // If Entity contains quotes
         $hasQuotes1 = DbUtil::selectOne('quote', 'quote_id', array("pub_id" => $pub_id));
         $hasQuotes2 = DbUtil::selectOne('quote', 'quote_id', array("quoted_pub_id" => $pub_id));
-        if ($hasQuotes1 || $hasQuotes2) {
-            return array("status" => false, "alert" => "Entity contains citations or is cited by another entity");
+        $quoted = "";
+        if ($hasQuotes2) {
+            $quoted = DbUtil::selectFrom('quote', 'pub_id', array("quoted_pub_id" => $pub_id));
+            $quoted = join(", ", $quoted);
+        }
+        if ($hasQuotes1) {
+            return array("status" => false, "alert" => "Entity contains citations.");
+        }
+        if ($hasQuotes2) {
+            return array("status" => false, "alert" => "Entity is cited by other entities.\nCiting entities: ".$quoted);
         }
 
         return array("status" => true);

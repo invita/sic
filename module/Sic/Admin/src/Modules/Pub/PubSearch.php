@@ -46,6 +46,7 @@ class PubSearch extends SicModuleAbs {
         $solr->run();
         $rowCountData = $solr->toArray();
 
+
         $solr = new \Solr();
         //$solr->setQueryString("?q=".$query."&".$wt."&".$rows."&start=".$pageStart."&sort=".$sort);
         $solr->setQueryParams(array(
@@ -110,71 +111,77 @@ class PubSearch extends SicModuleAbs {
     }
 
     public function autoComplete_search($args) {
-        $typed = Util::getArg($args, 'typed', "");
+        $typed = Util::getArg($args, "typed", "");
+        $fieldName = Util::getArg($args, "fieldName", "");
 
         // $typed is a string for normal inputs,
         // $typed can also be array of ("codeId" => codeId, "value" => stringValue) for inputs with dropdown
-
-
+        if (is_array($typed))
+            $typed = $typed["value"];
+        if (!$typed) return array();
 
         $array = array();
-        if(strlen($typed) >= 3){
+        $data = array();
 
-            $solr = new \Solr();
-            $solr->setQueryParams(array(
-                "q" => "quickSearch:*".$typed."*",
-                "wt" => "json",
-                "rows" => "10"
+        if ($fieldName) {
+
+            // Search by field
+
+            if(strlen($typed) >= 2) {
+
+                $solr = new \Solr();
+                $solr->setQueryParams(array(
+                    "q" => "quickSearch:*" . $typed . "*",
+                    "wt" => "json",
+                    "rows" => "10"
                 ));
-            //$solr->setQueryString("?q=quickSearch:*".$typed."*&".$wt."&".$rows_all);
-            $solr->run();
-            $data = $solr->toArray();
+                $solr->run();
+                $data = $solr->toArray();
+            }
 
-            for($c = 0; $c < count($data); $c++){
-                $row = $data[$c];
+
+        } else {
+
+            // Search by all fields
+
+            if(strlen($typed) >= 3){
+                $solr = new \Solr();
+                $solr->setQueryParams(array(
+                    "q" => "quickSearch:*".$typed."*",
+                    "wt" => "json",
+                    "rows" => "10"
+                ));
+                $solr->run();
+                $data = $solr->toArray();
+            }
+        }
+
+        for($lineNum = 0; $lineNum < count($data); $lineNum++){
+            $row = $data[$lineNum];
+
+            if ($fieldName)
+                $vals = isset($row[$fieldName]) ? array($row[$fieldName]) : array();
+            else
                 $vals = array_values($row);
-                //print_r($vals); die();
 
-                // Split ||
-                for ($i = 0; $i < count($vals); $i++){
-                    if (!$this->isSubstring($typed, $vals[$i])) continue;
+            //print_r($vals); die();
 
-                    if (strpos($vals[$i], "||") !== false) {
-                        $exp = explode("||", $vals[$i]);
-                        foreach ($exp as $e) {
-                            if ($this->isSubstring($typed, $e) && !in_array($e, $array)) {
-                                array_push($array, $e);
-                            }
+            // Split ||
+            for ($i = 0; $i < count($vals); $i++){
+                if (!$this->isSubstring($typed, $vals[$i])) continue;
+                //if ($fieldName && $i != $fieldName) continue;
+
+                if (strpos($vals[$i], "||") !== false) {
+                    $exp = explode("||", $vals[$i]);
+                    foreach ($exp as $e) {
+                        if ($this->isSubstring($typed, $e) && !in_array($e, $array)) {
+                            array_push($array, $e);
                         }
-                    } else {
-                        if (!in_array($vals[$i], $array))
+                    }
+                } else {
+                    if (!in_array($vals[$i], $array))
                         array_push($array, $vals[$i]);
-                    }
                 }
-
-                //array_push($array, json_encode($row)); continue;
-
-
-/*
-                foreach($row as $key => $value){
-                    //if(!$value) continue;
-                    array_push($array, json_encode($row)); continue;
-                    if (strpos($array[$i], "||") !== false) {
-                        $multiLine = explode("||", $array[$i]);
-                        foreach ($multiLine as $ln) {
-                            if (strpos($ln, $typed) !== false) {
-                                $array[$i] = $ln;
-                                break;
-                            }
-                        }
-                    }
-                    if(strpos($value, $typed) !== false && !in_array($value, $used)){
-                        array_push($array, $value);
-                        array_push($used, $value);
-                    }
-                }
-*/
-
             }
         }
 
