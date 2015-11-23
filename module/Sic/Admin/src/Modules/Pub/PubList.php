@@ -59,8 +59,9 @@ class PubList extends SicModuleAbs {
         $pub_id = Util::getArg($data, 'pub_id', 0);
         $pub = DbUtil::selectRow('publication', null, array('pub_id' => $pub_id));
 
+        //echo "IsSuperAdmin: "; print_r(Util::isSuperUser());
         // If Not admin and Entity not yours
-        if (!Util::isSuperUser() || $pub['created_by'] != Util::getUserId()) {
+        if (Util::isSuperUser() != "superUser" && $pub['created_by'] != Util::getUserId()) {
             $creatorName = DbUtil::selectOne('user', 'username', array('id' => $pub['created_by']));
             return array("status" => false, "alert" => "Entity can only be deleted by it's creator: ".$creatorName);
         }

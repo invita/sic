@@ -198,4 +198,12 @@ sic.debug = function(obj, depth, nl, spaceChar) {
     var spacesChars = spaceChar+spaceChar+spaceChar+spaceChar;
 
     return dumpRc(obj, depth, nl, "")
+};
+
+sic.findKeyByValue = function(dict, value) {
+    if (typeof(dict) != "object") return 0;
+    for (var i in dict) {
+        if (dict[i] == value) return i;
+    }
+    return 0;
 }

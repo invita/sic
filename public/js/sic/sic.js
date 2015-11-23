@@ -3,7 +3,7 @@ var sic = { object:{}, widget:{}, data:{}, defaults:{} };
 sic.defaults = {
     fadeTime: 600,
     loadingFadeTime: 200,
-    hintFadeTime: 600,
+    hintFadeTime: 200,
     hintTriggerDelay: 200,
     autoCompleteDelay: 500,
 

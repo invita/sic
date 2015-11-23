@@ -202,7 +202,9 @@ span.hintPropVal { color:black; font-size:12px; line-height:16px; }
 
 div.sicAutoComplete { }
 div.sicAutoCompleteLine { cursor: pointer; line-height:18px; font-size:12px; }
-div.sicAutoCompleteLine:hover { text-decoration:underline; }
+
+/*div.sicAutoCompleteLine:hover,*/
+div.sicAutoCompleteLine.marked { text-decoration:underline; }
 
 tr.sicHtmlTable_tr { }
 td.sicHtmlTable_td { vertical-align:top; }

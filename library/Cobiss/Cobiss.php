@@ -425,6 +425,83 @@ class Cobiss_Detail_Window{
      * @return bool
      */
     private function parseResponse(){
+
+
+        $dom = str_get_dom($this->lastResponse->body);
+        $tableNode = $dom("table#nolist-full tbody", 0);
+        if(!$tableNode) return false;
+        $detailData = new Cobiss_Detail_Data();
+        foreach($tableNode("tr") as $trNode){
+            $thNode = $trNode("th", 0);
+            if($thNode && $thNode->getInnerText() == "Avtor"){
+                foreach($trNode("td a") as $aNode){
+                    $author = str_replace(",", "", $aNode->getInnerText());
+                    $author = trim(preg_replace('/[0-9]+\-[0-9]*/', '', $author));
+                    $detailData->addAuthor($author);
+                }
+            } else if($thNode && $thNode->getInnerText() == "Naslov"){
+                $tdNode = $trNode("td", 0);
+                $titles = $tdNode->getInnerText();
+                $array = explode("/", $titles);
+                $title = trim(isset($array[0]) ? $array[0] : "");
+                $detailData->addTitle($title);
+            } else if($thNode && $thNode->getInnerText() == "Leto"){
+                $tdNode = $trNode("td", 0);
+                $year = trim($tdNode->getInnerText());
+                $detailData->setYear($year);
+            } else if($thNode && $thNode->getInnerText() == "Fizični opis"){
+                $tdNode = $trNode("td", 0);
+                $fiz = trim($tdNode->getInnerText());
+                $array = explode("str.", $fiz);
+                $page = isset($array[0]) && is_numeric(trim($array[0])) ? trim($array[0]) : "";
+                $detailData->setPage($page);
+            } else if($thNode && $thNode->getInnerText() == "Založništvo in izdelava"){
+                $tdNode = $trNode("td", 0);
+                $publ = trim($tdNode->getInnerText());
+                $array = explode(":", $publ);
+
+                $place = trim(isset($array[0]) ? $array[0] : "");
+                $detailData->setPlace($place);
+
+                $publishers = explode(",", isset($array[1]) ? $array[1] : "");
+                foreach ($publishers as $p) {
+                    $publisher = trim($p);
+                    if (is_numeric($publisher)) continue;
+                    $detailData->addPublisher($publisher);
+                }
+            } else if($thNode && $thNode->getInnerText() == "ISBN"){
+                $tdNode = $trNode("td", 0);
+                $isbnUn = trim($tdNode->getInnerText());
+                $array = explode(":", $isbnUn);
+                $isbn = trim(str_replace("ISBN", "", isset($array[0]) ? $array[0] : ""));
+                $detailData->setISBN($isbn);
+            } else if($thNode && $thNode->getInnerText() == "ISSN"){
+                $tdNode = $trNode("td", 0);
+                $issnUn = trim($tdNode->getInnerText());
+                $array = explode(":", $issnUn);
+                $issn = trim(str_replace("ISSN", "", isset($array[0]) ? $array[0] : ""));
+                $detailData->setISBN($issn);
+            } else if($thNode && $thNode->getInnerText() == "URL"){
+                $tdNode = $trNode("td", 0);
+                $url = trim($tdNode->getInnerText());
+                $matches = array();
+                preg_match('/href=".*?"/', $url, $matches);
+                $url = isset($matches[0]) ? str_replace("\"", "", str_replace("href=\"", "", $matches[0])) : "";
+                $detailData->setUrl($url);
+            } else if($thNode && $thNode->getInnerText() == "URN"){
+                $tdNode = $trNode("td", 0);
+                $urn = trim($tdNode->getInnerText());
+                $detailData->setUrn($urn);
+            } else if($thNode && $thNode->getInnerText() == "COBISS.SI-ID"){
+                $tdNode = $trNode("td", 0);
+                $cobissId = trim($tdNode->getInnerText());
+                $detailData->setCobissId($cobissId);
+            }
+        }
+        $this->setData($detailData);
+        return true;
+
+        /*
         $dom = str_get_dom($this->lastResponse->body);
         $tableNode = $dom("table#nolist-full tbody", 0);
         if(!$tableNode) return false;
@@ -456,6 +533,7 @@ class Cobiss_Detail_Window{
         }
         $this->setData($detailData);
         return true;
+        */
     }
 
     /**
@@ -937,29 +1015,46 @@ class Cobiss_Detail_Data {
 
     private $authors = array();
     private $titles = array();
-    private $year;
-    private $cobissId;
-    private $publisher;
+    private $publishers = array();
+    private $year, $cobissId, $place, $page, $isbn, $issn, $url, $urn;
 
     public function addAuthor($author){ array_push($this->authors, $author); }
     public function addTitle($title){ array_push($this->titles, $title); }
+    public function addPublisher($publisher){ array_push($this->publishers, $publisher); }
     public function setYear($year){ $this->year = $year; }
     public function setCobissId($cobissId){ $this->cobissId = $cobissId; }
-    public function setPublisher($publisher){ $this->publisher = $publisher; }
+    public function setPlace($place){ $this->place = $place; }
+    public function setPage($page){ $this->page = $page; }
+    public function setISBN($isbn){ $this->isbn = $isbn; }
+    public function setISSN($issn){ $this->issn = $issn; }
+    public function setUrl($url){ $this->url = $url; }
+    public function setUrn($urn){ $this->urn = $urn; }
 
     public function getAuthors(){ return $this->authors; }
     public function getTitles(){ return $this->titles; }
     public function getYear(){ return $this->year; }
     public function getCobissId(){ return $this->cobissId; }
-    public function getPublisher(){ return $this->publisher; }
+    public function getPublishers(){ return $this->publishers; }
+    public function getPlace(){ return $this->place; }
+    public function getPage(){ return $this->page; }
+    public function getISBN(){ return $this->isbn; }
+    public function getISSN(){ return $this->issn; }
+    public function getUrl(){ return $this->url; }
+    public function getUrn(){ return $this->urn; }
 
     public function toArray(){
         $array = array();
         $array["authors"] = $this->getAuthors();
         $array["titles"] = $this->getTitles();
+        $array["publishers"] = $this->getPublishers();
         $array["year"] = $this->getYear();
+        $array["place"] = $this->getPlace();
+        $array["page"] = $this->getPage();
+        $array["isbn"] = $this->getISBN();
+        $array["issn"] = $this->getISSN();
+        $array["url"] = $this->getUrl();
+        $array["urn"] = $this->getUrn();
         $array["cobissId"] = $this->getCobissId();
-        $array["publisher"] = $this->getPublisher();
         return $array;
     }
 

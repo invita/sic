@@ -84,10 +84,13 @@ var F = function(args) {
         okButton.selector.click(function() {
             args.closeOKCallback(args);
 
-            if (tabPageBasic.parentTab) {
-                var citsPage = tabPageBasic.parentTab.header.findPageByName("Citations");
-                if (citsPage) citsPage.selectTab();
-            }
+            tabPageBasic.parentTab.destroyTab();
+
+            // They are going to want this functionality back, I guarantee it. (Today: 16.11.2015)
+            //if (tabPageBasic.parentTab) {
+            //    var citsPage = tabPageBasic.parentTab.header.findPageByName("Citations");
+            //    if (citsPage) citsPage.selectTab();
+            //}
         });
     }
 };

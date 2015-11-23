@@ -112,11 +112,27 @@ var F = function(args) {
 
         jQuery.ajax({url:"/cobiss.php", method:"POST", data:{url:url}, dataType:"json", success:function(data){
             data = data.data;
+            var idnos = [];
+            var onlines = [];
+
+            //sic.dump(sic.codes.pubOnline);
+            if (data.cobissId) idnos.push({ codeId: sic.findKeyByValue(sic.codes.pubIdno, "cobiss"), value: data.cobissId });
+            if (data.isbn) idnos.push({ codeId: sic.findKeyByValue(sic.codes.pubIdno, "isbn"), value: data.isbn });
+            if (data.issn) idnos.push({ codeId: sic.findKeyByValue(sic.codes.pubIdno, "issn"), value: data.issn });
+
+            if (data.url) onlines.push({ codeId: sic.findKeyByValue(sic.codes.pubOnline, "url"), value: data.url });
+            if (data.urn) onlines.push({ codeId: sic.findKeyByValue(sic.codes.pubOnline, "urn"), value: data.urn });
+
             pubSearchForm.setValue({
                 creator : data.authors,
                 title : data.titles,
-                cobiss : data.cobissId,
-                publisher : data.publisher
+                year : data.year,
+                place : data.place,
+                page : data.page,
+                publisher : data.publishers,
+
+                idno : idnos,
+                online : onlines
             });
             sic.loading.hide();
         }});

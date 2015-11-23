@@ -292,6 +292,11 @@ sic.widget.sicInput = function(args)
         _p.trigger('onKeyPressed', e);
     };
     this._onKeyUp = function(e) {
+        // We don't want the Arrow keys to trigger auto complete
+        if (e.which >= 37 && e.which <= 40) return;
+        // Same with escape key or enter key
+        if (e.which == 27 || e.which == 13) return;
+
         e.sicInput = _p;
         if (_p.showModified) _p.calcModified();
         _p._onChange();
