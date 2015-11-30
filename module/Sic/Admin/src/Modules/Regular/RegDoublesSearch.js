@@ -15,7 +15,9 @@ var F = function(args) {
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Regular/RegDoublesSearch",
             pageCount: 20,
-            filterMode: "levenshtein"
+            filterMode: "normal"
+            //filterMode: "duhec"
+            //filterMode: "levenshtein"
         }),
         editorModuleArgs: {
             moduleName:"Pub/PubEdit",

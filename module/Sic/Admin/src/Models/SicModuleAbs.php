@@ -67,6 +67,13 @@ abstract class SicModuleAbs
 
                 //print_r($select->getSqlString());
                 break;
+
+            case "duhec":
+                $filterWhere = DbUtil::prepareSqlFilterDuhec($filter);
+                //print_r($filterWhere); die("foo");
+                if (count($filterWhere->getPredicates()))
+                    $select->where->addPredicate($filterWhere);
+                break;
         }
     }
 

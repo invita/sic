@@ -160,6 +160,56 @@ class DbUtil
         return $whereFinal;
     }
 
+    // Sql Where For DuhecSearch algorithm
+    public static function prepareSqlFilterDuhec($filterData) {
+
+        $where = new Where(null, PredicateSet::COMBINED_BY_OR);
+
+        // For a string "Today is a sunny day" for n=3 returns "Tod*is *unn*ay" and "*ay *a s*y d*"
+        $getNs = function($str, $n) {
+            $str = $str."";
+            $r1 = ""; $r2 = "";
+            $switch = false;
+            for ($idx = 0; $idx < strlen($str); $idx++) {
+                $letter = $str[$idx];
+                if ($idx % $n == 0) {
+                    $switch = !$switch;
+                    if ($switch) $r1 .= "*"; if (!$switch) $r2 .= "*";
+                }
+                if ($switch) $r1 .= $letter; if (!$switch) $r2 .= $letter;
+            }
+            $r1 .= "*"; $r2 .= "*";
+            $r1 = str_replace("**", "*", $r1); $r2 = str_replace("**", "*", $r2);
+            return array($r1, $r2);
+        };
+
+        foreach($filterData as $fKey => $fValue) {
+            $fValue = str_replace("*", "", trim($fValue));
+            if (!$fValue) continue;
+
+            $len = strlen($fValue);
+            if ($len <= 5) {
+                if (strpos($fValue, "*") === false) $fValue = "*".$fValue."*";
+                $fValue = str_replace("*", "%", $fValue);
+                $where->addPredicate(new Like($fKey, $fValue));
+            } else if ($len > 5 && $len <= 9) {
+                $ns = $getNs($fValue, 3);
+                $ns[0] = str_replace("*", "%", $ns[0]);
+                $ns[1] = str_replace("*", "%", $ns[1]);
+                $where->addPredicate(new Like($fKey, $ns[0]));
+                $where->addPredicate(new Like($fKey, $ns[1]));
+            } else if ($len > 9) {
+                $ns = $getNs($fValue, 5);
+                $ns[0] = str_replace("*", "%", $ns[0]);
+                $ns[1] = str_replace("*", "%", $ns[1]);
+                //print_r($ns);
+                $where->addPredicate(new Like($fKey, $ns[0]));
+                $where->addPredicate(new Like($fKey, $ns[1]));
+            }
+        }
+
+        return $where;
+    }
 
 
     public static function touchPublication($pub_id) {

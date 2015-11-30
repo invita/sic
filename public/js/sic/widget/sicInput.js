@@ -284,6 +284,10 @@ sic.widget.sicInput = function(args)
     // Internal events
     this._onKeyDown = function(e) {
         e.sicInput = _p;
+
+        if (_p.autoCompleteTimeout)
+            clearTimeout(_p.autoCompleteTimeout);
+
         _p.trigger('onKeyDown', e);
     };
     this._onKeyPressed = function(e) {
