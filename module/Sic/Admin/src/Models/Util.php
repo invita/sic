@@ -49,6 +49,10 @@ class Util
         return self::get('solrUrl');
     }
 
+    public static function getElasticUrl() {
+        return self::get('elasticUrl');
+    }
+
 
     public static function set($key, $val) {
         self::$dict[$key] = $val;

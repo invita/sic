@@ -16,5 +16,6 @@ var F = function(args){
         valDiv.selector.html(data[key]);
     }
 
-    sic.loadModule({moduleName:"System/SolrConfig", tabPage:tabPage, newTab:"Solr Config" });
+    //sic.loadModule({moduleName:"System/SolrConfig", tabPage:tabPage, newTab:"Solr Config" });
+    sic.loadModule({moduleName:"System/ElasticControl", tabPage:tabPage, newTab:"Elasticsearch Control" });
 };

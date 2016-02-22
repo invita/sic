@@ -80,11 +80,14 @@ return array(
     'sic' => array(
         'uploadPath' => 'data/upload',
         'downloadPath' => 'data/download',
+
         'solrConfigPaths' => array(
             'schema.xml' => 'opt/solr-4.9.1/example/solr/collection1/conf',
             'data-config.xml' => 'opt/solr-4.9.1/example/solr/collection1/conf',
             'solrconfig.xml' => 'opt/solr-4.9.1/example/solr/collection1/conf',
         ),
-        'solrUrl' => 'http://sici.sistory.si:8983/solr'
+        'solrUrl' => 'http://sici.sistory.si:8983/solr',
+
+        'elasticUrl' => 'http://localhost:9200/'
     ),
 );

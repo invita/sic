@@ -332,6 +332,8 @@ var F = function(args) {
 
 
     quickSearchForm.onSubmit(function(sicForm){
+
+        /*
         var fq = "";
         if (quickSearchBox.getValue() != "") {
             var fields = [];
@@ -349,8 +351,10 @@ var F = function(args) {
             }
             fq = '('+fields.join(" OR ")+')';
         }
+         dataTable.dataSource.staticData = { q: "*:*", fq: fq };
+        */
 
-        dataTable.dataSource.staticData = { q: "*:*", fq: fq };
+        dataTable.dataSource.staticData = { q:quickSearchBox.getValue() };
         dataTable.refresh(true);
         //showResults("pub");
     });

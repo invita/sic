@@ -1,20 +1,11 @@
 <?php
 namespace Sic\Admin\Modules\Pub;
 
-ini_set("display_errors", 1);
-
 use Sic\Admin\Models\Zotero;
-use Zend\Authentication\Storage\Session;
-use Zend\Db\Sql\Select;
-use Zend\Db\Sql\Where;
 use Sic\Admin\Models\Util;
 use Sic\Admin\Models\DbUtil;
 use Sic\Admin\Models\SicModuleAbs;
-use Zend\Db\Adapter\Driver\ResultInterface;
-use Zend\Db\Sql\Literal;
-use Zend\Db\Sql\Expression;
-
-require_once(realpath(__DIR__."/../../../../../../library/Solr/Solr.php"));
+use Sic\Admin\Models\Elastic\ElasticHelper;
 
 class PubSearch extends SicModuleAbs {
 
@@ -23,7 +14,7 @@ class PubSearch extends SicModuleAbs {
         //var_dump($args);
 
         $q = $args["staticData"]["q"];
-        $fq = $args["staticData"]["fq"];
+        //$fq = $args["staticData"]["fq"];
 
         $sortField = Util::getArg($args, "sortField", "");
         $sortOrder = Util::getArg($args, "sortOrder", "");
@@ -34,6 +25,136 @@ class PubSearch extends SicModuleAbs {
         $wt = "wt=json";
 
         $sort = ($sortField && $sortOrder) ? $sortField." ".$sortOrder : "score desc";
+
+        $resp = ElasticHelper::search(array(
+            "params" => array(
+                "q" => $q,
+                "from" => $pageStart,
+                "size" => $pageCount
+            )
+        ));
+
+        $took = Util::getArg($resp, "took", 0);
+        $tookStr = "Search took ".$took." miliseconds";
+        $hits = Util::getArg($resp, "hits", null);
+
+        $total = Util::getArg($hits, "total", 0);
+        $max_score = Util::getArg($hits, "max_score", 0);
+        $data = Util::getArg($hits, "hits", array());
+
+
+/*
+ * Sample data *
+
+$data = array(
+    ...
+    0: {
+        _index: "entities",
+        _type: "entity",
+        _id: "1"
+        _score: 1
+        _source: {
+            addidno: [""]
+            addtitle: [""]
+            child_id: ["13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29",…]
+            created_by: null
+            created_date: "0000-00-00 00:00:00"
+            creator: [{value: "author", codeId: "1"}, {value: "addAuthor", codeId: "2"}, {value: "editor", codeId: "3"},…]
+            edition: [""]
+            idno: [{value: "34491648", codeId: "1"}, {value: "1318-0185", codeId: "3"}]
+            is_series: "0"
+            issue: [""]
+            modified_by: "50"
+            modified_date: "2015-10-18 20:26:28"
+            note: [""]
+            online: [{value: "", codeId: "1"}]
+            original_id: "0"
+            page: [""]
+            parent_id: "0"
+            place: ["Koper; Milje"]
+            pub_id: "1"
+            publisher: ["Zgodovinsko društvo za Južno Primorsko"]
+            regalt_modified_by: null
+            source: [{value: "", codeId: "1"}]
+            strng: [""]
+            title: ["Acta Histriae"]
+            volume: [""]
+            year: [""]
+*/
+
+
+        // Post process data
+
+        $columns = array(
+            "pub_id",
+            "parent_id",
+            "series_id",
+            "original_id",
+            "creator",
+            "title",
+            "year",
+
+
+//            "edition",
+//            "issue",
+//            "online",
+//            "source",
+//            "volume",
+//            "idno",
+
+//            "addidno",
+//            "addtitle",
+//            "creator_author",
+//            "idno_cobiss",
+//            "is_series",
+//            "note",
+//            "page",
+//            "place",
+//            "proj_id",
+//            "publisher",
+//            "strng",
+
+        );
+
+        for ($lineIdx = 0; $lineIdx < count($data); $lineIdx++) {
+            $line = array();
+            foreach ($columns as $colName) {
+                $colData = Util::getArg($data[$lineIdx]["_source"], $colName, null);
+                if (is_array($colData)) {
+                    if (isset($colData[0]) && is_array($colData[0])) {
+                        // Values are arrays also
+                        if (isset($colData[0]["value"])) {
+                            $r = "";
+                            foreach ($colData as $crow) $r .= ($r ? "; " : "") . $crow["value"];
+                            $colData = $r;
+                        } else {
+                            // Unknown array type?
+                            $colData = print_r($colData, true);
+                        }
+                    } else {
+                        // Values are basic type
+                        $colData = join("; ", $colData);
+                    }
+                }
+
+                $line[$colName] = $colData;
+            }
+
+            $line["_score"] = $data[$lineIdx]["_score"];
+            $data[$lineIdx] = $line;
+        }
+
+
+        return array(
+            "data" => $data,
+            "rowCount" => $total,
+            "staticData" => array("q" => $q)
+        );
+
+
+        //print_r($resp);
+
+/*
 
         $solr = new \Solr();
         //$solr->setQueryString("?q=".$query."&".$wt."&".$rows_all);
@@ -72,26 +193,26 @@ class PubSearch extends SicModuleAbs {
             "title",
             "year",
 
-/*
-            "edition",
-            "issue",
-            "online",
-            "source",
-            "volume",
-            "idno",
 
-            "addidno",
-            "addtitle",
-            "creator_author",
-            "idno_cobiss",
-            "is_series",
-            "note",
-            "page",
-            "place",
-            "proj_id",
-            "publisher",
-            "strng",
-*/
+//            "edition",
+//            "issue",
+//            "online",
+//            "source",
+//            "volume",
+//            "idno",
+
+//            "addidno",
+//            "addtitle",
+//            "creator_author",
+//            "idno_cobiss",
+//            "is_series",
+//            "note",
+//            "page",
+//            "place",
+//            "proj_id",
+//            "publisher",
+//            "strng",
+
         );
 
 
@@ -108,9 +229,12 @@ class PubSearch extends SicModuleAbs {
             "rowCount" => count($rowCountData),
             "staticData" => array("q" => $q, "fq" => $fq)
         );
+
+*/
     }
 
     public function autoComplete_search($args) {
+        /*
         $typed = Util::getArg($args, "typed", "");
         $fieldName = Util::getArg($args, "fieldName", "");
 
@@ -186,45 +310,14 @@ class PubSearch extends SicModuleAbs {
         }
 
         return $array;
+        */
     }
 
     private function isSubstring($sub, $main) {
         return strpos(strtoupper($main), strtoupper($sub)) !== false;
     }
 
-    public function getZoteroUrl(){
 
-        if (isset($_SESSION["Zend_Auth"]) && isset($_SESSION["Zend_Auth"]['storage']) &&
-            isset($_SESSION["Zend_Auth"]['storage']["id"]) && $_SESSION["Zend_Auth"]['storage']["id"])
-        {
-            // Session ok
-            $user_id = $_SESSION["Zend_Auth"]['storage']["id"];
-
-            $row = DbUtil::selectRow("user", array("zotero_id", "zotero_key"), "id = ".$user_id);
-            $zotero_id = $row["zotero_id"];
-            $zotero_key = $row["zotero_key"];
-
-            $url = null;
-            if($zotero_id){
-                $url = "https://api.zotero.org/users/".$zotero_id."/items";
-                if($zotero_key){
-                    $url .= "?key=".$zotero_key;
-                }
-            }
-
-            return array(
-                "url" => $url
-            );
-
-        } else {
-
-            // Session expired
-            return array(
-                "url" => "",
-                "sessionExpired" => true
-            );
-        }
-    }
 
     /*
 
@@ -300,6 +393,41 @@ class PubSearch extends SicModuleAbs {
         return $responseData;
     }
     */
+
+
+    public function getZoteroUrl(){
+
+        if (isset($_SESSION["Zend_Auth"]) && isset($_SESSION["Zend_Auth"]['storage']) &&
+            isset($_SESSION["Zend_Auth"]['storage']["id"]) && $_SESSION["Zend_Auth"]['storage']["id"])
+        {
+            // Session ok
+            $user_id = $_SESSION["Zend_Auth"]['storage']["id"];
+
+            $row = DbUtil::selectRow("user", array("zotero_id", "zotero_key"), "id = ".$user_id);
+            $zotero_id = $row["zotero_id"];
+            $zotero_key = $row["zotero_key"];
+
+            $url = null;
+            if($zotero_id){
+                $url = "https://api.zotero.org/users/".$zotero_id."/items";
+                if($zotero_key){
+                    $url .= "?key=".$zotero_key;
+                }
+            }
+
+            return array(
+                "url" => $url
+            );
+
+        } else {
+
+            // Session expired
+            return array(
+                "url" => "",
+                "sessionExpired" => true
+            );
+        }
+    }
 
     function zoteroScrape($args) {
         $url = $args["url"];
