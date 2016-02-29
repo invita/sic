@@ -37,20 +37,21 @@ class ElasticControl
             "number_of_replicas": 0,
 
             "index" : {
-                "refresh_interval" : "5s",
+                "refresh_interval" : "1s",
                 "analysis" : {
                     "filter" : {
                         "my_ngram_filter" : {
                             "type" : "ngram",
                             "min_gram" : 3,
-                            "max_gram" : 5
+                            "max_gram" : 6,
+                            "minimum_should_match": 3
                         }
                     },
                     "analyzer" : {
                         "my_ngram_analyzer" : {
                             "type" : "custom",
-                            "tokenizer" : "lowercase",
-                            "filter"    : ["my_ngram_filter"]
+                            "tokenizer" : "standard",
+                            "filter"    : ["lowercase", "asciifolding", "my_ngram_filter"]
                         }
                     }
                 }
@@ -67,16 +68,14 @@ class ElasticControl
                     "addtitle": {
                         "type": "string",
                         "analyzer": "my_ngram_analyzer",
-                        "boost": 5
+                        "boost": 5,
+                        "copy_to": "quick_search"
                     },
                     "creator": {
-                        "properties": {
-                            "value": {
-                                "type": "string",
-                                "analyzer": "my_ngram_analyzer",
-                                "boost": 25
-                            }
-                        }
+                        "type": "string",
+                        "analyzer": "my_ngram_analyzer",
+                        "boost": 5,
+                        "copy_to": "quick_search"
                     },
                     "edition": {
                         "type": "string",
@@ -84,13 +83,9 @@ class ElasticControl
                         "boost": 5
                     },
                     "idno": {
-                        "properties": {
-                            "value": {
-                                "type": "string",
-                                "analyzer": "my_ngram_analyzer",
-                                "boost": 10
-                            }
-                        }
+                        "type": "string",
+                        "analyzer": "my_ngram_analyzer",
+                        "boost": 10
                     },
                     "issue": {
                         "type": "string",
@@ -100,16 +95,13 @@ class ElasticControl
                     "note": {
                         "type": "string",
                         "analyzer": "my_ngram_analyzer",
-                        "boost": 5
+                        "boost": 5,
+                        "copy_to": "quick_search"
                     },
                     "online": {
-                        "properties": {
-                            "value": {
-                                "type": "string",
-                                "analyzer": "my_ngram_analyzer",
-                                "boost": 5
-                            }
-                        }
+                        "type": "string",
+                        "analyzer": "my_ngram_analyzer",
+                        "boost": 5
                     },
                     "page": {
                         "type": "string",
@@ -127,13 +119,9 @@ class ElasticControl
                         "boost": 5
                     },
                     "source": {
-                        "properties": {
-                            "value": {
-                                "type": "string",
-                                "analyzer": "my_ngram_analyzer",
-                                "boost": 5
-                            }
-                        }
+                        "type": "string",
+                        "analyzer": "my_ngram_analyzer",
+                        "boost": 5
                     },
                     "strng": {
                         "type": "string",
@@ -143,7 +131,8 @@ class ElasticControl
                     "title": {
                         "type": "string",
                         "analyzer": "my_ngram_analyzer",
-                        "boost": 20
+                        "boost": 20,
+                        "copy_to": "quick_search"
                     },
                     "volume": {
                         "type": "string",
@@ -153,6 +142,10 @@ class ElasticControl
                     "year": {
                         "type": "string",
                         "boost": 10
+                    },
+                    "quick_search": {
+                        "analyzer": "my_ngram_analyzer",
+                        "type": "string"
                     }
                 }
             }
@@ -168,6 +161,10 @@ HERE;
             'content' => json_encode($d)
         )));
         $resp = file_get_contents($url, false, $context);
+
+        if (!$resp)
+            echo "Failed to put config\n";
+
         return $resp;
     }
 
@@ -197,7 +194,7 @@ HERE;
 
         $docCount = 0;
         $bulkData = "";
-        $pubIds = DbUtil::selectFrom('publication', "pub_id");
+        $pubs = DbUtil::selectFrom('view_publication_list');
         $this->totalTime = 0;
 
         $bulkRequest = function($bulkData) {
@@ -214,22 +211,27 @@ HERE;
             return $r;
         };
 
-        foreach ($pubIds as $pubId) {
+        //print_r($pubs);
+        foreach ($pubs as $pub) {
 
             // { "index" : { "_index" : "test", "_type" : "type1", "_id" : "1" } }
             $indexCmd = array(
                 "index" => array(
                     "_index" => ElasticHelper::$entityIndexName,
                     "_type" => "entity",
-                    "_id" => $pubId
+                    "_id" => $pub["pub_id"]
                 )
             );
             $indexCmdStr = json_encode($indexCmd);
 
             // { "field1" : "value1" }
-            $pub = new \Sic\Admin\Modules\Pub\PubEdit();
-            $pubData = $pub->pubSelect(array("pub_id" => $pubId));
-            $pubDataStr = json_encode($pubData["data"]);
+            //$pub = new \Sic\Admin\Modules\Pub\PubEdit();
+            //$pubData = $pub->pubSelect(array("pub_id" => $pub["pub_id"]));
+            foreach ($pub as $key => $val)
+                $pub[$key] = explode("||", $val);
+                //$pub[$key] = str_replace("||", " ", $val);
+
+            $pubDataStr = json_encode($pub);
             //echo $pubDataStr."\n";
 
             $bulkData .= $indexCmdStr."\n".$pubDataStr."\n";

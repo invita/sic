@@ -13,19 +13,29 @@ class PubSearch extends SicModuleAbs {
 
         //var_dump($args);
 
-        $q = $args["staticData"]["q"];
-        //$fq = $args["staticData"]["fq"];
+        $staticData = Util::getArg($args, "staticData", array());
+
+        $q = Util::getArg($staticData, "q", "");
+        $type = Util::getArg($staticData, "type", "quick");
 
         $sortField = Util::getArg($args, "sortField", "");
         $sortOrder = Util::getArg($args, "sortOrder", "");
         $pageStart = Util::getArg($args, "pageStart", "");
         $pageCount = Util::getArg($args, "pageCount", 10);
 
-        $rows = "rows=".$pageCount;
-        $wt = "wt=json";
+        //$sort = ($sortField && $sortOrder) ? $sortField." ".$sortOrder : "score desc";
 
-        $sort = ($sortField && $sortOrder) ? $sortField." ".$sortOrder : "score desc";
+        switch ($type) {
+            case "quick": default:
+                $resp = ElasticHelper::quickSearch($q, $pageStart, $pageCount);
+                break;
 
+            case "full":
+                $resp = ElasticHelper::fullSearch($q, $pageStart, $pageCount);
+                break;
+        }
+
+        /*
         $resp = ElasticHelper::search(array(
             "params" => array(
                 "q" => $q,
@@ -33,6 +43,7 @@ class PubSearch extends SicModuleAbs {
                 "size" => $pageCount
             )
         ));
+        */
 
         $took = Util::getArg($resp, "took", 0);
         $tookStr = "Search took ".$took." miliseconds";
@@ -148,8 +159,9 @@ $data = array(
         return array(
             "data" => $data,
             "rowCount" => $total,
-            "staticData" => array("q" => $q)
-        );
+            "staticData" => array("q" => $q),
+            "lastQueryJson" => ElasticHelper::$lastQueryJson
+    );
 
 
         //print_r($resp);

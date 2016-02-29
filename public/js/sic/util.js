@@ -131,13 +131,13 @@ sic.attachCopyToClipboard = function(sel, text, afterCopyF) {
 sic.solrSpecialChars = ["+", "-", "!", "(", ")", "{", "}", "[", "]", "^", '"', "~", "*", "?", ":", "\\", ","];
 sic.stripSolrSpecialChars = function(text) {
     /*
-    // Escape Solr chars
-    for (var cIdx in sic.solrSpecialChars) {
-        var solrChar = sic.solrSpecialChars[cIdx];
-        var searchRegEx = new RegExp("\\"+solrChar, 'ig');
-        text = text.replace(searchRegEx, "\\"+solrChar);
-    }
-    */
+     // Escape Solr chars
+     for (var cIdx in sic.solrSpecialChars) {
+     var solrChar = sic.solrSpecialChars[cIdx];
+     var searchRegEx = new RegExp("\\"+solrChar, 'ig');
+     text = text.replace(searchRegEx, "\\"+solrChar);
+     }
+     */
 
     // Strip Solr chars
     for (var cIdx in sic.solrSpecialChars) {
@@ -148,6 +148,23 @@ sic.stripSolrSpecialChars = function(text) {
 
     if (text.length > 80)
         text = text.substring(0, 80);
+
+    return text;
+};
+
+sic.elasticReplaceMap = {" ": "+"};
+sic.stripElasticSpecialChars = function(text) {
+    // Strip Elastic chars
+    for (var sourceChar in sic.elasticReplaceMap) {
+        var targetChar = sic.elasticReplaceMap[sourceChar];
+        var searchRegEx = new RegExp(sourceChar, 'g');
+        text = text.replace(searchRegEx, targetChar);
+    }
+
+    if (text.length > 300)
+        text = text.substring(0, 300);
+
+    //text = "+"+text+"+";
 
     return text;
 };

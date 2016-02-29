@@ -295,7 +295,7 @@ var F = function(args) {
             moduleName:"Pub/PubSearch",
             //staticData: { searchType: "pubSearch", fields: pubSearchForm.getValue(), zotero:zoteroForm.getValue() },
             //staticData : createStaticData(),
-            staticData : { q: "*:*", fq: "" },
+            staticData : { type: "quick", q: "" },
             pageCount: 20
         }),
         editorModuleArgs: {
@@ -354,7 +354,7 @@ var F = function(args) {
          dataTable.dataSource.staticData = { q: "*:*", fq: fq };
         */
 
-        dataTable.dataSource.staticData = { q:quickSearchBox.getValue() };
+        dataTable.dataSource.staticData = { type:"quick", q: sic.stripElasticSpecialChars(quickSearchBox.getValue()) };
         dataTable.refresh(true);
         //showResults("pub");
     });
@@ -366,9 +366,10 @@ var F = function(args) {
         //sic.dump(pubSearchForm.getValue());
 
         var formData = pubSearchForm.getValue();
+
         //sic.dump(formData); return;
 
-        var fields = [];
+        var fields = {};
         for (var sfKey in searchFields)
         {
             if (sfKey.substr(0, 1) == "_") continue;
@@ -376,7 +377,8 @@ var F = function(args) {
             var value;
             if (typeof(formData[sfKey]) == "string") {
                 // String
-                value = formData[sfKey];
+                if (formData[sfKey] == "") continue;
+                value = sic.stripElasticSpecialChars(formData[sfKey]);
             } else if ($.isArray(formData[sfKey])) {
                 if (formData[sfKey][0] && formData[sfKey][0].codeId) {
                     // Object
@@ -392,22 +394,14 @@ var F = function(args) {
             if (value == "") continue;
 
             // Strip Solr chars
-            value = sic.stripSolrSpecialChars(value);
-
-            var values = value.split(" ");
-            for (var i in values) {
-                if (sfKey == "title")
-                    values[i] = sfKey+":"+values[i];
-                else
-                    values[i] = sfKey+":*"+values[i]+"*";
-            }
-
-            fields.push("("+values.join(" AND ")+")");
+            value = sic.stripElasticSpecialChars(value);
+            fields[sfKey] = value;
         }
-        if (fields.length) fq = '('+fields.join(" AND ")+')';
+
+        //if (fields.length) fq = '('+fields.join(" AND ")+')';
         //sic.dump(fq);
 
-        dataTable.dataSource.staticData = { q: "*:*", fq: fq };
+        dataTable.dataSource.staticData = { type: "full", q: fields };
         dataTable.refresh(true);
         //showResults("pub");
     });
