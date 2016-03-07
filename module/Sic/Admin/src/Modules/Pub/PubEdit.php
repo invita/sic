@@ -1,6 +1,7 @@
 <?php
 namespace Sic\Admin\Modules\Pub;
 
+use Sic\Admin\Models\Elastic\ElasticHelper;
 use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
 use Zend\Db\Sql\Sql;
 use Sic\Admin\Models\Util;
@@ -69,6 +70,8 @@ class PubEdit {
 
         DbUtil::touchPublication($pub_id);
 
+        ElasticHelper::reindexPubId($pub_id);
+
         return $this->pubSelect($args);
     }
 
@@ -107,6 +110,8 @@ class PubEdit {
         }
 
         DbUtil::touchPublication($args['pub_id']);
+
+        ElasticHelper::reindexPubId($args['pub_id']);
 
         return $this->pubSelect($args);
     }

@@ -2,6 +2,7 @@
 namespace Sic\Admin\Models\Elastic;
 
 use Sic\Admin\Models\Util;
+use Sic\Admin\Modules\System\ElasticControl;
 
 class ElasticHelper
 {
@@ -102,5 +103,10 @@ class ElasticHelper
         $respArray = json_decode($respString, true);
 
         return $respArray;
+    }
+
+    public static function reindexPubId($pubId) {
+        $ec = new ElasticControl();
+        return $ec->reindexPubId($pubId);
     }
 }

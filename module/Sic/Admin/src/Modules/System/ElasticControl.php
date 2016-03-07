@@ -181,6 +181,20 @@ HERE;
         return $message;
     }
 
+    private function bulkRequest($postData) {
+        $r = "";
+        $startT = microtime(true);
+        $bulkResult = json_decode($this->bulkReindex($postData), true);
+
+        $t = microtime(true) -$startT;
+        $r .= "Indexing ".self::$indexBulkDocCount." documents ... ".
+            "took:". $bulkResult["took"].", ".
+            "errors: ".($bulkResult["errors"] ? $bulkResult["errors"] : "false").", ".
+            "measuredTime: ".number_format($t*1000, 2)." ms" .self::$NL;
+        $this->totalTime += $t;
+        return $r;
+    }
+
     public function reindex($args)
     {
         set_time_limit(86400); // Limit time: one day
@@ -197,20 +211,6 @@ HERE;
         $pubs = DbUtil::selectFrom('view_publication_list');
         $this->totalTime = 0;
 
-        $bulkRequest = function($bulkData) {
-            $r = "";
-            $startT = microtime(true);
-            $bulkResult = json_decode($this->bulkReindex($bulkData), true);
-
-            $t = microtime(true) -$startT;
-            $r .= "Indexing ".self::$indexBulkDocCount." documents ... ".
-                "took:". $bulkResult["took"].", ".
-                "errors: ".($bulkResult["errors"] ? $bulkResult["errors"] : "false").", ".
-                "measuredTime: ".number_format($t*1000, 2)." ms" .self::$NL;
-            $this->totalTime += $t;
-            return $r;
-        };
-
         //print_r($pubs);
         foreach ($pubs as $pub) {
 
@@ -224,12 +224,8 @@ HERE;
             );
             $indexCmdStr = json_encode($indexCmd);
 
-            // { "field1" : "value1" }
-            //$pub = new \Sic\Admin\Modules\Pub\PubEdit();
-            //$pubData = $pub->pubSelect(array("pub_id" => $pub["pub_id"]));
             foreach ($pub as $key => $val)
                 $pub[$key] = explode("||", $val);
-                //$pub[$key] = str_replace("||", " ", $val);
 
             $pubDataStr = json_encode($pub);
             //echo $pubDataStr."\n";
@@ -238,7 +234,7 @@ HERE;
 
             $docCount++;
             if ($docCount % self::$indexBulkDocCount == 0) {
-                $message .= $bulkRequest($bulkData);
+                $message .= $this->bulkRequest($bulkData);
                 $bulkData = "";
             }
 
@@ -247,7 +243,7 @@ HERE;
         }
 
         if ($bulkData) {
-            $message .= $bulkRequest($bulkData);
+            $message .= $this->bulkRequest($bulkData);
             $bulkData = "";
         }
 
@@ -265,6 +261,45 @@ HERE;
         );
 
         return $result;
+    }
+
+    private function deletePubId($pubId) {
+        $url = Util::getElasticUrl() .ElasticHelper::$entityIndexName ."/entity/".$pubId;
+        $context  = stream_context_create(array('http' => array(
+            'method'  => 'DELETE',
+            'content' => ""
+        )));
+
+
+        ob_start();
+        $resp = file_get_contents($url, false, $context);
+        $ob = ob_get_clean();
+
+        return $resp.$ob;
+    }
+
+    public function reindexPubId($pubId) {
+        $message = $this->deletePubId($pubId);
+
+        $indexCmd = array(
+            "index" => array(
+                "_index" => ElasticHelper::$entityIndexName,
+                "_type" => "entity",
+                "_id" => $pubId
+            )
+        );
+        $indexCmdStr = json_encode($indexCmd);
+
+        $pub = DbUtil::selectRow('view_publication_list', null, array('pub_id' => $pubId));
+        foreach ($pub as $key => $val)
+            $pub[$key] = explode("||", $val);
+
+        $pubDataStr = json_encode($pub);
+        //echo $pubDataStr."\n";
+
+        $bulkData = $indexCmdStr . "\n" . $pubDataStr . "\n";
+        $message .= $this->bulkRequest($bulkData) .self::$NL;
+        return $message;
     }
 
 }
