@@ -104,7 +104,11 @@ sic.callMethod = function(args, f) {
 
     var errorF = function(xhr, status, statusText) {
         sic.loading.hide();
-        alert('['+sic.capitalize(status)+']\n\nmoduleName: '+moduleName+'\nmethodName: '+methodName+'\n\n'+statusText);
+        if (status == "parsererror") {
+            // Strip tags
+            statusText += xhr.responseText.replace(/(<([^>]+)>)/ig,"");
+        }
+        alert('moduleName: '+moduleName+'\nmethodName: '+methodName+'\n\n['+status+'] '+statusText);
     };
 
     var ajaxResult = $.ajax({
