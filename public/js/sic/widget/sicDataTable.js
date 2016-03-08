@@ -946,7 +946,7 @@ sic.widget.sicDataTableRow = function(tableSectionWnd, args){
         if (_p.headerRow) _p.dataTable.trigger("headerRowClick", _p.getEventArgs());
         if (!_p.headerRow) _p.dataTable.trigger("dataRowClick", _p.getEventArgs());
         _p.dataTable.trigger("rowClick", _p.getEventArgs());
-        e.preventDefault();
+        //e.preventDefault();
     });
     this.selector.dblclick(function(e){
         if (_p.headerRow) _p.dataTable.trigger("headerRowDoubleClick", _p.getEventArgs());
@@ -1036,9 +1036,13 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
         // Data field
         if (this.editable && this.dataField) {
 
+            if (this.editorType == "checkbox")
+                this.selector.addClass('dataTableCheckboxCell');
+
             this.input = new sic.widget.sicInput({parent:this.valueDiv.selector, name:this.fieldKey,
                 caption:false, showModified:true, type:this.editorType });
             this.input.selector.addClass('dataTableValueInput');
+
             this.input.onModified(function(modArgs) {
                 if (modArgs.modified) _p.row.isModified = true;
             });
@@ -1207,7 +1211,7 @@ sic.widget.sicDataTableField = function(tableRowWnd, args) {
         if (_p.headerField) _p.dataTable.trigger("headerFieldClick", _p.getEventArgs());
         if (_p.dataField) _p.dataTable.trigger("dataFieldClick", _p.getEventArgs());
         _p.dataTable.trigger("fieldClick", _p.getEventArgs());
-        e.preventDefault();
+        //e.preventDefault();
     });
     this.selector.dblclick(function(e){
         if (_p.headerField) _p.dataTable.trigger("headerFieldDoubleClick", _p.getEventArgs());

@@ -37,7 +37,7 @@ class ElasticControl
             "number_of_replicas": 0,
 
             "index" : {
-                "refresh_interval" : "1s",
+                "refresh_interval" : "1ms",
                 "analysis" : {
                     "filter" : {
                         "my_ngram_filter" : {
@@ -45,6 +45,12 @@ class ElasticControl
                             "min_gram" : 3,
                             "max_gram" : 6,
                             "minimum_should_match": 3
+                        },
+                        "left_ngram_filter" : {
+                            "type" : "edge_ngram",
+                            "min_gram" : 1,
+                            "max_gram" : 20,
+                            "minimum_should_match": "100%"
                         }
                     },
                     "analyzer" : {
@@ -52,6 +58,11 @@ class ElasticControl
                             "type" : "custom",
                             "tokenizer" : "standard",
                             "filter"    : ["lowercase", "asciifolding", "my_ngram_filter"]
+                        },
+                        "left_ngram_analyzer" : {
+                            "type" : "custom",
+                            "tokenizer" : "standard",
+                            "filter"    : ["lowercase", "asciifolding", "left_ngram_filter"]
                         }
                     }
                 }
@@ -75,7 +86,7 @@ class ElasticControl
                         "type": "string",
                         "analyzer": "my_ngram_analyzer",
                         "boost": 5,
-                        "copy_to": "quick_search"
+                        "copy_to": ["quick_search", "auto_suggest"]
                     },
                     "edition": {
                         "type": "string",
@@ -132,7 +143,7 @@ class ElasticControl
                         "type": "string",
                         "analyzer": "my_ngram_analyzer",
                         "boost": 20,
-                        "copy_to": "quick_search"
+                        "copy_to": ["quick_search", "auto_suggest"]
                     },
                     "volume": {
                         "type": "string",
@@ -143,8 +154,19 @@ class ElasticControl
                         "type": "string",
                         "boost": 10
                     },
+
+                    "original_id": {
+                        "type": "integer"
+                    },
+                    "rds_selected": {
+                        "type": "string"
+                    },
                     "quick_search": {
                         "analyzer": "my_ngram_analyzer",
+                        "type": "string"
+                    },
+                    "auto_suggest": {
+                        "analyzer": "left_ngram_analyzer",
                         "type": "string"
                     }
                 }
@@ -278,7 +300,7 @@ HERE;
         return $resp.$ob;
     }
 
-    public function reindexPubId($pubId) {
+    public function reindexPubId($pubId, $customData = null) {
         $message = $this->deletePubId($pubId);
 
         $indexCmd = array(
@@ -294,11 +316,17 @@ HERE;
         foreach ($pub as $key => $val)
             $pub[$key] = explode("||", $val);
 
+        if ($customData)
+            $pub = array_merge($pub, $customData);
+
         $pubDataStr = json_encode($pub);
         //echo $pubDataStr."\n";
 
         $bulkData = $indexCmdStr . "\n" . $pubDataStr . "\n";
         $message .= $this->bulkRequest($bulkData) .self::$NL;
+        //print_r($bulkData);
+        //echo "\n\n";
+        //print_r($message);
         return $message;
     }
 

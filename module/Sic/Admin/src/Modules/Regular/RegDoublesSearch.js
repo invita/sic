@@ -14,10 +14,7 @@ var F = function(args) {
         filter: { visible: true },
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Regular/RegDoublesSearch",
-            pageCount: 20,
-            filterMode: "normal"
-            //filterMode: "duhec"
-            //filterMode: "levenshtein"
+            pageCount: 20
         }),
         editorModuleArgs: {
             moduleName:"Pub/PubEdit",
@@ -49,6 +46,7 @@ var F = function(args) {
             source: { visible: false },
             page: { visible: false },
             volume: { visible: false },
+            _score: { canFilter: false }
         }
     });
 
@@ -61,7 +59,12 @@ var F = function(args) {
             {
                 //eArgs.field.input.selector.prop("checked", true);
                 //sic.dump(eArgs.field.input, 0);
-                dataTable.refresh();
+                setTimeout(function() {
+                    dataTable.refresh();
+                }, 30);
+                //dataTable.setCellValue({pub_id:});
+                //eArgs.field.setValue(!eArgs.field.getValue());
+                //console.debug(eArgs);
             });
 
         }

@@ -54,46 +54,6 @@ class PubSearch extends SicModuleAbs {
         $data = Util::getArg($hits, "hits", array());
 
 
-/*
- * Sample data *
-
-$data = array(
-    ...
-    0: {
-        _index: "entities",
-        _type: "entity",
-        _id: "1"
-        _score: 1
-        _source: {
-            addidno: [""]
-            addtitle: [""]
-            child_id: ["13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29",…]
-            created_by: null
-            created_date: "0000-00-00 00:00:00"
-            creator: [{value: "author", codeId: "1"}, {value: "addAuthor", codeId: "2"}, {value: "editor", codeId: "3"},…]
-            edition: [""]
-            idno: [{value: "34491648", codeId: "1"}, {value: "1318-0185", codeId: "3"}]
-            is_series: "0"
-            issue: [""]
-            modified_by: "50"
-            modified_date: "2015-10-18 20:26:28"
-            note: [""]
-            online: [{value: "", codeId: "1"}]
-            original_id: "0"
-            page: [""]
-            parent_id: "0"
-            place: ["Koper; Milje"]
-            pub_id: "1"
-            publisher: ["Zgodovinsko društvo za Južno Primorsko"]
-            regalt_modified_by: null
-            source: [{value: "", codeId: "1"}]
-            strng: [""]
-            title: ["Acta Histriae"]
-            volume: [""]
-            year: [""]
-*/
-
-
         // Post process data
 
         $columns = array(
@@ -127,125 +87,56 @@ $data = array(
 
         );
 
-        for ($lineIdx = 0; $lineIdx < count($data); $lineIdx++) {
-            $line = array();
-            foreach ($columns as $colName) {
-                $colData = Util::getArg($data[$lineIdx]["_source"], $colName, null);
-                if (is_array($colData)) {
-                    if (isset($colData[0]) && is_array($colData[0])) {
-                        // Values are arrays also
-                        if (isset($colData[0]["value"])) {
-                            $r = "";
-                            foreach ($colData as $crow) $r .= ($r ? "; " : "") . $crow["value"];
-                            $colData = $r;
-                        } else {
-                            // Unknown array type?
-                            $colData = print_r($colData, true);
-                        }
-                    } else {
-                        // Values are basic type
-                        $colData = join("; ", $colData);
-                    }
-                }
-
-                $line[$colName] = $colData;
-            }
-
-            $line["_score"] = $data[$lineIdx]["_score"];
-            $data[$lineIdx] = $line;
-        }
-
+        $data = ElasticHelper::postProcessData($data, $columns);
 
         return array(
             "data" => $data,
             "rowCount" => $total,
             "staticData" => array("q" => $q),
             "lastQueryJson" => ElasticHelper::$lastQueryJson
-    );
-
-
-        //print_r($resp);
-
-/*
-
-        $solr = new \Solr();
-        //$solr->setQueryString("?q=".$query."&".$wt."&".$rows_all);
-        $solr->setQueryParams(array(
-            "q" => $q,
-            "fq" => $fq,
-            "wt" => "json",
-            "rows" => "2147483647"
-        ));
-        $solr->run();
-        $rowCountData = $solr->toArray();
-
-
-        $solr = new \Solr();
-        //$solr->setQueryString("?q=".$query."&".$wt."&".$rows."&start=".$pageStart."&sort=".$sort);
-        $solr->setQueryParams(array(
-            "q" => $q,
-            "fq" => $fq,
-            "wt" => "json",
-            "rows" => $pageCount,
-            "start" => $pageStart,
-            "sort" => $sort
-        ));
-        $solr->run();
-        $data = $solr->toArray();
-
-        if ($data === null) $data = array();
-
-        // Sort columns
-        $columns = array(
-            "pub_id",
-            "parent_id",
-            "series_id",
-            "original_id",
-            "creator",
-            "title",
-            "year",
-
-
-//            "edition",
-//            "issue",
-//            "online",
-//            "source",
-//            "volume",
-//            "idno",
-
-//            "addidno",
-//            "addtitle",
-//            "creator_author",
-//            "idno_cobiss",
-//            "is_series",
-//            "note",
-//            "page",
-//            "place",
-//            "proj_id",
-//            "publisher",
-//            "strng",
-
         );
-
-
-        for ($lineIdx = 0; $lineIdx < count($data); $lineIdx++) {
-            $line = array();
-            foreach ($columns as $colName)
-                $line[$colName] = Util::getArg($data[$lineIdx], $colName, null);
-
-            $data[$lineIdx] = $line;
-        }
-
-        return array(
-            "data" => $data,
-            "rowCount" => count($rowCountData),
-            "staticData" => array("q" => $q, "fq" => $fq)
-        );
-
-*/
     }
 
     public function autoComplete_search($args) {
+
+        $typed = Util::getArg($args, "typed", "");
+        $fieldName = Util::getArg($args, "fieldName", "auto_suggest");
+
+        if (is_array($typed)) $typed = $typed["value"];
+        if (!$typed) return array();
+
+        $resp = ElasticHelper::autoSuggest($typed, 10, $fieldName);
+
+        $took = Util::getArg($resp, "took", 0);
+        $tookStr = "Search took ".$took." miliseconds";
+        $hits = Util::getArg($resp, "hits", null);
+
+        $total = Util::getArg($hits, "total", 0);
+        $max_score = Util::getArg($hits, "max_score", 0);
+        $data = Util::getArg($hits, "hits", array());
+
+        $data = ElasticHelper::postProcessData($data, null);
+
+        $result = array();
+        foreach ($data as $rIdx => $row) {
+            foreach ($row as $key => $val) {
+                if ($fieldName != "auto_suggest" && $fieldName != $key) continue;
+                if ($this->isSubstring($typed, $val) && !in_array($val, $result)) {
+                    array_push($result, $val);
+                }
+            }
+        }
+
+        return $result;
+        /*
+        return array(
+            "data" => $data,
+            "rowCount" => $total,
+            "typed" => $typed,
+            "lastQueryJson" => ElasticHelper::$lastQueryJson
+        );
+        */
+
         /*
         $typed = Util::getArg($args, "typed", "");
         $fieldName = Util::getArg($args, "fieldName", "");
@@ -328,84 +219,6 @@ $data = array(
     private function isSubstring($sub, $main) {
         return strpos(strtoupper($main), strtoupper($sub)) !== false;
     }
-
-
-
-    /*
-
-    public function defineSqlSelect($args, Select $select)
-    {
-        $staticData = Util::getArg($args, 'staticData', array());
-
-        $searchType = Util::getArg($staticData, 'searchType', null);
-
-        $where = new Where();
-
-        switch ($searchType) {
-            case "quickSearch":
-                $quickSearch = Util::getArg($staticData, 'quickSearch', null);
-                $where->literal(
-                    "(view_publication_list.creator LIKE '%".$quickSearch."%' OR ".
-                    "view_publication_list.title LIKE '%".$quickSearch."%' OR ".
-                    "view_publication_list.year LIKE '%".$quickSearch."%')"
-                );
-                break;
-
-            case "pubSearch": default:
-                $fields = Util::getArg($staticData, 'fields', array());
-
-
-                // ----- TODO: Temporary Solution
-                $arrayFields = array("idno", "title", "creator", "year", "addidno", "addtitle", "place", "publisher",
-                    "volume", "issue", "page", "edition", "source", "online", "strng", "note");
-                foreach ($arrayFields as $arrayField) {
-                    if (is_array($fields[$arrayField]))
-                        $fields[$arrayField] = $fields[$arrayField][0];
-                    if (is_array($fields[$arrayField]))
-                        $fields[$arrayField] = $fields[$arrayField]["value"];
-                }
-                // -----
-
-                $fieldsWhere = DbUtil::prepareSqlFilter($fields);
-                if (count($fieldsWhere->getPredicates()))
-                    $where->addPredicate($fieldsWhere);
-                break;
-        }
-
-        //$select->columns(array(
-        //    "pub_id", "parent_id", "creator", "title", "year"));
-        $select->from('view_publication_list');
-        $select->where($where);
-    }
-
-    public function defineDataTableResponseData($args, ResultInterface $result) {
-        $responseData = array();
-        foreach($result as $row) {
-            $newRow = array(
-                'pub_id' => $row['pub_id'],
-                'parent_id' => $row['parent_id'],
-                'series_id' => $row['series_id'],
-                'creator' => Util::shortenText($row['creator'], PubEdit::$creatorMaxLen),
-                'title' => Util::shortenText($row['title'], PubEdit::$titleMaxLen),
-                '__creator_long' => $row['creator'],
-                '__title_long' => $row['title'],
-                'year' => $row['year'],
-                //'is_series' => $row['is_series'],
-
-                '__row' => $row
-            );
-
-            //$row['creator'] = Util::shortenText($row['creator'], PubEdit::$creatorMaxLen);
-            //$row['title'] = Util::shortenText($row['title'], PubEdit::$titleMaxLen);
-            //$row['publisher'] = Util::shortenText($row['publisher'], PubEdit::$publisherMaxLen);
-            //$row['is_series'] = $row['parent_id'] == 0;
-
-            $responseData[] = $newRow;
-        }
-        return $responseData;
-    }
-    */
-
 
     public function getZoteroUrl(){
 

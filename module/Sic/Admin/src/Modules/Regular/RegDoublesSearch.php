@@ -1,22 +1,99 @@
 <?php
 namespace Sic\Admin\Modules\Regular;
 
-use Zend\Db\Sql\Select;
-use Zend\Db\Sql\Delete;
-use Zend\Db\Sql\Literal;
-use Zend\Db\Sql\Where;
-use Zend\Db\Sql\Predicate\Expression;
 use Sic\Admin\Models\SicModuleAbs;
 use Sic\Admin\Models\Util;
 use Sic\Admin\Models\DbUtil;
-use Zend\Db\Adapter\Driver\ResultInterface;
-use Sic\Admin\Modules\Pub\PubEdit;
 use Zend\Db\TableGateway\Feature\GlobalAdapterFeature;
 use Zend\Db\Sql\Sql;
+use Sic\Admin\Models\Elastic\ElasticHelper;
+use Sic\Admin\Modules\Pub\PubEdit;
 
 
 class RegDoublesSearch extends SicModuleAbs {
 
+
+    public function dataTableSelect($args) {
+
+        $userId = Util::getUserId();
+        $filter = Util::getArg($args, "filter", array());
+
+        $sortField = Util::getArg($args, "sortField", "");
+        $sortOrder = Util::getArg($args, "sortOrder", "");
+        $pageStart = Util::getArg($args, "pageStart", "");
+        $pageCount = Util::getArg($args, "pageCount", 10);
+
+        //$sort = ($sortField && $sortOrder) ? $sortField." ".$sortOrder : "score desc";
+
+        $sort = array(
+            array("_score" => "desc"),
+            array("creator" => "asc"),
+            array("title" => "asc")
+        );
+        $resp = ElasticHelper::fullSearch($filter, $pageStart, $pageCount, $sort);
+        print_r(" ");
+
+        $took = Util::getArg($resp, "took", 0);
+        $tookStr = "Search took ".$took." miliseconds";
+        $hits = Util::getArg($resp, "hits", null);
+
+        $total = Util::getArg($hits, "total", 0);
+        $max_score = Util::getArg($hits, "max_score", 0);
+        $data = Util::getArg($hits, "hits", array());
+
+        // Post process data
+
+        $columns = array(
+            "pub_id",
+            "parent_id",
+            "series_id",
+            "original_id",
+            "creator",
+            "title",
+            "addtitle",
+            "idno",
+            "addidno",
+            "year",
+            "publisher",
+            "edition",
+            "place",
+            "issue",
+            "online",
+            "note",
+            "strng",
+            "source",
+            "page",
+            "volume",
+            "rds_selected"
+        );
+
+        $data = ElasticHelper::postProcessData($data, $columns);
+
+        foreach ($data as $rIdx => $row) {
+            $rds_selected = explode("; ", isset($row["rds_selected"]) ? $row["rds_selected"] : "");
+            unset($row["rds_selected"]);
+
+            $newRow = array(
+                'user_id' => in_array("user".$userId, $rds_selected) ? 1 : 0);
+            $row = array_merge($newRow, $row);
+            $row['__creator_long'] = $row['creator'];
+            $row['__title_long'] = $row['title'];
+            $row['__addtitle_long'] = $row['addtitle'];
+            $row['creator'] = Util::shortenText($row['__creator_long'], PubEdit::$creatorMaxLen);
+            $row['title'] = Util::shortenText($row['__title_long'], PubEdit::$titleMaxLen);
+            $row['addtitle'] = Util::shortenText($row['__addtitle_long'], PubEdit::$titleMaxLen);
+            $data[$rIdx] = $row;
+        }
+
+        return array(
+            "data" => $data,
+            "rowCount" => $total,
+            "filter" => $filter,
+            "lastQueryJson" => ElasticHelper::$lastQueryJson
+        );
+    }
+
+    /*
     public function defineSqlSelect($args, Select $select)
     {
 
@@ -92,7 +169,9 @@ class RegDoublesSearch extends SicModuleAbs {
         return $responseData;
     }
 
+    */
 
+/*
     public function selectAll($args) {
         //print_r($args);
         $userId = Util::getUserId();
@@ -145,7 +224,7 @@ class RegDoublesSearch extends SicModuleAbs {
         }
         return array("status" => true);
     }
-
+*/
     /*
     public function selectLine($args) {
         $pubId = Util::getArg($args, "pub_id", 0);
@@ -160,19 +239,37 @@ class RegDoublesSearch extends SicModuleAbs {
     }
     */
 
+
     public function selectLineToggle($args) {
         $pubId = Util::getArg($args, "pub_id", 0);
         $userId = Util::getUserId();
         if (!$pubId || !$userId) return array("status" => false);
 
-        if ($this->_isPubSelected($pubId)) {
-            $this->_deselectPub($pubId);
+        $pub = ElasticHelper::findPubId($pubId);
+        $rdsSelected = Util::getArg($pub, "rds_selected", array());
+
+        if (isset($rdsSelected) && in_array("user".$userId, $rdsSelected)) {
+            $idx = array_search("user".$userId, $rdsSelected);
+            unset($rdsSelected[$idx]);
         } else {
-            $this->_selectPub($pubId);
+            $rdsSelected[] = "user".$userId;
         }
+
+        //$pub["rdsSelected"] = $rdsSelected;
+        //ElasticHelper::reindexPubId($pubId, array("rds_selected" => $rdsSelected));
+        ElasticHelper::updatePubId($pubId, array("rds_selected" => $rdsSelected));
+
+        //if ($this->_isPubSelected($pubId)) {
+        //    $this->_deselectPub($pubId);
+        //} else {
+        //    $this->_selectPub($pubId);
+        //}
 
         return array("status" => true);
     }
+
+
+    /*
 
     public function _isPubSelected($pubId) {
         $userId = Util::getUserId();
@@ -270,5 +367,5 @@ class RegDoublesSearch extends SicModuleAbs {
                 'pub_id' => $pubId, 'user_id' => $userId));
         }
     }
-
+    */
 }
