@@ -175,7 +175,7 @@ class ElasticHelper
                 volume: [""]
                 year: [""]
     */
-    public static function postProcessData($data, $columns) {
+    public static function postProcessData($data, $columns = null) {
         for ($lineIdx = 0; $lineIdx < count($data); $lineIdx++) {
             $line = array();
             $lineData = Util::getArg($data[$lineIdx], "_source", array());
@@ -204,6 +204,8 @@ class ElasticHelper
                     }
                 }
 
+                //$colData = str_replace("Hawai`i", "'", $colData);
+                //echo $colData."\n";
                 $line[$colName] = $colData;
             }
 

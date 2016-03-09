@@ -92,7 +92,7 @@ class PubSearch extends SicModuleAbs {
         return array(
             "data" => $data,
             "rowCount" => $total,
-            "staticData" => array("q" => $q),
+            "staticData" => array("q" => $q, "type" => $type),
             "lastQueryJson" => ElasticHelper::$lastQueryJson
         );
     }

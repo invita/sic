@@ -31,7 +31,7 @@ class RegDoublesSearch extends SicModuleAbs {
             array("title" => "asc")
         );
         $resp = ElasticHelper::fullSearch($filter, $pageStart, $pageCount, $sort);
-        print_r(" ");
+        //print_r(ElasticHelper::$lastOutputBuffers);
 
         $took = Util::getArg($resp, "took", 0);
         $tookStr = "Search took ".$took." miliseconds";
@@ -84,6 +84,8 @@ class RegDoublesSearch extends SicModuleAbs {
             $row['addtitle'] = Util::shortenText($row['__addtitle_long'], PubEdit::$titleMaxLen);
             $data[$rIdx] = $row;
         }
+
+        //print_r($data);
 
         return array(
             "data" => $data,
