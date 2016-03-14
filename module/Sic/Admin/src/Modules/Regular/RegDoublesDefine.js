@@ -6,6 +6,9 @@ var F = function(args) {
         parent:tabPage.content.selector,
         primaryKey: ['pub_id'],
         entityTitle: "Entity %pub_id% - %title%",
+        canExportXls: false,
+        canExportCsv: false,
+        filterHint: false,
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Regular/RegDoublesDefine",
             pageCount: 20

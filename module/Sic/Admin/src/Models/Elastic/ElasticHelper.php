@@ -136,6 +136,57 @@ class ElasticHelper
         return Util::getArg($respArray, "_source", array());
     }
 
+    public static function findSelectedPubs($userId) {
+        $url = Util::getElasticUrl().self::$entityIndexName."/entity/_search";
+        $query = array(
+            "query" => array(
+                "match" => array(
+                    "rds_selected" => array(
+                        "query" => "user".$userId
+                    )
+                )
+            )
+        );
+        $context  = stream_context_create(array('http' => array(
+            'method'  => "POST",
+            'header'  => "Content-Type: application/x-www-form-urlencoded\r\n",
+            'content' => json_encode($query)
+        )));
+        $respArray = self::callElastic($url, $context);
+
+        $parsedData = array();
+        foreach ($respArray["hits"]["hits"] as $idx => $pubData) {
+            $pubData["_source"]["pub_id"] =  $pubData["_id"];
+            array_push($parsedData, $pubData["_source"]);
+        }
+        return $parsedData;
+    }
+
+    public static function findAltPubs($pubId) {
+        $url = Util::getElasticUrl().self::$entityIndexName."/entity/_search";
+        $query = array(
+            "query" => array(
+                "match" => array(
+                    "original_id" => array(
+                        "query" => $pubId
+                    )
+                )
+            )
+        );
+        $context  = stream_context_create(array('http' => array(
+            'method'  => "POST",
+            'header'  => "Content-Type: application/x-www-form-urlencoded\r\n",
+            'content' => json_encode($query)
+        )));
+        $respArray = self::callElastic($url, $context);
+        $parsedData = array();
+        foreach ($respArray["hits"]["hits"] as $idx => $pubData) {
+            $pubData["_source"]["pub_id"] =  $pubData["_id"];
+            array_push($parsedData, $pubData["_source"]);
+        }
+        return $parsedData;
+    }
+
 
     /*
      * Sample data *
@@ -178,7 +229,7 @@ class ElasticHelper
     public static function postProcessData($data, $columns = null) {
         for ($lineIdx = 0; $lineIdx < count($data); $lineIdx++) {
             $line = array();
-            $lineData = Util::getArg($data[$lineIdx], "_source", array());
+            $lineData = Util::getArg($data[$lineIdx], "_source", $data[$lineIdx]);
 
             if ($columns == null) {
                 $columns2 = array_keys($lineData);

@@ -35,7 +35,7 @@ sic.widget.sicDataTable = function(args)
     this.initRefresh = sic.getArg(args, "initRefresh", true);
     this.canExportXls = sic.getArg(args, "canExportXls", true);
     this.canExportCsv = sic.getArg(args, "canExportCsv", true);
-
+    this.filterHint = sic.getArg(args, "filterHint", true);
 
     this.rowsPerPage = sic.getArg(args, "rowsPerPage", sic.defaults.dataTableRowsPerPage); // Ignored if dataSource is given
 
@@ -317,7 +317,8 @@ sic.widget.sicDataTable = function(args)
             _p[cpName].filterSpan = new sic.widget.sicElement({parent:_p[cpName].filterDiv.selector, tagName:"span", tagClass:"vmid"});
             _p[cpName].filterSpan.selector.html("Filter");
             _p[cpName].filterDiv.selector.click(function(){ _p.toggleFilter(); });
-            _p[cpName].filterDiv.setHint("<b>Filter options:</b><br/>"+
+            if (_p.filterHint !== false) {
+                _p[cpName].filterDiv.setHint("<b>Filter options:</b><br/>"+
                 "<br/>"+
                 "<b>*</b> - Add a star to search for any characters, example: 'John*' will find 'John Smith' and 'Johnny Bravo'<br/>"+
                 "<b>,</b> - List multiple values with comma, example: '1,2,3' will find values 1, 2 and 3<br/>"+
@@ -325,6 +326,7 @@ sic.widget.sicDataTable = function(args)
                 "<br/>"+
                 "Note: All filter values are automatically fitted with stars on both ends. When you search for 'John', you actually search for '*John*'<br/>"+
                 "");
+            }
         }
     };
 

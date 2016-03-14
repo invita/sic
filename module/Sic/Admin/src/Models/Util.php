@@ -26,6 +26,11 @@ class Util
         return $result;
     }
 
+    public static function arrayFirst($arr) {
+        if (!is_array($arr)) return $arr;
+        if (isset($arr[0])) return $arr[0];
+    }
+
     public static function getUploadPath() {
         return realpath(self::get('uploadPath')).'/';
     }

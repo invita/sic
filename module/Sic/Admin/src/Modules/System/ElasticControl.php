@@ -32,10 +32,8 @@ class ElasticControl
         $config = <<<HERE
     {
         "settings" : {
-
             "number_of_shards": 1,
             "number_of_replicas": 0,
-
             "index" : {
                 "refresh_interval" : "1ms",
                 "analysis" : {
@@ -158,9 +156,14 @@ class ElasticControl
                     "original_id": {
                         "type": "integer"
                     },
+
                     "rds_selected": {
                         "type": "string"
                     },
+                    "temp_original_id": {
+                        "type": "integer"
+                    },
+
                     "quick_search": {
                         "analyzer": "my_ngram_analyzer",
                         "type": "string"
@@ -249,6 +252,8 @@ HERE;
             foreach ($pub as $key => $val)
                 $pub[$key] = explode("||", $val);
 
+            //$pub["rds_selected"] = array();
+
             $pubDataStr = json_encode($pub);
             //echo $pubDataStr."\n";
 
@@ -291,7 +296,6 @@ HERE;
             'method'  => 'DELETE',
             'content' => ""
         )));
-
 
         ob_start();
         $resp = file_get_contents($url, false, $context);

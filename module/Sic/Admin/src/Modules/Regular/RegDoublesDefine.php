@@ -1,104 +1,90 @@
 <?php
 namespace Sic\Admin\Modules\Regular;
 
-use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Delete;
-use Zend\Db\Sql\Literal;
-use Zend\Db\Sql\Where;
-use Zend\Db\Sql\Predicate\Expression;
 use Sic\Admin\Models\SicModuleAbs;
 use Sic\Admin\Models\Util;
 use Sic\Admin\Models\DbUtil;
-use Zend\Db\Adapter\Driver\ResultInterface;
 use Sic\Admin\Modules\Pub\PubEdit;
+use Sic\Admin\Models\Elastic\ElasticHelper;
 
 
 class RegDoublesDefine extends SicModuleAbs
 {
 
-    public function defineSqlSelect($args, Select $select)
-    {
+
+    public function dataTableSelect($args) {
 
         $userId = Util::getUserId();
+        //$filter = Util::getArg($args, "filter", array());
 
-        $select->from('view_publication_list')
-            ->join('publication_doubles_selected',
-                new Expression('publication_doubles_selected.pub_id = view_publication_list.pub_id ' .
-                    'AND publication_doubles_selected.user_id = ' . $userId),
-                array("user_id", "temp_original_id"),
-                Select::JOIN_INNER);
+        //$pageStart = Util::getArg($args, "pageStart", "");
+        //$pageCount = Util::getArg($args, "pageCount", 10);
 
+        //$resp = ElasticHelper::fullSearch($filter, $pageStart, $pageCount);
+        $data = ElasticHelper::findSelectedPubs($userId);
+        //print_r(ElasticHelper::$lastOutputBuffers);
 
-        $where = new Where();
-        $where->equalTo('user_id', $userId);
-        //$where->addPredicates(array(new Expression('(user_id IS NULL OR user_id = '.$userId.')')));
-        $select->where($where);
-    }
+        // Post process data
 
-    public function defineDataTableResponseData($args, ResultInterface $result)
-    {
-        $responseData = array();
-        foreach ($result as $row) {
+        $columns = array(
+            "pub_id",
+            "parent_id",
+            "series_id",
+            "original_id",
+            "creator",
+            "title",
+            "year",
+            "temp_original_id"
+        );
+
+        $data = ElasticHelper::postProcessData($data, $columns);
+        //print_r($data);
+
+        foreach ($data as $rIdx => $row) {
+            //$rds_selected = explode("; ", isset($row["rds_selected"]) ? $row["rds_selected"] : "");
+            //unset($row["rds_selected"]);
+
             $newRow = array(
-                'pub_id' => $row['pub_id'],
-                'parent_id' => $row['parent_id'],
-                'series_id' => $row['series_id'],
-                'temp_original_id' => $row['temp_original_id'],
-
-                'creator' => Util::shortenText($row['creator'], PubEdit::$creatorMaxLen),
-                'title' => Util::shortenText($row['title'], PubEdit::$titleMaxLen),
-                'year' => $row['year'],
-
-                '__creator_long' => $row['creator'],
-                '__title_long' => $row['title'],
-
-                '__row' => $row
+                //'user_id' => in_array("user".$userId, $rds_selected) ? 1 : 0
             );
-
-            //$row['creator'] = Util::shortenText($row['creator'], PubEdit::$creatorMaxLen);
-            //$row['title'] = Util::shortenText($row['title'], PubEdit::$titleMaxLen);
-            //$row['publisher'] = Util::shortenText($row['publisher'], PubEdit::$publisherMaxLen);
-            //$row['is_series'] = $row['parent_id'] == 0;
-
-            $responseData[] = $newRow;
+            $row = array_merge($newRow, $row);
+            $row['__creator_long'] = $row['creator'];
+            $row['__title_long'] = $row['title'];
+            $row['creator'] = Util::shortenText($row['__creator_long'], PubEdit::$creatorMaxLen);
+            $row['title'] = Util::shortenText($row['__title_long'], PubEdit::$titleMaxLen);
+            if (!isset($row['temp_original_id']))
+                $row['temp_original_id'] = $row['original_id'];
+            unset($row['_score']);
+            $data[$rIdx] = $row;
         }
-        return $responseData;
-    }
 
-    /*
-    public function defineDataTableResponseData($args, ResultInterface $result) {
-        $responseData = array();
-        foreach($result as $row) {
-            $responseData[] = $row;
-        }
-        return $responseData;
+        //print_r($data);
+
+        return array(
+            "data" => $data,
+            "rowCount" => count($data),
+            "lastQueryJson" => ElasticHelper::$lastQueryJson
+        );
     }
-    */
 
     public function defineSqlDelete($args, Delete $delete)
     {
-        $data = Util::getArg($args, "data", null);
-        $pubId = Util::getArg($data, "pub_id", 0);
-        $userId = Util::getUserId();
 
-        if ($pubId && $userId) {
-            $delete->from('publication_doubles_selected')->where(array('pub_id' => $pubId, 'user_id' => $userId));
-        }
     }
 
     public function setRegular($args) {
-        $pubId = Util::getArg($args, "pub_id", 0);
+
         $userId = Util::getUserId();
-        if (!$pubId || !$userId) return array("status" => false);
+        $pubId = Util::getArg($args, "pub_id", 0);
 
-        $selectedPubs = DbUtil::selectFrom("publication_doubles_selected", null, array("user_id" => $userId));
-
-        foreach ($selectedPubs as $selPub) {
-            $selPubId = $selPub["pub_id"];
+        $selectedPubs = ElasticHelper::findSelectedPubs($userId);
+        foreach ($selectedPubs as $selectedPub) {
+            $selPubId = intval(Util::arrayFirst($selectedPub["pub_id"]));
             if ($selPubId == $pubId)
-                DbUtil::updateTable("publication_doubles_selected", array("temp_original_id" => -1), array("pub_id" => $selPubId, "user_id" => $userId));
+                ElasticHelper::updatePubId($selPubId, array("temp_original_id" => -1));
             else
-                DbUtil::updateTable("publication_doubles_selected", array("temp_original_id" => $pubId), array("pub_id" => $selPubId, "user_id" => $userId));
+                ElasticHelper::updatePubId($selPubId, array("temp_original_id" => $pubId));
         }
 
         return array("status" => true);
@@ -106,43 +92,29 @@ class RegDoublesDefine extends SicModuleAbs
 
     public function setAlternative($args) {
 
-        $pubId = Util::getArg($args, "pub_id", 0);
-        $userId = Util::getUserId();
-        if (!$pubId || !$userId) return array("status" => false);
-
-        $selectedPubs = DbUtil::selectFrom("publication_doubles_selected", null, array("user_id" => $userId));
-
-        $regularPubId = null;
-        foreach ($selectedPubs as $selPub) {
-            //$pub = DbUtil::selectRow("publication", null, array("pub_id" => $selPub["pub_id"]));
-            if (isset($selPub["temp_original_id"]) && $selPub["temp_original_id"] == -1) {
-                $regularPubId = $selPub["pub_id"];
-                break;
-            }
-        }
-
-        if (!$regularPubId) return array("status" => false, "alert" => "Entity can not be marked as Alternative because no listed entity is marked Regular!");
-
-        DbUtil::updateTable("publication_doubles_selected", array("temp_original_id" => $regularPubId), array("pub_id" => $pubId));
-
         return array("status" => true);
     }
 
     public function saveSelected($args) {
-        $userId = Util::getUserId();
-        $selectedPubs = DbUtil::selectFrom("publication_doubles_selected", null, array("user_id" => $userId));
 
-        // Check if Regular selected
-        foreach ($selectedPubs as $selPub) {
-            DbUtil::updateTable("publication", array("original_id" => $selPub['temp_original_id']), array("pub_id" => $selPub['pub_id']));
-            DbUtil::touchPublication($selPub['pub_id']);
+        $userId = Util::getUserId();
+
+        $selectedPubs = ElasticHelper::findSelectedPubs($userId);
+        foreach ($selectedPubs as $selectedPub) {
+            $selPubId = intval(Util::arrayFirst($selectedPub["pub_id"]));
+            if (isset($selectedPub["temp_original_id"]))
+                $temp_original_id = intval(Util::arrayFirst($selectedPub["temp_original_id"]));
+            else
+                $temp_original_id = intval(Util::arrayFirst($selectedPub["original_id"]));
+
+            ElasticHelper::updatePubId($selPubId, array(
+                "original_id" => $temp_original_id,
+                "temp_original_id" => null
+            ));
         }
 
-        //foreach ($selectedPubs as $selPub) {
-        //    DbUtil::updateTable("publication", array("original_id" => $selPub['temp_original_id']), array("pub_id" => $selPub['pub_id']));
-        //}
-
-        DbUtil::deleteFrom("publication_doubles_selected", array("user_id" => $userId));
+        $regDoublesSearch = new RegDoublesSearch();
+        $regDoublesSearch->deselectAll($args);
 
         return array("status" => true);
     }

@@ -11,6 +11,9 @@ var F = function(args) {
         entityTitle: "Entity %pub_id% - %title%",
         canDelete: false,
         canInsert: false,
+        canExportXls: false,
+        canExportCsv: false,
+        filterHint: false,
         filter: { visible: true },
         dataSource: new sic.widget.sicDataTableDataSource({
             moduleName:"Regular/RegDoublesSearch",
@@ -25,7 +28,7 @@ var F = function(args) {
             pub_id: { hintF: function(args) { sic.hint.publication(args.row.lastRowData.pub_id) } },
             parent_id: { hintF: function(args) { sic.hint.publication(args.row.lastRowData.parent_id) } },
             series_id: { hintF: function(args) { sic.hint.publication(args.row.lastRowData.series_id) } },
-            original_id: { visible: false, caption: "Regular/Alt" },
+            original_id: { visible: true, caption: "Regular/Alt" },
             creator: { tagClass:"sicDataTable_shortText",
                 hintF: function(args) { sic.showHint(sic.replacePipes(args.row.lastRowData.__creator_long, "<br/>")); } },
             title: { tagClass:"sicDataTable_shortText",
@@ -159,6 +162,7 @@ var F = function(args) {
             if (row.original_id == -1) {
                 // Is Original
                 dataTable.rows[i].selector.addClass("regular");
+                dataTable.rows[i].fields.original_id.valueDiv.selector.html("Regular");
             } else
             if (row.original_id > 0) {
                 // Is Alternative
