@@ -68,9 +68,13 @@ class RegDoublesDefine extends SicModuleAbs
         );
     }
 
-    public function defineSqlDelete($args, Delete $delete)
-    {
-
+    public function dataTableDelete($args) {
+        $data = Util::getArg($args, "data", array());
+        $pubId = Util::getArg($data, "pub_id", 0);
+        ElasticHelper::updatePubId($pubId, array("temp_original_id" => 0));
+        $result = $this->dataTableSelect($args);
+        foreach ($result["data"] as $i => $r) if ($r["pub_id"] == $pubId) $result["data"][$i]["temp_original_id"] = 0;
+        return $result;
     }
 
     public function setRegular($args) {
